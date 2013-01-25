@@ -128,6 +128,8 @@ head(temp.single <- sim.reg(fixed = fixed, fixed.param = fixed.param, cov.param 
 summary(lm(sim.data ~ 1 + act + diff + numCourse + act:numCourse, data = temp.single))
 ```
 
+Longitudinal
+---------------
 ```{r simreg, message = FALSE}
 library(simReg)
 fixed <- ~ 1 + time + diff + act + time:act 

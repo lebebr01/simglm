@@ -1,0 +1,8 @@
+Package: simReg
+Maintainer: Brandon LeBeau <lebea027@umn.edu>
+Author: Brandon LeBeau <lebea027@umn.edu>
+Version: 0.1
+License: GPL-2
+Title: Simulate regression models
+Description: This package easily simulates
+     nested data.

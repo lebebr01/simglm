@@ -7,6 +7,7 @@
 #' @param n Cluster sample size.
 #' @param dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
+#' @parm num.dist Number of distributions for bimod random variables
 #' @export 
 rand.eff.sim <- function(random.param, cor, n, dist = c("lap","chi","norm", "bimod"), num.dist){
   
@@ -31,7 +32,7 @@ rand.eff.sim <- function(random.param, cor, n, dist = c("lap","chi","norm", "bim
       if(dist == "bimod"){
         
         reff <- do.call("cbind", lapply(1:length(random.param), function(xx) 
-          rbimod(n, mean = rep(0, num.dist), 1)))
+          rbimod(n, mean = rep(0, num.dist), var = rep(1, num.dist), num.dist)))
         c <- varcov.randeff(random.param, cor)
         reff1 <- reff %*% chol(c/2)
 

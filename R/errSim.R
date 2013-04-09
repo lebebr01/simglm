@@ -9,8 +9,9 @@
 #' @param serCorVal Serial correlation parameters. A list of values to pass on to arima.sim.
 #' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
+#' @parm num.dist Number of distributions for bimod random variables
 #' @export 
-err.sim.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist){
+err.sim.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist){
   require(VGAM)
   require(MASS)
   if(serCor == "ARMA" & length(serCorVal) < 2) stop("Incorrect dimensions serCorVal")
@@ -37,9 +38,9 @@ err.sim.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist){
       if(err.dist == "chi"){
         err <- unlist(lapply(1:n, function(x){((rchisq(p,1)-1)/sqrt(2))*sqrt(errorVar)}))
       } else {
-        #Note this does bimodal distribution with mean 0 and variance approx .64.
-        #Does not change with errorVar
-        err <- unlist(lapply(1:n, function(x){ c(rnorm(p/2,mean=.7,sd=.4),rnorm(p/2,mean=-.7,sd=.4))}))
+        err <- unlist(lapply(1:n, function(x){
+          ((rbimod(p, mean = rep(0, num.dist), var = rep(1, num.dist), num.dist)
+            *chol((errorVar/2)))) }))
       }
     }
   }

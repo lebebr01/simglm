@@ -22,9 +22,10 @@
 #' @param serCor Simulation of serial correlation. Must be "AR", "MA", "ARMA", or "ID", "ID" is default.
 #' @param serCorVal Serial correlation parameters. A list of values to pass on to arima.sim.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
+#' @parm num.dist Number of distributions for bimod random distribution
 #' @export 
 sim.reg.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, errorVar, randCor, 
-                    rand.dist, err.dist, serCor, serCorVal, data.str) {
+                    rand.dist, err.dist, serCor, serCorVal, data.str, num.dist) {
 
   if(randCor > 1 | randCor < -1) stop("cor out of range")
 
@@ -37,7 +38,7 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.
      if(length(rand.vars)+1 != length(random.param)) stop("Random lengths not equal")
      if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
 
-   rand.eff <- rand.eff.sim(random.param, randCor, n, rand.dist)
+   rand.eff <- rand.eff.sim(random.param, randCor, n, rand.dist, num.dist)
 
    Xmat <- fixef.sim.nested(fixed, fixed.vars, n, p, w.var, data.str)
   
@@ -48,7 +49,7 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.
   Zmat <- model.matrix(random, data.frame(Xmat))
 
  #if(serCor == "AR" | serCor == "MA" | serCor == "ARMA" & is.list(serCorVal) == "FALSE") {stop("Incorrect dimensions serCorVal")}
-  err <- err.sim.nested(errorVar, n, p, serCor, serCorVal, err.dist)
+  err <- err.sim.nested(errorVar, n, p, serCor, serCorVal, err.dist, num.dist)
 
  sim.data <- data.reg.nested(Xmat, Zmat, fixed.param, rand.eff, n, p, err)
   

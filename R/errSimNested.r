@@ -31,18 +31,20 @@ err.sim.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist
         }
       }
     }
-  } else {
-    if(err.dist == "lap"){
-      err <- unlist(lapply(1:n, function(x){rlaplace(p,0,1)*chol((errorVar/2))}))
-    } else {
-      if(err.dist == "chi"){
-        err <- unlist(lapply(1:n, function(x){((rchisq(p,1)-1)/sqrt(2))*sqrt(errorVar)}))
-      } else {
-        err <- unlist(lapply(1:n, function(x){
-          ((rbimod(p, mean = rep(0, num.dist), var = rep(1, num.dist), num.dist)
-            *chol((errorVar/2)))) }))
-      }
-    }
   }
-  err
+  
+  if(err.dist == "lap"){
+    err <- unlist(lapply(1:n, function(x){rlaplace(p,0,1)*chol((errorVar/2))}))
+  }
+  
+  if(err.dist == "chi"){
+    err <- unlist(lapply(1:n, function(x){((rchisq(p,1)-1)/sqrt(2))*sqrt(errorVar)}))
+  }
+  
+  if(err.dist == "bimod"){
+    err <- unlist(lapply(1:n, function(x) {
+      ((rbimod(p, mean = rep(0, num.dist), var = rep(1, num.dist), num.dist)
+      *chol((errorVar/2)))) }))
+  }
+err
 }

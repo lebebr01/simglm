@@ -2,6 +2,10 @@
 #' 
 #' Input fixed variables, sample size, and number of within variables, returns design matrix.
 #' 
+#' Simulates the fixed effects for the \code{\link{sim.reg}} function when a linear mixed
+#' model is specified.  This function assumes a time variable when longitudinal data 
+#' is specified and does include any interactions that are specified.
+#' 
 #' @param fixed One sided formula for fixed effects in the simulation, currently assumes intercept.
 #' @param fixed.vars Character vector of covariates for design matrix.
 #' @param n Number of clusters.

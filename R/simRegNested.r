@@ -1,7 +1,12 @@
 #' Function to simulate nested data
 #' 
-#' Takes simulation parameters as inputs and 
-#' returns simulated data.
+#' Takes simulation parameters as inputs and returns simulated data.
+#' 
+#' Simulates data for the linear mixed model, both cross sectional and longitudinal data.  Returns
+#' a data frame with ID variables, fixed effects, and many other variables useful to help when 
+#' running simulation studies.
+#' 
+#' @seealso \code{\link{sim.reg}} for a convenient wrapper for all data conditions.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.

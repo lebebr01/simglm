@@ -1,7 +1,11 @@
 #' Master function to simulate single level data.
 #' 
-#' Takes simulation parameters as inputs and 
-#' returns simulated data.
+#' Takes simulation parameters as inputs and returns simulated data.
+#' 
+#' Simulates data for the simple regression models.  Returns a data frame with ID variables, 
+#' fixed effects, and many other variables useful to help when running simulation studies.
+#' 
+#' @seealso \code{\link{sim.reg}} for a convenient wrapper for all data conditions.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.

@@ -2,6 +2,8 @@
 #' 
 #' Input error simulation parameters and outputs simulated errors.
 #' 
+#' Simulates error term for single level regression models.
+#' 
 #' @param errorVar Scalar of error variance
 #' @param n Cluster sample size.
 #' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 

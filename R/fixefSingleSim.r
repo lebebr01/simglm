@@ -2,6 +2,9 @@
 #' 
 #' Input fixed variables, sample size, and number of within variables, returns design matrix.
 #' 
+#' Simulates the fixed effects for the \code{\link{sim.rem}} function when simulating a 
+#' simple regression model.
+#' 
 #' @param fixed One sided formula for fixed effects in the simulation, currently assumes intercept.
 #' @param fixed.vars Character vector of covariates for design matrix.
 #' @param n Number of clusters.

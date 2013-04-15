@@ -1,6 +1,8 @@
 #' Function to extract coefficient table from lmer object
 #' 
 #' Input lmer object output coefficient table
+#' 
+#' Extracts coefficients from lmer object for use to check adequacy of simulation.
 #'
 #' @param fm lmer object 
 #'  

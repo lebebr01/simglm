@@ -1,6 +1,10 @@
 #' Master power simulation function.
 #' 
-#' Input simulation conditions, returns power for term
+#' Input simulation conditions, returns power for term.
+#' 
+#' This function is a wrapper that replicates the simulation functions for simple regression
+#' and the linear mixed model power functions.  This function replicates the power call a 
+#' specified number of times and prints outs a matrix with the results.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.

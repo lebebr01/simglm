@@ -1,7 +1,10 @@
 #' Simulates single level data
 #' 
-#' Takes simulation paramter arguments and 
-#' returns simulated data.
+#' Takes simulation paramter arguments and returns simulated data.
+#' 
+#' This is a helper function to the master function \code{\link{sim.reg}}, 
+#' this function does the actual simulation to return the data for single 
+#' level models.
 #' 
 #' @param Xmat A matrix of covariates.
 #' @param beta A vector of regression parameters.

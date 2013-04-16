@@ -42,7 +42,7 @@ rand.eff.sim <- function(random.param, cor, n, dist = c("lap","chi","norm", "bim
     reff1 <- reff %*% chol(c/2)
 
   }
-  if(dist = "norm"){
+  if(dist == "norm"){
     c <- varcov.randeff(random.param, cor)
     reff1 <- mvrnorm(n, rep.int(0, length(random.param)), c)
   }

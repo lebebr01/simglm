@@ -12,7 +12,7 @@
 #' @param n Cluster sample size.
 #' @param dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
-#' @parm num.dist Number of distributions for bimod random variables
+#' @param num.dist Number of distributions for bimod random variables
 #' @export 
 rand.eff.sim <- function(random.param, cor, n, dist = c("lap","chi","norm", "bimod"), num.dist){
   

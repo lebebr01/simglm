@@ -7,7 +7,7 @@
 #' when a specific variance is desired.  Especially useful when attempting to simulate a 
 #' mixture normal/bimodal distribution.
 #' 
-#' @parm desVar Desired overall variance of mixture normal distribution.
+#' @param desVar Desired overall variance of mixture normal distribution.
 #' @param num.dist Number of normal distributions.
 #' @param means Vector of means for each normal distribution.  Must equal num.dist.
 #' @param equalWeight Should equal weights be used, only TRUE is currently supported.

@@ -8,26 +8,24 @@
 #' @param n Cluster sample size.
 #' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
+#' @param num.dist Number of distributions for bimod random variables.
 #' @export 
-err.sim.single <- function(errorVar, n, err.dist){
+err.sim.single <- function(errorVar, n, err.dist, num.dist){
   
   require(MASS)
   
   if(err.dist == "norm"){
     err <- rnorm(n, 0, sd = sqrt(errorVar))
-  } else {
-    if(err.dist == "lap"){
-      require(VGAM)
-      err <- rlaplace(n,0,1)*chol((errorVar/2))
-    } else {
-      if(err.dist == "chi"){
-        err <- ((rchisq(n,1)-1)/sqrt(2))*sqrt(errorVar)
-      } else {
-        #Note this does bimodal distribution with mean 0 and variance approx .64.
-        #Does not change with errorVar
-        err <- unlist(lapply(1:n, function(x){ c(rnorm(p/2,mean=.7,sd=.4),rnorm(p/2,mean=-.7,sd=.4))}))
-      }
-    }
+  }
+  if(err.dist == "lap"){
+    require(VGAM)
+    err <- rlaplace(n,0,1)*chol((errorVar/2))
+  }
+  if(err.dist == "chi"){
+    err <- ((rchisq(n,1)-1)/sqrt(2))*sqrt(errorVar)
+  }
+  if(err.dist == "bimod"){
+    err <- rbimod(n, mean = rep(0, num.dist), var = rep(1, num.dist), num.dist)*chol((errorVar/2))
   }
   err
 }

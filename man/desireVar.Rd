@@ -5,6 +5,9 @@
   desireVar(desVar, num.dist, means, equalWeight = TRUE)
 }
 \arguments{
+  \item{desVar}{Desired overall variance of mixture normal
+  distribution.}
+
   \item{num.dist}{Number of normal distributions.}
 
   \item{means}{Vector of means for each normal

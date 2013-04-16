@@ -51,6 +51,9 @@
 
   \item{data.str}{Type of data. Must be "cross", "long", or
   "single".}
+
+  \item{num.dist}{Number of distributions for bimod random
+  distribution}
 }
 \description{
   Takes simulation parameters as inputs and returns

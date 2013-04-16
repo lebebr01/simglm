@@ -2,7 +2,7 @@
 \alias{coef.tbl}
 \title{Function to extract coefficient table from lmer object}
 \usage{
-  coef.tbl(fm)
+  coef.tbl(fm, ...)
 }
 \arguments{
   \item{fm}{lmer object}

@@ -21,6 +21,9 @@
   \item{err.dist}{Simulated within cluster error
   distribution. Must be "lap", "chi", "norm", "bimod",
   "norm" is default.}
+
+  \item{num.dist}{Number of distributions for bimod random
+  variables.}
 }
 \description{
   Input error simulation parameters and outputs simulated

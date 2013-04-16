@@ -15,6 +15,9 @@
 
   \item{dist}{Simulated random effect distribution.  Must
   be "lap", "chi", "norm", "bimod", "norm" is default.}
+
+  \item{num.dist}{Number of distributions for bimod random
+  variables}
 }
 \description{
   Input simulation parameters and returns random effects.

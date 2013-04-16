@@ -16,7 +16,7 @@
 #' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
-#' @param num.dist Number of distributions for bimodal random variables
+#' @param num.dist Number of distributions for bimodal random variables.
 #' @export 
 sim.reg.single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, num.dist) {
   

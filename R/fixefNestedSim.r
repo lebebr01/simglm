@@ -8,13 +8,15 @@
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation, currently assumes intercept.
 #' @param fixed.vars Character vector of covariates for design matrix.
+#' @param cov.param List of mean and variance for fixed effects. Does not include intercept, time, or 
+#' interactions. Must be same order as fixed formula above.
 #' @param n Number of clusters.
 #' @param p Number of within cluster units.
 #' @param w.var Number of time varying covariates or level one covariates for cross-sectional clustering.  
 #' This number includes the intercept and time variable for longitudinal data.
 #' @param data.str Type of data. Must be "cross", or "long".
 #' @export 
-fixef.sim.nested <- function(fixed, fixed.vars, n, p, w.var, data.str){
+fixef.sim.nested <- function(fixed, fixed.vars, cov.param, n, p, w.var, data.str){
   
   n.vars <- length(fixed.vars)
   n.int <- length(grep(":",fixed.vars))

@@ -19,7 +19,7 @@ data.reg.nested <- function(Xmat, Zmat, beta, rand.eff, n, p, err) {
   require(Matrix)
   
    Fbeta <- (Xmat %*% beta) 
-    
+    ID <- NULL
     Zmat <- cbind(Zmat, ID = rep(1:n, each = p))
     Zmatd <- data.frame(Zmat)
     ZmatList <- lapply(1:n, function(xx) as.matrix(subset(Zmatd, ID == xx, select = 1:(ncol(Zmatd)-1))))

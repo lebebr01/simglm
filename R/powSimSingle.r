@@ -36,7 +36,7 @@ sim.pow.single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist,
   testStat <- ifelse(pow.tail == 2, abs(coefficients(summary(temp.lm))[pow.param, 3]), 
                  coefficients(summary(temp.lm))[pow.param, 3])
   
-  reject <- ifelse(tval >= crit, 1, 0)
+  reject <- ifelse(testStat >= crit, 1, 0)
   
   return(reject)
 }

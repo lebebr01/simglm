@@ -6,8 +6,7 @@
 #'
 #' @param fm lmer object 
 #'  
-coef.tbl <- function(fm)
-{
+coef.tbl <- function(fm, ...){
   ## check that fm is an object of the "mer" class
   stopifnot(is(fm, "mer"))
   cc <- fixef(fm)

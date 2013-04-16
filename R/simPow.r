@@ -48,10 +48,10 @@ sim.pow <- function(fixed, random, fixed.param, random.param, w.var, cov.param, 
       #               err.dist, pow.param, alpha, pow.dist, pow.tail))
     #})
   } else {
-    profr(temp.pow <- replicate(replicates, sim.pow.nested(fixed, random, fixed.param, random.param, w.var, 
+    temp.pow <- replicate(replicates, sim.pow.nested(fixed, random, fixed.param, random.param, w.var, 
                                                      cov.param, n, p, errorVar, randCor, rand.dist, err.dist, 
                                                      serCor, serCorVal, data.str, pow.param, alpha, 
-                                                     pow.dist, pow.tail)))
+                                                     pow.dist, pow.tail))
   }
   
   powerMat <- data.frame(cbind(matrix(table(temp.pow), ncol = 2, nrow = 1), table(temp.pow)[2]/length(temp.pow)))

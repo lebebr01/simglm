@@ -2,8 +2,8 @@
 \alias{fixef.sim.nested}
 \title{Simulates design matrix.}
 \usage{
-  fixef.sim.nested(fixed, fixed.vars, n, p, w.var,
-    data.str)
+  fixef.sim.nested(fixed, fixed.vars, cov.param, n, p,
+    w.var, data.str)
 }
 \arguments{
   \item{fixed}{One sided formula for fixed effects in the
@@ -11,6 +11,10 @@
 
   \item{fixed.vars}{Character vector of covariates for
   design matrix.}
+
+  \item{cov.param}{List of mean and variance for fixed
+  effects. Does not include intercept, time, or
+  interactions. Must be same order as fixed formula above.}
 
   \item{n}{Number of clusters.}
 

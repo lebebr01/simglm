@@ -9,7 +9,7 @@
   \item{random.param}{Variance of random effects. Must be
   same length as random.}
 
-  \item{Cor}{Correlation between random effects.}
+  \item{cor}{Correlation between random effects.}
 
   \item{n}{Cluster sample size.}
 

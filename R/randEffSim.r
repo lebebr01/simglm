@@ -8,7 +8,7 @@
 #' normal, or normal distribution.
 #' 
 #' @param random.param Variance of random effects. Must be same length as random.
-#' @param Cor Correlation between random effects.
+#' @param cor Correlation between random effects.
 #' @param n Cluster sample size.
 #' @param dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.

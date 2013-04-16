@@ -5,10 +5,10 @@ Author: Brandon LeBeau <lebea027@umn.edu>
 Version: 0.1
 License: GPL-2
 Title: Simulate regression models
-Description: This package easily simulates regression models, 
-    this includes both simple regression and linear mixed 
+Description: This package easily simulates regression models,
+    this includes both simple regression and linear mixed
     models.
-Depends: 
+Depends:
     R (>= 2.14),
     stats,
     methods
@@ -17,4 +17,20 @@ Imports:
     Matrix,
     VGAM,
     nlme
-    
+Collate:
+    'dataRegNested.r'
+    'dataRegSingle.r'
+    'desireVar.r'
+    'errSimNested.r'
+    'errSimSingle.r'
+    'fixefNestedSim.r'
+    'fixefSingleSim.r'
+    'powSimNested.r'
+    'powSimSingle.r'
+    'randEffSim.r'
+    'rbimod.r'
+    'simPow.r'
+    'simReg.r'
+    'simRegNested.r'
+    'simRegSingle.r'
+    'varcovRandeff.r'

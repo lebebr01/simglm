@@ -3,7 +3,7 @@
 \title{Simulates design matrix.}
 \usage{
   fixef.sim.nested(fixed, fixed.vars, cov.param, n, p,
-    w.var, data.str)
+    w.var, data.str, ...)
 }
 \arguments{
   \item{fixed}{One sided formula for fixed effects in the
@@ -27,6 +27,8 @@
 
   \item{data.str}{Type of data. Must be "cross", or
   "long".}
+
+  \item{...}{Other arguments passed, not currently used.}
 }
 \description{
   Input fixed variables, sample size, and number of within

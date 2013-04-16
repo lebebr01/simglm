@@ -2,7 +2,7 @@
 #' 
 #' Input fixed variables, sample size, and number of within variables, returns design matrix.
 #' 
-#' Simulates the fixed effects for the \code{\link{sim.rem}} function when simulating a 
+#' Simulates the fixed effects for the \code{\link{sim.reg}} function when simulating a 
 #' simple regression model.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation, currently assumes intercept.

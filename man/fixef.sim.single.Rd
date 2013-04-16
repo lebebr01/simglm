@@ -22,7 +22,7 @@
   variables, returns design matrix.
 }
 \details{
-  Simulates the fixed effects for the \code{\link{sim.rem}}
+  Simulates the fixed effects for the \code{\link{sim.reg}}
   function when simulating a simple regression model.
 }
 

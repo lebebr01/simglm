@@ -12,7 +12,7 @@
 #' @param means Vector of means for each normal distribution.  Must equal num.dist.
 #' @param equalWeight Should equal weights be used, only TRUE is currently supported.
 #' @export 
-#' @example
+#' @examples
 #' \donttest{
 #' # calculating variance to be 2.5 with 2 distributions
 #' desireVar(2.5, 2, means = c(-1, 1), equalWeight = TRUE)

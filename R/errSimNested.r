@@ -11,7 +11,7 @@
 #' "norm" is default.
 #' @param num.dist Number of distributions for bimod random variables.
 #' @export 
-err.sim.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist){
+sim.err.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist){
   require(VGAM)
   require(MASS)
   if(serCor == "ARMA" & length(serCorVal) < 2) stop("Incorrect dimensions serCorVal")

@@ -10,9 +10,8 @@
 #' @param n Number of clusters.
 #' @param cov.param List of mean and variance for fixed effects. Does not include intercept, time, or 
 #' interactions. Must be same order as fixed formula above.
-#' @param ... Other arguments passed, not currently used.
 #' @export 
-fixef.sim.single <- function(fixed, fixed.vars, n, cov.param, ...){
+sim.fixef.single <- function(fixed, fixed.vars, n, cov.param){
   
   n.vars <- length(fixed.vars)
   n.int <- length(grep(":",fixed.vars))

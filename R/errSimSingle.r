@@ -10,7 +10,7 @@
 #' "norm" is default.
 #' @param num.dist Number of distributions for bimod random variables.
 #' @export 
-err.sim.single <- function(errorVar, n, err.dist, num.dist){
+sim.err.single <- function(errorVar, n, err.dist, num.dist){
   
   require(MASS)
   

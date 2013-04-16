@@ -43,9 +43,9 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.
      if(length(rand.vars)+1 != length(random.param)) stop("Random lengths not equal")
      if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
 
-   rand.eff <- rand.eff.sim(random.param, randCor, n, rand.dist, num.dist)
+   rand.eff <- sim.rand.eff(random.param, randCor, n, rand.dist, num.dist)
 
-   Xmat <- fixef.sim.nested(fixed, fixed.vars, n, p, w.var, data.str)
+   Xmat <- sim.fixef.nested(fixed, fixed.vars, n, p, w.var, data.str)
   
   reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
     rep(rand.eff[,xx], each = p)))
@@ -54,7 +54,7 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.
   Zmat <- model.matrix(random, data.frame(Xmat))
 
  #if(serCor == "AR" | serCor == "MA" | serCor == "ARMA" & is.list(serCorVal) == "FALSE") {stop("Incorrect dimensions serCorVal")}
-  err <- err.sim.nested(errorVar, n, p, serCor, serCorVal, err.dist, num.dist)
+  err <- sim.err.nested(errorVar, n, p, serCor, serCorVal, err.dist, num.dist)
 
  sim.data <- data.reg.nested(Xmat, Zmat, fixed.param, rand.eff, n, p, err)
   

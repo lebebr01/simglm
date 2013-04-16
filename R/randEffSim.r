@@ -14,7 +14,7 @@
 #' "norm" is default.
 #' @param num.dist Number of distributions for bimod random variables
 #' @export 
-rand.eff.sim <- function(random.param, cor, n, dist = c("lap","chi","norm", "bimod"), num.dist){
+sim.rand.eff <- function(random.param, cor, n, dist = c("lap","chi","norm", "bimod"), num.dist){
   
   require(MASS)
   if(dist == "lap"){ 

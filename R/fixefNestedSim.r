@@ -15,9 +15,8 @@
 #' @param w.var Number of time varying covariates or level one covariates for cross-sectional clustering.  
 #' This number includes the intercept and time variable for longitudinal data.
 #' @param data.str Type of data. Must be "cross", or "long".
-#' @param ... Other arguments passed, not currently used.
 #' @export 
-fixef.sim.nested <- function(fixed, fixed.vars, cov.param, n, p, w.var, data.str, ...){
+sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, w.var, data.str){
   
   n.vars <- length(fixed.vars)
   n.int <- length(grep(":",fixed.vars))

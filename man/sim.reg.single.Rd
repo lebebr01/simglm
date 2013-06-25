@@ -28,7 +28,7 @@
   "single".}
 
   \item{num.dist}{Number of distributions for bimodal
-  random variables.}
+  random variables}
 }
 \description{
   Takes simulation parameters as inputs and returns

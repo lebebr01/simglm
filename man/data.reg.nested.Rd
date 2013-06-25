@@ -24,9 +24,4 @@
   Takes simulation paramter arguments and returns simulated
   data.
 }
-\details{
-  This is a helper function to the master function
-  \code{\link{sim.reg}}, this function does the actual
-  simulation to return the data for linear mixed models.
-}
 

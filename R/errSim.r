@@ -13,6 +13,8 @@
 #' @import VGAM MASS
 #' @export 
 err.sim.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist){
+  
+  # Look to edit this with match.arg and switch
 
   if(serCor == "ARMA" & length(serCorVal) < 2) stop("Incorrect dimensions serCorVal")
   if(err.dist == "norm"){

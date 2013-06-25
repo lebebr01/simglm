@@ -6,11 +6,10 @@
 #' @param n Cluster sample size.
 #' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
+#' @import MASS
 #' @export 
 err.sim.single <- function(errorVar, n, err.dist){
-  
-  require(MASS)
-  
+
   if(err.dist == "norm"){
     err <- rnorm(n, 0, sd = sqrt(errorVar))
   } else {

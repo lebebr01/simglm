@@ -9,6 +9,7 @@
 #' @param var Vector of variance values for each normal distribution.
 #' Must be the same length as num.dist.
 #' @param num.dist Number of normal distributions to use when simulating mixture normal distribution.
+#' @export 
 rbimod <- function(n, mean, var, num.dist){
   if(length(mean) != num.dist) stop("length of mean must equal num.dist")
   if(length(var) != num.dist) stop("length of var must equal num.dist")

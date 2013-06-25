@@ -10,10 +10,10 @@
 #' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
 #' @parm num.dist Number of distributions for bimod random variables
+#' @import VGAM MASS
 #' @export 
 err.sim.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist){
-  require(VGAM)
-  require(MASS)
+
   if(serCor == "ARMA" & length(serCorVal) < 2) stop("Incorrect dimensions serCorVal")
   if(err.dist == "norm"){
     if(serCor == "AR"){

@@ -13,12 +13,10 @@
 #' "norm" is default.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param num.dist Number of distributions for bimodal random variables
+#' @import MASS Matrix
 #' @export 
 sim.reg.single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, num.dist) {
-  
-  require(MASS)
-  require(Matrix)
-  
+
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
 
   if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")

@@ -26,14 +26,12 @@
 #' @param alpha What should the per test alpha rate be used for the hypothesis testing.
 #' @param pow.dist Which distribution should be used when testing hypothesis test, z or t?
 #' @param pow.tail One-tailed or two-tailed test?
+#' @import nlme
 #' @export 
 sim.pow.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, errorVar, randCor, 
                     rand.dist, err.dist, serCor, serCorVal, data.str,
                            pow.param, alpha, pow.dist = c("z", "t"), pow.tail = c(1, 2)){
-  
-  #require(lme4)
-  require(nlme)
-  
+
   temp.nest <- sim.reg.nested(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, 
                               errorVar, randCor, rand.dist, err.dist, serCor, serCorVal, data.str)
   

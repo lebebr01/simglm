@@ -8,14 +8,12 @@
 #' @param dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
 #' @parm num.dist Number of distributions for bimod random variables
+#' @import MASS VGAM
 #' @export 
 rand.eff.sim <- function(random.param, cor, n, dist = c("lap","chi","norm", "bimod"), num.dist){
-  
-  require(MASS)
+
   if(dist == "lap"){ 
-    
-    require(VGAM)
-    
+
     reff <- do.call("cbind", lapply(1:length(random.param), function(xx) rlaplace(n, 0, 1)))
     c <- varcov.randeff(random.param, cor)
     reff1 <- reff %*% chol(c/2)

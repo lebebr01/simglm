@@ -10,10 +10,9 @@
 #' @param n Number of clusters.
 #' @param p Number of units within each cluster.
 #' @param err A vector of within cluster errors.
+#' @import Matrix
 #' @export 
 data.reg.nested <- function(Xmat, Zmat, beta, rand.eff, n, p, err) {
-   
-  require(Matrix)
   
    Fbeta <- (Xmat %*% beta) 
     

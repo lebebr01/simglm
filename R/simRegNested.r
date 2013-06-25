@@ -23,15 +23,13 @@
 #' @param serCorVal Serial correlation parameters. A list of values to pass on to arima.sim.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @parm num.dist Number of distributions for bimod random distribution
+#' @import MASS Matrix
 #' @export 
 sim.reg.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, errorVar, randCor, 
                     rand.dist, err.dist, serCor, serCorVal, data.str, num.dist) {
 
   if(randCor > 1 | randCor < -1) stop("cor out of range")
 
-  require(MASS)
-  require(Matrix)
-  
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
 

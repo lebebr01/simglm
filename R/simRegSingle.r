@@ -1,7 +1,11 @@
 #' Master function to simulate single level data.
 #' 
-#' Takes simulation parameters as inputs and 
-#' returns simulated data.
+#' Takes simulation parameters as inputs and returns simulated data.
+#' 
+#' Simulates data for the simple regression models.  Returns a data frame with ID variables, 
+#' fixed effects, and many other variables useful to help when running simulation studies.
+#' 
+#' @seealso \code{\link{sim.reg}} for a convenient wrapper for all data conditions.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
@@ -21,9 +25,9 @@ sim.reg.single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist,
 
   if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
   
-  Xmat <- fixef.sim.single(fixed, fixed.vars, n, cov.param)
+  Xmat <- sim.fixef.single(fixed, fixed.vars, n, cov.param)
   
-  err <- err.sim.single(errorVar, n, err.dist, num.dist)
+  err <- sim.err.single(errorVar, n, err.dist, num.dist)
   
   sim.data <- data.reg.single(Xmat, fixed.param, n, err)
   

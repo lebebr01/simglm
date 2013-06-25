@@ -1,0 +1,18 @@
+\name{varcov.randeff}
+\alias{varcov.randeff}
+\title{Function to create random effect variance-covariance matrices}
+\usage{
+  varcov.randeff(random.param, cor)
+}
+\arguments{
+  \item{random.param}{Variance of random effects.}
+
+  \item{cor}{Correlation between random effects, currently
+  only a constant supported.}
+}
+\description{
+  Input variances of random effects and correlation between
+  random effects, returns variance-covariance matrix of
+  random effects.
+}
+

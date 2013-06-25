@@ -1,7 +1,12 @@
 #' Power simulation for nested designs
 #' 
-#' Takes simulation conditions as input, 
-#' exports power.
+#' Takes simulation conditions as input, exports power.
+#' 
+#' Power function to compute power for a regression term for the linear mixed model.  This
+#' function would need to be replicated to make any statement about power.  Use \code{\link{sim.pow}}
+#' as a convenient wrapper for this.
+#' 
+#' @seealso \code{\link{sim.pow}} for a wrapper to replicate.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.

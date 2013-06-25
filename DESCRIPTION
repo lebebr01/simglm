@@ -1,8 +1,35 @@
 Package: simReg
+Type: Package
 Maintainer: Brandon LeBeau <lebea027@umn.edu>
 Author: Brandon LeBeau <lebea027@umn.edu>
 Version: 0.1
 License: GPL-2
 Title: Simulate regression models
-Description: This package easily simulates
-     nested data.
+Description: This package easily simulates regression models,
+    this includes both simple regression and linear mixed
+    models.
+Depends:
+    R (>= 2.15),
+    stats,
+    methods,
+    MASS,
+    Matrix,
+    VGAM,
+    nlme
+Collate:
+    'dataRegNested.r'
+    'dataRegSingle.r'
+    'desireVar.r'
+    'errSimNested.r'
+    'errSimSingle.r'
+    'fixefNestedSim.r'
+    'fixefSingleSim.r'
+    'powSimNested.r'
+    'powSimSingle.r'
+    'randEffSim.r'
+    'rbimod.r'
+    'simPow.r'
+    'simReg.r'
+    'simRegNested.r'
+    'simRegSingle.r'
+    'varcovRandeff.r'

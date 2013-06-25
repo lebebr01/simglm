@@ -9,7 +9,7 @@
 #' @param serCorVal Serial correlation parameters. A list of values to pass on to arima.sim.
 #' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
-#' @parm num.dist Number of distributions for bimod random variables
+#' @param num.dist Number of distributions for bimod random variables
 #' @import VGAM MASS
 #' @export 
 err.sim.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist){

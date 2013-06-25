@@ -1,7 +1,12 @@
 #' Function to simulate power.
 #' 
-#' Input simulation conditions and which term to compute power for,
-#' export reported power.
+#' Input simulation conditions and which term to compute power for, export reported power.
+#' 
+#' Power function to compute power for a regression term for simple regression models.  This
+#' function would need to be replicated to make any statement about power.  Use \code{\link{sim.pow}}
+#' as a convenient wrapper for this.
+#' 
+#' @seealso \code{\link{sim.pow}} for a wrapper to replicate.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
@@ -31,7 +36,7 @@ sim.pow.single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist,
   testStat <- ifelse(pow.tail == 2, abs(coefficients(summary(temp.lm))[pow.param, 3]), 
                  coefficients(summary(temp.lm))[pow.param, 3])
   
-  reject <- ifelse(tval >= crit, 1, 0)
+  reject <- ifelse(testStat >= crit, 1, 0)
   
   return(reject)
 }

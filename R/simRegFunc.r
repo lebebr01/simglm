@@ -81,7 +81,6 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.
 #' "norm" is default.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param num.dist Number of distributions for bimodal random variables
-#' @import MASS Matrix
 #' @export 
 sim.reg.single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, num.dist) {
   

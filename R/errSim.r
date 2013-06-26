@@ -10,7 +10,8 @@
 #' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
 #' @param num.dist Number of distributions for bimod random variables
-#' @importFrom VGAM rlaplace MASS mvrnorm
+#' @importFrom VGAM rlaplace 
+#' @importFrom MASS mvrnorm
 #' @export 
 err.sim.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist){
   
@@ -63,7 +64,7 @@ err
 #' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
 #' @param num.dist Number of distributions for bimod random variables.
-#' @import MASS
+#' @importFrom VGAM rlaplace
 #' @export 
 sim.err.single <- function(errorVar, n, err.dist, num.dist){
   

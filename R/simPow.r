@@ -32,7 +32,6 @@
 #' @param replicates How many replications should be done (i.e. the denominator in power calculation).
 #' @param parallel Whether the computation should be done in parallel, 
 #'  must have parallel backend registered first.
-#' 
 #' @export 
 sim.pow <- function(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, errorVar, randCor, 
                     rand.dist, err.dist, serCor, serCorVal, data.str, pow.param, alpha, 

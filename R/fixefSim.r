@@ -91,3 +91,35 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param){
   Xmat <- model.matrix(fixed, data.frame(Xmat))
   Xmat
 }
+
+#' Simulate categorical, factor, or discrete variables
+#' 
+#' Function that simulates discrete, factor, or categorical variables.  Is essentially
+#' a wrapper around the sample function from base R.
+#' 
+#' @param n Number of clusters or number of observations for single level
+#' @param p Number of within cluster observations for multilevel
+#' @param numlevels Number of levels for categorical, factor, or discrete variable
+#' @param replace Whether to replace levels of categorical variable, TRUE/FALSE
+#' @param prob Probability of levels for variable, must be same length as numlevels
+#' @param data.str Data structure for the data
+sim.factor <- function(n, p, numlevels, replace = TRUE, prob = NULL, data.str = c('long', 'cross', 'single')) {
+  
+  if(is.null(prob) == FALSE & (length(prob) == numlevels | length(prob) == length(numlevels)) == FALSE) {
+    stop("prob must be same length as numlevels")
+  }
+  
+  data.str <- match.arg(data.str)
+  
+  catVar <- switch(data.str,
+         single = sample(x = numlevels, size = n, replace = replace, prob = prob),
+         long = sample(x = numlevels, size = n, replace = replace, prob = prob),
+         cross = sample(x = numlevels, size = n*p, replace = replace, prob = prob)
+         )
+  
+  if(data.str == "long"){
+    catVar <- rep(catVar, each = p)
+  }
+  
+  return(catVar)
+}

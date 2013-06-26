@@ -10,7 +10,7 @@
 #' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
 #' @param num.dist Number of distributions for bimod random variables
-#' @import VGAM MASS
+#' @importFrom VGAM rlaplace MASS mvrnorm
 #' @export 
 err.sim.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist){
   
@@ -36,17 +36,17 @@ err.sim.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist
   }
   
   if(err.dist == "lap"){
-    err <- unlist(lapply(1:n, function(x){rlaplace(p,0,1)*chol((errorVar/2))}))
+    err <- unlist(lapply(1:n, function(x){rlaplace(p,0,1)*chol(errorVar/2)}))
   }
   
   if(err.dist == "chi"){
-    err <- unlist(lapply(1:n, function(x){((rchisq(p,1)-1)/sqrt(2))*sqrt(errorVar)}))
+    err <- unlist(lapply(1:n, function(x){(rchisq(p,1)-1)*chol(errorVar/2)}))
   }
   
   if(err.dist == "bimod"){
     err <- unlist(lapply(1:n, function(x) {
       ((rbimod(p, mean = rep(0, num.dist), var = rep(1, num.dist), num.dist)
-      *chol((errorVar/2)))) }))
+      *chol(errorVar/2))) }))
   }
 err
 }
@@ -71,14 +71,13 @@ sim.err.single <- function(errorVar, n, err.dist, num.dist){
     err <- rnorm(n, 0, sd = sqrt(errorVar))
   }
   if(err.dist == "lap"){
-    require(VGAM)
-    err <- rlaplace(n,0,1)*chol((errorVar/2))
+    err <- rlaplace(n,0,1)*chol(errorVar/2)
   }
   if(err.dist == "chi"){
-    err <- ((rchisq(n,1)-1)/sqrt(2))*sqrt(errorVar)
+    err <- (rchisq(n,1)-1)*chol(errorVar/2)
   }
   if(err.dist == "bimod"){
-    err <- rbimod(n, mean = rep(0, num.dist), var = rep(1, num.dist), num.dist)*chol((errorVar/2))
+    err <- rbimod(n, mean = rep(0, num.dist), var = rep(1, num.dist), num.dist)*chol(errorVar/2)
   }
   err
 }

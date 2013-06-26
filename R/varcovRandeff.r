@@ -5,7 +5,6 @@
 #' 
 #' @param random.param Variance of random effects.
 #' @param cor Correlation between random effects, currently only a constant supported.
-#' 
 #' @export 
 varcov.randeff <- function(random.param, cor){
   

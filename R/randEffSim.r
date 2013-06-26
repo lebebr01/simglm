@@ -13,7 +13,7 @@
 #' @param dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
 #' @param num.dist Number of distributions for bimod random variables
-#' @import MASS VGAM
+#' @importFrom MASS mvrnorm VGAM rlaplace
 #' @export 
 sim.rand.eff <- function(random.param, cor, n, dist = c("lap","chi","norm", "bimod"), num.dist){
 

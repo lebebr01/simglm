@@ -103,7 +103,10 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param){
 #' @param replace Whether to replace levels of categorical variable, TRUE/FALSE
 #' @param prob Probability of levels for variable, must be same length as numlevels
 #' @param data.str Data structure for the data
-sim.factor <- function(n, p, numlevels, replace = TRUE, prob = NULL, data.str = c('long', 'cross', 'single')) {
+#' @param value.labels Optional argument with value labels for variable, 
+#'        converts variable to factor.
+sim.factor <- function(n, p, numlevels, replace = TRUE, prob = NULL, data.str = c('long', 'cross', 'single'), 
+                       value.labels = NULL) {
   
   if(is.null(prob) == FALSE & (length(prob) == numlevels | length(prob) == length(numlevels)) == FALSE) {
     stop("prob must be same length as numlevels")
@@ -117,8 +120,13 @@ sim.factor <- function(n, p, numlevels, replace = TRUE, prob = NULL, data.str = 
          cross = sample(x = numlevels, size = n*p, replace = replace, prob = prob)
          )
   
-  if(data.str == "long"){
+  if(data.str == "long") {
     catVar <- rep(catVar, each = p)
+  }
+  
+  if(is.null(value.labels) == FALSE) {
+    if(length(value.labels) != numlevels) { stop("value.labels must be same length as numlevels") }
+    catVar <- factor(catVar, labels = value.labels)
   }
   
   return(catVar)

@@ -6,7 +6,7 @@
 #' model is specified.  This function assumes a time variable when longitudinal data 
 #' is specified and does include any interactions that are specified.
 #' 
-#' @param fixed One sided formula for fixed effects in the simulation, currently assumes intercept.
+#' @param fixed One sided formula for fixed effects in the simulation.
 #' @param fixed.vars Character vector of covariates for design matrix.
 #' @param cov.param List of mean and variance for fixed effects. Does not include intercept, time, or 
 #' interactions. Must be same order as fixed formula above.
@@ -15,11 +15,15 @@
 #' @param w.var Number of time varying covariates or level one covariates for cross-sectional clustering.  
 #' This number includes the intercept and time variable for longitudinal data.
 #' @param data.str Type of data. Must be "cross", or "long".
+#' @param fact.vars A list of factor, categorical, or ordinal variable specification, list must include
+#'      numlevels, optional specifications are: replace, prob, value.labels.
 #' @export 
-sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, w.var, data.str){
+sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, w.var, data.str, fact.vars = list(NULL)){
   
   n.vars <- length(fixed.vars)
   n.int <- length(grep(":",fixed.vars))
+  int.loc <- grep(":", fixed.vars)
+  fact.loc <- grep("\\.f|\\.o|\\.c", fixed.vars, ignore.case = TRUE) 
   
   Xmat <- matrix(nrow=n*p,ncol = ifelse(w.var == 1, 0, 1))
 
@@ -68,19 +72,28 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, w.var, data.str
 #' Simulates the fixed effects for the \code{\link{sim.reg}} function when simulating a 
 #' simple regression model.
 #' 
-#' @param fixed One sided formula for fixed effects in the simulation, currently assumes intercept.
+#' @param fixed One sided formula for fixed effects in the simulation.
 #' @param fixed.vars Character vector of covariates for design matrix.
 #' @param n Number of clusters.
 #' @param cov.param List of mean and variance for fixed effects. Does not include intercept, time, or 
 #' interactions. Must be same order as fixed formula above.
+#' @param fact.vars A list of factor, categorical, or ordinal variable specification, list must include
+#'      numlevels, optional specifications are: replace, prob, value.labels.
 #' @export 
-sim.fixef.single <- function(fixed, fixed.vars, n, cov.param){
+sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(NULL)){
   
   n.vars <- length(fixed.vars)
   n.int <- length(grep(":",fixed.vars))
+  int.loc <- grep(":", fixed.vars)
+  fact.loc <- grep("\\.f|\\.o|\\.c", fixed.vars, ignore.case = TRUE)  
   
   Xmat <- do.call("cbind", lapply(2:((n.vars - n.int)+1), function(xx)
     rnorm(n, mean = cov.param[[xx-1]][1], sd = cov.param[[xx-1]][2])))
+  
+  if(length(fact.loc > 0)){
+    Xmat[, fact.loc[fact.loc != int.loc]] <- do.call("cbind", lapply(fact.loc[fact.loc != int.loc], 
+            function(xx) sim.factor(n, numlevels = fact.vars$numlevels, data.str = "single")))
+  }
   
   if(n.int == 0){
     colnames(Xmat) <- fixed.vars
@@ -99,7 +112,7 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param){
 #' 
 #' @param n Number of clusters or number of observations for single level
 #' @param p Number of within cluster observations for multilevel
-#' @param numlevels Number of levels for categorical, factor, or discrete variable
+#' @param numlevels Scalar indicating the number of levels for categorical, factor, or discrete variable
 #' @param replace Whether to replace levels of categorical variable, TRUE/FALSE
 #' @param prob Probability of levels for variable, must be same length as numlevels
 #' @param data.str Data structure for the data

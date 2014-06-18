@@ -148,7 +148,7 @@ serCor <- "ID"
 serCorVal <- NULL
 data.str <- "long"
 head(temp.long <- sim.reg(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, errorVar,
-               randCor, rand.dist, err.dist, serCor, serCorVal, data.str), n = 15)
+               randCor, rand.dist, err.dist, serCor, serCorVal, data.str, num.dist = NULL), n = 15)
 
 ##fitting lmer model
 library(lme4)

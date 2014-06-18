@@ -16,15 +16,3 @@ Depends:
     Matrix,
     VGAM,
     nlme
-Collate:
-    'desireVar.r'
-    'randEffSim.r'
-    'rbimod.r'
-    'simPow.r'
-    'simReg.r'
-    'varcovRandeff.r'
-    'dataReg.r'
-    'errSim.r'
-    'fixefSim.r'
-    'powSim.r'
-    'simRegFunc.r'

@@ -13,7 +13,7 @@
 #' @importFrom VGAM rlaplace 
 #' @importFrom MASS mvrnorm
 #' @export 
-err.sim.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist){
+sim.err.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist){
   
   # Look to edit this with match.arg and switch
 

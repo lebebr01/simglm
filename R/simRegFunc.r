@@ -42,7 +42,8 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.
 
    rand.eff <- sim.rand.eff(random.param, randCor, n, rand.dist, num.dist)
 
-   Xmat <- sim.fixef.nested(fixed, fixed.vars, n, p, w.var, data.str)
+   Xmat <- sim.fixef.nested(fixed, fixed.vars, cov.param, n, p, w.var, 
+                            data.str, fact.vars = NULL)
   
   reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
     rep(rand.eff[,xx], each = p)))

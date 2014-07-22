@@ -47,7 +47,7 @@ sim.err.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist
   if(err.dist == "bimod"){
     err <- unlist(lapply(1:n, function(x) {
       ((rbimod(p, mean = rep(0, num.dist), var = rep(1, num.dist), num.dist)
-      *chol(errorVar/2))) }))
+      *chol(errorVar))) }))
   }
 err
 }
@@ -78,7 +78,7 @@ sim.err.single <- function(errorVar, n, err.dist, num.dist){
     err <- (rchisq(n,1)-1)*chol(errorVar/2)
   }
   if(err.dist == "bimod"){
-    err <- rbimod(n, mean = rep(0, num.dist), var = rep(1, num.dist), num.dist)*chol(errorVar/2)
+    err <- rbimod(n, mean = rep(0, num.dist), var = rep(1, num.dist), num.dist)*chol(errorVar)
   }
   err
 }

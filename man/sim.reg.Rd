@@ -4,7 +4,8 @@
 \title{Master simulation function.}
 \usage{
 sim.reg(fixed, random, fixed.param, random.param, w.var, cov.param, n, p,
-  errorVar, randCor, rand.dist, err.dist, serCor, serCorVal, data.str, num.dist)
+  errorVar, randCor, rand.dist, err.dist, serCor, serCorVal, data.str, num.dist,
+  ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -42,6 +43,8 @@ interactions. Must be same order as fixed formula above.}
 \item{data.str}{Type of data. Must be "cross", "long", or "single".}
 
 \item{num.dist}{Number of distributions for bimodal random variables}
+
+\item{...}{Additional arguments to pass to rbimod}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

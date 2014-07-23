@@ -3,7 +3,7 @@
 \alias{sim.err.nested}
 \title{Function that simulates errors.}
 \usage{
-sim.err.nested(errorVar, n, p, serCor, serCorVal, err.dist, num.dist, ...)
+sim.err.nested(errorVar, n, p, serCor, serCorVal, err.dist, num.dist, mean, var)
 }
 \arguments{
 \item{errorVar}{Scalar of error variance}
@@ -21,7 +21,9 @@ sim.err.nested(errorVar, n, p, serCor, serCorVal, err.dist, num.dist, ...)
 
 \item{num.dist}{Number of distributions for bimod random variables}
 
-\item{...}{Additional arguments passed to rbimod}
+\item{mean}{A vector of means passed to rbimod, length must match num.dist.}
+
+\item{var}{A vector of variances passed to rbimod, length must match num.dist.}
 }
 \description{
 Input error simulation parameters and outputs simulated errors.

@@ -10,11 +10,12 @@
 #' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
 #' @param num.dist Number of distributions for bimod random variables
-#' @param ... Additional arguments passed to rbimod
+#' @param mean A vector of means passed to rbimod, length must match num.dist.
+#' @param var A vector of variances passed to rbimod, length must match num.dist.
 #' @importFrom VGAM rlaplace 
 #' @importFrom MASS mvrnorm
 #' @export 
-sim.err.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist, ...){
+sim.err.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist, mean, var){
   
   # Look to edit this with match.arg and switch
 
@@ -64,10 +65,11 @@ err
 #' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
 #' @param num.dist Number of distributions for bimod random variables.
-#' @param ... Additional parameters passed to rbimod
+#' @param mean A vector of means passed to rbimod, length must match num.dist.
+#' @param var A vector of variances passed to rbimod, length must match num.dist.
 #' @importFrom VGAM rlaplace
 #' @export 
-sim.err.single <- function(errorVar, n, err.dist, num.dist, ...){
+sim.err.single <- function(errorVar, n, err.dist, num.dist, mean, var){
   
   if(err.dist == "norm"){
     err <- rnorm(n, 0, sd = sqrt(errorVar))

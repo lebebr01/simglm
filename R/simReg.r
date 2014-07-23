@@ -30,6 +30,7 @@
 #' @param serCorVal Serial correlation parameters. A list of values to pass on to arima.sim.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param num.dist Number of distributions for bimodal random variables
+#' @param ... Additional arguments to pass to rbimod 
 #' @export 
 #' @examples
 #' \donttest{
@@ -70,7 +71,7 @@
 #' data = temp.long)
 #' }
 sim.reg <- function(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, errorVar, randCor, 
-                         rand.dist, err.dist, serCor, serCorVal, data.str, num.dist) {
+                         rand.dist, err.dist, serCor, serCorVal, data.str, num.dist, ...) {
   
   if(data.str == "single"){
     sim.reg.single(fixed, fixed.param, cov.param, n, errorVar, err.dist, num.dist)

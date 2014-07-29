@@ -31,7 +31,7 @@
 #' @param pow.tail One-tailed or two-tailed test?
 #' @param replicates How many replications should be done (i.e. the denominator in power calculation).
 #' @param parallel Whether the computation should be done in parallel, 
-#'  must have parallel backend registered first.
+#'  must have parallel backend registered first.  Currently not supported.
 #' @export 
 sim.pow <- function(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, errorVar, randCor, 
                     rand.dist, err.dist, serCor, serCorVal, data.str, pow.param, alpha, 
@@ -55,5 +55,7 @@ sim.pow <- function(fixed, random, fixed.param, random.param, w.var, cov.param, 
   
   powerMat <- data.frame(cbind(matrix(table(temp.pow), ncol = 2, nrow = 1), table(temp.pow)[2]/length(temp.pow)))
   names(powerMat) <- c("Not Rejected", "Rejected", "Power Prop")
+  
+  powerMat
   
 }

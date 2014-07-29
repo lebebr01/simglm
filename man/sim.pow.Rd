@@ -54,7 +54,7 @@ interactions. Must be same order as fixed formula above.}
 \item{replicates}{How many replications should be done (i.e. the denominator in power calculation).}
 
 \item{parallel}{Whether the computation should be done in parallel,
-must have parallel backend registered first.}
+must have parallel backend registered first.  Currently not supported.}
 }
 \description{
 Input simulation conditions, returns power for term.

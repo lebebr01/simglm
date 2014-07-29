@@ -3,7 +3,7 @@
 \alias{sim.err.single}
 \title{Function that simulates errors.}
 \usage{
-sim.err.single(errorVar, n, err.dist, num.dist, mean, var)
+sim.err.single(errorVar, n, err.dist, num.dist, dmean, dvar)
 }
 \arguments{
 \item{errorVar}{Scalar of error variance}
@@ -15,9 +15,9 @@ sim.err.single(errorVar, n, err.dist, num.dist, mean, var)
 
 \item{num.dist}{Number of distributions for bimod random variables.}
 
-\item{mean}{A vector of means passed to rbimod, length must match num.dist.}
+\item{dmean}{A vector of means passed to rbimod, length must match num.dist.}
 
-\item{var}{A vector of variances passed to rbimod, length must match num.dist.}
+\item{dvar}{A vector of variances passed to rbimod, length must match num.dist.}
 }
 \description{
 Input error simulation parameters and outputs simulated errors.

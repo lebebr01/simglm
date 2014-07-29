@@ -74,7 +74,7 @@ sim.reg <- function(fixed, random, fixed.param, random.param, w.var, cov.param, 
                          rand.dist, err.dist, serCor, serCorVal, data.str, num.dist, ...) {
   
   if(data.str == "single"){
-    sim.reg.single(fixed, fixed.param, cov.param, n, errorVar, err.dist, num.dist, ...)
+    sim.reg.single(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, num.dist, ...)
   } else {
     sim.reg.nested(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, errorVar, randCor, 
                    rand.dist, err.dist, serCor, serCorVal, data.str, num.dist, ...)

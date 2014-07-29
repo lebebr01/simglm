@@ -28,9 +28,10 @@
 #' @param serCorVal Serial correlation parameters. A list of values to pass on to arima.sim.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param num.dist Number of distributions for bimod random distribution
+#' @param ... Additional arguments to pass to rbimod 
 #' @export 
 sim.reg.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, errorVar, randCor, 
-                    rand.dist, err.dist, serCor, serCorVal, data.str, num.dist) {
+                    rand.dist, err.dist, serCor, serCorVal, data.str, num.dist, ...) {
 
   if(randCor > 1 | randCor < -1) stop("cor out of range")
 
@@ -52,7 +53,7 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.
   Zmat <- model.matrix(random, data.frame(Xmat))
 
  #if(serCor == "AR" | serCor == "MA" | serCor == "ARMA" & is.list(serCorVal) == "FALSE") {stop("Incorrect dimensions serCorVal")}
-  err <- sim.err.nested(errorVar, n, p, serCor, serCorVal, err.dist, num.dist)
+  err <- sim.err.nested(errorVar, n, p, serCor, serCorVal, err.dist, num.dist, ...)
 
  sim.data <- data.reg.nested(Xmat, Zmat, fixed.param, rand.eff, n, p, err)
   
@@ -82,8 +83,10 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.
 #' "norm" is default.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param num.dist Number of distributions for bimodal random variables
+#' @param ... Additional arguments to pass to rbimod 
 #' @export 
-sim.reg.single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, num.dist) {
+sim.reg.single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, 
+                           num.dist, ...) {
   
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   
@@ -91,7 +94,7 @@ sim.reg.single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist,
   
   Xmat <- sim.fixef.single(fixed, fixed.vars, n, cov.param)
   
-  err <- sim.err.single(errorVar, n, err.dist, num.dist)
+  err <- sim.err.single(errorVar, n, err.dist, num.dist, ...)
   
   sim.data <- data.reg.single(Xmat, fixed.param, n, err)
   

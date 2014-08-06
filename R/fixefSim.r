@@ -16,7 +16,8 @@
 #' This number includes the intercept and time variable for longitudinal data.
 #' @param data.str Type of data. Must be "cross", or "long".
 #' @param fact.vars A list of factor, categorical, or ordinal variable specification, list must include
-#'      numlevels, optional specifications are: replace, prob, value.labels.
+#'      numlevels and var.type (must be "lvl1" or "lvl2");
+#'      optional specifications are: replace, prob, value.labels.
 #' @export 
 sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, w.var, data.str, fact.vars = list(NULL)){
   
@@ -24,7 +25,7 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, w.var, data.str
   n.int <- length(grep(":",fixed.vars))
   int.loc <- grep(":", fixed.vars)
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed.vars, ignore.case = TRUE) 
-  n.fact <- length(fact.loc)
+  n.fact <- length(fact.loc[fact.loc != int.loc])
   
   Xmat <- matrix(nrow=n*p,ncol = ifelse(w.var == 1, 0, 1))
 
@@ -79,7 +80,7 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, w.var, data.str
 #' @param cov.param List of mean and variance for fixed effects. Does not include intercept, time, or 
 #' interactions. Must be same order as fixed formula above.
 #' @param fact.vars A list of factor, categorical, or ordinal variable specification, list must include
-#'      numlevels and data.str (either "single", "lvl1", or "lvl2"), 
+#'      numlevels and var.type (must be "single" for single level regression); 
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
 sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(NULL)){
@@ -90,13 +91,19 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed.vars, ignore.case = TRUE)  
   n.fact <- length(fact.loc[fact.loc != int.loc])
   
+  if(n.fact > 0){
+    if(all(grepl("single", fact.vars$var.type)) == FALSE){
+      stop("All variables must have var.type = 'single'")
+    }
+  }
+  
   Xmat <- do.call("cbind", lapply(2:((n.vars - n.int - n.fact)+1), function(xx)
     rnorm(n, mean = cov.param[[xx-1]][1], sd = cov.param[[xx-1]][2])))
   
   if(length(fact.loc > 0)){
     Fmat <- do.call("cbind", lapply(n.fact, 
             function(xx) sim.factor(n, numlevels = fact.vars$numlevels[xx], 
-                                    data.str = fact.vars$data.str[xx])))
+                                    var.type = fact.vars$var.type[xx])))
   }
   
   Xmat <- cbind(Xmat, Fmat)
@@ -121,28 +128,28 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
 #' @param numlevels Scalar indicating the number of levels for categorical, factor, or discrete variable
 #' @param replace Whether to replace levels of categorical variable, TRUE/FALSE
 #' @param prob Probability of levels for variable, must be same length as numlevels
-#' @param data.str Data structure for the data
+#' @param var.type Variable type for the variable, must be either "lvl1", "lvl2", or "single"
 #' @param value.labels Optional argument with value labels for variable, 
 #'        converts variable to factor.
 #' @export 
-sim.factor <- function(n, p, numlevels, replace = TRUE, prob = NULL, data.str = c('lvl1', 'lvl2', 'single'), 
+sim.factor <- function(n, p, numlevels, replace = TRUE, prob = NULL, var.type = c('lvl1', 'lvl2', 'single'), 
                        value.labels = NULL) {
   
   if(is.null(prob) == FALSE & (length(prob) == numlevels | length(prob) == length(numlevels)) == FALSE) {
     stop("prob must be same length as numlevels")
   }
-  if(replace == FALSE & (data.str == "single" | data.str == "lvl2") & numlevels < n) {
+  if(replace == FALSE & (var.type == "single" | var.type == "lvl2") & numlevels < n) {
     stop("If replace = FALSE, numlevels must be greater than n")
   }
-  if(data.str == "lvl1") {
+  if(var.type == "lvl1") {
     if(replace == FALSE & numlevels < n*p){
       stop("If replace = FALSE, numlevels must be greater than n*p")
     }
   }  
   
-  data.str <- match.arg(data.str)
+  var.type <- match.arg(var.type)
   
-  catVar <- switch(data.str,
+  catVar <- switch(var.type,
          single = sample(x = numlevels, size = n, replace = replace, prob = prob),
          lvl2 = rep(sample(x = numlevels, size = n, replace = replace, prob = prob), each = p),
          lvl1 = sample(x = numlevels, size = n*p, replace = replace, prob = prob)

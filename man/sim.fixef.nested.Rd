@@ -24,7 +24,8 @@ This number includes the intercept and time variable for longitudinal data.}
 \item{data.str}{Type of data. Must be "cross", or "long".}
 
 \item{fact.vars}{A list of factor, categorical, or ordinal variable specification, list must include
-numlevels, optional specifications are: replace, prob, value.labels.}
+numlevels and var.type (must be "lvl1" or "lvl2");
+optional specifications are: replace, prob, value.labels.}
 }
 \description{
 Input fixed variables, sample size, and number of within variables, returns design matrix.

@@ -4,7 +4,7 @@
 \title{Simulate categorical, factor, or discrete variables}
 \usage{
 sim.factor(n, p, numlevels, replace = TRUE, prob = NULL,
-  data.str = c("lvl1", "lvl2", "single"), value.labels = NULL)
+  var.type = c("lvl1", "lvl2", "single"), value.labels = NULL)
 }
 \arguments{
 \item{n}{Number of clusters or number of observations for single level}
@@ -17,7 +17,7 @@ sim.factor(n, p, numlevels, replace = TRUE, prob = NULL,
 
 \item{prob}{Probability of levels for variable, must be same length as numlevels}
 
-\item{data.str}{Data structure for the data}
+\item{var.type}{Variable type for the variable, must be either "lvl1", "lvl2", or "single"}
 
 \item{value.labels}{Optional argument with value labels for variable,
 converts variable to factor.}

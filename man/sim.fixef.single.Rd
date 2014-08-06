@@ -16,7 +16,7 @@ sim.fixef.single(fixed, fixed.vars, n, cov.param, fact.vars = list(NULL))
 interactions. Must be same order as fixed formula above.}
 
 \item{fact.vars}{A list of factor, categorical, or ordinal variable specification, list must include
-numlevels and data.str (either "single", "lvl1", or "lvl2"),
+numlevels and var.type (must be "single" for single level regression);
 optional specifications are: replace, prob, value.labels.}
 }
 \description{

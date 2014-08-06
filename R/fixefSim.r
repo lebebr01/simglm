@@ -124,18 +124,20 @@ sim.factor <- function(n, p, numlevels, replace = TRUE, prob = NULL, data.str = 
   if(is.null(prob) == FALSE & (length(prob) == numlevels | length(prob) == length(numlevels)) == FALSE) {
     stop("prob must be same length as numlevels")
   }
+  if(replace == FALSE & (data.str == "single" | data.str == "long") & numlevels < n) {
+    stop("If replace = FALSE, numlevels must be greater than n")
+  }
+  if(replace == FALSE & data.str == "cross" & numlevels < n*p){
+    stop("If replace = FALSE, numlevels must be greater than n*p")
+  }
   
   data.str <- match.arg(data.str)
   
   catVar <- switch(data.str,
          single = sample(x = numlevels, size = n, replace = replace, prob = prob),
-         long = sample(x = numlevels, size = n, replace = replace, prob = prob),
+         long = rep(sample(x = numlevels, size = n, replace = replace, prob = prob), each = p),
          cross = sample(x = numlevels, size = n*p, replace = replace, prob = prob)
          )
-  
-  if(data.str == "long") {
-    catVar <- rep(catVar, each = p)
-  }
   
   if(is.null(value.labels) == FALSE) {
     if(length(value.labels) != numlevels) { stop("value.labels must be same length as numlevels") }

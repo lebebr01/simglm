@@ -16,7 +16,8 @@ sim.fixef.single(fixed, fixed.vars, n, cov.param, fact.vars = list(NULL))
 interactions. Must be same order as fixed formula above.}
 
 \item{fact.vars}{A list of factor, categorical, or ordinal variable specification, list must include
-numlevels, optional specifications are: replace, prob, value.labels.}
+numlevels and data.str (either "single", "lvl1", or "lvl2"),
+optional specifications are: replace, prob, value.labels.}
 }
 \description{
 Input fixed variables, sample size, and number of within variables, returns design matrix.

@@ -24,6 +24,7 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, w.var, data.str
   n.int <- length(grep(":",fixed.vars))
   int.loc <- grep(":", fixed.vars)
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed.vars, ignore.case = TRUE) 
+  n.fact <- length(fact.loc)
   
   Xmat <- matrix(nrow=n*p,ncol = ifelse(w.var == 1, 0, 1))
 
@@ -78,7 +79,8 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, w.var, data.str
 #' @param cov.param List of mean and variance for fixed effects. Does not include intercept, time, or 
 #' interactions. Must be same order as fixed formula above.
 #' @param fact.vars A list of factor, categorical, or ordinal variable specification, list must include
-#'      numlevels, optional specifications are: replace, prob, value.labels.
+#'      numlevels and data.str (either "single", "lvl1", or "lvl2"), 
+#'      optional specifications are: replace, prob, value.labels.
 #' @export 
 sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(NULL)){
   
@@ -86,14 +88,18 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
   n.int <- length(grep(":",fixed.vars))
   int.loc <- grep(":", fixed.vars)
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed.vars, ignore.case = TRUE)  
+  n.fact <- length(fact.loc[fact.loc != int.loc])
   
-  Xmat <- do.call("cbind", lapply(2:((n.vars - n.int)+1), function(xx)
+  Xmat <- do.call("cbind", lapply(2:((n.vars - n.int - n.fact)+1), function(xx)
     rnorm(n, mean = cov.param[[xx-1]][1], sd = cov.param[[xx-1]][2])))
   
   if(length(fact.loc > 0)){
-    Xmat[, fact.loc[fact.loc != int.loc]] <- do.call("cbind", lapply(fact.loc[fact.loc != int.loc], 
-            function(xx) sim.factor(n, numlevels = fact.vars$numlevels, data.str = "single")))
+    Fmat <- do.call("cbind", lapply(n.fact, 
+            function(xx) sim.factor(n, numlevels = fact.vars$numlevels[xx], 
+                                    data.str = fact.vars$data.str[xx])))
   }
+  
+  Xmat <- cbind(Xmat, Fmat)
   
   if(n.int == 0){
     colnames(Xmat) <- fixed.vars
@@ -118,16 +124,17 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
 #' @param data.str Data structure for the data
 #' @param value.labels Optional argument with value labels for variable, 
 #'        converts variable to factor.
+#' @export 
 sim.factor <- function(n, p, numlevels, replace = TRUE, prob = NULL, data.str = c('lvl1', 'lvl2', 'single'), 
                        value.labels = NULL) {
   
   if(is.null(prob) == FALSE & (length(prob) == numlevels | length(prob) == length(numlevels)) == FALSE) {
     stop("prob must be same length as numlevels")
   }
-  if(replace == FALSE & (data.str == "single" | data.str == "long") & numlevels < n) {
+  if(replace == FALSE & (data.str == "single" | data.str == "lvl2") & numlevels < n) {
     stop("If replace = FALSE, numlevels must be greater than n")
   }
-  if(data.str == "cross") {
+  if(data.str == "lvl1") {
     if(replace == FALSE & numlevels < n*p){
       stop("If replace = FALSE, numlevels must be greater than n*p")
     }

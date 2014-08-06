@@ -7,7 +7,7 @@ License: GPL-2 + file LICENSE
 Title: Simulate regression models
 Description: This package easily simulates regression models,
     this includes both simple regression and linear mixed
-    models. It also aims to do power simulations for specific 
+    models. It also aims to do power simulations for specific
     regression parameters.
 Depends:
     R (>= 3.0.2),

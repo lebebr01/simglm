@@ -4,7 +4,7 @@
 \title{Simulate categorical, factor, or discrete variables}
 \usage{
 sim.factor(n, p, numlevels, replace = TRUE, prob = NULL,
-  data.str = c("long", "cross", "single"), value.labels = NULL)
+  data.str = c("lvl1", "lvl2", "single"), value.labels = NULL)
 }
 \arguments{
 \item{n}{Number of clusters or number of observations for single level}

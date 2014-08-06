@@ -118,7 +118,7 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
 #' @param data.str Data structure for the data
 #' @param value.labels Optional argument with value labels for variable, 
 #'        converts variable to factor.
-sim.factor <- function(n, p, numlevels, replace = TRUE, prob = NULL, data.str = c('long', 'cross', 'single'), 
+sim.factor <- function(n, p, numlevels, replace = TRUE, prob = NULL, data.str = c('lvl1', 'lvl2', 'single'), 
                        value.labels = NULL) {
   
   if(is.null(prob) == FALSE & (length(prob) == numlevels | length(prob) == length(numlevels)) == FALSE) {
@@ -137,8 +137,8 @@ sim.factor <- function(n, p, numlevels, replace = TRUE, prob = NULL, data.str = 
   
   catVar <- switch(data.str,
          single = sample(x = numlevels, size = n, replace = replace, prob = prob),
-         long = rep(sample(x = numlevels, size = n, replace = replace, prob = prob), each = p),
-         cross = sample(x = numlevels, size = n*p, replace = replace, prob = prob)
+         lvl2 = rep(sample(x = numlevels, size = n, replace = replace, prob = prob), each = p),
+         lvl1 = sample(x = numlevels, size = n*p, replace = replace, prob = prob)
          )
   
   if(is.null(value.labels) == FALSE) {

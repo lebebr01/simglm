@@ -127,9 +127,11 @@ sim.factor <- function(n, p, numlevels, replace = TRUE, prob = NULL, data.str = 
   if(replace == FALSE & (data.str == "single" | data.str == "long") & numlevels < n) {
     stop("If replace = FALSE, numlevels must be greater than n")
   }
-  if(replace == FALSE & data.str == "cross" & numlevels < n*p){
-    stop("If replace = FALSE, numlevels must be greater than n*p")
-  }
+  if(data.str == "cross") {
+    if(replace == FALSE & numlevels < n*p){
+      stop("If replace = FALSE, numlevels must be greater than n*p")
+    }
+  }  
   
   data.str <- match.arg(data.str)
   

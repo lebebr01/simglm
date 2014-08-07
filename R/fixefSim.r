@@ -25,10 +25,15 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str,
   n.int <- length(grep(":",fixed.vars))
   int.loc <- grep(":", fixed.vars)
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed.vars, ignore.case = TRUE) 
-  n.fact <- length(fact.loc[fact.loc != int.loc])
-  n.fact.lvl1 <- length(grep("lvl1", fact.vars$var.type, ignore.case = TRUE))
-  n.fact.lvl2 <- length(grep("lvl2", fact.vars$var.type, ignore.case = TRUE))
   w.var <- length(grep("lvl1", cov.param$var.type, ignore.case = TRUE))
+  
+  if(length(fact.loc) > 0){
+    n.fact <- length(fact.loc[fact.loc != int.loc])
+    n.fact.lvl1 <- length(grep("lvl1", fact.vars$var.type, ignore.case = TRUE))
+    n.fact.lvl2 <- length(grep("lvl2", fact.vars$var.type, ignore.case = TRUE))
+  } else {
+    n.fact <- 0
+  } 
   
   #Xmat <- matrix(nrow=n*p,ncol = ifelse(w.var == 1, 0, 1))
 
@@ -49,13 +54,13 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str,
   
   if(n.int == 0){
     if(w.var + n.fact != n.vars+1){
-      Xmat <- cbind(Xmat, do.call("cbind", lapply((w.var+1):(n.vars+1-n.fact), function(xx)
+      Xmat <- cbind(Xmat, do.call("cbind", lapply((w.var):(n.vars-n.fact), function(xx)
         rep(rnorm(n, mean = cov.param$mean[xx], sd=cov.param$sd[xx]), each = p))))
     } 
   } else {
     num.no.int <- n.vars - n.int                  
     if(w.var + n.fact != num.no.int+1){
-      Xmat <- cbind(Xmat, do.call("cbind", lapply((w.var+1):(num.no.int+1-n.fact), function(xx)
+      Xmat <- cbind(Xmat, do.call("cbind", lapply((w.var):(num.no.int-1-n.fact), function(xx)
         rep(rnorm(n, mean = cov.param$mean[xx], sd=cov.param$sd[xx]), each = p))))
     }
   }  

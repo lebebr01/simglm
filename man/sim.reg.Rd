@@ -64,7 +64,7 @@ linear mixed models (aka. hierarchical linear models or multilevel models).
 # generating parameters for single level regression
 fixed <- ~1 + act + diff + numCourse + act:numCourse
 fixed.param <- c(2, 4, 1, 3.5, 2)
-cov.param <- list(c(0, 4), c(0, 3), c(0, 3))
+cov.param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var.type = c("single", "single", "single"))
 n <- 150
 errorVar <- 3
 err.dist <- "norm"
@@ -78,7 +78,7 @@ fixed <- ~1 + time + diff + act + time:act
 random <- ~1 + time + diff
 fixed.param <- c(4, 2, 6, 2.3, 7)
 random.param <- c(7, 4, 2)
-cov.param <- list(c(0, 1.5), c(0, 4))
+cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
 n <- 150
 p <- 30
 errorVar <- 4

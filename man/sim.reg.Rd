@@ -3,9 +3,9 @@
 \alias{sim.reg}
 \title{Master simulation function.}
 \usage{
-sim.reg(fixed, random, fixed.param, random.param, w.var, cov.param, n, p,
-  errorVar, randCor, rand.dist, err.dist, serCor, serCorVal, data.str, num.dist,
-  ...)
+sim.reg(fixed, random, fixed.param, random.param, cov.param, n, p, errorVar,
+  randCor, rand.dist, err.dist, serCor, serCorVal, data.str,
+  fact.vars = list(NULL), num.dist, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -15,9 +15,6 @@ sim.reg(fixed, random, fixed.param, random.param, w.var, cov.param, n, p,
 \item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
 \item{random.param}{Variance of random effects. Must be same length as random.}
-
-\item{w.var}{Number of within cluster variables, including intercept if applicable.
-Also could be number of level one covariates for cross-sectional clustering.}
 
 \item{cov.param}{List of mean and variance for fixed effects. Does not include intercept, time, or
 interactions. Must be same order as fixed formula above.}
@@ -41,6 +38,10 @@ interactions. Must be same order as fixed formula above.}
 \item{serCorVal}{Serial correlation parameters. A list of values to pass on to arima.sim.}
 
 \item{data.str}{Type of data. Must be "cross", "long", or "single".}
+
+\item{fact.vars}{A list of factor, categorical, or ordinal variable specification, list must include
+numlevels and var.type (must be "single" for single level regression);
+optional specifications are: replace, prob, value.labels.}
 
 \item{num.dist}{Number of distributions for bimodal random variables}
 
@@ -77,7 +78,6 @@ fixed <- ~1 + time + diff + act + time:act
 random <- ~1 + time + diff
 fixed.param <- c(4, 2, 6, 2.3, 7)
 random.param <- c(7, 4, 2)
-w.var <- 3
 cov.param <- list(c(0, 1.5), c(0, 4))
 n <- 150
 p <- 30

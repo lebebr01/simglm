@@ -3,9 +3,9 @@
 \alias{sim.reg.nested}
 \title{Function to simulate nested data}
 \usage{
-sim.reg.nested(fixed, random, fixed.param, random.param, w.var, cov.param, n, p,
-  errorVar, randCor, rand.dist, err.dist, serCor, serCorVal, data.str, num.dist,
-  ...)
+sim.reg.nested(fixed, random, fixed.param, random.param, cov.param, n, p,
+  errorVar, randCor, rand.dist, err.dist, serCor, serCorVal, data.str,
+  fact.vars = list(NULL), num.dist, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -16,11 +16,9 @@ sim.reg.nested(fixed, random, fixed.param, random.param, w.var, cov.param, n, p,
 
 \item{random.param}{Variance of random effects. Must be same length as random.}
 
-\item{w.var}{Number of within cluster variables, including intercept if applicable.
-Also could be number of level one covariates for cross-sectional clustering.}
-
-\item{cov.param}{List of mean and variance for fixed effects. Does not include intercept, time, or
-interactions. Must be same order as fixed formula above.}
+\item{cov.param}{List of mean, sd (standard deviations), and var.type for fixed effects.
+Does not include intercept, time, factors, or interactions.
+var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.}
 
 \item{n}{Cluster sample size.}
 
@@ -41,6 +39,10 @@ interactions. Must be same order as fixed formula above.}
 \item{serCorVal}{Serial correlation parameters. A list of values to pass on to arima.sim.}
 
 \item{data.str}{Type of data. Must be "cross", "long", or "single".}
+
+\item{fact.vars}{A list of factor, categorical, or ordinal variable specification, list must include
+numlevels and var.type (must be "single" for single level regression);
+optional specifications are: replace, prob, value.labels.}
 
 \item{num.dist}{Number of distributions for bimod random distribution}
 

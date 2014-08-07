@@ -12,10 +12,9 @@
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
 #' @param random.param Variance of random effects. Must be same length as random.
-#' @param w.var Number of within cluster variables, including intercept if applicable.   
-#' Also could be number of level one covariates for cross-sectional clustering.
-#' @param cov.param List of mean and variance for fixed effects. Does not include intercept, time, or 
-#' interactions. Must be same order as fixed formula above.
+#' @param cov.param List of mean, sd (standard deviations), and var.type for fixed effects. 
+#'  Does not include intercept, time, factors, or interactions. 
+#'  var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
 #' @param errorVar Scalar of error variance.
@@ -27,11 +26,14 @@
 #' @param serCor Simulation of serial correlation. Must be "AR", "MA", "ARMA", or "ID", "ID" is default.
 #' @param serCorVal Serial correlation parameters. A list of values to pass on to arima.sim.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
+#' @param fact.vars A list of factor, categorical, or ordinal variable specification, list must include
+#'      numlevels and var.type (must be "single" for single level regression); 
+#'      optional specifications are: replace, prob, value.labels.
 #' @param num.dist Number of distributions for bimod random distribution
 #' @param ... Additional arguments to pass to rbimod 
 #' @export 
-sim.reg.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, errorVar, randCor, 
-                    rand.dist, err.dist, serCor, serCorVal, data.str, num.dist, ...) {
+sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, n, p, errorVar, randCor, 
+                    rand.dist, err.dist, serCor, serCorVal, data.str, fact.vars = list(NULL), num.dist, ...) {
 
   if(randCor > 1 | randCor < -1) stop("cor out of range")
 
@@ -44,7 +46,7 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.
    rand.eff <- sim.rand.eff(random.param, randCor, n, rand.dist, num.dist)
 
    Xmat <- sim.fixef.nested(fixed, fixed.vars, cov.param, n, p, w.var, 
-                            data.str, fact.vars = NULL)
+                            data.str, fact.vars)
   
   reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
     rep(rand.eff[,xx], each = p)))
@@ -75,24 +77,27 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
-#' @param cov.param List of mean and standard deviation for fixed effects. Does not include intercept, time, or 
-#' interactions. Must be same order as fixed formula above.
+#' @param cov.param List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or 
+#'   interactions. Must be same order as fixed formula above.
 #' @param n Cluster sample size.
 #' @param errorVar Scalar of error variance.
 #' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
-#' "norm" is default.
+#'   "norm" is default.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
+#' @param fact.vars A list of factor, categorical, or ordinal variable specification, list must include
+#'      numlevels and var.type (must be "single" for single level regression); 
+#'      optional specifications are: replace, prob, value.labels. 
 #' @param num.dist Number of distributions for bimodal random variables
-#' @param ... Additional arguments to pass to rbimod 
+#' @param ... Additional arguments to pass to rbimod
 #' @export 
 sim.reg.single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, 
-                           num.dist, ...) {
+                           fact.vars = list(NULL), num.dist, ...) {
   
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   
   if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
   
-  Xmat <- sim.fixef.single(fixed, fixed.vars, n, cov.param)
+  Xmat <- sim.fixef.single(fixed, fixed.vars, n, cov.param, fact.vars)
   
   err <- sim.err.single(errorVar, n, err.dist, num.dist, ...)
   

@@ -8,53 +8,63 @@
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.
 #' @param fixed.vars Character vector of covariates for design matrix.
-#' @param cov.param List of mean and variance for fixed effects. Does not include intercept, time, or 
-#' interactions. Must be same order as fixed formula above.
+#' @param cov.param List of mean, sd (standard deviations), and var.type for fixed effects. 
+#'  Does not include intercept, time, factors, or interactions. 
+#'  var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
 #' @param n Number of clusters.
 #' @param p Number of within cluster units.
-#' @param w.var Number of time varying covariates or level one covariates for cross-sectional clustering.  
-#' This number includes the intercept and time variable for longitudinal data.
 #' @param data.str Type of data. Must be "cross", or "long".
 #' @param fact.vars A list of factor, categorical, or ordinal variable specification, list must include
 #'      numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
-sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, w.var, data.str, fact.vars = list(NULL)){
+sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str, 
+                             fact.vars = list(NULL)){
   
   n.vars <- length(fixed.vars)
   n.int <- length(grep(":",fixed.vars))
   int.loc <- grep(":", fixed.vars)
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed.vars, ignore.case = TRUE) 
   n.fact <- length(fact.loc[fact.loc != int.loc])
+  n.fact.lvl1 <- length(grep("lvl1", fact.vars$var.type, ignore.case = TRUE))
+  n.fact.lvl2 <- length(grep("lvl2", fact.vars$var.type, ignore.case = TRUE))
+  w.var <- length(grep("lvl1", cov.param$var.type, ignore.case = TRUE))
   
-  Xmat <- matrix(nrow=n*p,ncol = ifelse(w.var == 1, 0, 1))
+  #Xmat <- matrix(nrow=n*p,ncol = ifelse(w.var == 1, 0, 1))
 
   if(data.str == "long"){
-    if(w.var == 2){
-      Xmat[,1] <- rep.int((1:p)-1,times = n)
+    w.var <- w.var + 1
+    if(w.var == 1){
+      Xmat <- rep.int((1:p)-1,times = n)
     } else { 
-      Xmat[,1] <- rep.int((1:p)-1,times = n)
-      Xmat <- cbind(Xmat, do.call("cbind", lapply(3:w.var, function(xx) 
-        rnorm(n * p, mean = cov.param[[xx-2]][1], sd = cov.param[[xx-2]][2]))))
+      Xmat <- rep.int((1:p)-1,times = n)
+      Xmat <- cbind(Xmat, do.call("cbind", lapply(w.var, function(xx) 
+        rnorm(n * p, mean = cov.param$mean[xx], sd = cov.param$sd[xx]))))
       }
     } else {
-       Xmat <- do.call("cbind", lapply(2:w.var, function(xx) 
-         rnorm(n * p, mean = cov.param[[xx-1]][1], sd = cov.param[[xx-1]][2])))
+       Xmat <- do.call("cbind", lapply(w.var, function(xx) 
+         rnorm(n * p, mean = cov.param$mean[xx], sd = cov.param$sd[xx])))
      }
   
   
   if(n.int == 0){
-    if(w.var != n.vars+1){
-      Xmat <- cbind(Xmat, do.call("cbind", lapply((w.var+1):(n.vars+1), function(xx)
-        rep(rnorm(n, mean = cov.param[[xx-2]][1], sd=cov.param[[xx-2]][2]), each = p))))
+    if(w.var + n.fact != n.vars+1){
+      Xmat <- cbind(Xmat, do.call("cbind", lapply((w.var+1):(n.vars+1-n.fact), function(xx)
+        rep(rnorm(n, mean = cov.param$mean[xx], sd=cov.param$sd[xx]), each = p))))
     } 
   } else {
     num.no.int <- n.vars - n.int                  
-    if(w.var != num.no.int+1){
-      Xmat <- cbind(Xmat, do.call("cbind", lapply((w.var+1):(num.no.int+1), function(xx)
-        rep(rnorm(n, mean = cov.param[[xx-2]][1], sd=cov.param[[xx-2]][2]), each = p))))
+    if(w.var + n.fact != num.no.int+1){
+      Xmat <- cbind(Xmat, do.call("cbind", lapply((w.var+1):(num.no.int+1-n.fact), function(xx)
+        rep(rnorm(n, mean = cov.param$mean[xx], sd=cov.param$sd[xx]), each = p))))
     }
   }  
+  
+  if(length(fact.loc > 0)){
+    Xmat <- cbind(Xmat, do.call("cbind", lapply(n.fact, 
+              function(xx) sim.factor(n, numlevels = fact.vars$numlevels[xx], 
+                              var.type = fact.vars$var.type[xx]))))
+  }
 
    if(n.int == 0){
      colnames(Xmat) <- fixed.vars
@@ -77,8 +87,8 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, w.var, data.str
 #' @param fixed One sided formula for fixed effects in the simulation.
 #' @param fixed.vars Character vector of covariates for design matrix.
 #' @param n Number of clusters.
-#' @param cov.param List of mean and variance for fixed effects. Does not include intercept, time, or 
-#' interactions. Must be same order as fixed formula above.
+#' @param cov.param List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or 
+#'   interactions. Must be same order as fixed formula above.
 #' @param fact.vars A list of factor, categorical, or ordinal variable specification, list must include
 #'      numlevels and var.type (must be "single" for single level regression); 
 #'      optional specifications are: replace, prob, value.labels.
@@ -101,12 +111,10 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
     rnorm(n, mean = cov.param[[xx-1]][1], sd = cov.param[[xx-1]][2])))
   
   if(length(fact.loc > 0)){
-    Fmat <- do.call("cbind", lapply(n.fact, 
+    Xmat <- cbind(Xmat, do.call("cbind", lapply(n.fact, 
             function(xx) sim.factor(n, numlevels = fact.vars$numlevels[xx], 
-                                    var.type = fact.vars$var.type[xx])))
+                                    var.type = fact.vars$var.type[xx]))))
   }
-  
-  Xmat <- cbind(Xmat, Fmat)
   
   if(n.int == 0){
     colnames(Xmat) <- fixed.vars

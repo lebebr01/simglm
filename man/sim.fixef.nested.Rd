@@ -3,7 +3,7 @@
 \alias{sim.fixef.nested}
 \title{Simulates design matrix.}
 \usage{
-sim.fixef.nested(fixed, fixed.vars, cov.param, n, p, w.var, data.str,
+sim.fixef.nested(fixed, fixed.vars, cov.param, n, p, data.str,
   fact.vars = list(NULL))
 }
 \arguments{
@@ -11,15 +11,13 @@ sim.fixef.nested(fixed, fixed.vars, cov.param, n, p, w.var, data.str,
 
 \item{fixed.vars}{Character vector of covariates for design matrix.}
 
-\item{cov.param}{List of mean and variance for fixed effects. Does not include intercept, time, or
-interactions. Must be same order as fixed formula above.}
+\item{cov.param}{List of mean, sd (standard deviations), and var.type for fixed effects.
+Does not include intercept, time, factors, or interactions.
+var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.}
 
 \item{n}{Number of clusters.}
 
 \item{p}{Number of within cluster units.}
-
-\item{w.var}{Number of time varying covariates or level one covariates for cross-sectional clustering.
-This number includes the intercept and time variable for longitudinal data.}
 
 \item{data.str}{Type of data. Must be "cross", or "long".}
 

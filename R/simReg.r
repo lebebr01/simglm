@@ -14,8 +14,6 @@
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
 #' @param random.param Variance of random effects. Must be same length as random.
-#' @param w.var Number of within cluster variables, including intercept if applicable.   
-#' Also could be number of level one covariates for cross-sectional clustering.
 #' @param cov.param List of mean and variance for fixed effects. Does not include intercept, time, or 
 #' interactions. Must be same order as fixed formula above.
 #' @param n Cluster sample size.
@@ -29,6 +27,9 @@
 #' @param serCor Simulation of serial correlation. Must be "AR", "MA", "ARMA", or "ID", "ID" is default.
 #' @param serCorVal Serial correlation parameters. A list of values to pass on to arima.sim.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
+#' @param fact.vars A list of factor, categorical, or ordinal variable specification, list must include
+#'      numlevels and var.type (must be "single" for single level regression); 
+#'      optional specifications are: replace, prob, value.labels.
 #' @param num.dist Number of distributions for bimodal random variables
 #' @param ... Additional arguments to pass to rbimod 
 #' @export 
@@ -51,7 +52,6 @@
 #' random <- ~1 + time + diff
 #' fixed.param <- c(4, 2, 6, 2.3, 7)
 #' random.param <- c(7, 4, 2)
-#' w.var <- 3
 #' cov.param <- list(c(0, 1.5), c(0, 4))
 #' n <- 150
 #' p <- 30
@@ -70,14 +70,16 @@
 #' lmer(sim.data ~ 1 + time + diff + act + time:act + (1 + time + diff | clustID), 
 #' data = temp.long)
 #' }
-sim.reg <- function(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, errorVar, randCor, 
-                         rand.dist, err.dist, serCor, serCorVal, data.str, num.dist, ...) {
+sim.reg <- function(fixed, random, fixed.param, random.param, cov.param, n, p, errorVar, randCor, 
+                    rand.dist, err.dist, serCor, serCorVal, data.str, fact.vars = list(NULL),
+                    num.dist, ...) {
   
   if(data.str == "single"){
-    sim.reg.single(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, num.dist, ...)
+    sim.reg.single(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, fact.vars, 
+                   num.dist, ...)
   } else {
-    sim.reg.nested(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, errorVar, randCor, 
-                   rand.dist, err.dist, serCor, serCorVal, data.str, num.dist, ...)
+    sim.reg.nested(fixed, random, fixed.param, random.param, cov.param, n, p, errorVar, randCor, 
+                   rand.dist, err.dist, serCor, serCorVal, data.str, fact.vars, num.dist, ...)
   }
   
 }

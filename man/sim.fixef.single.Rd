@@ -12,7 +12,7 @@ sim.fixef.single(fixed, fixed.vars, n, cov.param, fact.vars = list(NULL))
 
 \item{n}{Number of clusters.}
 
-\item{cov.param}{List of mean and variance for fixed effects. Does not include intercept, time, or
+\item{cov.param}{List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or
 interactions. Must be same order as fixed formula above.}
 
 \item{fact.vars}{A list of factor, categorical, or ordinal variable specification, list must include

@@ -16,3 +16,4 @@ Depends:
     Matrix,
     VGAM,
     nlme
+VignetteBuilder: knitr

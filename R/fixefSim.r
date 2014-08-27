@@ -34,8 +34,6 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str,
   } else {
     n.fact <- 0
   } 
-  
-  #Xmat <- matrix(nrow=n*p,ncol = ifelse(w.var == 1, 0, 1))
 
   if(data.str == "long"){
     w.var <- w.var + 1
@@ -112,8 +110,8 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
     }
   }
   
-  Xmat <- do.call("cbind", lapply(2:((n.vars - n.int - n.fact)+1), function(xx)
-    rnorm(n, mean = cov.param[[xx-1]][1], sd = cov.param[[xx-1]][2])))
+  Xmat <- do.call("cbind", lapply(1:((n.vars - n.int - n.fact)), function(xx)
+    rnorm(n, mean = cov.param$mean[xx], sd = cov.param$sd[xx])))
   
   if(length(fact.loc > 0)){
     Xmat <- cbind(Xmat, do.call("cbind", lapply(n.fact, 

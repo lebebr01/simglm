@@ -54,8 +54,7 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, 
   
   Zmat <- model.matrix(random, data.frame(Xmat))
 
- #if(serCor == "AR" | serCor == "MA" | serCor == "ARMA" & is.list(serCorVal) == "FALSE") {stop("Incorrect dimensions serCorVal")}
-  err <- sim.err.nested(errorVar, n, p, serCor, serCorVal, err.dist, num.dist, ...)
+  err <- sim.err.nested(errorVar, n, p, serCor, serCorVal, err.dist, num.dist, mean, var)
 
  sim.data <- data.reg.nested(Xmat, Zmat, fixed.param, rand.eff, n, p, err)
   

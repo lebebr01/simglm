@@ -62,7 +62,7 @@
 #' serCor <- "ID"
 #' serCorVal <- NULL
 #' data.str <- "long"
-#' temp.long <- sim.reg(fixed, random, fixed.param, random.param, w.var, cov.param, 
+#' temp.long <- sim.reg(fixed, random, fixed.param, random.param, cov.param, 
 #' n, p, errorVar, randCor, rand.dist, err.dist, serCor, serCorVal, data.str)
 #' 
 #' ## fitting lmer model

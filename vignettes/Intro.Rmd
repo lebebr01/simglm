@@ -1,0 +1,51 @@
+---
+title: "Introduction to simReg"
+date: '`r Sys.Date()`'
+output: 
+  html_document:
+    highlight: null
+    toc: yes
+---
+
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Introduction to simReg}
+-->
+```{r setup, include=FALSE}
+library(knitr)
+library(simReg)
+knit_print.data.frame = function(x, ...) {
+  res = paste(c('', '', kable(x, output = FALSE)), collapse = '\n')
+  asis_output(res)
+}
+```
+
+The *simReg* package aims to define a consistent framework for simulating regression models - including single level and multilevel models. This will hopefully allow the user to quickly simulate data for a class, project, or even a dissertation.
+
+## Installation
+Currently development is happening on github. To install the package, use the *devtools* package:
+```{r install, eval=FALSE}
+library(devtools)
+install_github("lebebr01/simReg")
+library(simReg)
+```
+This should load the *devtools* package, install the *simReg* package, and finally load the *simReg* package. The package has currently not been tested on a Mac machine. I do not anticipate any problems installing on a Mac however.
+
+## Simulate Data
+The master function that handles the simulation grunt work is the `sim.reg()` function. As always, you can do `?sim.reg` to pull up the help file for the function. Let's look at a simple single level regression example to get started:
+
+```{r singlelevel}
+fixed <- ~1 + act + diff + numCourse + act:numCourse
+fixed.param <- c(2, 4, 1, 3.5, 2)
+cov.param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var.type = c("single", "single", "single"))
+n <- 150
+errorVar <- 3
+err.dist <- "norm"
+temp.single <- sim.reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param,
+n = n, errorVar = errorVar, err.dist = err.dist, data.str = "single")
+```
+
+
+## Bugs/Feature Requests
+Lastly, for any bugs or feature requests go to the github repository to create post an issue. I will work to resolve them as quickly as possible. See [simReg github repository](https://github.com/lebebr01/simReg)
+

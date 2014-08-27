@@ -52,7 +52,7 @@ head(temp.single)
 As can be seen from the data itself, the first 5 columns represent the raw data used in the simulation, the column labeled "Fbeta" is the matrix multiplication of the design matrix (first 5 columns in this case) by the **fixed.param** object above (the desired values for the fixed effects).  The "err" column is the simulated errors, the column labeled "sim.data" is the simulated data (taking "Fbeta" + "err"), and lastly an ID variable reflecting the individuals.
 
 You could then use simple regression on these data to see how the simulation went:
-```{r simpregmod, results='asis'}
+```{r simpregmod}
 summary(lm(sim.data ~ 1 + act + diff + numCourse + act:numCourse, data = temp.single))
 ```
 As can be seen, the fixed effects and error variance depicted above are replicated very closely in the simulated data set.

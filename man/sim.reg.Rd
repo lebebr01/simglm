@@ -40,7 +40,7 @@ interactions. Must be same order as fixed formula above.}
 \item{data.str}{Type of data. Must be "cross", "long", or "single".}
 
 \item{fact.vars}{A list of factor, categorical, or ordinal variable specification, list must include
-numlevels and var.type (must be "single" for single level regression);
+numlevels and var.type (must be "single" for single level regression or "lvl1" or "lvl2" for nested data);
 optional specifications are: replace, prob, value.labels.}
 
 \item{num.dist}{Number of distributions for bimodal random variables}

@@ -27,6 +27,10 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str,
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed.vars, ignore.case = TRUE) 
   w.var <- length(grep("lvl1", cov.param$var.type, ignore.case = TRUE))
   
+  if(length(fact.loc)> 0){
+    fixed.vars <- c(fixed.vars[-c(fact.loc, int.loc)], fixed.vars[fact.loc], fixed.vars[int.loc])
+  }
+  
   if(length(fact.loc) > 0){
     n.fact <- length(fact.loc[fact.loc != int.loc])
     n.fact.lvl1 <- length(grep("lvl1", fact.vars$var.type, ignore.case = TRUE))
@@ -65,7 +69,7 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str,
   
   if(length(fact.loc > 0)){
     Xmat <- cbind(Xmat, do.call("cbind", lapply(n.fact, 
-              function(xx) sim.factor(n, numlevels = fact.vars$numlevels[xx], 
+              function(xx) sim.factor(n, p, numlevels = fact.vars$numlevels[xx], 
                               var.type = fact.vars$var.type[xx]))))
   }
 
@@ -103,6 +107,10 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
   int.loc <- grep(":", fixed.vars)
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed.vars, ignore.case = TRUE)  
   n.fact <- length(fact.loc[fact.loc != int.loc])
+  
+  if(length(fact.loc)> 0){
+    fixed.vars <- c(fixed.vars[-c(fact.loc, int.loc)], fixed.vars[fact.loc], fixed.vars[int.loc])
+  }
   
   if(n.fact > 0){
     if(all(grepl("single", fact.vars$var.type)) == FALSE){

@@ -27,7 +27,7 @@
 #' @param serCorVal Serial correlation parameters. A list of values to pass on to arima.sim.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param fact.vars A list of factor, categorical, or ordinal variable specification, list must include
-#'      numlevels and var.type (must be "single" for single level regression); 
+#'      numlevels and var.type (must be "lvl1" or "lvl2"); 
 #'      optional specifications are: replace, prob, value.labels.
 #' @param num.dist Number of distributions for bimod random distribution
 #' @param ... Additional arguments to pass to rbimod 

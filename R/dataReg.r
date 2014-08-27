@@ -16,9 +16,8 @@ data.reg.nested <- function(Xmat, Zmat, beta, rand.eff, n, p, err) {
   
    Fbeta <- (Xmat %*% beta) 
     
-    Zmat <- cbind(Zmat, ID = rep(1:n, each = p))
-    Zmatd <- data.frame(Zmat)
-    ZmatList <- lapply(1:n, function(xx) as.matrix(subset(Zmatd, ID == xx, select = 1:(ncol(Zmatd)-1))))
+    Zmat <- data.frame(Zmat, ID = rep(1:n, each = p))
+    ZmatList <- lapply(1:n, function(xx) as.matrix(subset(Zmat, ID == xx, select = 1:(ncol(Zmat)-1))))
     ZmatBlock <- bdiag(ZmatList)
     reVec <- matrix(c(t(rand.eff)))
     re <- as.matrix(ZmatBlock %*% reVec)

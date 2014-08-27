@@ -1,12 +1,3 @@
----
-title: "Introduction to simReg"
-date: '`r Sys.Date()`'
-output: 
-  html_document:
-    highlight: null
-    toc: yes
----
-
 <!--
 %\VignetteEngine{knitr::knitr}
 %\VignetteIndexEntry{Introduction to simReg}
@@ -19,6 +10,7 @@ knit_print.data.frame = function(x, ...) {
   asis_output(res)
 }
 ```
+# Introduction to *simReg*
 
 The *simReg* package aims to define a consistent framework for simulating regression models - including single level and multilevel models. This will hopefully allow the user to quickly simulate data for a class, project, or even a dissertation.
 
@@ -32,10 +24,13 @@ library(simReg)
 This should load the *devtools* package, install the *simReg* package, and finally load the *simReg* package. The package has currently not been tested on a Mac machine. I do not anticipate any problems installing on a Mac however.
 
 ## Simulate Data
-The master function that handles the simulation grunt work is the `sim.reg()` function. As always, you can do `?sim.reg` to pull up the help file for the function. Let's look at a simple single level regression example to get started:
+The master function that handles the simulation grunt work is the `sim.reg()` function. As always, you can do `?sim.reg` to pull up the help file for the function. 
+
+### Single Level
+Let's look at a simple single level regression example to get started:
 
 ```{r singlelevel}
-fixed <- ~1 + act + diff + numCourse + act:numCourse
+fixed <- ~ 1 + act + diff + numCourse + act:numCourse
 fixed.param <- c(2, 4, 1, 3.5, 2)
 cov.param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var.type = c("single", "single", "single"))
 n <- 150
@@ -45,6 +40,22 @@ temp.single <- sim.reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov
 n = n, errorVar = errorVar, err.dist = err.dist, data.str = "single")
 ```
 
+A few things to highlight about the above syntax, first the object **fixed** is a one sided formula that gives the names of the variables to be included in the simulated data. The intercept is directly shown in the formulation here, but can also be omitted (similar to linear models in R). I like to include the 1 as it reminds me that I do in fact want an intercept. The next object, **fixed.param** is the regression weights for the fixed effects, this must be the same length as fixed (or one larger if the 1 is not explicitly stated in the **fixed** object). Next, **cov.param** represents the mean, standard deviation, and type of variable from the **fixed** object (must by "single" for single level regression).  The **cov.param** object must contain all variables except the intercept and any interactions.
+
+The rest of the arguments are pretty straightforward, **n** is the sample size, **errorVar** is the error variance, **err.dist** is the distribution of the residuals, and finally in the function call itself, **data.str** must be "single" in this instance to reflect a single level regression.
+
+Finally, looking at the output from the above call:
+```{r printsinglelevel}
+head(temp.single)
+```
+
+As can be seen from the data itself, the first 5 columns represent the raw data used in the simulation, the column labeled "Fbeta" is the matrix multiplication of the design matrix (first 5 columns in this case) by the **fixed.param** object above (the desired values for the fixed effects).  The "err" column is the simulated errors, the column labeled "sim.data" is the simulated data (taking "Fbeta" + "err"), and lastly an ID variable reflecting the individuals.
+
+You could then use simple regression on these data to see how the simulation went:
+```{r simpregmod, results='asis'}
+summary(lm(sim.data ~ 1 + act + diff + numCourse + act:numCourse, data = temp.single))
+```
+As can be seen, the fixed effects and error variance depicted above are replicated very closely in the simulated data set.
 
 ## Bugs/Feature Requests
 Lastly, for any bugs or feature requests go to the github repository to create post an issue. I will work to resolve them as quickly as possible. See [simReg github repository](https://github.com/lebebr01/simReg)

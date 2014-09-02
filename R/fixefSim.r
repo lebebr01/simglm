@@ -68,7 +68,7 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str,
   }  
   
   if(length(fact.loc > 0)){
-    Xmat <- cbind(Xmat, do.call("cbind", lapply(n.fact, 
+    Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
               function(xx) sim.factor(n, p, numlevels = fact.vars$numlevels[xx], 
                               var.type = fact.vars$var.type[xx]))))
   }
@@ -122,7 +122,7 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
     rnorm(n, mean = cov.param$mean[xx], sd = cov.param$sd[xx])))
   
   if(length(fact.loc > 0)){
-    Xmat <- cbind(Xmat, do.call("cbind", lapply(n.fact, 
+    Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
             function(xx) sim.factor(n, numlevels = fact.vars$numlevels[xx], 
                                     var.type = fact.vars$var.type[xx]))))
   }

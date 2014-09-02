@@ -154,9 +154,9 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
 sim.factor <- function(n, p, numlevels, replace = TRUE, prob = NULL, var.type = c('lvl1', 'lvl2', 'single'), 
                        value.labels = NULL) {
   
-  if(is.null(prob) == FALSE & (length(prob) == numlevels | length(prob) == length(numlevels)) == FALSE) {
-    stop("prob must be same length as numlevels")
-  }
+  #if(is.null(prob) == FALSE & (length(prob) == numlevels | length(prob) == length(numlevels)) == FALSE) {
+  #  stop("prob must be same length as numlevels")
+  #}
   if(replace == FALSE & (var.type == "single" | var.type == "lvl2") & numlevels < n) {
     stop("If replace = FALSE, numlevels must be greater than n")
   }

@@ -32,7 +32,8 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str,
   }
   
   if(length(fact.loc) > 0){
-    n.fact <- length(fact.loc[fact.loc != int.loc])
+    n.fact <- ifelse(length(int.loc) > 0, length(fact.loc[fact.loc != int.loc]), 
+                     length(fact.loc))
     n.fact.lvl1 <- length(grep("lvl1", fact.vars$var.type, ignore.case = TRUE))
     n.fact.lvl2 <- length(grep("lvl2", fact.vars$var.type, ignore.case = TRUE))
   } else {
@@ -45,24 +46,24 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str,
       Xmat <- rep.int((1:p)-1,times = n)
     } else { 
       Xmat <- rep.int((1:p)-1,times = n)
-      Xmat <- cbind(Xmat, do.call("cbind", lapply(w.var, function(xx) 
+      Xmat <- cbind(Xmat, do.call("cbind", lapply(1:w.var, function(xx) 
         rnorm(n * p, mean = cov.param$mean[xx], sd = cov.param$sd[xx]))))
       }
     } else {
-       Xmat <- do.call("cbind", lapply(w.var, function(xx) 
+       Xmat <- do.call("cbind", lapply(1:w.var, function(xx) 
          rnorm(n * p, mean = cov.param$mean[xx], sd = cov.param$sd[xx])))
      }
   
   
   if(n.int == 0){
-    if(w.var + n.fact != n.vars+1){
-      Xmat <- cbind(Xmat, do.call("cbind", lapply((w.var):(n.vars-n.fact), function(xx)
+    if(w.var + n.fact != n.vars){
+      Xmat <- cbind(Xmat, do.call("cbind", lapply((w.var+1):(n.vars-n.fact), function(xx)
         rep(rnorm(n, mean = cov.param$mean[xx], sd=cov.param$sd[xx]), each = p))))
     } 
   } else {
     num.no.int <- n.vars - n.int                  
-    if(w.var + n.fact != num.no.int+1){
-      Xmat <- cbind(Xmat, do.call("cbind", lapply((w.var):(num.no.int-1-n.fact), function(xx)
+    if(w.var + n.fact != num.no.int){
+      Xmat <- cbind(Xmat, do.call("cbind", lapply((w.var+1):(num.no.int-n.fact), function(xx)
         rep(rnorm(n, mean = cov.param$mean[xx], sd=cov.param$sd[xx]), each = p))))
     }
   }  

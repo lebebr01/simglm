@@ -69,7 +69,7 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str,
   }  
   
   if(length(fact.loc > 0)){
-    fact.vars <- c(n = n, fact.vars)
+    fact.vars <- c(n = n, p = p, fact.vars)
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
               function(xx) do.call(sim.factor, fact.vars))))
   }

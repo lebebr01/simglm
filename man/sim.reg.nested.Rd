@@ -40,8 +40,8 @@ var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 
 \item{data.str}{Type of data. Must be "cross", "long", or "single".}
 
-\item{fact.vars}{A list of factor, categorical, or ordinal variable specification, list must include
-numlevels and var.type (must be "lvl1" or "lvl2");
+\item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
+each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 optional specifications are: replace, prob, value.labels.}
 
 \item{num.dist}{Number of distributions for bimod random distribution}

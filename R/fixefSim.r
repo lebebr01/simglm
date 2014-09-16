@@ -14,8 +14,8 @@
 #' @param n Number of clusters.
 #' @param p Number of within cluster units.
 #' @param data.str Type of data. Must be "cross", or "long".
-#' @param fact.vars A list of factor, categorical, or ordinal variable specification, list must include
-#'      numlevels and var.type (must be "lvl1" or "lvl2");
+#' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
+#'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
 sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str, 
@@ -69,9 +69,10 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str,
   }  
   
   if(length(fact.loc > 0)){
-    fact.vars <- c(n = n, p = p, fact.vars)
+    fact.vars <- lapply(1:length(fact.vars), function(xx) 
+      c(n = n, p = p, fact.vars[[xx]]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
-              function(xx) do.call(sim.factor, fact.vars))))
+              function(xx) do.call(sim.factor, fact.vars[[xx]]))))
   }
 
    if(n.int == 0){
@@ -97,8 +98,8 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str,
 #' @param n Number of clusters.
 #' @param cov.param List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or 
 #'   interactions. Must be same order as fixed formula above.
-#' @param fact.vars A list of factor, categorical, or ordinal variable specification, list must include
-#'      numlevels and var.type (must be "single" for single level regression); 
+#' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
+#'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
 sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(NULL)){
@@ -123,9 +124,9 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
     rnorm(n, mean = cov.param$mean[xx], sd = cov.param$sd[xx])))
   
   if(length(fact.loc > 0)){
-    fact.vars <- c(n = n, fact.vars)
+    fact.vars <- lapply(1:length(fact.vars), function(xx) c(n = n, fact.vars[[xx]]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
-            function(xx) do.call(sim.factor, fact.vars))))
+            function(xx) do.call(sim.factor, fact.vars[[xx]]))))
   }
   
   if(n.int == 0){

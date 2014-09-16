@@ -15,8 +15,8 @@ sim.fixef.single(fixed, fixed.vars, n, cov.param, fact.vars = list(NULL))
 \item{cov.param}{List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or
 interactions. Must be same order as fixed formula above.}
 
-\item{fact.vars}{A list of factor, categorical, or ordinal variable specification, list must include
-numlevels and var.type (must be "single" for single level regression);
+\item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
+each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 optional specifications are: replace, prob, value.labels.}
 }
 \description{

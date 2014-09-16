@@ -27,8 +27,8 @@
 #' @param serCor Simulation of serial correlation. Must be "AR", "MA", "ARMA", or "ID", "ID" is default.
 #' @param serCorVal Serial correlation parameters. A list of values to pass on to arima.sim.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
-#' @param fact.vars A list of factor, categorical, or ordinal variable specification, list must include
-#'      numlevels and var.type (must be "single" for single level regression or "lvl1" or "lvl2" for nested data); 
+#' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
+#'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
 #' @param num.dist Number of distributions for bimodal random variables
 #' @param ... Additional arguments to pass to rbimod 

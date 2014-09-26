@@ -61,7 +61,11 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str,
         rep(rnorm(n, mean = cov.param$mean[xx], sd=cov.param$sd[xx]), each = p))))
     } 
   } else {
-    num.no.int <- n.vars - n.int                  
+    if(data.str == "long") {
+      num.no.int <- n.vars - n.int - 1
+    } else {
+      num.no.int <- n.vars - n.int 
+    }                 
     if(w.var + n.fact != num.no.int){
       Xmat <- cbind(Xmat, do.call("cbind", lapply((w.var+1):(num.no.int-n.fact), function(xx)
         rep(rnorm(n, mean = cov.param$mean[xx], sd=cov.param$sd[xx]), each = p))))

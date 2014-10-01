@@ -61,8 +61,8 @@ To add a factor, categorical, or ordinal variable, just append one of the follow
 ```{r singlelevelfact}
 fixed <- ~ 1 + act + diff + numCourse.o + act:numCourse.o
 fixed.param <- c(2, 4, 1, 3.5, 2)
-cov.param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var.type = c("single", "single", "single"))
-fact.vars <- list(numlevels = 5, var.type = "single")
+cov.param <- list(mean = c(0, 0), sd = c(4, 3), var.type = c("single", "single"))
+fact.vars <- list(list(numlevels = 5, var.type = "single"))
 n <- 150
 errorVar <- 3
 err.dist <- "norm"

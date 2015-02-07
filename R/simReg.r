@@ -12,14 +12,19 @@
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
+#' @param random3 One sided formula for random effects at third level in the simulation. Must be a subset of fixed
+#'  (and likely of random).
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
 #' @param random.param Variance of random effects. Must be same length as random.
+#' @param random.param3 Variance of third level random effects. Must be same length as random3.
 #' @param cov.param List of mean and variance for fixed effects. Does not include intercept, time, or 
 #' interactions. Must be same order as fixed formula above.
+#' @param k Number of third level clusters.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
 #' @param errorVar Scalar of error variance.
 #' @param randCor Correlation between random effects.
+#' @param randCor3 Correlation between third level random effects.
 #' @param rand.dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
 #' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
@@ -62,24 +67,56 @@
 #' serCor <- "ID"
 #' serCorVal <- NULL
 #' data.str <- "long"
-#' temp.long <- sim.reg(fixed, random, fixed.param, random.param, cov.param, 
-#' n, p, errorVar, randCor, rand.dist, err.dist, serCor, serCorVal, data.str)
+#' temp.long <- sim.reg(fixed, random, fixed.param, random.param, cov.param, k = NULL,
+#' n, p, kVar = NULL, errorVar, randCor, rand.dist, err.dist, serCor, serCorVal, data.str)
 #' 
 #' ## fitting lmer model
 #' library(lme4)
 #' lmer(sim.data ~ 1 + time + diff + act + time:act + (1 + time + diff | clustID), 
 #' data = temp.long)
+#' 
+#' # Three level example
+#' fixed <- ~1 + time + diff + act + time:act
+#' random <- ~1 + time + diff
+#' random3 <- ~ 1 + time
+#' fixed.param <- c(4, 2, 6, 2.3, 7)
+#' random.param <- c(7, 4, 2)
+#' random.param3 <- c(4, 2)
+#' cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
+#' k <- 10
+#' n <- 150
+#' p <- 30
+#' errorVar <- 4
+#' randCor <- 0
+#' randCor3 <- 0
+#' rand.dist <- "norm"
+#' err.dist <- "norm"
+#' serCor <- "ID"
+#' serCorVal <- NULL
+#' data.str <- "long"
+#' temp.three <- sim.reg(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k,
+#' n, p, errorVar, randCor, randCor3, rand.dist, err.dist, serCor, serCorVal, data.str)
+#' 
+#' library(lme4)
+#' lmer(sim.data ~ 1 + time + diff + act + time:act + (1 + time + diff | clustID) +  
+#' (1 | clust3ID), data = temp.three)
+#' 
 #' }
-sim.reg <- function(fixed, random, fixed.param, random.param, cov.param, n, p, errorVar, randCor, 
-                    rand.dist, err.dist, serCor, serCorVal, data.str, fact.vars = list(NULL),
-                    num.dist, ...) {
+sim.reg <- function(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k = NULL, 
+                    n, p, errorVar, randCor, randCor3, rand.dist, err.dist, serCor, serCorVal, data.str, 
+                    fact.vars = list(NULL), num.dist, ...) {
   
   if(data.str == "single"){
     sim.reg.single(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, fact.vars, 
                    num.dist, ...)
   } else {
-    sim.reg.nested(fixed, random, fixed.param, random.param, cov.param, n, p, errorVar, randCor, 
-                   rand.dist, err.dist, serCor, serCorVal, data.str, fact.vars, num.dist, ...)
+  	if (is.null(k)){
+  	  sim.reg.nested(fixed, random, fixed.param, random.param, cov.param, n, p, errorVar, randCor, 
+  	                 rand.dist, err.dist, serCor, serCorVal, data.str, fact.vars, num.dist, ...)
+  } else {
+    sim.reg.nested3(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k, n, p, 
+                    errorVar, randCor, randCor3, rand.dist, err.dist, serCor, serCorVal, data.str, 
+                    fact.vars, num.dist, ...)
   }
-  
+ }
 }

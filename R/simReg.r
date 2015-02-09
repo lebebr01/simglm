@@ -67,8 +67,9 @@
 #' serCor <- "ID"
 #' serCorVal <- NULL
 #' data.str <- "long"
-#' temp.long <- sim.reg(fixed, random, fixed.param, random.param, cov.param, k = NULL,
-#' n, p, kVar = NULL, errorVar, randCor, rand.dist, err.dist, serCor, serCorVal, data.str)
+#' temp.long <- sim.reg(fixed, random, random3 = NULL, fixed.param, random.param, random.param3 = NULL,
+#'  cov.param, k = NULL, n, p, errorVar, randCor, randCor3 = NULL, rand.dist, err.dist, serCor, serCorVal, 
+#'  data.str)
 #' 
 #' ## fitting lmer model
 #' library(lme4)
@@ -76,13 +77,14 @@
 #' data = temp.long)
 #' 
 #' # Three level example
-#' fixed <- ~1 + time + diff + act + time:act
+#' fixed <- ~1 + time + diff + act + actClust + time:act
 #' random <- ~1 + time + diff
 #' random3 <- ~ 1 + time
-#' fixed.param <- c(4, 2, 6, 2.3, 7)
+#' fixed.param <- c(4, 2, 6, 2.3, 7, 0)
 #' random.param <- c(7, 4, 2)
 #' random.param3 <- c(4, 2)
-#' cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
+#' cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
+#' var.type = c("lvl1", "lvl2", "lvl3"))
 #' k <- 10
 #' n <- 150
 #' p <- 30
@@ -98,7 +100,7 @@
 #' n, p, errorVar, randCor, randCor3, rand.dist, err.dist, serCor, serCorVal, data.str)
 #' 
 #' library(lme4)
-#' lmer(sim.data ~ 1 + time + diff + act + time:act + (1 + time + diff | clustID) +  
+#' lmer(sim.data ~ 1 + time + diff + act + actClust + time:act + (1 + time + diff | clustID) +  
 #' (1 | clust3ID), data = temp.three)
 #' 
 #' }

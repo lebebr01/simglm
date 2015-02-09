@@ -11,7 +11,7 @@
 			"file": "R/dataReg.r",
 			"settings":
 			{
-				"buffer_size": 3226,
+				"buffer_size": 3347,
 				"line_ending": "Windows"
 			}
 		},
@@ -19,7 +19,7 @@
 			"file": "R/randEffSim.r",
 			"settings":
 			{
-				"buffer_size": 2466,
+				"buffer_size": 2606,
 				"line_ending": "Windows"
 			}
 		},
@@ -35,7 +35,7 @@
 			"file": "R/simReg.r",
 			"settings":
 			{
-				"buffer_size": 4567,
+				"buffer_size": 5702,
 				"line_ending": "Windows"
 			}
 		},
@@ -43,7 +43,23 @@
 			"file": "R/simRegFunc.r",
 			"settings":
 			{
-				"buffer_size": 9315,
+				"buffer_size": 10160,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/bleb/Copy/Courses/Uiowa/Comp/Syntax/SPSS/assign3.sps",
+			"settings":
+			{
+				"buffer_size": 6083,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/bleb/Copy/Courses/Uiowa/Comp/Syntax/SPSS/Week4.sps",
+			"settings":
+			{
+				"buffer_size": 7679,
 				"line_ending": "Windows"
 			}
 		}
@@ -114,7 +130,7 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 6,
 			"sheets":
 			[
 				{
@@ -123,20 +139,19 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3226,
+						"buffer_size": 3347,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2312,
-								2312
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"WordCountShouldRun": true,
 							"WordCountSyntax": "r extended",
 							"r_box_status": false,
 							"syntax": "Packages/R-Box/syntax/R Extended.tmLanguage",
@@ -147,7 +162,7 @@
 						"translation.y": 660.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
@@ -156,20 +171,19 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2466,
+						"buffer_size": 2606,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1725,
-								1772
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"WordCountShouldRun": true,
 							"WordCountSyntax": "r extended",
 							"r_box_status": false,
 							"syntax": "Packages/R-Box/syntax/R Extended.tmLanguage",
@@ -180,7 +194,7 @@
 						"translation.y": 220.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -202,7 +216,6 @@
 						],
 						"settings":
 						{
-							"WordCountShouldRun": true,
 							"WordCountSyntax": "r extended",
 							"r_box_status": false,
 							"syntax": "Packages/R-Box/syntax/R Extended.tmLanguage",
@@ -213,7 +226,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -222,20 +235,19 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4567,
+						"buffer_size": 5702,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3124,
-								3146
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"WordCountShouldRun": true,
 							"WordCountSyntax": "r extended",
 							"r_box_status": false,
 							"syntax": "Packages/R-Box/syntax/R Extended.tmLanguage"
@@ -244,7 +256,7 @@
 						"translation.y": 990.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -253,20 +265,19 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 9315,
+						"buffer_size": 10160,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6605,
-								6605
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"WordCountShouldRun": true,
 							"WordCountSyntax": "r extended",
 							"r_box_status": false,
 							"syntax": "Packages/R-Box/syntax/R Extended.tmLanguage",
@@ -275,6 +286,68 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 2041.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/C/Users/bleb/Copy/Courses/Uiowa/Comp/Syntax/SPSS/assign3.sps",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6083,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1859,
+								1859
+							]
+						],
+						"settings":
+						{
+							"WordCountShouldRun": true,
+							"WordCountSyntax": "plain text",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 7735.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/C/Users/bleb/Copy/Courses/Uiowa/Comp/Syntax/SPSS/Week4.sps",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7679,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3802,
+								3835
+							]
+						],
+						"settings":
+						{
+							"WordCountShouldRun": true,
+							"WordCountSyntax": "plain text",
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3492.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,

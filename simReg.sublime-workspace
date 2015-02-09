@@ -35,7 +35,7 @@
 			"file": "R/simReg.r",
 			"settings":
 			{
-				"buffer_size": 5702,
+				"buffer_size": 5793,
 				"line_ending": "Windows"
 			}
 		},
@@ -43,7 +43,7 @@
 			"file": "R/simRegFunc.r",
 			"settings":
 			{
-				"buffer_size": 10160,
+				"buffer_size": 10135,
 				"line_ending": "Windows"
 			}
 		},
@@ -235,7 +235,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5702,
+						"buffer_size": 5793,
 						"regions":
 						{
 						},
@@ -265,7 +265,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 10160,
+						"buffer_size": 10135,
 						"regions":
 						{
 						},
@@ -310,7 +310,6 @@
 						],
 						"settings":
 						{
-							"WordCountShouldRun": true,
 							"WordCountSyntax": "plain text",
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},

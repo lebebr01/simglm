@@ -104,21 +104,25 @@
 #' (1 | clust3ID), data = temp.three)
 #' 
 #' }
-sim.reg <- function(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k = NULL, 
-                    n, p, errorVar, randCor, randCor3, rand.dist, err.dist, serCor, serCorVal, data.str, 
-                    fact.vars = list(NULL), num.dist, ...) {
+sim.reg <- function(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k, n, p, 
+                    unbal = NULL, unbal3 = NULL, errorVar, randCor, randCor3, rand.dist, err.dist, 
+                    serCor, serCorVal, data.str, fact.vars = list(NULL), num.dist,
+                    unbalCont = c(min = NULL, max = NULL), unbalCont3 = c(min = NULL, max = NULL), ...) {
   
   if(data.str == "single"){
     sim.reg.single(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, fact.vars, 
                    num.dist, ...)
   } else {
   	if (is.null(k)){
-  	  sim.reg.nested(fixed, random, fixed.param, random.param, cov.param, n, p, errorVar, randCor, 
-  	                 rand.dist, err.dist, serCor, serCorVal, data.str, fact.vars, num.dist, ...)
+  	  sim.reg.nested(fixed, random, fixed.param, random.param, cov.param, n, p, 
+  	                 unbal = NULL, errorVar, randCor, rand.dist, err.dist, serCor, 
+  	                 serCorVal, data.str, fact.vars = list(NULL), num.dist,
+  	                 unbalCont = c(min = NULL, max = NULL), ...)
   } else {
     sim.reg.nested3(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k, n, p, 
-                    errorVar, randCor, randCor3, rand.dist, err.dist, serCor, serCorVal, data.str, 
-                    fact.vars, num.dist, ...)
+                    unbal = NULL, unbal3 = NULL, errorVar, randCor, randCor3, rand.dist, err.dist, 
+                    serCor, serCorVal, data.str, fact.vars = list(NULL), num.dist,
+                    unbalCont = c(min = NULL, max = NULL), unbalCont3 = c(min = NULL, max = NULL), ...)
   }
  }
 }

@@ -55,7 +55,7 @@ data.reg.nested3 <- function(Xmat, Zmat, Zmat3, beta, rand.eff, rand.eff3, k, n,
     reVec <- matrix(c(t(rand.eff)))
     re <- as.matrix(ZmatBlock %*% reVec)
 
-    Zmat3 <- data.frame(Zmat3, ID = rep(1:k, times = lvl2ss))
+    Zmat3 <- data.frame(Zmat3, ID = rep(1:k, times = n))
     Zmat3List <- lapply(1:k, function(xx) as.matrix(subset(Zmat3, ID == xx, select = 1:(ncol(Zmat3) - 1))))
     Zmat3Block <- bdiag(Zmat3List)
     re3Vec <- as.matrix(c(t(rand.eff3)))

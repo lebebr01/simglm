@@ -1,6 +1,9 @@
 ### Unbalanced Data
 
+Unbalanced data simulation - three level replication of balanced design.
+
 ```{r unbal3}
+library(simReg)
 fixed <- ~1 + time + diff + act + actClust + time:act
 random <- ~1 + time + diff
 random3 <- ~ 1 + time
@@ -12,8 +15,6 @@ var.type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
 n <- 150
 p <- 30
-unbal = NULL
-unbal3 = NULL
 errorVar <- 4
 randCor <- 0
 randCor3 <- 0
@@ -22,5 +23,14 @@ err.dist <- "norm"
 serCor <- "ID"
 serCorVal <- NULL
 data.str <- "long"
+temp.three <- sim.reg(fixed = fixed, random = random, random3 = random3,
+      fixed.param = fixed.param, random.param = random.param, 
+      random.param3 = random.param3, cov.param = cov.param, k = k,
+      n = n, p = p, errorVar = errorVar,
+      randCor = randCor, randCor3 = randCor3, rand.dist = rand.dist,
+      err.dist = err.dist, serCor = serCor, serCorVal = serCorVal, 
+      data.str = data.str)
+
 ```
 
+Unbalanced data simulation - two level

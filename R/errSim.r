@@ -18,6 +18,7 @@
 sim.err.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist, mean, var){
   
   # Look to edit this with match.arg and switch
+  n <- length(p)
 
   if(serCor == "ARMA" & length(serCorVal) < 2) stop("Incorrect dimensions serCorVal")
   if(err.dist == "norm"){
@@ -31,8 +32,9 @@ sim.err.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist
           err <- unlist(lapply(1:n,function(x){arima.sim(serCorVal,p, sd = sqrt(errorVar))}))
         } else {
           # generate multivariate normal error terms with zero mean 
-          d2 <- (errorVar)*diag(p) 
-          err <- matrix(c(mvrnorm(n,rep(0,p),d2)) ,nrow=n*p, ncol = 1)
+          #d2 <- (errorVar)*diag(p) 
+          err <- unlist(lapply(1:length(lvl1ss), function(xx) 
+            mvrnorm(n = 1,rep(0,p[xx]), Sigma = errorVar * diag(p[xx]))))
         }
       }
     }

@@ -9,14 +9,15 @@ Description: This package easily simulates regression models,
     this includes both simple regression and linear mixed
     models. It also aims to do power simulations for specific
     regression parameters.
-Depends:
+Depends: 
     R (>= 3.0.2),
     stats,
     MASS,
     Matrix,
     VGAM,
     nlme
-Suggests:
+Suggests: 
     knitr,
-    lme4
+    lme4,
+    testthat
 VignetteBuilder: knitr

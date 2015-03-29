@@ -16,7 +16,7 @@ data.reg.nested <- function(Xmat, Zmat, beta, rand.eff, n, p, err) {
   
    Fbeta <- (Xmat %*% beta) 
     
-    Zmat <- data.frame(Zmat, ID = rep(1:n, each = p))
+    Zmat <- data.frame(Zmat, ID = rep(1:n, times = p))
     ZmatList <- lapply(1:n, function(xx) as.matrix(subset(Zmat, ID == xx, select = 1:(ncol(Zmat)-1))))
     ZmatBlock <- bdiag(ZmatList)
     reVec <- matrix(c(t(rand.eff)))
@@ -49,13 +49,13 @@ data.reg.nested3 <- function(Xmat, Zmat, Zmat3, beta, rand.eff, rand.eff3, k, n,
   
    Fbeta <- (Xmat %*% beta) 
     
-    Zmat <- data.frame(Zmat, ID = rep(1:n, each = p))
-    ZmatList <- lapply(1:n, function(xx) as.matrix(subset(Zmat, ID == xx, select = 1:(ncol(Zmat) - 1))))
+    Zmat <- data.frame(Zmat, ID = rep(1:length(p), times = p))
+    ZmatList <- lapply(1:length(p), function(xx) as.matrix(subset(Zmat, ID == xx, select = 1:(ncol(Zmat) - 1))))
     ZmatBlock <- bdiag(ZmatList)
     reVec <- matrix(c(t(rand.eff)))
     re <- as.matrix(ZmatBlock %*% reVec)
 
-    Zmat3 <- data.frame(Zmat3, ID = rep(1:k, each = (n*p)/k))
+    Zmat3 <- data.frame(Zmat3, ID = rep(1:k, times = lvl2ss))
     Zmat3List <- lapply(1:k, function(xx) as.matrix(subset(Zmat3, ID == xx, select = 1:(ncol(Zmat3) - 1))))
     Zmat3Block <- bdiag(Zmat3List)
     re3Vec <- as.matrix(c(t(rand.eff3)))

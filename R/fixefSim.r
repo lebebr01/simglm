@@ -117,7 +117,8 @@ sim.fixef.nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data.str,
   } 
   
  if(data.str == "long") {
-    Xmat <- rep.int((1:p) - 1, times = n)
+    Xmat <- unlist(lapply(1:length(lvl1ss), function(xx) (1:lvl1ss[xx]) - 1))
+    #Xmat <- rep.int((1:p) - 1, times = n)
     cov.param2 <- lapply(1:n.cont, function(xx) 
       list(k = k, n = n, p = p, mean = cov.param$mean[xx], sd = cov.param$sd[xx], 
            var.type = cov.param$var.type[xx]))
@@ -281,9 +282,9 @@ sim.continuous <- function(k, n, p, mean, sd, var.type = c('lvl1', 'lvl2', 'lvl3
   
   contVar <- switch(var.type,
                    single = rnorm(n = n, mean = mean, sd = sd),
-                   lvl3 = rep(rnorm(n = k, mean = mean, sd = sd), each = (n*p)/k),
-                   lvl2 = rep(rnorm(n = n, mean = mean, sd = sd), each = p),
-                   lvl1 = rnorm(n = n*p, mean = mean, sd = sd)
+                   lvl3 = rep(rnorm(n = k, mean = mean, sd = sd), times = sum(p)/k),
+                   lvl2 = rep(rnorm(n = length(p), mean = mean, sd = sd), times = p),
+                   lvl1 = rnorm(n = sum(p), mean = mean, sd = sd)
   )
 
   

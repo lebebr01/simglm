@@ -6,8 +6,8 @@
 \usage{
 sim.reg(fixed, random, random3, fixed.param, random.param, random.param3,
   cov.param, k, n, p, errorVar, randCor, randCor3, rand.dist, err.dist, serCor,
-  serCorVal, data.str, fact.vars = list(NULL), num.dist, unbal = FALSE,
-  unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL, ...)
+  serCorVal, data.str, fact.vars = list(NULL), unbal = FALSE,
+  unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -54,8 +54,6 @@ interactions. Must be same order as fixed formula above.}
 each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 optional specifications are: replace, prob, value.labels.}
 
-\item{num.dist}{Number of distributions for bimodal random variables}
-
 \item{unbal}{A vector of sample sizes for the number of observations for each level 2
 cluster. Must have same length as level two sample size n. Alternative specification
 can be TRUE, which uses additional argument, unbalCont.}
@@ -69,8 +67,6 @@ will be drawn from a random uniform distribution with min and max specified.}
 
 \item{unbalCont3}{When unbal3 = TRUE, this specifies the minimum and maximum level two size,
 will be drawn from a random uniform distribution with min and max specified.}
-
-\item{...}{Additional arguments to pass to rbimod}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

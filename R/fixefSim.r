@@ -249,7 +249,7 @@ sim.factor <- function(k, n, p, numlevels, replace = TRUE, prob = NULL, var.type
   
   catVar <- switch(var.type,
          single = sample(x = numlevels, size = n, replace = replace, prob = prob),
-         lvl3 = rep(sampl(x = numlevels, size = k, replace = replace, prob = prob), each = (n*p)/k),
+         lvl3 = rep(sample(x = numlevels, size = k, replace = replace, prob = prob), each = (n*p)/k),
          lvl2 = rep(sample(x = numlevels, size = n, replace = replace, prob = prob), each = p),
          lvl1 = sample(x = numlevels, size = n*p, replace = replace, prob = prob)
          )

@@ -5,7 +5,7 @@
 \title{Master function to simulate single level data.}
 \usage{
 sim.reg.single(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str,
-  fact.vars = list(NULL), num.dist, ...)
+  fact.vars = list(NULL))
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -27,10 +27,6 @@ interactions. Must be same order as fixed formula above.}
 \item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
 each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 optional specifications are: replace, prob, value.labels.}
-
-\item{num.dist}{Number of distributions for bimodal random variables}
-
-\item{...}{Additional arguments to pass to rbimod}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

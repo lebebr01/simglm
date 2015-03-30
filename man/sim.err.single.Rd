@@ -4,21 +4,15 @@
 \alias{sim.err.single}
 \title{Function that simulates errors.}
 \usage{
-sim.err.single(errorVar, n, err.dist, num.dist, mean, var)
+sim.err.single(errorVar, n, err.dist)
 }
 \arguments{
 \item{errorVar}{Scalar of error variance}
 
 \item{n}{Cluster sample size.}
 
-\item{err.dist}{Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod",
+\item{err.dist}{Simulated within cluster error distribution. Must be "lap", "chi", "norm",
 "norm" is default.}
-
-\item{num.dist}{Number of distributions for bimod random variables.}
-
-\item{mean}{A vector of means passed to rbimod, length must match num.dist.}
-
-\item{var}{A vector of variances passed to rbimod, length must match num.dist.}
 }
 \description{
 Input error simulation parameters and outputs simulated errors.

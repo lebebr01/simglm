@@ -7,15 +7,12 @@
 #' @param p Within cluster sample size.
 #' @param serCor Simulation of serial correlation. Must be "AR", "MA", "ARMA", or "ID", "ID" is default.
 #' @param serCorVal Serial correlation parameters. A list of values to pass on to arima.sim.
-#' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
+#' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", 
 #' "norm" is default.
-#' @param num.dist Number of distributions for bimod random variables
-#' @param mean A vector of means passed to rbimod, length must match num.dist.
-#' @param var A vector of variances passed to rbimod, length must match num.dist.
 #' @importFrom VGAM rlaplace 
 #' @importFrom MASS mvrnorm
 #' @export 
-sim.err.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist, mean, var){
+sim.err.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist){
   
   # Look to edit this with match.arg and switch
   #n <- length(p)
@@ -48,10 +45,10 @@ sim.err.nested <- function(errorVar, n, p, serCor, serCorVal, err.dist, num.dist
     err <- unlist(lapply(1:n, function(x){(rchisq(p,1)-1)*chol(errorVar/2)}))
   }
   
-  if(err.dist == "bimod"){
-    err <- unlist(lapply(1:n, function(x) {
-      rbimod(p, mean, var, num.dist) }))
-  }
+#   if(err.dist == "bimod"){
+#     err <- unlist(lapply(1:n, function(x) {
+#       rbimod(p, mean, var, num.dist) }))
+#   }
 err
 }
 
@@ -64,14 +61,11 @@ err
 #' 
 #' @param errorVar Scalar of error variance
 #' @param n Cluster sample size.
-#' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
+#' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", 
 #' "norm" is default.
-#' @param num.dist Number of distributions for bimod random variables.
-#' @param mean A vector of means passed to rbimod, length must match num.dist.
-#' @param var A vector of variances passed to rbimod, length must match num.dist.
 #' @importFrom VGAM rlaplace
 #' @export 
-sim.err.single <- function(errorVar, n, err.dist, num.dist, mean, var){
+sim.err.single <- function(errorVar, n, err.dist){
   
   if(err.dist == "norm"){
     err <- rnorm(n, 0, sd = sqrt(errorVar))
@@ -82,8 +76,8 @@ sim.err.single <- function(errorVar, n, err.dist, num.dist, mean, var){
   if(err.dist == "chi"){
     err <- (rchisq(n,1)-1)*chol(errorVar/2)
   }
-  if(err.dist == "bimod"){
-    err <- rbimod(n, mean, var, num.dist)
-  }
+#   if(err.dist == "bimod"){
+#     err <- rbimod(n, mean, var, num.dist)
+#   }
   err
 }

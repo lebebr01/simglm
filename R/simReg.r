@@ -35,8 +35,16 @@
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
-#' @param num.dist Number of distributions for bimodal random variables
-#' @param ... Additional arguments to pass to rbimod 
+#' @param unbal A vector of sample sizes for the number of observations for each level 2
+#'  cluster. Must have same length as level two sample size n. Alternative specification
+#'  can be TRUE, which uses additional argument, unbalCont.
+#' @param unbal3 A vector of sample sizes for the number of observations for each level 3
+#'  cluster. Must have same length as level two sample size k. Alternative specification
+#'  can be TRUE, which uses additional argument, unbalCont3.
+#' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum level one size,
+#'  will be drawn from a random uniform distribution with min and max specified.
+#' @param unbalCont3 When unbal3 = TRUE, this specifies the minimum and maximum level two size,
+#'  will be drawn from a random uniform distribution with min and max specified.
 #' @export 
 #' @examples
 #' \donttest{
@@ -105,24 +113,23 @@
 #' 
 #' }
 sim.reg <- function(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k, n, p, 
-                    unbal = NULL, unbal3 = NULL, errorVar, randCor, randCor3, rand.dist, err.dist, 
-                    serCor, serCorVal, data.str, fact.vars = list(NULL), num.dist,
-                    unbalCont = c(min = NULL, max = NULL), unbalCont3 = c(min = NULL, max = NULL), ...) {
+                    errorVar, randCor, randCor3, rand.dist, err.dist, 
+                    serCor, serCorVal, data.str, fact.vars = list(NULL),
+                    unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL) {
   
   if(data.str == "single"){
-    sim.reg.single(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, fact.vars, 
-                   num.dist, ...)
+    sim.reg.single(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, fact.vars)
   } else {
   	if (is.null(k)){
   	  sim.reg.nested(fixed, random, fixed.param, random.param, cov.param, n, p, 
-  	                 unbal = NULL, errorVar, randCor, rand.dist, err.dist, serCor, 
-  	                 serCorVal, data.str, fact.vars = list(NULL), num.dist,
-  	                 unbalCont = c(min = NULL, max = NULL), ...)
+  	                 errorVar, randCor, rand.dist, err.dist, serCor, 
+  	                 serCorVal, data.str, fact.vars,
+  	                 unbal, unbalCont)
   } else {
     sim.reg.nested3(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k, n, p, 
-                    unbal = NULL, unbal3 = NULL, errorVar, randCor, randCor3, rand.dist, err.dist, 
-                    serCor, serCorVal, data.str, fact.vars = list(NULL), num.dist,
-                    unbalCont = c(min = NULL, max = NULL), unbalCont3 = c(min = NULL, max = NULL), ...)
+                    errorVar, randCor, randCor3, rand.dist, err.dist, 
+                    serCor, serCorVal, data.str, fact.vars,
+                    unbal, unbal3, unbalCont, unbalCont3)
   }
  }
 }

@@ -47,6 +47,14 @@ data.reg.nested <- function(Xmat, Zmat, beta, rand.eff, n, p, err) {
 #' @export 
 data.reg.nested3 <- function(Xmat, Zmat, Zmat3, beta, rand.eff, rand.eff3, k, n, p, err) {
   
+  
+  end <- cumsum(n)
+  beg <- c(1, cumsum(n) + 1)
+  beg <- beg[-length(beg)]
+  
+  lvl3ss <- sapply(lapply(1:length(beg), function(xx) 
+    p[beg[xx]:end[xx]]), sum)
+  
    Fbeta <- (Xmat %*% beta) 
     
     Zmat <- data.frame(Zmat, ID = rep(1:length(p), times = p))
@@ -55,7 +63,7 @@ data.reg.nested3 <- function(Xmat, Zmat, Zmat3, beta, rand.eff, rand.eff3, k, n,
     reVec <- matrix(c(t(rand.eff)))
     re <- as.matrix(ZmatBlock %*% reVec)
 
-    Zmat3 <- data.frame(Zmat3, ID = rep(1:k, times = n))
+    Zmat3 <- data.frame(Zmat3, ID = rep(1:k, times = lvl3ss))
     Zmat3List <- lapply(1:k, function(xx) as.matrix(subset(Zmat3, ID == xx, select = 1:(ncol(Zmat3) - 1))))
     Zmat3Block <- bdiag(Zmat3List)
     re3Vec <- as.matrix(c(t(rand.eff3)))

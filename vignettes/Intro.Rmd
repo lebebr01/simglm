@@ -93,10 +93,10 @@ serCor <- "ID"
 serCorVal <- NULL
 data.str <- "long"
 temp.long <- sim.reg(fixed = fixed, random = random, fixed.param = fixed.param, 
-                     random.param = random.param, cov.param = cov.param, n = n, p = p,
+                     random.param = random.param, cov.param = cov.param, k = NULL, n = n, p = p,
                      errorVar = errorVar, randCor = randCor, rand.dist = rand.dist, 
                      err.dist = err.dist, serCor = serCor, serCorVal = serCorVal, 
-                     data.str = data.str)
+                     data.str = data.str, unbal = FALSE)
 ```
 
 Highlighting the new agruments needed, the first is a one sided formula **random**. This specifies which terms should be specified above. Related to **random**, **random.param** specifies the variance for the random effects and must be the same length as **random**.  Although still found in the single level regression, the "var.type" portion of **cov.param** must not be either "lvl1" or "lvl2" to represent either level 1 or level 2 variables respectively. Note that the time variable is not included in the **cov.param** argument and is automatically specified as discrete starting from 0.  In the future, differing time scales will be expanded.

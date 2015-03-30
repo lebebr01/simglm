@@ -12,13 +12,13 @@
 #'  Does not include intercept, time, factors, or interactions. 
 #'  var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
 #' @param n Number of clusters.
-#' @param p Number of within cluster units.
+#' @param lvl1ss Number of within cluster units.
 #' @param data.str Type of data. Must be "cross", or "long".
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
-sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str, 
+sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data.str, 
                              fact.vars = list(NULL)){
   
   n.vars <- length(fixed.vars)
@@ -42,15 +42,15 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str,
   } 
 
   if(data.str == "long") {
-    Xmat <- rep.int((1:p) - 1, times = n)
+    Xmat <- unlist(lapply(1:length(lvl1ss), function(xx) (1:lvl1ss[xx])-1))
     cov.param2 <- lapply(1:n.cont, function(xx) 
-      list(k = 0, n = n, p = p, mean = cov.param$mean[xx], sd = cov.param$sd[xx], 
+      list(k = 0, n = n, p = lvl1ss, mean = cov.param$mean[xx], sd = cov.param$sd[xx], 
            var.type = cov.param$var.type[xx]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.cont, function(xx) 
       do.call(sim.continuous, cov.param2[[xx]]))))
   } else {
     cov.param2 <- lapply(1:n.cont, function(xx) 
-      list(k = 0, n = n, p = p, mean = cov.param$mean[xx], sd = cov.param$sd[xx], 
+      list(k = 0, n = n, p = lvl1ss, mean = cov.param$mean[xx], sd = cov.param$sd[xx], 
            var.type = cov.param$var.type[xx]))
     Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
       do.call(sim.continuous, cov.param2[[xx]])))
@@ -58,7 +58,7 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, p, data.str,
   
   if(length(fact.loc > 0)){
     fact.vars <- lapply(1:length(fact.vars), function(xx) 
-      list(k = 0, n = n, p = p, numlevels = fact.vars$numlevels[xx], 
+      list(k = 0, n = n, p = lvl1ss, numlevels = fact.vars$numlevels[xx], 
            var.type = fact.vars$var.type[xx]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
               function(xx) do.call(sim.factor, fact.vars[[xx]]))))
@@ -116,6 +116,7 @@ sim.fixef.nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data.str,
     n.fact <- 0
   } 
   
+  p = p
  if(data.str == "long") {
     Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx]) - 1))
     #Xmat <- rep.int((1:p) - 1, times = n)

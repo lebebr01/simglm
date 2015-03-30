@@ -5,9 +5,8 @@
 \title{Function to simulate nested data}
 \usage{
 sim.reg.nested(fixed, random, fixed.param, random.param, cov.param, n, p,
-  unbal = NULL, errorVar, randCor, rand.dist, err.dist, serCor, serCorVal,
-  data.str, fact.vars = list(NULL), num.dist, unbalCont = c(min = NULL, max
-  = NULL), ...)
+  errorVar, randCor, rand.dist, err.dist, serCor, serCorVal, data.str,
+  fact.vars = list(NULL), num.dist, unbal = FALSE, unbalCont = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -25,10 +24,6 @@ var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 \item{n}{Cluster sample size.}
 
 \item{p}{Within cluster sample size.}
-
-\item{unbal}{A vector of sample sizes for the number of observations for each level 2
-cluster. Must have same length as level two sample size n. Alternative specification
-can be TRUE, which uses additional argument, unbalCont.}
 
 \item{errorVar}{Scalar of error variance.}
 
@@ -51,6 +46,10 @@ each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 optional specifications are: replace, prob, value.labels.}
 
 \item{num.dist}{Number of distributions for bimod random distribution}
+
+\item{unbal}{A vector of sample sizes for the number of observations for each level 2
+cluster. Must have same length as level two sample size n. Alternative specification
+can be TRUE, which uses additional argument, unbalCont.}
 
 \item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum level one size,
 will be drawn from a random uniform distribution with min and max specified.}

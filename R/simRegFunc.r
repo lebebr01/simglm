@@ -17,9 +17,6 @@
 #'  var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
-#' @param unbal A vector of sample sizes for the number of observations for each level 2
-#'  cluster. Must have same length as level two sample size n. Alternative specification
-#'  can be TRUE, which uses additional argument, unbalCont.
 #' @param errorVar Scalar of error variance.
 #' @param randCor Correlation between random effects.
 #' @param rand.dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
@@ -32,15 +29,16 @@
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
-#' @param num.dist Number of distributions for bimod random distribution
+#' @param unbal A vector of sample sizes for the number of observations for each level 2
+#'  cluster. Must have same length as level two sample size n. Alternative specification
+#'  can be TRUE, which uses additional argument, unbalCont.
 #' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum level one size,
 #'  will be drawn from a random uniform distribution with min and max specified.
-#' @param ... Additional arguments to pass to rbimod 
 #' @export 
 sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, n, p, 
-                           unbal = NULL, errorVar, randCor, rand.dist, err.dist, serCor, 
-                           serCorVal, data.str, fact.vars = list(NULL), num.dist,
-                           unbalCont = c(min = NULL, max = NULL), ...) {
+                           errorVar, randCor, rand.dist, err.dist, serCor, 
+                           serCorVal, data.str, fact.vars = list(NULL),
+                           unbal = FALSE, unbalCont = NULL) {
 
   if(randCor > 1 | randCor < -1) stop("cor out of range")
 
@@ -49,22 +47,19 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 
      if(length(rand.vars)+1 != length(random.param)) stop("Random lengths not equal")
      if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
-  
-  if(unbal) {
-    if(is.null(unbalCont)) stop("Must specify unbalCont when unbal = TRUE")
-    lvl1ss <- round(runif(n = n, min = unbalCont["min"], max = unbalCont["max"]), 0)
+
+  if(unbal == FALSE) {
+    lvl1ss <- rep(p, n)
+    if(is.null(lvl1ss)) stop("lvl1ss is NULL")
   } else {
-    if(is.null(unbal)) {
-      lvl1ss <- rep(p, n)
-    } else {
-      lvl1ss <- unbal 
-  } 
+    if(length(unbalCont) < 2) stop("Must specify unbalCont when unbal = TRUE")
+    lvl1ss <- round(runif(n = n, min = min(unbalCont), max = max(unbalCont)), 0)
   }
 
-  rand.eff <- sim.rand.eff(random.param, randCor, n, rand.dist, num.dist)
+  rand.eff <- sim.rand.eff(random.param, randCor, n, rand.dist)
 
   Xmat <- sim.fixef.nested(fixed, fixed.vars, cov.param, n, lvl1ss, 
-                            data.str, fact.vars)
+                            data.str = data.str, fact.vars = fact.vars)
   
   reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
     rep(rand.eff[,xx], times = lvl1ss)))
@@ -72,9 +67,10 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, 
   
   Zmat <- model.matrix(random, data.frame(Xmat))
 
-  err <- sim.err.nested(errorVar, n, lvl1ss, serCor, serCorVal, err.dist, num.dist, mean, var)
+  err <- sim.err.nested(errorVar, n, p = lvl1ss, serCor = serCor, serCorVal = serCorVal,
+                        err.dist = err.dist)
 
- sim.data <- data.reg.nested(Xmat, Zmat, fixed.param, rand.eff, n, lvl1ss, err)
+ sim.data <- data.reg.nested(Xmat, Zmat, fixed.param, rand.eff, n, p = lvl1ss, err = err)
   
  Xmat <- data.frame(Xmat,reff,sim.data)
  Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
@@ -105,12 +101,6 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 #' @param k Number of third level clusters.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
-#' @param unbal A vector of sample sizes for the number of observations for each level 2
-#'  cluster. Must have same length as level two sample size n. Alternative specification
-#'  can be TRUE, which uses additional argument, unbalCont.
-#' @param unbal3 A vector of sample sizes for the number of observations for each level 3
-#'  cluster. Must have same length as level two sample size k. Alternative specification
-#'  can be TRUE, which uses additional argument, unbalCont3.
 #' @param errorVar Scalar of error variance.
 #' @param randCor Correlation between random effects.
 #' @param randCor3 Correlation between level 3 random effects.
@@ -124,17 +114,21 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
-#' @param num.dist Number of distributions for bimod random distribution
+#' @param unbal A vector of sample sizes for the number of observations for each level 2
+#'  cluster. Must have same length as level two sample size n. Alternative specification
+#'  can be TRUE, which uses additional argument, unbalCont.
+#' @param unbal3 A vector of sample sizes for the number of observations for each level 3
+#'  cluster. Must have same length as level two sample size k. Alternative specification
+#'  can be TRUE, which uses additional argument, unbalCont3.
 #' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum level one size,
 #'  will be drawn from a random uniform distribution with min and max specified.
 #' @param unbalCont3 When unbal3 = TRUE, this specifies the minimum and maximum level two size,
 #'  will be drawn from a random uniform distribution with min and max specified.
-#' @param ... Additional arguments to pass to rbimod 
 #' @export 
 sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k, n, p, 
-                            unbal = NULL, unbal3 = NULL, errorVar, randCor, randCor3, rand.dist, err.dist, 
-                            serCor, serCorVal, data.str, fact.vars = list(NULL), num.dist,
-                            unbalCont = c(min = NULL, max = NULL), unbalCont3 = c(min = NULL, max = NULL), ...) {
+                            errorVar, randCor, randCor3, rand.dist, err.dist, 
+                            serCor, serCorVal, data.str, fact.vars = list(NULL),
+                            unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL) {
 
   if(randCor > 1 | randCor < -1 | randCor3 > 1 | randCor3 < -1) stop("Random effect correlation out of range")
 
@@ -146,28 +140,20 @@ sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, r
      if(length(rand.vars3)+1 != length(random.param3)) stop("Third level random lengths not equal")
      if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
   
-  if(is.null(unbal3)) {
+  if(unbal3 == FALSE) {
     lvl2ss <- rep(n/k, k)
   } else {
-    if(is.null(unbal3)) {
-      if(is.null(unbalCont3)) stop("Must specify unbalCont3 when unbal3 = TRUE")
-      lvl2ss <- round(runif(n = k, min = unbalCont3["min"], max = unbalCont3["max"]), 0)
-      n <- sum(lvl2ss) 
-    } else {
-      lvl2ss <- unbal3 
-      n <- sum(lvl2ss)
-   } 
+    if(length(unbalCont3) < 2) stop("Must specify unbalCont3 when unbal3 = TRUE")
+    lvl2ss <- round(runif(n = k, min = min(unbalCont3), max = max(unbalCont3)), 0)
+    n <- sum(lvl2ss)
   }
-  
-  if(is.null(unbal)) {
+
+  if(unbal == FALSE) {
     lvl1ss <- rep(p, n)
+    if(is.null(lvl1ss)) stop("lvl1ss is NULL")
   } else {
-    if(unbal) {
-      if(is.null(unbalCont)) stop("Must specify unbalCont when unbal = TRUE")
-      lvl1ss <- round(runif(n = n, min = unbalCont["min"], max = unbalCont["max"]), 0)
-    } else {
-      lvl1ss <- unbal 
-   } 
+    if(length(unbalCont) < 2) stop("Must specify unbalCont when unbal = TRUE")
+    lvl1ss <- round(runif(n = n, min = min(unbalCont), max = max(unbalCont)), 0)
   }
   
   end <- cumsum(lvl2ss)
@@ -177,10 +163,11 @@ sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, r
   lvl3ss <- sapply(lapply(1:length(beg), function(xx) 
     lvl1ss[beg[xx]:end[xx]]), sum)
   
-  rand.eff <- sim.rand.eff(random.param, randCor, n, rand.dist, num.dist)
+  rand.eff <- sim.rand.eff(random.param, randCor, n, rand.dist)
   rand.eff3 <- sim.rand.eff3(random.param3, randCor3, k)
    
-  Xmat <- sim.fixef.nested3(fixed, fixed.vars, cov.param, k, lvl2ss, lvl1ss, data.str, fact.vars)
+  Xmat <- sim.fixef.nested3(fixed, fixed.vars, cov.param, k, n = lvl2ss, 
+                            p = lvl1ss, data.str = data.str, fact.vars = fact.vars)
   
   reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
     rep(rand.eff[,xx], times = lvl1ss)))
@@ -193,9 +180,11 @@ sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, r
   Zmat <- model.matrix(random, data.frame(Xmat))
   Zmat3 <- model.matrix(random3, data.frame(Xmat))
 
-  err <- sim.err.nested(errorVar, lvl2ss, lvl1ss, serCor, serCorVal, err.dist, num.dist, mean, var)
+  err <- sim.err.nested(errorVar, n = lvl2ss, p = lvl1ss, serCor = serCor, 
+                        serCorVal = serCorVal, err.dist = err.dist)
 
- sim.data <- data.reg.nested3(Xmat, Zmat, Zmat3, fixed.param, rand.eff, rand.eff3, k, lvl2ss, lvl1ss, err)
+ sim.data <- data.reg.nested3(Xmat, Zmat, Zmat3, fixed.param, rand.eff, rand.eff3,
+                              k, n = lvl2ss, p = lvl1ss, err = err)
   
  Xmat <- data.frame(Xmat,reff,sim.data)
  Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
@@ -226,11 +215,9 @@ sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, r
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
-#' @param num.dist Number of distributions for bimodal random variables
-#' @param ... Additional arguments to pass to rbimod
 #' @export 
 sim.reg.single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, 
-                           fact.vars = list(NULL), num.dist, ...) {
+                           fact.vars = list(NULL)) {
   
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   
@@ -238,7 +225,7 @@ sim.reg.single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist,
   
   Xmat <- sim.fixef.single(fixed, fixed.vars, n, cov.param, fact.vars)
   
-  err <- sim.err.single(errorVar, n, err.dist, num.dist, ...)
+  err <- sim.err.single(errorVar, n, err.dist)
   
   sim.data <- data.reg.single(Xmat, fixed.param, n, err)
   

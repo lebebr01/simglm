@@ -2,7 +2,7 @@ Package: simReg
 Type: Package
 Maintainer: Brandon LeBeau <lebebr01+simReg@gmail.com>
 Author: Brandon LeBeau <lebebr01+simReg@gmail.com>
-Version: 0.1.1
+Version: 0.2
 License: MIT + file LICENSE
 Title: Simulate regression models
 Description: This package easily simulates regression models,

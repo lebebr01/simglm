@@ -278,11 +278,18 @@ sim.continuous <- function(k, n, p, mean, sd, var.type = c('lvl1', 'lvl2', 'lvl3
   #if(is.null(prob) == FALSE & (length(prob) == numlevels | length(prob) == length(numlevels)) == FALSE) {
   #  stop("prob must be same length as numlevels")
   #}
+  end <- cumsum(n)
+  beg <- c(1, cumsum(n) + 1)
+  beg <- beg[-length(beg)]
+  
+  lvl3ss <- sapply(lapply(1:length(beg), function(xx) 
+    p[beg[xx]:end[xx]]), sum)
+  
   var.type <- match.arg(var.type)
   
   contVar <- switch(var.type,
                    single = rnorm(n = n, mean = mean, sd = sd),
-                   lvl3 = rep(rnorm(n = k, mean = mean, sd = sd), times = sum(p)/k),
+                   lvl3 = rep(rnorm(n = k, mean = mean, sd = sd), times = lvl3ss),
                    lvl2 = rep(rnorm(n = length(p), mean = mean, sd = sd), times = p),
                    lvl1 = rnorm(n = sum(p), mean = mean, sd = sd)
   )

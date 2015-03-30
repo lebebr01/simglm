@@ -156,7 +156,7 @@ sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, r
     } else {
       lvl2ss <- unbal3 
       n <- sum(lvl2ss)
-  } 
+   } 
   }
   
   if(is.null(unbal)) {
@@ -167,8 +167,15 @@ sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, r
       lvl1ss <- round(runif(n = n, min = unbalCont["min"], max = unbalCont["max"]), 0)
     } else {
       lvl1ss <- unbal 
-  } 
+   } 
   }
+  
+  end <- cumsum(lvl2ss)
+  beg <- c(1, cumsum(lvl2ss) + 1)
+  beg <- beg[-length(beg)]
+  
+  lvl3ss <- sapply(lapply(1:length(beg), function(xx) 
+    lvl1ss[beg[xx]:end[xx]]), sum)
   
   rand.eff <- sim.rand.eff(random.param, randCor, n, rand.dist, num.dist)
   rand.eff3 <- sim.rand.eff3(random.param3, randCor3, k)
@@ -193,7 +200,7 @@ sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, r
  Xmat <- data.frame(Xmat,reff,sim.data)
  Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
  Xmat$clustID <- rep(1:n, times = lvl1ss)
- Xmat$clust3ID <- rep(1:k, times = lvl2ss)
+ Xmat$clust3ID <- rep(1:k, times = lvl3ss)
  Xmat
 }
 

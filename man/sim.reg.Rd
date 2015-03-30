@@ -5,8 +5,10 @@
 \title{Master simulation function.}
 \usage{
 sim.reg(fixed, random, random3, fixed.param, random.param, random.param3,
-  cov.param, k = NULL, n, p, errorVar, randCor, randCor3, rand.dist, err.dist,
-  serCor, serCorVal, data.str, fact.vars = list(NULL), num.dist, ...)
+  cov.param, k, n, p, unbal = NULL, unbal3 = NULL, errorVar, randCor,
+  randCor3, rand.dist, err.dist, serCor, serCorVal, data.str,
+  fact.vars = list(NULL), num.dist, unbalCont = c(min = NULL, max = NULL),
+  unbalCont3 = c(min = NULL, max = NULL), ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}

@@ -116,7 +116,6 @@ sim.fixef.nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data.str,
     n.fact <- 0
   } 
   
-  p = p
  if(data.str == "long") {
     Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx]) - 1))
     #Xmat <- rep.int((1:p) - 1, times = n)

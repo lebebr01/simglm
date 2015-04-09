@@ -5,7 +5,8 @@
 A flexible suite of functions to simulate nested data.  
 Currently supports the following features:
 * Longitudinal data simulation
-* Two levels of nesting
+* Three levels of nesting
+* Unbalanced designs
 * Specification of distribution of random effects
 * Specification of distribution of within cluster errors
 * Specification of serial correlation
@@ -21,7 +22,6 @@ Currently supports the following features:
 * Single level simulation
 
 Features coming soon:
-* Adding factor variable simulation
 * More options for simulating random components
  * More distributions
  * Ability to simulate different distributions for different random effects

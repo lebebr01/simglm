@@ -1,7 +1,45 @@
 ### Unbalanced Data
 
-Unbalanced data simulation - three level design unbalanced number of level 1 in each level 2 cluster.
+Unbalanced data tends to be the rule rather than the exception with real world data. As such, when simulating data it is better to replicate data that matches real world data conditions. The *simReg* package by default generates data for a balanced design. This means that the number of level one units within each level two cluster is the same.
 
+To override the default and generate unbalanced data where the number of observations within each level two cluster differ, two new arguments need to be passed to the *sim.reg* function. First, the argument **unbal** needs to be set to TRUE. This overrides the default of a balanced design. Next, the argument **unbalCont** is a vector of two values. The two values represent the minimum number of values per cluster and the maximum number of values per cluster. They can be specified in any order. The number of observations per cluster is then simulated from a random uniform distribution with the minimum and maximum values specified in the **unbalCont** argument.
+
+The following is an example of an unbalanced two level design. Note, the **p** argument (level one sample size) is set to NULL as the level one sample size is specified in the **unbalCont** argument.
+
+```{r seed, echo = FALSE}
+set.seed(100)
+```
+
+```{r twolevelunbal}
+library(simReg)
+fixed <- ~1 + diff + act + diff:act
+random <- ~1 +  diff
+fixed.param <- c(4, 6, 2.3, 7)
+random.param <- c(7, 2)
+cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
+n <- 150
+unbal <- TRUE
+errorVar <- 4
+randCor <- 0
+rand.dist <- "norm"
+err.dist <- "norm"
+serCor <- "ID"
+serCorVal <- NULL
+data.str <- "cross"
+unbalCont <- c(3, 10)
+temp.cross <- sim.reg(fixed = fixed, random = random, fixed.param = fixed.param, random.param = random.param,
+ cov.param = cov.param, k = NULL, n = n, p = NULL, errorVar = errorVar, randCor = randCor, rand.dist = rand.dist, err.dist = err.dist, serCor = serCor, serCorVal = serCorVal, data.str = data.str, unbal = TRUE, unbalCont = unbalCont)
+```
+
+The unbalanced design can be verified by running a table on the cluster ID variable. As can be seen from the output below, the sample size of the clusters ranges from a small of 3 to a maximum of 10.
+```{r clustValue}
+table(temp.cross$clustID)
+```
+
+#### Three Level Models
+Moving from two level to three level models is straightforward. Now there are four arguments instead of just two. The same **unbal** and **unbalCont** control whether the data is balanced for each level two cluster, but two additional arguments control whether the data is balanced for each level three cluster. These two new arguments are **unbal3** and **unbalCont3**. They behave identically to the two balanced case.
+
+To specify a design that has an unbalanced number of observations within each level two cluster, but balanced level two units within each level three cluster, the following code can be used. Notice here that **unbal** is set to TRUE, but **unbal3** is set to FALSE. Similarly, **unbalCont** specifies the minimum and maximum values for the number of observations within each level two cluster and **unbalCont3** is set to NULL.
 ```{r bal3lvl2}
 library(simReg)
 fixed <- ~1 + time + diff + act + actClust + time:act
@@ -14,7 +52,6 @@ cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
 var.type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
 n <- 150
-p <- 30
 unbal <- TRUE
 unbal3 <- FALSE
 errorVar <- 4
@@ -36,8 +73,14 @@ temp.three <- sim.reg(fixed = fixed, random = random, random3 = random3,
       data.str = data.str, unbalCont = unbalCont, unbalCont3 = unbalCont3)
 ```
 
-Unbalanced data simulation - Both level unbalanced.
+Checking that the data are as unbalanced at level two and balanced number of clusters within each level three cluster.
+```{r threecheck}
+table(temp.three$clustID)
+func.temp <- function(x) length(unique(x))
+tapply(temp.three$clustID, temp.three$clust3ID, func.temp)
+```
 
+Moving to a design that is unbalanced at both levels is straightforward. Now the **unbal3** argument is set to TRUE and the **unbalCont3** argument is a vector that contains the minimum and maximum number of level two clusters that are contained within a level three cluster. Note that now only the number of clusters needs to be specified, the number of level one and two clusters are randomly generated.
 ```{r bal3lvl2}
 library(simReg)
 fixed <- ~1 + time + diff + act + actClust + time:act
@@ -49,8 +92,6 @@ random.param3 <- c(4, 2)
 cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
 var.type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
-n <- 150
-p <- 30
 unbal <- TRUE
 unbal3 <- TRUE
 errorVar <- 4
@@ -72,60 +113,11 @@ temp.three <- sim.reg(fixed = fixed, random = random, random3 = random3,
       data.str = data.str, unbalCont = unbalCont, unbalCont3 = unbalCont3)
 ```
 
-Unbalanced data simulation - three level replication of balanced design.
-
+Lastly, showing that the design is indeed unbalanced at both levels.
 ```{r unbal3}
-library(simReg)
-fixed <- ~1 + time + diff + act + actClust + time:act
-random <- ~1 + time + diff
-random3 <- ~ 1 + time
-fixed.param <- c(4, 2, 6, 2.3, 7, 0)
-random.param <- c(7, 4, 2)
-random.param3 <- c(4, 2)
-cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
-var.type = c("lvl1", "lvl2", "lvl3"))
-k <- 10
-n <- 150
-p <- 30
-errorVar <- 4
-randCor <- 0
-randCor3 <- 0
-rand.dist <- "norm"
-err.dist <- "norm"
-serCor <- "ID"
-serCorVal <- NULL
-data.str <- "long"
-temp.three <- sim.reg(fixed = fixed, random = random, random3 = random3,
-      fixed.param = fixed.param, random.param = random.param, 
-      random.param3 = random.param3, cov.param = cov.param, k = k,
-      n = n, p = p, errorVar = errorVar,
-      randCor = randCor, randCor3 = randCor3, rand.dist = rand.dist,
-      err.dist = err.dist, serCor = serCor, serCorVal = serCorVal, 
-      data.str = data.str)
-
+table(temp.three$clustID)
+tapply(temp.three$clustID, temp.three$clust3ID, func.temp)
 ```
 
-Unbalanced data simulation - two level
 
-```{r twolevelunbal}
-library(simReg)
-fixed <- ~1 + diff + act + diff:act
-random <- ~1 +  diff
-fixed.param <- c(4, 6, 2.3, 7)
-random.param <- c(7, 2)
-cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
-n <- 150
-p <- 30
-unbal <- TRUE
-errorVar <- 4
-randCor <- 0
-rand.dist <- "norm"
-err.dist <- "norm"
-serCor <- "ID"
-serCorVal <- NULL
-data.str <- "cross"
-unbalCont <- c(3, 10)
-temp.long <- sim.reg(fixed = fixed, random = random, fixed.param = fixed.param, random.param = random.param,
- cov.param = cov.param, k = NULL, n = n, p = NULL, errorVar = errorVar, randCor = randCor, rand.dist = rand.dist, err.dist = err.dist, serCor = serCor, serCorVal = serCorVal, data.str = data.str, unbal = TRUE, unbalCont = unbalCont)
-```
 

@@ -42,6 +42,7 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data.str,
   } 
 
   if(data.str == "long") {
+    
     Xmat <- unlist(lapply(1:length(lvl1ss), function(xx) (1:lvl1ss[xx])-1))
     cov.param2 <- lapply(1:n.cont, function(xx) 
       list(k = 0, n = n, p = lvl1ss, mean = cov.param$mean[xx], sd = cov.param$sd[xx], 

@@ -1,3 +1,26 @@
+#' Master Missing Data Function
+#' 
+#' This function is a wrapper to easily call the specific types of 
+#' missing data mechanisms.
+#' 
+#' @param sim_data Simulated data frame
+#' @param resp_var Response variable to add missing data to
+#' @param clust_var Cluster variable used for the grouping.
+#' @param miss_prop Proportion of missing data overall or a vector
+#'           the same length as the number of clusters representing the
+#'           percentage of missing data for each cluster
+#' @param type The type of missing data to generate, currently supports
+#'           droput or random missing data.
+#' @export 
+missing_data <- function(sim_data, resp_var = 'sim.data',
+                         clust_var = 'clustID', miss_prop,
+                         type = c('dropout', 'random')) {
+  switch(type,
+         dropout = dropout_missing(sim_data, resp_var, clust_var, miss_prop),
+         random = random_missing(sim_data, resp_var, clust_var, miss_prop)
+         )
+}
+
 #' Dropout Missing Data
 #' 
 #' Function that inputs simulated data and returns data frame with
@@ -17,9 +40,8 @@
 #' @param miss_prop Proportion of missing data overall or a vector
 #'           the same length as the number of clusters representing the
 #'           percentage of missing data for each cluster
-#' @import dplyr
 #' @export 
-dropout_miss <- function(sim_data, resp_var = 'sim.data', 
+dropout_missing <- function(sim_data, resp_var = 'sim.data', 
                         clust_var = 'clustID', miss_prop) {
   
   if(resp_var %ni% names(sim_data)) {
@@ -86,7 +108,6 @@ dropout_miss <- function(sim_data, resp_var = 'sim.data',
 #' @param miss_prop Proportion of missing data overall or a vector
 #'           the same length as the number of clusters representing the
 #'           percentage of missing data for each cluster
-#' @import dplyr
 #' @export 
 random_missing <- function(sim_data, resp_var = 'sim.data',
                            clust_var = 'clustID', miss_prop) {
@@ -102,7 +123,7 @@ random_missing <- function(sim_data, resp_var = 'sim.data',
                                       eval(parse(text = clust_var)),
                                       length))
   
-  n_obs <- nrow(sim_data)
+  num_obs <- nrow(sim_data)
   
   if(length(miss_prop) == 1) {
     if(miss_prop > 1) {

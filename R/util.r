@@ -1,5 +1,4 @@
-#' Utility Functions
-'%ni%' <- Negate('%in%')
+"%ni%" <- Negate("%in%")
 
 prop_limits <- function(prop) {
   if(prop > .5) {

@@ -69,21 +69,28 @@ err
 #' @param n Cluster sample size.
 #' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", 
 #' "norm" is default.
+#' @param rand.gen The generating function used with arima.sim.
+#' @param ... Additional values that need to be passed to the function
+#'             called from rand.gen.
 #' @importFrom VGAM rlaplace
 #' @export 
-sim.err.single <- function(errorVar, n, err.dist){
+sim.err.single <- function(errorVar, n, err.dist, rand.gen = NULL, ...){
   
-  if(err.dist == "norm"){
-    err <- rnorm(n, 0, sd = sqrt(errorVar))
+  if(is.null(rand.gen) == FALSE) {
+    err <- arima.sim(n = n, rand.gen = rand.gen, ...)
+  } else {
+    if(err.dist == "norm"){
+      err <- rnorm(n, 0, sd = sqrt(errorVar))
+    }
+    if(err.dist == "lap"){
+      err <- rlaplace(n,0,1)*chol(errorVar/2)
+    }
+    if(err.dist == "chi"){
+      err <- (rchisq(n,1)-1)*chol(errorVar/2)
+    }
+    #   if(err.dist == "bimod"){
+    #     err <- rbimod(n, mean, var, num.dist)
+    #   }
   }
-  if(err.dist == "lap"){
-    err <- rlaplace(n,0,1)*chol(errorVar/2)
-  }
-  if(err.dist == "chi"){
-    err <- (rchisq(n,1)-1)*chol(errorVar/2)
-  }
-#   if(err.dist == "bimod"){
-#     err <- rbimod(n, mean, var, num.dist)
-#   }
   err
 }

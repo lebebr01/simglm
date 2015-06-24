@@ -16,14 +16,15 @@
 #' interactions. Must be same order as fixed formula above.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
-#' @param errorVar Scalar of error variance.
+#' @param error_var Scalar of error variance.
 #' @param randCor Correlation between random effects.
 #' @param rand.dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
-#' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
+#' @param rand_gen Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
-#' @param serCor Simulation of serial correlation. Must be "AR", "MA", "ARMA", or "ID", "ID" is default.
-#' @param serCorVal Serial correlation parameters. A list of values to pass on to arima.sim.
+#' @param arima TRUE/FALSE flag indicating whether residuals should 
+#'             be correlated. If TRUE, must specify a valid model to pass to 
+#'             arima.sim. See \code{\link{arima.sim}} for examples.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param pow.param Number of parameter to calculate power includes intercept where applicable.
 #' @param alpha What should the per test alpha rate be used for the hypothesis testing.
@@ -33,23 +34,23 @@
 #' @param parallel Whether the computation should be done in parallel, 
 #'  must have parallel backend registered first.  Currently not supported.
 #' @export 
-sim.pow <- function(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, errorVar, randCor, 
-                    rand.dist, err.dist, serCor, serCorVal, data.str, pow.param, alpha, 
+sim_pow <- function(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, error_var, randCor, 
+                    rand.dist, rand_gen, arima = FALSE, data.str, pow.param, alpha, 
                     pow.dist = c("z", "t"), pow.tail = c(1, 2), replicates, parallel){
   
   if(data.str == "single"){
-    temp.pow <- replicate(replicates, sim.pow.single(fixed, fixed.param, cov.param, n, errorVar,
-                                                     err.dist, pow.param, alpha, pow.dist, pow.tail))
+    temp.pow <- replicate(replicates, sim_pow_single(fixed, fixed.param, cov.param, n, error_var,
+                                                     rand_gen, arima, pow.param, alpha, pow.dist, pow.tail))
     
     #nbatch <- 3
     #system.time(temp.pow <- foreach(i = 1:(9999/nbatch), .combine = "c", .packages = "simReg") %dopar% {
-     # replicate(nbatch, sim.pow.single(fixed, fixed.param, cov.param, n, errorVar,
-      #               err.dist, pow.param, alpha, pow.dist, pow.tail))
+     # replicate(nbatch, sim.pow.single(fixed, fixed.param, cov.param, n, error_var,
+      #               rand_gen, pow.param, alpha, pow.dist, pow.tail))
     #})
   } else {
-    temp.pow <- replicate(replicates, sim.pow.nested(fixed, random, fixed.param, random.param, w.var, 
-                                                     cov.param, n, p, errorVar, randCor, rand.dist, err.dist, 
-                                                     serCor, serCorVal, data.str, pow.param, alpha, 
+    temp.pow <- replicate(replicates, sim_pow_nested(fixed, random, fixed.param, random.param, w.var, 
+                                                     cov.param, n, p, error_var, randCor, rand.dist, rand_gen,
+                                                     arima, data.str, pow.param, alpha, 
                                                      pow.dist, pow.tail))
   }
   

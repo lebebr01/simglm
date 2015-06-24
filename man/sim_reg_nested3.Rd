@@ -82,6 +82,6 @@ a data frame with ID variables, fixed effects, and many other variables useful t
 running simulation studies.
 }
 \seealso{
-\code{\link{sim.reg}} for a convenient wrapper for all data conditions.
+\code{\link{sim_reg}} for a convenient wrapper for all data conditions.
 }
 

@@ -8,7 +8,7 @@
 #' @param rand_gen The generating function used.
 #' @param arima TRUE/FALSE flag indicating whether residuals should 
 #'             be correlated. If TRUE, must specify a valid model to pass to 
-#'             arima.sim. See \link{\code{arima.sim}} for examples.
+#'             arima.sim. See \code{\link{arima.sim}} for examples.
 #' @param ... Additional specification needed to pass to the random generating 
 #'             function defined by rand.gen.
 #' @export 
@@ -38,7 +38,7 @@ sim_err_nested <- function(error_var, n, p, rand_gen, arima = FALSE, ...){
 #' @param rand_gen The generating function used.
 #' @param arima TRUE/FALSE flag indicating whether residuals should 
 #'             be correlated. If TRUE, must specify a valid model to pass to 
-#'             arima.sim, See \link{\code{arima.sim}} for examples.
+#'             arima.sim, See \code{\link{arima.sim}} for examples.
 #' @param ... Additional values that need to be passed to the function
 #'             called from rand.gen.
 #' @importFrom VGAM rlaplace

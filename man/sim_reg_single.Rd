@@ -43,6 +43,6 @@ Simulates data for the simple regression models.  Returns a data frame with ID v
 fixed effects, and many other variables useful to help when running simulation studies.
 }
 \seealso{
-\code{\link{sim.reg}} for a convenient wrapper for all data conditions.
+\code{\link{sim_reg}} for a convenient wrapper for all data conditions.
 }
 

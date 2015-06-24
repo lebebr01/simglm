@@ -23,7 +23,7 @@ sim_rand_eff(random.param, cor, n, dist = c("lap", "chi", "norm", "bimod"),
 Input simulation parameters and returns random effects.
 }
 \details{
-Simulates random effects for the master function \code{\link{sim.reg}} when
+Simulates random effects for the master function \code{\link{sim_reg}} when
 simulating a linear mixed model, both cross sectional and longitudinal.  Allows
 the ability to simulate random effects from a Laplace, chi-square (1), mixture
 normal, or normal distribution.

@@ -6,7 +6,7 @@
 #' a data frame with ID variables, fixed effects, and many other variables useful to help when 
 #' running simulation studies.
 #' 
-#' @seealso \code{\link{sim.reg}} for a convenient wrapper for all data conditions.
+#' @seealso \code{\link{sim_reg}} for a convenient wrapper for all data conditions.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
@@ -89,7 +89,7 @@ sim_reg_nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 #' a data frame with ID variables, fixed effects, and many other variables useful to help when 
 #' running simulation studies.
 #' 
-#' @seealso \code{\link{sim.reg}} for a convenient wrapper for all data conditions.
+#' @seealso \code{\link{sim_reg}} for a convenient wrapper for all data conditions.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
@@ -209,7 +209,7 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed.param, random.param, r
 #' Simulates data for the simple regression models.  Returns a data frame with ID variables, 
 #' fixed effects, and many other variables useful to help when running simulation studies.
 #' 
-#' @seealso \code{\link{sim.reg}} for a convenient wrapper for all data conditions.
+#' @seealso \code{\link{sim_reg}} for a convenient wrapper for all data conditions.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.

@@ -30,7 +30,7 @@ optional specifications are: replace, prob, value.labels.}
 Input fixed variables, sample size, and number of within variables, returns design matrix.
 }
 \details{
-Simulates the fixed effects for the \code{\link{sim.reg}} function when a linear mixed
+Simulates the fixed effects for the \code{\link{sim_reg}} function when a linear mixed
 model is specified.  This function assumes a time variable when longitudinal data
 is specified and does include any interactions that are specified.
 }

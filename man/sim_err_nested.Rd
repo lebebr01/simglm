@@ -17,7 +17,7 @@ sim_err_nested(error_var, n, p, rand_gen, arima = FALSE, ...)
 
 \item{arima}{TRUE/FALSE flag indicating whether residuals should
 be correlated. If TRUE, must specify a valid model to pass to
-arima.sim. See \link{\code{arima.sim}} for examples.}
+arima.sim. See \code{\link{arima.sim}} for examples.}
 
 \item{...}{Additional specification needed to pass to the random generating
 function defined by rand.gen.}

@@ -2,7 +2,7 @@
 #' 
 #' Input fixed variables, sample size, and number of within variables, returns design matrix.
 #' 
-#' Simulates the fixed effects for the \code{\link{sim.reg}} function when a linear mixed
+#' Simulates the fixed effects for the \code{\link{sim_reg}} function when a linear mixed
 #' model is specified.  This function assumes a time variable when longitudinal data 
 #' is specified and does include any interactions that are specified.
 #' 
@@ -79,7 +79,7 @@ sim_fixef_nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data.str,
 #' 
 #' Input fixed variables, sample size, and number of within variables, returns design matrix.
 #' 
-#' Simulates the fixed effects for the \code{\link{sim.reg}} function when a linear mixed
+#' Simulates the fixed effects for the \code{\link{sim_reg}} function when a linear mixed
 #' model is specified.  This function assumes a time variable when longitudinal data 
 #' is specified and does include any interactions that are specified.
 #' 
@@ -156,7 +156,7 @@ sim_fixef_nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data.str,
 #' 
 #' Input fixed variables, sample size, and number of within variables, returns design matrix.
 #' 
-#' Simulates the fixed effects for the \code{\link{sim.reg}} function when simulating a 
+#' Simulates the fixed effects for the \code{\link{sim_reg}} function when simulating a 
 #' simple regression model.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.

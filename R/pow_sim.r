@@ -3,10 +3,10 @@
 #' Takes simulation conditions as input, exports power.
 #' 
 #' Power function to compute power for a regression term for the linear mixed model.  This
-#' function would need to be replicated to make any statement about power.  Use \code{\link{sim.pow}}
+#' function would need to be replicated to make any statement about power.  Use \code{\link{sim_pow}}
 #' as a convenient wrapper for this.
 #' 
-#' @seealso \code{\link{sim.pow}} for a wrapper to replicate.
+#' @seealso \code{\link{sim_pow}} for a wrapper to replicate.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
@@ -18,14 +18,15 @@
 #' interactions. Must be same order as fixed formula above.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
-#' @param errorVar Scalar of error variance.
+#' @param error_var Scalar of error variance.
 #' @param randCor Correlation between random effects.
 #' @param rand.dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
-#' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
+#' @param rand_gen Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
-#' @param serCor Simulation of serial correlation. Must be "AR", "MA", "ARMA", or "ID", "ID" is default.
-#' @param serCorVal Serial correlation parameters. A list of values to pass on to arima.sim.
+#' @param arima TRUE/FALSE flag indicating whether residuals should 
+#'             be correlated. If TRUE, must specify a valid model to pass to 
+#'             arima.sim. See \code{\link{arima.sim}} for examples.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param pow.param Number of parameter to calculate power includes intercept where applicable.
 #' @param alpha What should the per test alpha rate be used for the hypothesis testing.
@@ -33,12 +34,12 @@
 #' @param pow.tail One-tailed or two-tailed test?
 #' @importFrom nlme lme
 #' @export 
-sim.pow.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, errorVar, randCor, 
-                    rand.dist, err.dist, serCor, serCorVal, data.str,
+sim_pow_nested <- function(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, error_var, 
+                           randCor, rand.dist, rand_gen, arima = FALSE, data.str,
                            pow.param, alpha, pow.dist = c("z", "t"), pow.tail = c(1, 2)){
 
-  temp.nest <- sim.reg.nested(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, 
-                              errorVar, randCor, rand.dist, err.dist, serCor, serCorVal, data.str)
+  temp.nest <- sim_reg_nested(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, 
+                              error_var, randCor, rand.dist, rand_gen, serCor, serCorVal, data.str)
   
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   rand.vars <- attr(terms(random),"term.labels")
@@ -66,28 +67,28 @@ sim.pow.nested <- function(fixed, random, fixed.param, random.param, w.var, cov.
 #' Input simulation conditions and which term to compute power for, export reported power.
 #' 
 #' Power function to compute power for a regression term for simple regression models.  This
-#' function would need to be replicated to make any statement about power.  Use \code{\link{sim.pow}}
+#' function would need to be replicated to make any statement about power.  Use \code{\link{sim_pow}}
 #' as a convenient wrapper for this.
 #' 
-#' @seealso \code{\link{sim.pow}} for a wrapper to replicate.
+#' @seealso \code{\link{sim_pow}} for a wrapper to replicate.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
 #' @param cov.param List of mean and standard deviation for fixed effects. Does not include intercept, time, or 
 #' interactions. Must be same order as fixed formula above.
 #' @param n Cluster sample size.
-#' @param errorVar Scalar of error variance.
-#' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
+#' @param error_var Scalar of error variance.
+#' @param rand_gen Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
 #' @param pow.param Number of parameter to calculate power includes intercept where applicable.
 #' @param alpha What should the per test alpha rate be used for the hypothesis testing.
 #' @param pow.dist Which distribution should be used when testing hypothesis test, z or t?
 #' @param pow.tail One-tailed or two-tailed test?
 #' @export 
-sim.pow.single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist, 
+sim_pow_single <- function(fixed, fixed.param, cov.param, n, error_var, rand_gen, 
                            pow.param, alpha, pow.dist = c("z", "t"), pow.tail = c(1, 2)){
   
-  temp.single <- sim.reg.single(fixed, fixed.param, cov.param, n, errorVar, err.dist)
+  temp.single <- sim.reg.single(fixed, fixed.param, cov.param, n, error_var, rand_gen)
   fixed.vars <- attr(terms(fixed),"term.labels")
   
   fm1 <- as.formula(paste("sim.data ~", paste(fixed.vars, collapse = "+")))

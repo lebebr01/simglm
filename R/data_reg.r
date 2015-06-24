@@ -82,7 +82,7 @@ data_reg_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand.eff, rand.eff3, k, n,
 #' 
 #' Takes simulation parameter arguments and returns simulated data.
 #' 
-#' This is a helper function to the master function \code{\link{sim.reg}}, 
+#' This is a helper function to the master function \code{\link{sim_reg}}, 
 #' this function does the actual simulation to return the data for single 
 #' level models.
 #' 

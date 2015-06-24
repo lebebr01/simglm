@@ -4,17 +4,18 @@
 \alias{sim.err.single}
 \title{Function that simulates errors.}
 \usage{
-sim.err.single(errorVar, n, err.dist, rand.gen = NULL, ...)
+sim.err.single(error_var, n, rand_gen, arima = FALSE, ...)
 }
 \arguments{
-\item{errorVar}{Scalar of error variance}
+\item{error_var}{Numeric scalar of error variance}
 
 \item{n}{Cluster sample size.}
 
-\item{err.dist}{Simulated within cluster error distribution. Must be "lap", "chi", "norm",
-"norm" is default.}
+\item{rand_gen}{The generating function used.}
 
-\item{rand.gen}{The generating function used with arima.sim.}
+\item{arima}{TRUE/FALSE flag indicating whether residuals should
+be correlated. If TRUE, must specify a valid model to pass to
+arima.sim, \seealso{arima.sim}.}
 
 \item{...}{Additional values that need to be passed to the function
 called from rand.gen.}

@@ -4,21 +4,23 @@
 \alias{sim.err.nested}
 \title{Function that simulates errors.}
 \usage{
-sim.err.nested(errorVar, n, p, serCor, serCorVal, err.dist)
+sim.err.nested(error_var, n, p, rand_gen, arima = FALSE, ...)
 }
 \arguments{
-\item{errorVar}{Scalar of error variance}
+\item{error_var}{Scalar of error variance}
 
 \item{n}{Cluster sample size.}
 
 \item{p}{Within cluster sample size.}
 
-\item{serCor}{Simulation of serial correlation. Must be "AR", "MA", "ARMA", or "ID", "ID" is default.}
+\item{rand_gen}{The generating function used.}
 
-\item{serCorVal}{Serial correlation parameters. A list of values to pass on to arima.sim.}
+\item{arima}{TRUE/FALSE flag indicating whether residuals should
+be correlated. If TRUE, must specify a valid model to pass to
+arima.sim, \seealso{arima.sim}}
 
-\item{err.dist}{Simulated within cluster error distribution. Must be "lap", "chi", "norm",
-"norm" is default.}
+\item{...}{Additional specification needed to pass to the random generating
+function defined by rand.gen.}
 }
 \description{
 Input error simulation parameters and outputs simulated errors.

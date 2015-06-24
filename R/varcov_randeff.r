@@ -6,7 +6,7 @@
 #' @param random.param Variance of random effects.
 #' @param cor Correlation between random effects, currently only a constant supported.
 #' @export 
-varcov.randeff <- function(random.param, cor){
+varcov_randeff <- function(random.param, cor){
   
   if (any(random.param < 0)) 
     stop("All 'random.param' should be positive")

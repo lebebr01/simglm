@@ -35,7 +35,7 @@
 #' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum level one size,
 #'  will be drawn from a random uniform distribution with min and max specified.
 #' @export 
-sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, n, p, 
+sim_reg_nested <- function(fixed, random, fixed.param, random.param, cov.param, n, p, 
                            errorVar, randCor, rand.dist, err.dist, serCor, 
                            serCorVal, data.str, fact.vars = list(NULL),
                            unbal = FALSE, unbalCont = NULL) {
@@ -56,9 +56,9 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, 
     lvl1ss <- round(runif(n = n, min = min(unbalCont), max = max(unbalCont)), 0)
   }
 
-  rand.eff <- sim.rand.eff(random.param, randCor, n, rand.dist)
+  rand.eff <- sim_rand_eff(random.param, randCor, n, rand.dist)
 
-  Xmat <- sim.fixef.nested(fixed, fixed.vars, cov.param, n, lvl1ss, 
+  Xmat <- sim_fixef_nested(fixed, fixed.vars, cov.param, n, lvl1ss, 
                             data.str = data.str, fact.vars = fact.vars)
   
   reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
@@ -67,10 +67,10 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, 
   
   Zmat <- model.matrix(random, data.frame(Xmat))
 
-  err <- sim.err.nested(errorVar, n, p = lvl1ss, serCor = serCor, serCorVal = serCorVal,
+  err <- sim_err_nested(errorVar, n, p = lvl1ss, serCor = serCor, serCorVal = serCorVal,
                         err.dist = err.dist)
 
- sim.data <- data.reg.nested(Xmat, Zmat, fixed.param, rand.eff, n, p = lvl1ss, err = err)
+ sim.data <- data_reg_nested(Xmat, Zmat, fixed.param, rand.eff, n, p = lvl1ss, err = err)
   
  Xmat <- data.frame(Xmat,reff,sim.data)
  Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
@@ -163,10 +163,10 @@ sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, r
   lvl3ss <- sapply(lapply(1:length(beg), function(xx) 
     lvl1ss[beg[xx]:end[xx]]), sum)
   
-  rand.eff <- sim.rand.eff(random.param, randCor, n, rand.dist)
-  rand.eff3 <- sim.rand.eff3(random.param3, randCor3, k)
+  rand.eff <- sim_rand_eff(random.param, randCor, n, rand.dist)
+  rand.eff3 <- sim_rand_eff3(random.param3, randCor3, k)
    
-  Xmat <- sim.fixef.nested3(fixed, fixed.vars, cov.param, k, n = lvl2ss, 
+  Xmat <- sim_fixef_nested3(fixed, fixed.vars, cov.param, k, n = lvl2ss, 
                             p = lvl1ss, data.str = data.str, fact.vars = fact.vars)
   
   reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
@@ -180,10 +180,10 @@ sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, r
   Zmat <- model.matrix(random, data.frame(Xmat))
   Zmat3 <- model.matrix(random3, data.frame(Xmat))
 
-  err <- sim.err.nested(errorVar, n = lvl2ss, p = lvl1ss, serCor = serCor, 
+  err <- sim_err_nested(errorVar, n = lvl2ss, p = lvl1ss, serCor = serCor, 
                         serCorVal = serCorVal, err.dist = err.dist)
 
- sim.data <- data.reg.nested3(Xmat, Zmat, Zmat3, fixed.param, rand.eff, rand.eff3,
+ sim.data <- data_reg_nested3(Xmat, Zmat, Zmat3, fixed.param, rand.eff, rand.eff3,
                               k, n = lvl2ss, p = lvl1ss, err = err)
   
  Xmat <- data.frame(Xmat,reff,sim.data)
@@ -216,18 +216,18 @@ sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, r
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
-sim.reg.single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, 
+sim_reg_single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, 
                            fact.vars = list(NULL)) {
   
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   
   if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
   
-  Xmat <- sim.fixef.single(fixed, fixed.vars, n, cov.param, fact.vars)
+  Xmat <- sim_fixef_single(fixed, fixed.vars, n, cov.param, fact.vars)
   
-  err <- sim.err.single(errorVar, n, err.dist)
+  err <- sim_err_single(errorVar, n, err.dist)
   
-  sim.data <- data.reg.single(Xmat, fixed.param, n, err)
+  sim.data <- data_reg_single(Xmat, fixed.param, n, err)
   
   Xmat <- data.frame(Xmat,sim.data)
   Xmat$ID <- 1:n

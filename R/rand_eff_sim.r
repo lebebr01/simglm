@@ -16,7 +16,7 @@
 #' @importFrom MASS mvrnorm 
 #' @importFrom VGAM rlaplace
 #' @export 
-sim.rand.eff <- function(random.param, cor, n, dist = c("lap","chi","norm", "bimod"), num.dist){
+sim_rand_eff <- function(random.param, cor, n, dist = c("lap","chi","norm", "bimod"), num.dist){
 
   # Look to edit this with match.arg and switch functions
    
@@ -64,7 +64,7 @@ sim.rand.eff <- function(random.param, cor, n, dist = c("lap","chi","norm", "bim
 #' @param cor Correlation between level 3 random effects.
 #' @param k Number of third level clusters.
 #' @export 
-sim.rand.eff3 <- function(random.param3, cor, k){
+sim_rand_eff3 <- function(random.param3, cor, k){
 
   c <- varcov.randeff(random.param3, cor)
   reff1 <- mvrnorm(k, rep.int(0, length(random.param3)), c)

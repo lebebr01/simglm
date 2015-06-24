@@ -18,7 +18,7 @@
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
-sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data.str, 
+sim_fixef_nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data.str, 
                              fact.vars = list(NULL)){
   
   n.vars <- length(fixed.vars)
@@ -48,13 +48,13 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data.str,
       list(k = 0, n = n, p = lvl1ss, mean = cov.param$mean[xx], sd = cov.param$sd[xx], 
            var.type = cov.param$var.type[xx]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.cont, function(xx) 
-      do.call(sim.continuous, cov.param2[[xx]]))))
+      do.call(sim_continuous, cov.param2[[xx]]))))
   } else {
     cov.param2 <- lapply(1:n.cont, function(xx) 
       list(k = 0, n = n, p = lvl1ss, mean = cov.param$mean[xx], sd = cov.param$sd[xx], 
            var.type = cov.param$var.type[xx]))
     Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
-      do.call(sim.continuous, cov.param2[[xx]])))
+      do.call(sim_continuous, cov.param2[[xx]])))
   }
   
   if(length(fact.loc > 0)){
@@ -62,7 +62,7 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data.str,
       list(k = 0, n = n, p = lvl1ss, numlevels = fact.vars$numlevels[xx], 
            var.type = fact.vars$var.type[xx]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
-              function(xx) do.call(sim.factor, fact.vars[[xx]]))))
+              function(xx) do.call(sim_factor, fact.vars[[xx]]))))
   }
 
    if(n.int == 0){
@@ -97,7 +97,7 @@ sim.fixef.nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data.str,
 #'      each list must include numlevels and var.type (must be "lvl1", "lvl2", or "lvl3");
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
-sim.fixef.nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data.str, 
+sim_fixef_nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data.str, 
                              fact.vars = list(NULL)){
   
   n.vars <- length(fixed.vars)
@@ -124,13 +124,13 @@ sim.fixef.nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data.str,
       list(k = k, n = n, p = p, mean = cov.param$mean[xx], sd = cov.param$sd[xx], 
            var.type = cov.param$var.type[xx]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.cont, function(xx) 
-      do.call(sim.continuous, cov.param2[[xx]]))))
+      do.call(sim_continuous, cov.param2[[xx]]))))
   } else {
     cov.param2 <- lapply(1:n.cont, function(xx) 
       list(k = k, n = n, p = p, mean = cov.param$mean[xx], sd = cov.param$sd[xx], 
            var.type = cov.param$var.type[xx]))
     Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
-      do.call(sim.continuous, cov.param2[[xx]])))
+      do.call(sim_continuous, cov.param2[[xx]])))
   }
   
   if(length(fact.loc > 0)){
@@ -138,7 +138,7 @@ sim.fixef.nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data.str,
       list(k = k, n = n, p = p, numlevels = fact.vars$numlevels[xx], 
            var.type = fact.vars$var.type[xx]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
-                function(xx) do.call(sim.factor, fact.vars[[xx]]))))
+                function(xx) do.call(sim_factor, fact.vars[[xx]]))))
   }
   
   if(n.int == 0){
@@ -168,7 +168,7 @@ sim.fixef.nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data.str,
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
-sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(NULL)){
+sim_fixef_single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(NULL)){
   
   n.vars <- length(fixed.vars)
   n.int <- length(grep(":",fixed.vars))
@@ -191,7 +191,7 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
     list(k = 0, n = n, p = 0, mean = cov.param$mean[xx], sd = cov.param$sd[xx], 
          var.type = cov.param$var.type[xx]))
   Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
-    do.call(sim.continuous, cov.param[[xx]])))
+    do.call(sim_continuous, cov.param[[xx]])))
   
   if(length(fact.loc > 0)){
     #op <- names(fact.vars)
@@ -199,7 +199,7 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
       list(k = 0, n = n, p = 0, numlevels = fact.vars$numlevels[xx], 
            var.type = fact.vars$var.type[xx]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
-            function(xx) do.call(sim.factor, fact.vars[[xx]]))))
+            function(xx) do.call(sim_factor, fact.vars[[xx]]))))
   }
   
   if(n.int == 0){
@@ -227,7 +227,7 @@ sim.fixef.single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
 #' @param value.labels Optional argument with value labels for variable, 
 #'        converts variable to factor.
 #' @export 
-sim.factor <- function(k, n, p, numlevels, replace = TRUE, prob = NULL, var.type = c('lvl1', 'lvl2', 'lvl3', 'single'), 
+sim_factor <- function(k, n, p, numlevels, replace = TRUE, prob = NULL, var.type = c('lvl1', 'lvl2', 'lvl3', 'single'), 
                        value.labels = NULL) {
   
   #if(is.null(prob) == FALSE & (length(prob) == numlevels | length(prob) == length(numlevels)) == FALSE) {
@@ -274,7 +274,7 @@ sim.factor <- function(k, n, p, numlevels, replace = TRUE, prob = NULL, var.type
 #' @param sd Standard deviation for variable simulated from normal distribution
 #' @param var.type Variable type for the variable, must be either "lvl1", "lvl2", or "single"
 #' @export 
-sim.continuous <- function(k, n, p, mean, sd, var.type = c('lvl1', 'lvl2', 'lvl3', 'single')) {
+sim_continuous <- function(k, n, p, mean, sd, var.type = c('lvl1', 'lvl2', 'lvl3', 'single')) {
   
   #if(is.null(prob) == FALSE & (length(prob) == numlevels | length(prob) == length(numlevels)) == FALSE) {
   #  stop("prob must be same length as numlevels")

@@ -12,7 +12,7 @@
 #' @param ... Additional specification needed to pass to the random generating 
 #'             function defined by rand.gen.
 #' @export 
-sim.err.nested <- function(error_var, n, p, rand_gen, arima = FALSE, ...){
+sim_err_nested <- function(error_var, n, p, rand_gen, arima = FALSE, ...){
   
   # Look to edit this with match.arg and switch
   #n <- length(p)
@@ -43,7 +43,7 @@ sim.err.nested <- function(error_var, n, p, rand_gen, arima = FALSE, ...){
 #'             called from rand.gen.
 #' @importFrom VGAM rlaplace
 #' @export 
-sim.err.single <- function(error_var, n, rand_gen, arima = FALSE, ...){
+sim_err_single <- function(error_var, n, rand_gen, arima = FALSE, ...){
   
   if(arima) {
     err <- scale(arima.sim(n = n, rand.gen = rand_gen, ...)) * sqrt(error_var)

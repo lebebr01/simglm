@@ -12,7 +12,7 @@
 #' @param err A vector of within cluster errors.
 #' @importFrom Matrix bdiag
 #' @export 
-data.reg.nested <- function(Xmat, Zmat, beta, rand.eff, n, p, err) {
+data_reg_nested <- function(Xmat, Zmat, beta, rand.eff, n, p, err) {
   
    Fbeta <- (Xmat %*% beta) 
     
@@ -46,7 +46,7 @@ data.reg.nested <- function(Xmat, Zmat, beta, rand.eff, n, p, err) {
 #' @param err A vector of within cluster errors.
 #' @importFrom Matrix bdiag
 #' @export 
-data.reg.nested3 <- function(Xmat, Zmat, Zmat3, beta, rand.eff, rand.eff3, k, n, p, err) {
+data_reg_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand.eff, rand.eff3, k, n, p, err) {
   
   
   end <- cumsum(n)
@@ -91,7 +91,7 @@ data.reg.nested3 <- function(Xmat, Zmat, Zmat3, beta, rand.eff, rand.eff3, k, n,
 #' @param n Number of clusters.
 #' @param err A vector of within cluster errors.
 #' @export 
-data.reg.single <- function(Xmat, beta, n, err) {
+data_reg_single <- function(Xmat, beta, n, err) {
   
   Fbeta <-(Xmat %*% beta)  #Simulate average growth curve
   sim.data <- Fbeta + err  #Adding everything together

@@ -23,7 +23,7 @@ sim_rand_eff <- function(random.param, cor, n, dist = c("lap","chi","norm", "bim
   if(dist == "lap"){ 
 
     reff <- do.call("cbind", lapply(1:length(random.param), function(xx) rlaplace(n, 0, 1)))
-    c <- varcov.randeff(random.param, cor)
+    c <- varcov_randeff(random.param, cor)
     reff1 <- reff %*% chol(c/2)
 
   }
@@ -31,7 +31,7 @@ sim_rand_eff <- function(random.param, cor, n, dist = c("lap","chi","norm", "bim
       
     reff <- do.call("cbind", lapply(1:length(random.param), function(xx) rchisq(n, 1)))
     reff <- reff-1
-    c <- varcov.randeff(random.param, cor)
+    c <- varcov_randeff(random.param, cor)
     reff1 <- reff %*% chol(c/2)
 
   }
@@ -39,12 +39,12 @@ sim_rand_eff <- function(random.param, cor, n, dist = c("lap","chi","norm", "bim
         
     reff <- do.call("cbind", lapply(1:length(random.param), function(xx) 
       rbimod(n, mean = rep(0, num.dist), var = rep(1, num.dist), num.dist)))
-    c <- varcov.randeff(random.param, cor)
+    c <- varcov_randeff(random.param, cor)
     reff1 <- reff %*% chol(c/2)
 
   }
   if(dist == "norm"){
-    c <- varcov.randeff(random.param, cor)
+    c <- varcov_randeff(random.param, cor)
     reff1 <- mvrnorm(n, rep.int(0, length(random.param)), c)
   }
  return(reff1)  
@@ -66,7 +66,7 @@ sim_rand_eff <- function(random.param, cor, n, dist = c("lap","chi","norm", "bim
 #' @export 
 sim_rand_eff3 <- function(random.param3, cor, k){
 
-  c <- varcov.randeff(random.param3, cor)
+  c <- varcov_randeff(random.param3, cor)
   reff1 <- mvrnorm(k, rep.int(0, length(random.param3)), c)
   
   return(reff1)

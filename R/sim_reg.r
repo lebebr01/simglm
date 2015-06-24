@@ -29,6 +29,9 @@
 #' "norm" is default.
 #' @param rand_gen Distribution function to pass on to the level one
 #'                  simulation of errors.
+#' @param arima TRUE/FALSE flag indicating whether residuals should 
+#'             be correlated. If TRUE, must specify a valid model to pass to 
+#'             arima.sim. See \link{\code{arima.sim}} for examples.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
@@ -108,23 +111,22 @@
 #' 
 #' }
 sim_reg <- function(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k, n, p, 
-                    error_var, randCor, randCor3, rand.dist, rand_gen, 
-                    data.str, fact.vars = list(NULL),
-                    unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL) {
+                    error_var, randCor, randCor3, rand.dist, rand_gen, arima = FALSE,
+                    data.str, fact.vars = list(NULL), unbal = FALSE, unbal3 = FALSE, 
+                    unbalCont = NULL, unbalCont3 = NULL,
+                    ...) {
   
   if(data.str == "single"){
-    sim_reg_single(fixed, fixed.param, cov.param, n, error_var, rand_gen, data.str, fact.vars)
+    sim_reg_single(fixed, fixed.param, cov.param, n, error_var, rand_gen, arima, data.str, fact.vars, ...)
   } else {
   	if (is.null(k)){
   	  sim_reg_nested(fixed, random, fixed.param, random.param, cov.param, n, p, 
-  	                 error_var, randCor, rand.dist, rand_gen, serCor, 
-  	                 serCorVal, data.str, fact.vars,
-  	                 unbal, unbalCont)
+  	                 error_var, randCor, rand.dist, rand_gen, arima,
+  	                 data.str, fact.vars, unbal, unbalCont, ...)
   } else {
     sim_reg_nested3(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k, n, p, 
-                    error_var, randCor, randCor3, rand.dist, rand_gen, 
-                    serCor, serCorVal, data.str, fact.vars,
-                    unbal, unbal3, unbalCont, unbalCont3)
+                    error_var, randCor, randCor3, rand.dist, rand_gen, arima,
+                    data.str, fact.vars, unbal, unbal3, unbalCont, unbalCont3, ...)
   }
  }
 }

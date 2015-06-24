@@ -25,7 +25,7 @@
 #' "norm" is default.
 #' @param arima TRUE/FALSE flag indicating whether residuals should 
 #'             be correlated. If TRUE, must specify a valid model to pass to 
-#'             arima.sim. See \link{\code{arima.sim}} for examples.
+#'             arima.sim. See \code{\link{arima.sim}} for examples.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
@@ -113,7 +113,7 @@ sim_reg_nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 #' "norm" is default.
 #' @param arima TRUE/FALSE flag indicating whether residuals should 
 #'               be correlated. If TRUE, must specify a valid model to pass to 
-#'               arima.sim. See \link{\code{arima.sim}} for examples.
+#'               arima.sim. See \code{\link{arima.sim}} for examples.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
@@ -221,7 +221,7 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed.param, random.param, r
 #'   "norm" is default.
 #' @param arima TRUE/FALSE flag indicating whether residuals should 
 #'               be correlated. If TRUE, must specify a valid model to pass to 
-#'               arima.sim. See \link{\code{arima.sim}} for examples.
+#'               arima.sim. See \code{\link{arima.sim}} for examples.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");

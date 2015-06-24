@@ -71,7 +71,7 @@ error_var <- 4
 randCor <- 0
 randCor3 <- 0
 rand.dist <- "norm"
-rand_gen <- "norm"
+rand_gen <- rnorm
 data.str <- "long"
 unbalCont <- c(min = 3, max = 10)
 unbalCont3 = NULL

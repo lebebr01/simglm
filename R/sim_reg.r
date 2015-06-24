@@ -31,7 +31,7 @@
 #'                  simulation of errors.
 #' @param arima TRUE/FALSE flag indicating whether residuals should 
 #'             be correlated. If TRUE, must specify a valid model to pass to 
-#'             arima.sim. See \link{\code{arima.sim}} for examples.
+#'             arima.sim. See \code{\link{arima.sim}} for examples.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");

@@ -24,7 +24,7 @@ interactions. Must be same order as fixed formula above.}
 
 \item{arima}{TRUE/FALSE flag indicating whether residuals should
 be correlated. If TRUE, must specify a valid model to pass to
-arima.sim. See \link{\code{arima.sim}} for examples.}
+arima.sim. See \code{\link{arima.sim}} for examples.}
 
 \item{data.str}{Type of data. Must be "cross", "long", or "single".}
 

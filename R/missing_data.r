@@ -192,6 +192,6 @@ mar_missing <- function(sim_data, resp_var, clust_var, miss_cov, miss_prop) {
   
   miss_per <- cbind(miss_cov = uniq_vals, miss_prop = miss_prop)
   
-  sim_data2 <- left_join(sim_data, miss_per, by = c(print(miss_cov) = 'cov'))
+  #sim_data2 <- left_join(sim_data, miss_per, by = c(print(miss_cov) = 'cov'))
   
 }

@@ -57,7 +57,7 @@
 #' n <- 150
 #' error_var <- 3
 #' rand_gen <- rnorm
-#' temp.single <- sim.reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param, 
+#' temp.single <- sim_reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param, 
 #' n = n, error_var = error_var, rand_gen = rand_gen, data.str = "single")
 #' # Fitting regression to obtain parameter estimates
 #' summary(lm(sim.data ~ 1 + act + diff + numCourse + act:numCourse, data = temp.single))
@@ -75,7 +75,7 @@
 #' rand.dist <- "norm"
 #' rand_gen <- rnorm
 #' data.str <- "long"
-#' temp.long <- sim.reg(fixed, random, random3 = NULL, fixed.param, random.param, random.param3 = NULL,
+#' temp.long <- sim_reg(fixed, random, random3 = NULL, fixed.param, random.param, random.param3 = NULL,
 #'  cov.param, k = NULL, n, p, error_var, randCor, randCor3 = NULL, rand.dist, rand_gen, 
 #'  data.str)
 #' 
@@ -102,7 +102,7 @@
 #' rand.dist <- "norm"
 #' rand_gen <- rnorm
 #' data.str <- "long"
-#' temp.three <- sim.reg(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k,
+#' temp.three <- sim_reg(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k,
 #' n, p, error_var, randCor, randCor3, rand.dist, rand_gen, data.str)
 #' 
 #' library(lme4)

@@ -39,16 +39,32 @@ sim_err_nested <- function(error_var, n, p, rand_gen, arima = FALSE, ...){
 #' @param arima TRUE/FALSE flag indicating whether residuals should 
 #'             be correlated. If TRUE, must specify a valid model to pass to 
 #'             arima.sim, See \code{\link{arima.sim}} for examples.
+#' @param ther A vector of length two that specifies the theoretical mean and 
+#'              standard deviation of the rand_gen. This would commonly be used
+#'              to standardize the generating variable to have a mean of 0 and
+#'              standard deviation of 1 to meet model assumptions. The variable
+#'              is then rescaled to have the variance specified by error_var.
+#' @param ther_sim A TRUE/FALSE flag indicating whether the error simulation function
+#'              should be simulated, that is should the mean and standard deviation
+#'              used for standardization be simulated.
 #' @param ... Additional values that need to be passed to the function
-#'             called from rand.gen.
+#'             called from rand_gen.
 #' @importFrom VGAM rlaplace
 #' @export 
-sim_err_single <- function(error_var, n, rand_gen, arima = FALSE, ...){
+sim_err_single <- function(error_var, n, rand_gen, arima = FALSE, 
+                           ther = c(0, 1), ther_sim = FALSE, ...){
+  
+  if(ther_sim) {
+    ther_val <- sapply(X = 1000000, FUN = rand_gen, ...)
+    ther <- c(mean(ther_val), sd(ther_val))
+  }
   
   if(arima) {
-    err <- scale(arima.sim(n = n, rand.gen = rand_gen, ...)) * sqrt(error_var)
+    err <- standardize(arima.sim(n = n, rand.gen = rand_gen, ...), 
+                       mean = ther[1], sd = ther[2]) * sqrt(error_var)
   } else {
-    err <- scale(sapply(X = n, FUN = rand_gen, ...)) * sqrt(error_var)
+    err <- standardize(sapply(X = n, FUN = rand_gen, ...), 
+                       mean = ther[1], sd = ther[2]) * sqrt(error_var)
   }
   return(err)
 }

@@ -4,12 +4,16 @@
 \alias{varcov.randeff}
 \title{Function to create random effect variance-covariance matrices}
 \usage{
+<<<<<<< Updated upstream:man/varcov.randeff.Rd
 varcov.randeff(random.param, cor)
+=======
+varcov_randeff(random.param, cor_re)
+>>>>>>> Stashed changes:man/varcov_randeff.Rd
 }
 \arguments{
 \item{random.param}{Variance of random effects.}
 
-\item{cor}{Correlation between random effects, currently only a constant supported.}
+\item{cor_re}{Correlation between random effects, currently only a constant supported.}
 }
 \description{
 Input variances of random effects and correlation between random effects,

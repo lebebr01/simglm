@@ -4,8 +4,7 @@
 \alias{sim_rand_eff}
 \title{Function to simulate random effects.}
 \usage{
-sim_rand_eff(random.param, cor, n, dist = c("lap", "chi", "norm", "bimod"),
-  num.dist)
+sim_rand_eff(random.param, cor, n, rand_gen, ther, ther_sim = FALSE, ...)
 }
 \arguments{
 \item{random.param}{Variance of random effects. Must be same length as random.}
@@ -14,10 +13,24 @@ sim_rand_eff(random.param, cor, n, dist = c("lap", "chi", "norm", "bimod"),
 
 \item{n}{Cluster sample size.}
 
-\item{dist}{Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod",
-"norm" is default.}
+\item{rand_gen}{The generating function used.}
 
-\item{num.dist}{Number of distributions for bimod random variables}
+\item{ther}{A vector of length two that specifies the theoretical mean and
+standard deviation of the rand_gen. This would commonly be used
+to standardize the generating variable to have a mean of 0 and
+standard deviation of 1 to meet model assumptions. The variable
+is then rescaled to have the variance specified by error_var.}
+
+\item{ther_sim}{A TRUE/FALSE flag indicating whether the error simulation function
+should be simulated, that is should the mean and standard deviation
+used for standardization be simulated.}
+
+\item{...}{Additional values that need to be passed to the function
+called from rand_gen.}
+
+\item{arima}{TRUE/FALSE flag indicating whether residuals should
+be correlated. If TRUE, must specify a valid model to pass to
+arima.sim, See \code{\link{arima.sim}} for examples.}
 }
 \description{
 Input simulation parameters and returns random effects.

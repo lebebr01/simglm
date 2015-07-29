@@ -65,7 +65,6 @@ sim_err_nested <- function(error_var, n, p, rand_gen, arima = FALSE,
 #'              used for standardization be simulated.
 #' @param ... Additional values that need to be passed to the function
 #'             called from rand_gen.
-#' @importFrom VGAM rlaplace
 #' @export 
 sim_err_single <- function(error_var, n, rand_gen, arima = FALSE, 
                            ther = c(0, 1), ther_sim = FALSE, ...){

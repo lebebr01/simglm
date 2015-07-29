@@ -39,15 +39,15 @@ fixed <- ~ 1 + act + diff + numCourse + act:numCourse
 fixed.param <- c(2, 4, 1, 3.5, 2)
 cov.param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var.type = c("single", "single", "single"))
 n <- 150
-errorVar <- 3
-err.dist <- "norm"
-temp.single <- sim.reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param,
-n = n, errorVar = errorVar, err.dist = err.dist, data.str = "single")
+error_var <- 3
+rand_gen = rnorm
+temp.single <- sim_reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param,
+n = n, error_var = error_var, rand_gen = rand_gen, data.str = "single")
 ```
 
 A few things to highlight about the above syntax, first the object **fixed** is a one sided formula that gives the names of the variables to be included in the simulated data. The intercept is directly shown in the formulation here, but can also be omitted (similar to linear models in R). I like to include the 1 as it reminds me that I do in fact want an intercept. The next object, **fixed.param** is the regression weights for the fixed effects, this must be the same length as fixed (or one larger if the 1 is not explicitly stated in the **fixed** object). Next, **cov.param** represents the mean, standard deviation, and type of variable from the **fixed** object (must by "single" for single level regression).  The **cov.param** object must contain all variables except the intercept and any interactions.
 
-The rest of the arguments are pretty straightforward, **n** is the sample size, **errorVar** is the error variance, **err.dist** is the distribution of the residuals, and finally in the function call itself, **data.str** must be "single" in this instance to reflect a single level regression.
+The rest of the arguments are pretty straightforward, **n** is the sample size, **error_var** is the error variance, **rand_gen** is the distribution of the residuals, and finally in the function call itself, **data.str** must be "single" in this instance to reflect a single level regression.
 
 Finally, looking at the output from the above call:
 ```{r printsinglelevel}
@@ -69,10 +69,10 @@ fixed.param <- c(2, 4, 1, 3.5, 2)
 cov.param <- list(mean = c(0, 0), sd = c(4, 3), var.type = c("single", "single"))
 fact.vars <- list(numlevels = 5, var.type = "single", "single")
 n <- 150
-errorVar <- 3
-err.dist <- "norm"
-temp.single.o <- sim.reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param,
-n = n, errorVar = errorVar, err.dist = err.dist, data.str = "single", fact.vars = fact.vars)
+error_var <- 3
+rand_gen = rnorm
+temp.single.o <- sim_reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param,
+n = n, error_var = error_var, rand_gen = rand_gen, data.str = "single", fact.vars = fact.vars)
 ```
 
 The next thing to add is a new object called **fact.vars**.  This object must be a list that contains **numlevels** and **var.type**. Other optional features will be added in the future to increase functionality - such as including value labels, user specified probabilities, etc. Once these are passed into the `sim.reg()` function, the simulated data now looks like the following.
@@ -90,23 +90,23 @@ random.param <- c(7, 4, 2)
 cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
 n <- 150
 p <- 30
-errorVar <- 4
+error_var <- 4
 randCor <- 0
 rand.dist <- "norm"
-err.dist <- "norm"
-serCor <- "ID"
-serCorVal <- NULL
+rand_gen = rnorm
 data.str <- "long"
-temp.long <- sim.reg(fixed = fixed, random = random, fixed.param = fixed.param, 
-                     random.param = random.param, cov.param = cov.param, k = NULL, n = n, p = p,
-                     errorVar = errorVar, randCor = randCor, rand.dist = rand.dist, 
-                     err.dist = err.dist, serCor = serCor, serCorVal = serCorVal, 
+temp.long <- sim_reg(fixed = fixed, random = random, 
+                     fixed.param = fixed.param, 
+                     random.param = random.param, cov.param = cov.param, 
+                     k = NULL, n = n, p = p,
+                     error_var = error_var, randCor = randCor, 
+                     rand.dist = rand.dist, rand_gen = rand_gen,
                      data.str = data.str, unbal = FALSE)
 ```
 
 Highlighting the new agruments needed, the first is a one sided formula **random**. This specifies which terms should be specified above. Related to **random**, **random.param** specifies the variance for the random effects and must be the same length as **random**.  Although still found in the single level regression, the "var.type" portion of **cov.param** must not be either "lvl1" or "lvl2" to represent either level 1 or level 2 variables respectively. Note that the time variable is not included in the **cov.param** argument and is automatically specified as discrete starting from 0.  In the future, differing time scales will be expanded.
 
-The other new terms needed are straightforward, **p** is the within cluster sample size (i.e. how many repeated measurements), **randCor** is the correlation between the random effects, **rand.dist** is the distribution of the random effects - see the help file for details on options here, **serCor** is which serial correlation structure is specified - again see details in help file for details on options, **serCorVal** is values passed on to the specific serial correlation structure, and lastly **data.str** is now "long" for longitudinal data.
+The other new terms needed are straightforward, **p** is the within cluster sample size (i.e. how many repeated measurements), **randCor** is the correlation between the random effects, **rand.dist** is the distribution of the random effects - see the help file for details on options here, and lastly **data.str** is now "long" for longitudinal data.
 
 The simulated data now look like the following:
 ```{r longdata}

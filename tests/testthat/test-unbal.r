@@ -9,19 +9,16 @@ test_that("return error",{
   n <- 150
   p <- 30
   unbal <- TRUE
-  errorVar <- 4
+  error_var <- 4
   randCor <- 0
   rand.dist <- "norm"
-  err.dist <- "norm"
-  serCor <- "ID"
-  serCorVal <- NULL
+  rand_gen <- rnorm
   data.str <- "cross"
   unbalCont <- NULL
-  expect_error(sim.reg(fixed = fixed, random = random, fixed.param = fixed.param, 
+  expect_error(sim_reg(fixed = fixed, random = random, fixed.param = fixed.param, 
                        random.param = random.param, cov.param = cov.param, k = NULL, 
-                       n = n, p = NULL, errorVar = errorVar, randCor = randCor, 
-                       rand.dist = rand.dist, err.dist = err.dist, serCor = serCor, 
-                       serCorVal = serCorVal, data.str = data.str, unbal = TRUE, 
+                       n = n, p = NULL, error_var = error_var, randCor = randCor, 
+                       rand.dist = rand.dist, rand_gen = rand_gen, data.str = data.str, unbal = TRUE, 
                        unbalCont = unbalCont),
                "Must specify unbalCont when unbal = TRUE")
 })

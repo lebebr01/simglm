@@ -156,3 +156,41 @@ random_missing <- function(sim_data, resp_var = 'sim.data',
   
   sim_data
 }
+
+#' Missing at Random
+#' 
+#' This type of missing data structure will be simulated based on values of a 
+#' third variable. For example, the likelihood of a missing value is a function 
+#' of gender, socioeconomic status, or age. Note, this function is similar to 
+#' dropout missing data, but instead of missing due to time, this is missing
+#' due to another covariate.
+#' 
+#' @param sim_data Simulated data frame
+#' @param resp_var Response variable to add missing data to
+#' @param miss_cov Covariate that the missing values are based on.
+#' @param miss_prop A vector the same length as the number of unique values 
+#'           from miss_cov variable.
+#' @export 
+mar_missing <- function(sim_data, resp_var, miss_cov, miss_prop) {
+  
+  if(as.character(resp_var) %ni% names(sim_data)) {
+    stop(paste(resp_var, 'not found in variables of data supplied'))
+  }
+  if(as.character(miss_cov) %ni% names(sim_data)) {
+    stop(paste(miss_cov, 'not found in variables of data supplied'))
+  }
+  
+  num_obs <- nrow(sim_data)
+
+  uniq_vals <- dplyr::arrange(data.frame(cov = with(sim_data, unique(eval(parse(text = miss_cov))))), cov)
+  
+  miss_per <- cbind(miss_cov = uniq_vals, miss_prop = miss_prop,
+                    miss_obs = runif(length(miss_prop)))
+  
+  join_var <- as.character(miss_cov)
+  sim_data2 <- merge(sim_data, miss_per, by.x = miss_cov, by.y = 'cov')
+  
+  sim_data2 <- cbind(sim_data2, sim.data2 = 
+                       with(sim_data2, ifelse(miss_obs > miss_prop, NA, eval(parse(text = resp_var)))))
+  return(sim_data2)
+}

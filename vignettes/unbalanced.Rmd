@@ -29,19 +29,19 @@ random.param <- c(7, 2)
 cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
 n <- 150
 unbal <- TRUE
-errorVar <- 4
+error_var <- 4
 randCor <- 0
 rand.dist <- "norm"
-err.dist <- "norm"
-serCor <- "ID"
-serCorVal <- NULL
+rand_gen <- rnorm
 data.str <- "cross"
 unbalCont <- c(3, 10)
-temp.cross <- sim.reg(fixed = fixed, random = random, fixed.param = fixed.param, 
-                      random.param = random.param, cov.param = cov.param, k = NULL, n = n, 
-                      p = NULL, errorVar = errorVar, randCor = randCor, rand.dist = rand.dist, 
-                      err.dist = err.dist, serCor = serCor, serCorVal = serCorVal,
-                      data.str = data.str, unbal = TRUE, unbalCont = unbalCont)
+temp.cross <- sim_reg(fixed = fixed, random = random, 
+                      fixed.param = fixed.param, 
+                      random.param = random.param, cov.param = cov.param,
+                      k = NULL, n = n, p = NULL, error_var = error_var,
+                      randCor = randCor, rand.dist = rand.dist, 
+                      rand_gen = rand_gen, data.str = data.str, 
+                      unbal = TRUE, unbalCont = unbalCont)
 ```
 
 The unbalanced design can be verified by running a table on the cluster ID variable. As can be seen from the output below, the sample size of the clusters ranges from a small of 3 to a maximum of 10.
@@ -67,22 +67,20 @@ k <- 10
 n <- 150
 unbal <- TRUE
 unbal3 <- FALSE
-errorVar <- 4
+error_var <- 4
 randCor <- 0
 randCor3 <- 0
 rand.dist <- "norm"
-err.dist <- "norm"
-serCor <- "ID"
-serCorVal <- NULL
+rand_gen <- rnorm
 data.str <- "long"
 unbalCont <- c(min = 3, max = 10)
 unbalCont3 = NULL
-temp.three <- sim.reg(fixed = fixed, random = random, random3 = random3,
+temp.three <- sim_reg(fixed = fixed, random = random, random3 = random3,
       fixed.param = fixed.param, random.param = random.param, 
       random.param3 = random.param3, cov.param = cov.param, k = k,
-      n = n, p = p, unbal = unbal, unbal3 = unbal3, errorVar = errorVar,
+      n = n, p = p, unbal = unbal, unbal3 = unbal3, error_var = error_var,
       randCor = randCor, randCor3 = randCor3, rand.dist = rand.dist,
-      err.dist = err.dist, serCor = serCor, serCorVal = serCorVal, 
+      rand_gen = rand_gen, 
       data.str = data.str, unbalCont = unbalCont, unbalCont3 = unbalCont3)
 ```
 
@@ -107,22 +105,20 @@ var.type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
 unbal <- TRUE
 unbal3 <- TRUE
-errorVar <- 4
+error_var <- 4
 randCor <- 0
 randCor3 <- 0
 rand.dist <- "norm"
-err.dist <- "norm"
-serCor <- "ID"
-serCorVal <- NULL
+rand_gen <- rnorm
 data.str <- "long"
 unbalCont <- c(min = 3, max = 30)
 unbalCont3 = c(min = 3, max = 10)
-temp.three <- sim.reg(fixed = fixed, random = random, random3 = random3,
+temp.three <- sim_reg(fixed = fixed, random = random, random3 = random3,
       fixed.param = fixed.param, random.param = random.param, 
       random.param3 = random.param3, cov.param = cov.param, k = k,
-      n = NULL, p = NULL, unbal = unbal, unbal3 = unbal3, errorVar = errorVar,
+      n = NULL, p = NULL, unbal = unbal, unbal3 = unbal3, error_var = error_var,
       randCor = randCor, randCor3 = randCor3, rand.dist = rand.dist,
-      err.dist = err.dist, serCor = serCor, serCorVal = serCorVal, 
+      rand_gen = rand_gen, 
       data.str = data.str, unbalCont = unbalCont, unbalCont3 = unbalCont3)
 ```
 

@@ -12,3 +12,8 @@ prop_limits <- function(prop) {
   }
   return(c(u_min, u_max))
 }
+
+standardize <- function(x, mean, sd) {
+  new <- (x - mean) / sd
+  return(new)
+}

@@ -6,7 +6,7 @@
 #' a data frame with ID variables, fixed effects, and many other variables useful to help when 
 #' running simulation studies.
 #' 
-#' @seealso \code{\link{sim.reg}} for a convenient wrapper for all data conditions.
+#' @seealso \code{\link{sim_reg}} for a convenient wrapper for all data conditions.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
@@ -17,14 +17,15 @@
 #'  var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
-#' @param errorVar Scalar of error variance.
+#' @param error_var Scalar of error variance.
 #' @param randCor Correlation between random effects.
 #' @param rand.dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
-#' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
+#' @param rand_gen Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
-#' @param serCor Simulation of serial correlation. Must be "AR", "MA", "ARMA", or "ID", "ID" is default.
-#' @param serCorVal Serial correlation parameters. A list of values to pass on to arima.sim.
+#' @param arima TRUE/FALSE flag indicating whether residuals should 
+#'             be correlated. If TRUE, must specify a valid model to pass to 
+#'             arima.sim. See \code{\link{arima.sim}} for examples.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
@@ -34,11 +35,13 @@
 #'  can be TRUE, which uses additional argument, unbalCont.
 #' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum level one size,
 #'  will be drawn from a random uniform distribution with min and max specified.
+#' @param ... Additional specification needed to pass to the random generating 
+#'             function defined by rand.gen.
 #' @export 
-sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, n, p, 
-                           errorVar, randCor, rand.dist, err.dist, serCor, 
-                           serCorVal, data.str, fact.vars = list(NULL),
-                           unbal = FALSE, unbalCont = NULL) {
+sim_reg_nested <- function(fixed, random, fixed.param, random.param, cov.param, n, p, 
+                           error_var, randCor, rand.dist, rand_gen, arima = FALSE, 
+                           data.str, fact.vars = list(NULL),
+                           unbal = FALSE, unbalCont = NULL, ...) {
 
   if(randCor > 1 | randCor < -1) stop("cor out of range")
 
@@ -56,9 +59,9 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, 
     lvl1ss <- round(runif(n = n, min = min(unbalCont), max = max(unbalCont)), 0)
   }
 
-  rand.eff <- sim.rand.eff(random.param, randCor, n, rand.dist)
+  rand.eff <- sim_rand_eff(random.param, randCor, n, rand.dist)
 
-  Xmat <- sim.fixef.nested(fixed, fixed.vars, cov.param, n, lvl1ss, 
+  Xmat <- sim_fixef_nested(fixed, fixed.vars, cov.param, n, lvl1ss, 
                             data.str = data.str, fact.vars = fact.vars)
   
   reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
@@ -67,10 +70,10 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, 
   
   Zmat <- model.matrix(random, data.frame(Xmat))
 
-  err <- sim.err.nested(errorVar, n, p = lvl1ss, serCor = serCor, serCorVal = serCorVal,
-                        err.dist = err.dist)
+  err <- sim_err_nested(error_var, n, p = lvl1ss, rand_gen = rand_gen,
+                        arima = arima, ...)
 
- sim.data <- data.reg.nested(Xmat, Zmat, fixed.param, rand.eff, n, p = lvl1ss, err = err)
+ sim.data <- data_reg_nested(Xmat, Zmat, fixed.param, rand.eff, n, p = lvl1ss, err = err)
   
  Xmat <- data.frame(Xmat,reff,sim.data)
  Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
@@ -86,7 +89,7 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 #' a data frame with ID variables, fixed effects, and many other variables useful to help when 
 #' running simulation studies.
 #' 
-#' @seealso \code{\link{sim.reg}} for a convenient wrapper for all data conditions.
+#' @seealso \code{\link{sim_reg}} for a convenient wrapper for all data conditions.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
@@ -101,15 +104,16 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 #' @param k Number of third level clusters.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
-#' @param errorVar Scalar of error variance.
+#' @param error_var Scalar of error variance.
 #' @param randCor Correlation between random effects.
 #' @param randCor3 Correlation between level 3 random effects.
 #' @param rand.dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
-#' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
+#' @param rand_gen Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
-#' @param serCor Simulation of serial correlation. Must be "AR", "MA", "ARMA", or "ID", "ID" is default.
-#' @param serCorVal Serial correlation parameters. A list of values to pass on to arima.sim.
+#' @param arima TRUE/FALSE flag indicating whether residuals should 
+#'               be correlated. If TRUE, must specify a valid model to pass to 
+#'               arima.sim. See \code{\link{arima.sim}} for examples.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
@@ -124,11 +128,14 @@ sim.reg.nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 #'  will be drawn from a random uniform distribution with min and max specified.
 #' @param unbalCont3 When unbal3 = TRUE, this specifies the minimum and maximum level two size,
 #'  will be drawn from a random uniform distribution with min and max specified.
+#' @param ... Additional specification needed to pass to the random generating 
+#'             function defined by rand.gen.
 #' @export 
-sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k, n, p, 
-                            errorVar, randCor, randCor3, rand.dist, err.dist, 
-                            serCor, serCorVal, data.str, fact.vars = list(NULL),
-                            unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL) {
+sim_reg_nested3 <- function(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k, n, p, 
+                            error_var, randCor, randCor3, rand.dist, rand_gen, arima = FALSE,
+                            data.str, fact.vars = list(NULL),
+                            unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
+                            ...) {
 
   if(randCor > 1 | randCor < -1 | randCor3 > 1 | randCor3 < -1) stop("Random effect correlation out of range")
 
@@ -142,6 +149,7 @@ sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, r
   
   if(unbal3 == FALSE) {
     lvl2ss <- rep(n/k, k)
+    n <- sum(lvl2ss)
   } else {
     if(length(unbalCont3) < 2) stop("Must specify unbalCont3 when unbal3 = TRUE")
     lvl2ss <- round(runif(n = k, min = min(unbalCont3), max = max(unbalCont3)), 0)
@@ -163,10 +171,10 @@ sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, r
   lvl3ss <- sapply(lapply(1:length(beg), function(xx) 
     lvl1ss[beg[xx]:end[xx]]), sum)
   
-  rand.eff <- sim.rand.eff(random.param, randCor, n, rand.dist)
-  rand.eff3 <- sim.rand.eff3(random.param3, randCor3, k)
+  rand.eff <- sim_rand_eff(random.param, randCor, n, rand.dist)
+  rand.eff3 <- sim_rand_eff3(random.param3, randCor3, k)
    
-  Xmat <- sim.fixef.nested3(fixed, fixed.vars, cov.param, k, n = lvl2ss, 
+  Xmat <- sim_fixef_nested3(fixed, fixed.vars, cov.param, k, n = lvl2ss, 
                             p = lvl1ss, data.str = data.str, fact.vars = fact.vars)
   
   reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
@@ -180,10 +188,10 @@ sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, r
   Zmat <- model.matrix(random, data.frame(Xmat))
   Zmat3 <- model.matrix(random3, data.frame(Xmat))
 
-  err <- sim.err.nested(errorVar, n = lvl2ss, p = lvl1ss, serCor = serCor, 
-                        serCorVal = serCorVal, err.dist = err.dist)
+  err <- sim_err_nested(error_var, n = n, p = lvl1ss, rand_gen = rand_gen,
+                        arima = arima, ...)
 
- sim.data <- data.reg.nested3(Xmat, Zmat, Zmat3, fixed.param, rand.eff, rand.eff3,
+ sim.data <- data_reg_nested3(Xmat, Zmat, Zmat3, fixed.param, rand.eff, rand.eff3,
                               k, n = lvl2ss, p = lvl1ss, err = err)
   
  Xmat <- data.frame(Xmat,reff,sim.data)
@@ -201,33 +209,38 @@ sim.reg.nested3 <- function(fixed, random, random3, fixed.param, random.param, r
 #' Simulates data for the simple regression models.  Returns a data frame with ID variables, 
 #' fixed effects, and many other variables useful to help when running simulation studies.
 #' 
-#' @seealso \code{\link{sim.reg}} for a convenient wrapper for all data conditions.
+#' @seealso \code{\link{sim_reg}} for a convenient wrapper for all data conditions.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
 #' @param cov.param List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or 
 #'   interactions. Must be same order as fixed formula above.
 #' @param n Cluster sample size.
-#' @param errorVar Scalar of error variance.
-#' @param err.dist Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
+#' @param error_var Scalar of error variance.
+#' @param rand_gen Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod", 
 #'   "norm" is default.
+#' @param arima TRUE/FALSE flag indicating whether residuals should 
+#'               be correlated. If TRUE, must specify a valid model to pass to 
+#'               arima.sim. See \code{\link{arima.sim}} for examples.
 #' @param data.str Type of data. Must be "cross", "long", or "single".
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
+#' @param ... Additional specification needed to pass to the random generating 
+#'             function defined by rand.gen.
 #' @export 
-sim.reg.single <- function(fixed, fixed.param, cov.param, n, errorVar, err.dist, data.str, 
-                           fact.vars = list(NULL)) {
+sim_reg_single <- function(fixed, fixed.param, cov.param, n, error_var, rand_gen,
+                           arima = FALSE, data.str, fact.vars = list(NULL), ...) {
   
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   
   if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
   
-  Xmat <- sim.fixef.single(fixed, fixed.vars, n, cov.param, fact.vars)
+  Xmat <- sim_fixef_single(fixed, fixed.vars, n, cov.param, fact.vars)
   
-  err <- sim.err.single(errorVar, n, err.dist)
+  err <- sim_err_single(error_var, n, rand_gen, arima = arima, ...)
   
-  sim.data <- data.reg.single(Xmat, fixed.param, n, err)
+  sim.data <- data_reg_single(Xmat, fixed.param, n, err)
   
   Xmat <- data.frame(Xmat,sim.data)
   Xmat$ID <- 1:n

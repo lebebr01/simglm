@@ -4,14 +4,12 @@
 \alias{mar_missing}
 \title{Missing at Random}
 \usage{
-mar_missing(sim_data, resp_var, clust_var, miss_cov, miss_prop)
+mar_missing(sim_data, resp_var, miss_cov, miss_prop)
 }
 \arguments{
 \item{sim_data}{Simulated data frame}
 
 \item{resp_var}{Response variable to add missing data to}
-
-\item{clust_var}{Cluster variable used for the grouping.}
 
 \item{miss_cov}{Covariate that the missing values are based on.}
 

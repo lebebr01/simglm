@@ -167,29 +167,30 @@ random_missing <- function(sim_data, resp_var = 'sim.data',
 #' 
 #' @param sim_data Simulated data frame
 #' @param resp_var Response variable to add missing data to
-#' @param clust_var Cluster variable used for the grouping.
 #' @param miss_cov Covariate that the missing values are based on.
 #' @param miss_prop A vector the same length as the number of unique values 
 #'           from miss_cov variable.
 #' @export 
-mar_missing <- function(sim_data, resp_var, clust_var, miss_cov, miss_prop) {
+mar_missing <- function(sim_data, resp_var, miss_cov, miss_prop) {
   
-  if(resp_var %ni% names(sim_data)) {
+  if(as.character(resp_var) %ni% names(sim_data)) {
     stop(paste(resp_var, 'not found in variables of data supplied'))
   }
-  if(clust_var %ni% names(sim_data)) {
-    stop(paste(clust_var, 'not found in variables of data supplied'))
-  }
-  if(miss_cov %ni% names(sim_data)) {
+  if(as.character(miss_cov) %ni% names(sim_data)) {
     stop(paste(miss_cov, 'not found in variables of data supplied'))
   }
   
   num_obs <- nrow(sim_data)
 
-  uniq_vals <- arrange(data.frame(cov = with(sim_data, unique(eval(parse(text = miss_cov))))), cov)
+  uniq_vals <- dplyr::arrange(data.frame(cov = with(sim_data, unique(eval(parse(text = miss_cov))))), cov)
   
-  miss_per <- cbind(miss_cov = uniq_vals, miss_prop = miss_prop)
+  miss_per <- cbind(miss_cov = uniq_vals, miss_prop = miss_prop,
+                    miss_obs = runif(length(miss_prop)))
   
-  #sim_data2 <- left_join(sim_data, miss_per, by = c(print(miss_cov) = 'cov'))
+  join_var <- as.character(miss_cov)
+  sim_data2 <- merge(sim_data, miss_per, by.x = miss_cov, by.y = 'cov')
   
+  sim_data2 <- cbind(sim_data2, sim.data2 = 
+                       with(sim_data2, ifelse(miss_obs > miss_prop, NA, eval(parse(text = resp_var)))))
+  return(sim_data2)
 }

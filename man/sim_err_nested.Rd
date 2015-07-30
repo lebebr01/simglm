@@ -4,7 +4,8 @@
 \alias{sim_err_nested}
 \title{Function that simulates errors.}
 \usage{
-sim_err_nested(error_var, n, p, rand_gen, arima = FALSE, ...)
+sim_err_nested(error_var, n, p, rand_gen, arima = FALSE, ther = c(0, 1),
+  ther_sim = FALSE, ...)
 }
 \arguments{
 \item{error_var}{Scalar of error variance}
@@ -18,6 +19,16 @@ sim_err_nested(error_var, n, p, rand_gen, arima = FALSE, ...)
 \item{arima}{TRUE/FALSE flag indicating whether residuals should
 be correlated. If TRUE, must specify a valid model to pass to
 arima.sim. See \code{\link{arima.sim}} for examples.}
+
+\item{ther}{A vector of length two that specifies the theoretical mean and
+standard deviation of the rand_gen. This would commonly be used
+to standardize the generating variable to have a mean of 0 and
+standard deviation of 1 to meet model assumptions. The variable
+is then rescaled to have the variance specified by error_var.}
+
+\item{ther_sim}{A TRUE/FALSE flag indicating whether the error simulation function
+should be simulated, that is should the mean and standard deviation
+used for standardization be simulated.}
 
 \item{...}{Additional specification needed to pass to the random generating
 function defined by rand.gen.}

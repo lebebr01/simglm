@@ -4,13 +4,13 @@
 \alias{sim_rand_eff}
 \title{Function to simulate random effects.}
 \usage{
-sim_rand_eff(random.param, cor, n, dist = c("lap", "chi", "norm", "bimod"),
+sim_rand_eff(random.param, cor_re, n, dist = c("lap", "chi", "norm", "bimod"),
   num.dist)
 }
 \arguments{
 \item{random.param}{Variance of random effects. Must be same length as random.}
 
-\item{cor}{Correlation between random effects.}
+\item{cor_re}{cor_rerelation between random effects.}
 
 \item{n}{Cluster sample size.}
 

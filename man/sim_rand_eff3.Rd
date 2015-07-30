@@ -4,12 +4,12 @@
 \alias{sim_rand_eff3}
 \title{Function to simulate third level random effects.}
 \usage{
-sim_rand_eff3(random.param3, cor, k)
+sim_rand_eff3(random.param3, cor_re, k)
 }
 \arguments{
 \item{random.param3}{Variance of random effects. Currently only supports a single random effect for third level.}
 
-\item{cor}{Correlation between level 3 random effects.}
+\item{cor_re}{cor_rerelation between level 3 random effects.}
 
 \item{k}{Number of third level clusters.}
 }

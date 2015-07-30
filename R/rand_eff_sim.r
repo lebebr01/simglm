@@ -8,7 +8,7 @@
 #' normal, or normal distribution.
 #' 
 #' @param random.param Variance of random effects. Must be same length as random.
-#' @param cor Correlation between random effects.
+#' @param cor_re cor_rerelation between random effects.
 #' @param n Cluster sample size.
 #' @param dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
@@ -16,14 +16,14 @@
 #' @importFrom MASS mvrnorm 
 #' @importFrom VGAM rlaplace
 #' @export 
-sim_rand_eff <- function(random.param, cor, n, dist = c("lap","chi","norm", "bimod"), num.dist){
+sim_rand_eff <- function(random.param, cor_re, n, dist = c("lap","chi","norm", "bimod"), num.dist){
 
   # Look to edit this with match.arg and switch functions
    
   if(dist == "lap"){ 
 
     reff <- do.call("cbind", lapply(1:length(random.param), function(xx) rlaplace(n, 0, 1)))
-    c <- varcov_randeff(random.param, cor)
+    c <- varcov_randeff(random.param, cor_re)
     reff1 <- reff %*% chol(c/2)
 
   }
@@ -31,7 +31,7 @@ sim_rand_eff <- function(random.param, cor, n, dist = c("lap","chi","norm", "bim
       
     reff <- do.call("cbind", lapply(1:length(random.param), function(xx) rchisq(n, 1)))
     reff <- reff-1
-    c <- varcov_randeff(random.param, cor)
+    c <- varcov_randeff(random.param, cor_re)
     reff1 <- reff %*% chol(c/2)
 
   }
@@ -39,13 +39,13 @@ sim_rand_eff <- function(random.param, cor, n, dist = c("lap","chi","norm", "bim
         
     reff <- do.call("cbind", lapply(1:length(random.param), function(xx) 
       rbimod(n, mean = rep(0, num.dist), var = rep(1, num.dist), num.dist)))
-    c <- varcov_randeff(random.param, cor)
+    c <- varcov_randeff(random.param, cor_re)
     reff1 <- reff %*% chol(c/2)
 
   }
   if(dist == "norm"){
-    c <- varcov_randeff(random.param, cor)
-    reff1 <- mvrnorm(n, rep.int(0, length(random.param)), c)
+    c <- varcov_randeff(random.param, cor_re)
+    reff1 <- MASS::mvrnorm(n, rep.int(0, length(random.param)), c)
   }
  return(reff1)  
 }
@@ -61,12 +61,12 @@ sim_rand_eff <- function(random.param, cor, n, dist = c("lap","chi","norm", "bim
 #' normal, or normal distribution.
 #' 
 #' @param random.param3 Variance of random effects. Currently only supports a single random effect for third level.
-#' @param cor Correlation between level 3 random effects.
+#' @param cor_re cor_rerelation between level 3 random effects.
 #' @param k Number of third level clusters.
 #' @export 
-sim_rand_eff3 <- function(random.param3, cor, k){
+sim_rand_eff3 <- function(random.param3, cor_re, k){
 
-  c <- varcov_randeff(random.param3, cor)
+  c <- varcov_randeff(random.param3, cor_re)
   reff1 <- mvrnorm(k, rep.int(0, length(random.param3)), c)
   
   return(reff1)

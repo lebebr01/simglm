@@ -36,7 +36,7 @@ sim_err_nested <- function(error_var, n, p, rand_gen, arima = FALSE,
       arima.sim(n = p[xx], rand.gen = rand_gen, ...), 
       standardize, mean = ther[1], sd = ther[2]))) * sqrt(error_var)
   } else {
-    err <- unlist(lapply(1:n, function(xx) lapply(mapply(rand_gen, n = p, ..., SIMPLIFY = FALSE), 
+    err <- unlist(lapply(1:n, function(xx) lapply(mapply(rand_gen, n = p[xx], ..., SIMPLIFY = FALSE), 
                          standardize, mean = ther[1], sd = ther[2]))) * sqrt(error_var)
   }
   return(err)

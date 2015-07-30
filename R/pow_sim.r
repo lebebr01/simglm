@@ -32,33 +32,32 @@
 #' @param alpha What should the per test alpha rate be used for the hypothesis testing.
 #' @param pow.dist Which distribution should be used when testing hypothesis test, z or t?
 #' @param pow.tail One-tailed or two-tailed test?
-#' @importFrom nlme lme
 #' @export 
 sim_pow_nested <- function(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, error_var, 
                            randCor, rand.dist, rand_gen, arima = FALSE, data.str,
                            pow.param, alpha, pow.dist = c("z", "t"), pow.tail = c(1, 2)){
 
-  temp.nest <- sim_reg_nested(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, 
-                              error_var, randCor, rand.dist, rand_gen, serCor, serCorVal, data.str)
-  
-  fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
-  rand.vars <- attr(terms(random),"term.labels")
-  
-  fix1 <- paste("sim.data ~", paste(fixed.vars, collapse = "+"))
-  #ran1 <- paste("(", paste(rand.vars, collapse = "+"), "|clustID)", sep = "")
-  #fm1 <- as.formula(paste(fix1, ran1, sep = "+ "))
-  ran1 <- paste("~", paste(rand.vars, collapse = "+"), "|clustID", sep = "")
-  
-  temp.lme <- lme(fixed = as.formula(fix1), data = temp.nest, random = as.formula(ran1))
-  
-  crit <- qnorm(alpha/pow.tail, lower.tail = FALSE)
-  #coefTab <- coef.tbl(temp.lmer)
-  #testStat <- coefTab[pow.param]
-  testStat <- summary(temp.lme)$tTable[pow.param, 3]
-  
-  reject <- ifelse(testStat >= crit, 1, 0)
-  
-  return(reject)  
+#   temp.nest <- sim_reg_nested(fixed, random, fixed.param, random.param, w.var, cov.param, n, p, 
+#                               error_var, randCor, rand.dist, rand_gen, serCor, serCorVal, data.str)
+#   
+#   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
+#   rand.vars <- attr(terms(random),"term.labels")
+#   
+#   fix1 <- paste("sim.data ~", paste(fixed.vars, collapse = "+"))
+#   #ran1 <- paste("(", paste(rand.vars, collapse = "+"), "|clustID)", sep = "")
+#   #fm1 <- as.formula(paste(fix1, ran1, sep = "+ "))
+#   ran1 <- paste("~", paste(rand.vars, collapse = "+"), "|clustID", sep = "")
+#   
+#   #temp.lme <- lme(fixed = as.formula(fix1), data = temp.nest, random = as.formula(ran1))
+#   
+#   crit <- qnorm(alpha/pow.tail, lower.tail = FALSE)
+#   #coefTab <- coef.tbl(temp.lmer)
+#   #testStat <- coefTab[pow.param]
+#   testStat <- summary(temp.lme)$tTable[pow.param, 3]
+#   
+#   reject <- ifelse(testStat >= crit, 1, 0)
+#   
+#   return(reject)  
 }
 
 

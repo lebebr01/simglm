@@ -136,8 +136,9 @@ randCor3 <- 0
 rand.dist <- "norm"
 rand_gen <- rnorm
 data.str <- "long"
-temp.three <- sim_reg(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k,
-n, p, error_var, randCor, randCor3, rand.dist, rand_gen, data.str)
+temp.three <- sim_reg(fixed, random, random3, fixed.param, random.param,
+random.param3, cov.param, k,n, p, error_var, randCor, randCor3, rand.dist,
+rand_gen, data.str)
 
 library(lme4)
 lmer(sim.data ~ 1 + time + diff + act + actClust + time:act + (1 + time + diff | clustID) +

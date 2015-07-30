@@ -170,6 +170,7 @@ random_missing <- function(sim_data, resp_var = 'sim.data',
 #' @param miss_cov Covariate that the missing values are based on.
 #' @param miss_prop A vector the same length as the number of unique values 
 #'           from miss_cov variable.
+#' @importFrom dplyr arrange
 #' @export 
 mar_missing <- function(sim_data, resp_var, miss_cov, miss_prop) {
   

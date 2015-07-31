@@ -244,5 +244,5 @@ sim_reg_single <- function(fixed, fixed.param, cov.param, n, error_var, rand_gen
   
   Xmat <- data.frame(Xmat,sim.data)
   Xmat$ID <- 1:n
-  Xmat
+  return(Xmat)
 }

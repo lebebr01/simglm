@@ -31,16 +31,16 @@ n <- 150
 unbal <- TRUE
 error_var <- 4
 randCor <- 0
-rand.dist <- "norm"
+rand_dist <- "norm"
 rand_gen <- rnorm
-data.str <- "cross"
+data_str <- "cross"
 unbalCont <- c(3, 10)
 temp.cross <- sim_reg(fixed = fixed, random = random, 
                       fixed.param = fixed.param, 
                       random.param = random.param, cov.param = cov.param,
                       k = NULL, n = n, p = NULL, error_var = error_var,
-                      randCor = randCor, rand.dist = rand.dist, 
-                      rand_gen = rand_gen, data.str = data.str, 
+                      randCor = randCor, rand_dist = rand_dist, 
+                      rand_gen = rand_gen, data_str = data_str, 
                       unbal = TRUE, unbalCont = unbalCont)
 ```
 
@@ -70,18 +70,18 @@ unbal3 <- FALSE
 error_var <- 4
 randCor <- 0
 randCor3 <- 0
-rand.dist <- "norm"
+rand_dist <- "norm"
 rand_gen <- rnorm
-data.str <- "long"
+data_str <- "long"
 unbalCont <- c(min = 3, max = 10)
 unbalCont3 = NULL
 temp.three <- sim_reg(fixed = fixed, random = random, random3 = random3,
       fixed.param = fixed.param, random.param = random.param, 
       random.param3 = random.param3, cov.param = cov.param, k = k,
       n = n, p = p, unbal = unbal, unbal3 = unbal3, error_var = error_var,
-      randCor = randCor, randCor3 = randCor3, rand.dist = rand.dist,
+      randCor = randCor, randCor3 = randCor3, rand_dist = rand_dist,
       rand_gen = rand_gen, 
-      data.str = data.str, unbalCont = unbalCont, unbalCont3 = unbalCont3)
+      data_str = data_str, unbalCont = unbalCont, unbalCont3 = unbalCont3)
 ```
 
 Checking that the data are as unbalanced at level two and balanced number of clusters within each level three cluster.
@@ -108,18 +108,18 @@ unbal3 <- TRUE
 error_var <- 4
 randCor <- 0
 randCor3 <- 0
-rand.dist <- "norm"
+rand_dist <- "norm"
 rand_gen <- rnorm
-data.str <- "long"
+data_str <- "long"
 unbalCont <- c(min = 3, max = 30)
 unbalCont3 = c(min = 3, max = 10)
 temp.three <- sim_reg(fixed = fixed, random = random, random3 = random3,
       fixed.param = fixed.param, random.param = random.param, 
       random.param3 = random.param3, cov.param = cov.param, k = k,
       n = NULL, p = NULL, unbal = unbal, unbal3 = unbal3, error_var = error_var,
-      randCor = randCor, randCor3 = randCor3, rand.dist = rand.dist,
+      randCor = randCor, randCor3 = randCor3, rand_dist = rand_dist,
       rand_gen = rand_gen, 
-      data.str = data.str, unbalCont = unbalCont, unbalCont3 = unbalCont3)
+      data_str = data_str, unbalCont = unbalCont, unbalCont3 = unbalCont3)
 ```
 
 Lastly, showing that the design is indeed unbalanced at both levels.

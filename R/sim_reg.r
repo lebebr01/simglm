@@ -77,7 +77,7 @@
 #' data.str <- "long"
 #' temp.long <- sim_reg(fixed, random, random3 = NULL, fixed.param, random.param, random.param3 = NULL,
 #'  cov.param, k = NULL, n, p, error_var, randCor, randCor3 = NULL, rand.dist, rand_gen, 
-#'  data.str)
+#'  data.str = data.str)
 #' 
 #' ## fitting lmer model
 #' library(lme4)
@@ -104,7 +104,7 @@
 #' data.str <- "long"
 #' temp.three <- sim_reg(fixed, random, random3, fixed.param, random.param, 
 #' random.param3, cov.param, k,n, p, error_var, randCor, randCor3, rand.dist,
-#' rand_gen, data.str)
+#' rand_gen, data.str = data.str)
 #' 
 #' library(lme4)
 #' lmer(sim.data ~ 1 + time + diff + act + actClust + time:act + (1 + time + diff | clustID) +  

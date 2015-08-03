@@ -1,5 +1,10 @@
 #' Generate logistic regression outcome
 #' 
+#' Takes simulation parameter arguments and 
+#' returns simulated data in the logistic metric and
+#' converted to 0/1 based on the probabilities and the 
+#' binomial distribution with 1 trial.
+#' 
 #' @param Xmat A matrix of covariates.
 #' @param beta A vector of regression parameters.
 #' @param n Number of clusters.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/sim_glm_func.r
 \name{sim_glm_single}
 \alias{sim_glm_single}
-\title{Simulation logistic regression model}
+\title{Simulation single level logistic regression model}
 \usage{
 sim_glm_single(fixed, fixed.param, cov.param, n)
 }
@@ -17,7 +17,12 @@ interactions. Must be same order as fixed formula above.}
 \item{n}{Cluster sample size.}
 }
 \description{
-Simulation logistic regression model
+Takes simulation parameters as inputs and returns simulated data.
+}
+\details{
+Simulates data for the simple logistic regression models.  Returns
+a data frame with ID variables, fixed effects, and many other variables
+to help when running simulation studies.
 }
 \examples{
 \donttest{

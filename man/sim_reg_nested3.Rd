@@ -5,8 +5,8 @@
 \title{Function to simulate three level nested data}
 \usage{
 sim_reg_nested3(fixed, random, random3, fixed.param, random.param,
-  random.param3, cov.param, k, n, p, error_var, randCor, randCor3, rand.dist,
-  rand_gen, arima = FALSE, data.str, fact.vars = list(NULL),
+  random.param3, cov.param, k, n, p, error_var, randCor, randCor3, rand_dist,
+  rand_gen, arima = FALSE, data_str, fact.vars = list(NULL),
   unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
   ...)
 }
@@ -40,7 +40,7 @@ var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 
 \item{randCor3}{Correlation between level 3 random effects.}
 
-\item{rand.dist}{Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod",
+\item{rand_dist}{Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod",
 "norm" is default.}
 
 \item{rand_gen}{Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod",
@@ -50,7 +50,7 @@ var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 be correlated. If TRUE, must specify a valid model to pass to
 arima.sim. See \code{\link{arima.sim}} for examples.}
 
-\item{data.str}{Type of data. Must be "cross", "long", or "single".}
+\item{data_str}{Type of data. Must be "cross", "long", or "single".}
 
 \item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
 each list must include numlevels and var.type (must be "lvl1" or "lvl2");

@@ -1,4 +1,10 @@
-#' Simulation logistic regression model
+#' Simulation single level logistic regression model
+#' 
+#' Takes simulation parameters as inputs and returns simulated data.
+#' 
+#' Simulates data for the simple logistic regression models.  Returns 
+#' a data frame with ID variables, fixed effects, and many other variables
+#' to help when running simulation studies.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
@@ -36,3 +42,92 @@ sim_glm_single <- function(fixed, fixed.param, cov.param, n) {
   return(Xmat)
   
 }
+
+#' Simulate two level logistic regression model
+#' 
+#' Takes simulation parameters as inputs and returns simulated data.
+#' 
+#' Simulates data for the nested logistic regression models.  Returns a 
+#' data frame with ID variables, fixed effects, random effects, and many
+#' other variables to help when running simulation studies.
+#' 
+#' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
+#' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
+#' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
+#' @param random.param Variance of random effects. Must be same length as random.
+#' @param cov.param List of mean, sd (standard deviations), and var.type for fixed effects. 
+#'  Does not include intercept, time, factors, or interactions. 
+#'  var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
+#' @param n Cluster sample size.
+#' @param p Within cluster sample size.
+#' @param randCor Correlation between random effects.
+#' @param rand_dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
+#' "norm" is default.
+#' @param data_str Type of data. Must be "cross", "long", or "single".
+#' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
+#'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
+#'      optional specifications are: replace, prob, value.labels.
+#' @param unbal A vector of sample sizes for the number of observations for each level 2
+#'  cluster. Must have same length as level two sample size n. Alternative specification
+#'  can be TRUE, which uses additional argument, unbalCont.
+#' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum level one size,
+#'  will be drawn from a random uniform distribution with min and max specified.
+#' @param ... Additional specification needed to pass to the random generating 
+#'             function defined by rand.gen
+#' @examples
+#' \donttest{
+#' fixed <- ~1 + time + diff + act + time:act
+#' random <- ~1
+#' fixed.param <- c(0.2, 1.5, 0.8, 1.2, 1.1)
+#' random.param <- c(3)
+#' cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
+#' n <- 100
+#' p <- 10
+#' randCor <- 0
+#' rand_dist <- "norm"
+#' data_str <- "long"
+#' temp.long <- sim_glm_nested(fixed, random, fixed.param, random.param,
+#'  cov.param, n, p, randCor, rand_dist, data_str = data_str)
+#' }
+#' @export
+sim_glm_nested <- function(fixed, random, fixed.param, random.param, cov.param, n, p, 
+                           randCor, rand_dist, 
+                           data_str, fact.vars = list(NULL),
+                           unbal = FALSE, unbalCont = NULL, ...) {
+  
+  if(randCor > 1 | randCor < -1) stop("cor out of range")
+  
+  fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
+  rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
+  
+  if(length(rand.vars)+1 != length(random.param)) stop("Random lengths not equal")
+  if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
+  
+  if(unbal == FALSE) {
+    lvl1ss <- rep(p, n)
+    if(is.null(lvl1ss)) stop("lvl1ss is NULL")
+  } else {
+    if(length(unbalCont) < 2) stop("Must specify unbalCont when unbal = TRUE")
+    lvl1ss <- round(runif(n = n, min = min(unbalCont), max = max(unbalCont)), 0)
+  }
+  
+  rand.eff <- sim_rand_eff(random.param, randCor, n, rand_dist)
+  
+  Xmat <- sim_fixef_nested(fixed, fixed.vars, cov.param, n, lvl1ss, 
+                           data_str = data_str, fact.vars = fact.vars)
+  
+  reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
+    rep(rand.eff[,xx], times = lvl1ss)))
+  colnames(reff) <- c(unlist(lapply(1:ncol(rand.eff), function(xx) paste("b", xx-1, sep = ""))))
+  
+  Zmat <- model.matrix(random, data.frame(Xmat))
+
+  sim.data <- data_glm_nested(Xmat, Zmat, fixed.param, rand.eff, n, p = lvl1ss)
+  
+  Xmat <- data.frame(Xmat,reff,sim.data)
+  Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
+  Xmat$clustID <- rep(1:n, times = lvl1ss)
+  return(Xmat)
+  
+}
+

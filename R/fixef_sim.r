@@ -13,12 +13,12 @@
 #'  var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
 #' @param n Number of clusters.
 #' @param lvl1ss Number of within cluster units.
-#' @param data.str Type of data. Must be "cross", or "long".
+#' @param data_str Type of data. Must be "cross", or "long".
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
-sim_fixef_nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data.str, 
+sim_fixef_nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data_str, 
                              fact.vars = list(NULL)){
   
   n.vars <- length(fixed.vars)
@@ -41,7 +41,7 @@ sim_fixef_nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data.str,
     n.fact <- 0
   } 
 
-  if(data.str == "long") {
+  if(data_str == "long") {
     
     Xmat <- unlist(lapply(1:length(lvl1ss), function(xx) (1:lvl1ss[xx])-1))
     cov.param2 <- lapply(1:n.cont, function(xx) 
@@ -92,12 +92,12 @@ sim_fixef_nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data.str,
 #' @param k Number of third level clusters.
 #' @param n Number of clusters.
 #' @param p Number of within cluster units.
-#' @param data.str Type of data. Must be "cross", or "long".
+#' @param data_str Type of data. Must be "cross", or "long".
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1", "lvl2", or "lvl3");
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
-sim_fixef_nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data.str, 
+sim_fixef_nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data_str, 
                              fact.vars = list(NULL)){
   
   n.vars <- length(fixed.vars)
@@ -117,7 +117,7 @@ sim_fixef_nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data.str,
     n.fact <- 0
   } 
   
- if(data.str == "long") {
+ if(data_str == "long") {
     Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx]) - 1))
     #Xmat <- rep.int((1:p) - 1, times = n)
     cov.param2 <- lapply(1:n.cont, function(xx) 

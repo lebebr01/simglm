@@ -5,7 +5,7 @@
 \title{Master function to simulate single level data.}
 \usage{
 sim_reg_single(fixed, fixed.param, cov.param, n, error_var, rand_gen,
-  arima = FALSE, data.str, fact.vars = list(NULL), ...)
+  arima = FALSE, data_str, fact.vars = list(NULL), ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -26,7 +26,7 @@ interactions. Must be same order as fixed formula above.}
 be correlated. If TRUE, must specify a valid model to pass to
 arima.sim. See \code{\link{arima.sim}} for examples.}
 
-\item{data.str}{Type of data. Must be "cross", "long", or "single".}
+\item{data_str}{Type of data. Must be "cross", "long", or "single".}
 
 \item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
 each list must include numlevels and var.type (must be "lvl1" or "lvl2");

@@ -25,14 +25,14 @@
 #' @param error_var Scalar of error variance.
 #' @param randCor Correlation between random effects.
 #' @param randCor3 Correlation between third level random effects.
-#' @param rand.dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
+#' @param rand_dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
 #' @param rand_gen Distribution function to pass on to the level one
 #'                  simulation of errors.
 #' @param arima TRUE/FALSE flag indicating whether residuals should 
 #'             be correlated. If TRUE, must specify a valid model to pass to 
 #'             arima.sim. See \code{\link{arima.sim}} for examples.
-#' @param data.str Type of data. Must be "cross", "long", or "single".
+#' @param data_str Type of data. Must be "cross", "long", or "single".
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
@@ -58,7 +58,7 @@
 #' error_var <- 3
 #' rand_gen <- rnorm
 #' temp.single <- sim_reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param, 
-#' n = n, error_var = error_var, rand_gen = rand_gen, data.str = "single")
+#' n = n, error_var = error_var, rand_gen = rand_gen, data_str = "single")
 #' # Fitting regression to obtain parameter estimates
 #' summary(lm(sim.data ~ 1 + act + diff + numCourse + act:numCourse, data = temp.single))
 #' 
@@ -72,12 +72,12 @@
 #' p <- 30
 #' error_var <- 4
 #' randCor <- 0
-#' rand.dist <- "norm"
+#' rand_dist <- "norm"
 #' rand_gen <- rnorm
-#' data.str <- "long"
+#' data_str <- "long"
 #' temp.long <- sim_reg(fixed, random, random3 = NULL, fixed.param, random.param, random.param3 = NULL,
-#'  cov.param, k = NULL, n, p, error_var, randCor, randCor3 = NULL, rand.dist, rand_gen, 
-#'  data.str = data.str)
+#'  cov.param, k = NULL, n, p, error_var, randCor, randCor3 = NULL, rand_dist, rand_gen, 
+#'  data_str = data_str)
 #' 
 #' ## fitting lmer model
 #' library(lme4)
@@ -99,12 +99,12 @@
 #' error_var <- 4
 #' randCor <- 0
 #' randCor3 <- 0
-#' rand.dist <- "norm"
+#' rand_dist <- "norm"
 #' rand_gen <- rnorm
-#' data.str <- "long"
+#' data_str <- "long"
 #' temp.three <- sim_reg(fixed, random, random3, fixed.param, random.param, 
-#' random.param3, cov.param, k,n, p, error_var, randCor, randCor3, rand.dist,
-#' rand_gen, data.str = data.str)
+#' random.param3, cov.param, k,n, p, error_var, randCor, randCor3, rand_dist,
+#' rand_gen, data_str = data_str)
 #' 
 #' library(lme4)
 #' lmer(sim.data ~ 1 + time + diff + act + actClust + time:act + (1 + time + diff | clustID) +  
@@ -112,22 +112,22 @@
 #' 
 #' }
 sim_reg <- function(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k, n, p, 
-                    error_var, randCor, randCor3, rand.dist, rand_gen, arima = FALSE,
-                    data.str, fact.vars = list(NULL), unbal = FALSE, unbal3 = FALSE, 
+                    error_var, randCor, randCor3, rand_dist, rand_gen, arima = FALSE,
+                    data_str, fact.vars = list(NULL), unbal = FALSE, unbal3 = FALSE, 
                     unbalCont = NULL, unbalCont3 = NULL,
                     ...) {
   
-  if(data.str == "single"){
-    sim_reg_single(fixed, fixed.param, cov.param, n, error_var, rand_gen, arima, data.str, fact.vars, ...)
+  if(data_str == "single"){
+    sim_reg_single(fixed, fixed.param, cov.param, n, error_var, rand_gen, arima, data_str, fact.vars, ...)
   } else {
   	if (is.null(k)){
   	  sim_reg_nested(fixed, random, fixed.param, random.param, cov.param, n, p, 
-  	                 error_var, randCor, rand.dist, rand_gen, arima,
-  	                 data.str, fact.vars, unbal, unbalCont, ...)
+  	                 error_var, randCor, rand_dist, rand_gen, arima,
+  	                 data_str, fact.vars, unbal, unbalCont, ...)
   } else {
     sim_reg_nested3(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k, n, p, 
-                    error_var, randCor, randCor3, rand.dist, rand_gen, arima,
-                    data.str, fact.vars, unbal, unbal3, unbalCont, unbalCont3, ...)
+                    error_var, randCor, randCor3, rand_dist, rand_gen, arima,
+                    data_str, fact.vars, unbal, unbal3, unbalCont, unbalCont3, ...)
   }
  }
 }

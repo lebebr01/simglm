@@ -1,3 +1,26 @@
+#' Simulates single level data
+#' 
+#' Takes simulation parameter arguments and returns simulated data.
+#' 
+#' This is a helper function to the master function \code{\link{sim_reg}}, 
+#' this function does the actual simulation to return the data for single 
+#' level models.
+#' 
+#' @param Xmat A matrix of covariates.
+#' @param beta A vector of regression parameters.
+#' @param n Number of clusters.
+#' @param err A vector of within cluster errors.
+#' @export 
+data_reg_single <- function(Xmat, beta, n, err) {
+  
+  Fbeta <-(Xmat %*% beta)  #Simulate average growth curve
+  sim.data <- Fbeta + err  #Adding everything together
+  sim.data <- cbind(Fbeta, err, sim.data)  
+  colnames(sim.data) <- c("Fbeta", "err", "sim.data")
+  return(sim.data)
+  
+}
+
 #' Simulates two level nested data
 #' 
 #' Takes simulation parameter arguments and 
@@ -26,7 +49,7 @@ data_reg_nested <- function(Xmat, Zmat, beta, rand.eff, n, p, err) {
     sim.data <- Fbeta + re + err
     sim.data <- cbind(Fbeta, re, err, sim.data)
     colnames(sim.data) <- c("Fbeta", "randEff", "err", "sim.data")
-    sim.data
+    return(sim.data)
 }
 
 #' Simulates three level nested data with a single third level random effect
@@ -74,29 +97,5 @@ data_reg_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand.eff, rand.eff3, k, n,
     sim.data <- Fbeta + re + re3 + err
     sim.data <- cbind(Fbeta, re, re3, err, sim.data)
     colnames(sim.data) <- c("Fbeta", "randEff", "randEff3", "err", "sim.data")
-    sim.data
-}
-
-
-#' Simulates single level data
-#' 
-#' Takes simulation parameter arguments and returns simulated data.
-#' 
-#' This is a helper function to the master function \code{\link{sim_reg}}, 
-#' this function does the actual simulation to return the data for single 
-#' level models.
-#' 
-#' @param Xmat A matrix of covariates.
-#' @param beta A vector of regression parameters.
-#' @param n Number of clusters.
-#' @param err A vector of within cluster errors.
-#' @export 
-data_reg_single <- function(Xmat, beta, n, err) {
-  
-  Fbeta <-(Xmat %*% beta)  #Simulate average growth curve
-  sim.data <- Fbeta + err  #Adding everything together
-  sim.data <- cbind(Fbeta, err, sim.data)  
-  colnames(sim.data) <- c("Fbeta", "err", "sim.data")
-  sim.data
-  
+    return(sim.data)
 }

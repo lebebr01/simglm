@@ -4,7 +4,7 @@
 \alias{sim_fixef_nested}
 \title{Simulates design matrix.}
 \usage{
-sim_fixef_nested(fixed, fixed.vars, cov.param, n, lvl1ss, data.str,
+sim_fixef_nested(fixed, fixed.vars, cov.param, n, lvl1ss, data_str,
   fact.vars = list(NULL))
 }
 \arguments{
@@ -20,7 +20,7 @@ var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 
 \item{lvl1ss}{Number of within cluster units.}
 
-\item{data.str}{Type of data. Must be "cross", or "long".}
+\item{data_str}{Type of data. Must be "cross", or "long".}
 
 \item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
 each list must include numlevels and var.type (must be "lvl1" or "lvl2");

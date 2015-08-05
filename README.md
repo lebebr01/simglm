@@ -1,12 +1,11 @@
-## simReg package
+Regression simulation function
 
 [![Build Status](https://travis-ci.org/lebebr01/simReg.svg?branch=master)](https://travis-ci.org/lebebr01/simReg)
 
 A flexible suite of functions to simulate nested data.  
 Currently supports the following features:
 * Longitudinal data simulation
-* Three levels of nesting
-* Unbalanced designs
+* Two levels of nesting
 * Specification of distribution of random effects
 * Specification of distribution of within cluster errors
 * Specification of serial correlation
@@ -22,6 +21,7 @@ Currently supports the following features:
 * Single level simulation
 
 Features coming soon:
+* Adding factor variable simulation
 * More options for simulating random components
  * More distributions
  * Ability to simulate different distributions for different random effects
@@ -41,12 +41,19 @@ library(simReg)
 ```
 
 ## Introduction to the simReg package
-The best way to become oriented with the *simReg* package is through the package vignette.  There are two ways to get to the vignette (both will open a browser to view the vignette):
+The best way to become oriented with the `simReg` package is through the package vignette.  There are two ways to get to the vignette (both will open a browser to view the vignette):
 
 
 ```r
 browseVignettes()
 vignette("Intro", package = "simReg")
 ```
+
+Note: You may need to tell R to build the vignettes when installing the `simReg` package by doing the following:
+
+```r
+install_github("lebebr01/simReg", build_vignettes = TRUE)
+```
+
 
 Enjoy!

@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="date" content="2015-04-08" />
+<meta name="date" content="2015-08-05" />
 
 <title>Introduction to simReg</title>
 
@@ -52,20 +52,20 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 <div id="header">
 <h1 class="title">Introduction to simReg</h1>
-<h4 class="date"><em>2015-04-08</em></h4>
+<h4 class="date"><em>2015-08-05</em></h4>
 </div>
 
 
 <div id="introduction-to-simreg" class="section level1">
 <h1>Introduction to simReg</h1>
-<p>The <em>simReg</em> package aims to define a consistent framework for simulating regression models - including single level and multilevel models. This will hopefully allow the user to quickly simulate data for a class, project, or even a dissertation.</p>
+<p>The <code>simReg</code> package aims to define a consistent framework for simulating regression models - including single level and multilevel models. This will hopefully allow the user to quickly simulate data for a class, project, or even a dissertation.</p>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
-<p>Currently development is happening on github. To install the package, use the <em>devtools</em> package:</p>
+<p>Currently development is happening on github. To install the package, use the <code>devtools</code> package:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(devtools)
 <span class="kw">install_github</span>(<span class="st">&quot;lebebr01/simReg&quot;</span>)
 <span class="kw">library</span>(simReg)</code></pre>
-<p>This should load the <em>devtools</em> package, install the <em>simReg</em> package, and finally load the <em>simReg</em> package. The package has currently not been tested on a Mac machine. I do not anticipate any problems installing on a Mac however.</p>
+<p>This should load the <code>devtools</code> package, install the <code>simReg</code> package, and finally load the <code>simReg</code> package. The package has currently not been tested on a Mac machine. I do not anticipate any problems installing on a Mac however.</p>
 </div>
 <div id="simulate-data" class="section level2">
 <h2>Simulate Data</h2>
@@ -77,12 +77,12 @@ code > span.er { color: #ff0000; font-weight: bold; }
 fixed.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="fl">3.5</span>, <span class="dv">2</span>)
 cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">sd =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">3</span>), <span class="dt">var.type =</span> <span class="kw">c</span>(<span class="st">&quot;single&quot;</span>, <span class="st">&quot;single&quot;</span>, <span class="st">&quot;single&quot;</span>))
 n &lt;-<span class="st"> </span><span class="dv">150</span>
-errorVar &lt;-<span class="st"> </span><span class="dv">3</span>
-err.dist &lt;-<span class="st"> &quot;norm&quot;</span>
-temp.single &lt;-<span class="st"> </span><span class="kw">sim.reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">fixed.param =</span> fixed.param, <span class="dt">cov.param =</span> cov.param,
-<span class="dt">n =</span> n, <span class="dt">errorVar =</span> errorVar, <span class="dt">err.dist =</span> err.dist, <span class="dt">data.str =</span> <span class="st">&quot;single&quot;</span>)</code></pre>
-<p>A few things to highlight about the above syntax, first the object <strong>fixed</strong> is a one sided formula that gives the names of the variables to be included in the simulated data. The intercept is directly shown in the formulation here, but can also be omitted (similar to linear models in R). I like to include the 1 as it reminds me that I do in fact want an intercept. The next object, <strong>fixed.param</strong> is the regression weights for the fixed effects, this must be the same length as fixed (or one larger if the 1 is not explicitly stated in the <strong>fixed</strong> object). Next, <strong>cov.param</strong> represents the mean, standard deviation, and type of variable from the <strong>fixed</strong> object (must by “single” for single level regression). The <strong>cov.param</strong> object must contain all variables except the intercept and any interactions.</p>
-<p>The rest of the arguments are pretty straightforward, <strong>n</strong> is the sample size, <strong>errorVar</strong> is the error variance, <strong>err.dist</strong> is the distribution of the residuals, and finally in the function call itself, <strong>data.str</strong> must be “single” in this instance to reflect a single level regression.</p>
+error_var &lt;-<span class="st"> </span><span class="dv">3</span>
+rand_gen =<span class="st"> </span>rnorm
+temp.single &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">fixed.param =</span> fixed.param, <span class="dt">cov.param =</span> cov.param,
+<span class="dt">n =</span> n, <span class="dt">error_var =</span> error_var, <span class="dt">rand_gen =</span> rand_gen, <span class="dt">data_str =</span> <span class="st">&quot;single&quot;</span>)</code></pre>
+<p>A few things to highlight about the above syntax, first the object <code>fixed</code> is a one sided formula that gives the names of the variables to be included in the simulated data. The intercept is directly shown in the formulation here, but can also be omitted (similar to linear models in R). I like to include the 1 as it reminds me that I do in fact want an intercept. The next object, <code>fixed.param</code> is the regression weights for the fixed effects, this must be the same length as fixed (or one larger if the 1 is not explicitly stated in the <code>fixed</code> object). Next, <code>cov.param</code> represents the mean, standard deviation, and type of variable from the <code>fixed</code> object (must by “single” for single level regression). The <code>cov.param</code> object must contain all variables except the intercept and any interactions.</p>
+<p>The rest of the arguments are pretty straightforward, <code>n</code> is the sample size, <code>error_var</code> is the error variance, <code>rand_gen</code> is the distribution of the residuals, and finally in the function call itself, <code>data_str</code> must be “single” in this instance to reflect a single level regression.</p>
 <p>Finally, looking at the output from the above call:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(temp.single)</code></pre>
 <table>
@@ -102,73 +102,73 @@ temp.single &lt;-<span class="st"> </span><span class="kw">sim.reg</span>(<span 
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-0.2684066</td>
-<td align="right">0.2967809</td>
-<td align="right">1.9891466</td>
-<td align="right">-0.5339002</td>
-<td align="right">7.117367</td>
-<td align="right">1.2907669</td>
-<td align="right">8.408134</td>
+<td align="right">2.3733974</td>
+<td align="right">0.2671375</td>
+<td align="right">1.0980805</td>
+<td align="right">2.606181</td>
+<td align="right">20.8163714</td>
+<td align="right">-0.2176893</td>
+<td align="right">20.5986821</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">4.8854144</td>
-<td align="right">5.1058354</td>
-<td align="right">3.0269326</td>
-<td align="right">14.7878203</td>
-<td align="right">66.817398</td>
-<td align="right">-0.4898185</td>
-<td align="right">66.327579</td>
+<td align="right">1.1815592</td>
+<td align="right">-1.5736227</td>
+<td align="right">-1.8262199</td>
+<td align="right">-2.157787</td>
+<td align="right">-5.5547292</td>
+<td align="right">-3.3081563</td>
+<td align="right">-8.8628855</td>
 <td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">2.4192908</td>
-<td align="right">-8.4742233</td>
-<td align="right">-3.1953775</td>
-<td align="right">-7.7305474</td>
-<td align="right">-23.441976</td>
-<td align="right">-1.5005596</td>
-<td align="right">-24.942536</td>
+<td align="right">-5.2244165</td>
+<td align="right">1.3340132</td>
+<td align="right">-0.5662513</td>
+<td align="right">2.958333</td>
+<td align="right">-13.6288672</td>
+<td align="right">1.2751096</td>
+<td align="right">-12.3537576</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">-1.2747473</td>
-<td align="right">-3.8059230</td>
-<td align="right">0.4657965</td>
-<td align="right">-0.5937728</td>
-<td align="right">-6.462170</td>
-<td align="right">1.9890850</td>
-<td align="right">-4.473085</td>
+<td align="right">0.9975311</td>
+<td align="right">-2.0914234</td>
+<td align="right">-0.6980735</td>
+<td align="right">-0.696350</td>
+<td align="right">0.0627435</td>
+<td align="right">0.7549430</td>
+<td align="right">0.8176865</td>
 <td align="right">4</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">5.1230254</td>
-<td align="right">-2.7945164</td>
-<td align="right">1.8471180</td>
-<td align="right">9.4628327</td>
-<td align="right">45.088164</td>
-<td align="right">-1.9093080</td>
-<td align="right">43.178856</td>
+<td align="right">-0.9715987</td>
+<td align="right">4.9338418</td>
+<td align="right">0.2508824</td>
+<td align="right">-0.243757</td>
+<td align="right">3.4380214</td>
+<td align="right">1.9462675</td>
+<td align="right">5.3842890</td>
 <td align="right">5</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">-0.3332057</td>
-<td align="right">3.2023332</td>
-<td align="right">-2.5856702</td>
-<td align="right">0.8615600</td>
-<td align="right">-3.457215</td>
-<td align="right">1.2968201</td>
-<td align="right">-2.160395</td>
+<td align="right">3.3276902</td>
+<td align="right">1.3281002</td>
+<td align="right">6.5868071</td>
+<td align="right">21.918853</td>
+<td align="right">83.5303923</td>
+<td align="right">-1.3059434</td>
+<td align="right">82.2244488</td>
 <td align="right">6</td>
 </tr>
 </tbody>
 </table>
-<p>As can be seen from the data itself, the first 5 columns represent the raw data used in the simulation, the column labeled “Fbeta” is the matrix multiplication of the design matrix (first 5 columns in this case) by the <strong>fixed.param</strong> object above (the desired values for the fixed effects). The “err” column is the simulated errors, the column labeled “sim.data” is the simulated data (taking “Fbeta” + “err”), and lastly an ID variable reflecting the individuals.</p>
+<p>As can be seen from the data itself, the first 5 columns represent the raw data used in the simulation, the column labeled “Fbeta” is the matrix multiplication of the design matrix (first 5 columns in this case) by the <code>fixed.param</code> object above (the desired values for the fixed effects). The “err” column is the simulated errors, the column labeled “sim.data” is the simulated data (taking “Fbeta” + “err”), and lastly an ID variable reflecting the individuals.</p>
 <p>You could then use simple regression on these data to see how the simulation went:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">lm</span>(sim.data ~<span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>act +<span class="st"> </span>diff +<span class="st"> </span>numCourse +<span class="st"> </span>act:numCourse, <span class="dt">data =</span> temp.single))</code></pre>
 <pre><code>## 
@@ -178,34 +178,34 @@ temp.single &lt;-<span class="st"> </span><span class="kw">sim.reg</span>(<span 
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -4.7180 -1.1612  0.0146  1.1425  4.5442 
+## -5.1440 -1.0199  0.1555  1.0500  4.2161 
 ## 
 ## Coefficients:
 ##               Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)    2.19683    0.13596   16.16   &lt;2e-16 ***
-## act            3.99945    0.03887  102.89   &lt;2e-16 ***
-## diff           0.97447    0.04833   20.16   &lt;2e-16 ***
-## numCourse      3.38412    0.04446   76.12   &lt;2e-16 ***
-## act:numCourse  1.98391    0.01171  169.41   &lt;2e-16 ***
+## (Intercept)    1.66691    0.14378   11.59   &lt;2e-16 ***
+## act            3.96338    0.03635  109.05   &lt;2e-16 ***
+## diff           0.98689    0.04724   20.89   &lt;2e-16 ***
+## numCourse      3.55999    0.04844   73.50   &lt;2e-16 ***
+## act:numCourse  1.98827    0.01212  164.05   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 1.657 on 145 degrees of freedom
-## Multiple R-squared:  0.9976, Adjusted R-squared:  0.9976 
-## F-statistic: 1.52e+04 on 4 and 145 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 1.735 on 145 degrees of freedom
+## Multiple R-squared:  0.9963, Adjusted R-squared:  0.9962 
+## F-statistic:  9688 on 4 and 145 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div id="adding-factorcategoricalordinal-variables" class="section level4">
 <h4>Adding Factor/Categorical/Ordinal Variables</h4>
-<p>To add a factor, categorical, or ordinal variable, just append one of the following to the end of the variable name in the <strong>fixed</strong> object: “.f”, “.c”, “.o”. These indicate the variable is a discrete variable of some sort. See below for an example.</p>
+<p>To add a factor, categorical, or ordinal variable, just append one of the following to the end of the variable name in the <code>fixed</code> object: “.f”, “.c”, “.o”. These indicate the variable is a discrete variable of some sort. See below for an example.</p>
 <pre class="sourceCode r"><code class="sourceCode r">fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>act +<span class="st"> </span>diff +<span class="st"> </span>numCourse.o +<span class="st"> </span>act:numCourse.o
 fixed.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="fl">3.5</span>, <span class="dv">2</span>)
 cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">sd =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">3</span>), <span class="dt">var.type =</span> <span class="kw">c</span>(<span class="st">&quot;single&quot;</span>, <span class="st">&quot;single&quot;</span>))
 fact.vars &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">numlevels =</span> <span class="dv">5</span>, <span class="dt">var.type =</span> <span class="st">&quot;single&quot;</span>, <span class="st">&quot;single&quot;</span>)
 n &lt;-<span class="st"> </span><span class="dv">150</span>
-errorVar &lt;-<span class="st"> </span><span class="dv">3</span>
-err.dist &lt;-<span class="st"> &quot;norm&quot;</span>
-temp.single.o &lt;-<span class="st"> </span><span class="kw">sim.reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">fixed.param =</span> fixed.param, <span class="dt">cov.param =</span> cov.param,
-<span class="dt">n =</span> n, <span class="dt">errorVar =</span> errorVar, <span class="dt">err.dist =</span> err.dist, <span class="dt">data.str =</span> <span class="st">&quot;single&quot;</span>, <span class="dt">fact.vars =</span> fact.vars)</code></pre>
-<p>The next thing to add is a new object called <strong>fact.vars</strong>. This object must be a list that contains <strong>numlevels</strong> and <strong>var.type</strong>. Other optional features will be added in the future to increase functionality - such as including value labels, user specified probabilities, etc. Once these are passed into the <code>sim.reg()</code> function, the simulated data now looks like the following.</p>
+error_var &lt;-<span class="st"> </span><span class="dv">3</span>
+rand_gen =<span class="st"> </span>rnorm
+temp.single.o &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">fixed.param =</span> fixed.param, <span class="dt">cov.param =</span> cov.param,
+<span class="dt">n =</span> n, <span class="dt">error_var =</span> error_var, <span class="dt">rand_gen =</span> rand_gen, <span class="dt">data_str =</span> <span class="st">&quot;single&quot;</span>, <span class="dt">fact.vars =</span> fact.vars)</code></pre>
+<p>The next thing to add is a new object called <code>fact.vars</code>. This object must be a list that contains <code>numlevels</code> and <code>var.type</code>. Other optional features will be added in the future to increase functionality - such as including value labels, user specified probabilities, etc. Once these are passed into the <code>sim.reg()</code> function, the simulated data now looks like the following.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(temp.single.o)</code></pre>
 <table>
 <thead>
@@ -224,68 +224,68 @@ temp.single.o &lt;-<span class="st"> </span><span class="kw">sim.reg</span>(<spa
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-2.6468027</td>
-<td align="right">3.5433340</td>
+<td align="right">1.434482</td>
+<td align="right">-1.5133274</td>
 <td align="right">2</td>
-<td align="right">-5.2936055</td>
-<td align="right">-8.631088</td>
-<td align="right">-1.1848365</td>
-<td align="right">-9.815924</td>
+<td align="right">2.868964</td>
+<td align="right">18.96253</td>
+<td align="right">1.9353899</td>
+<td align="right">20.89792</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">-0.3781010</td>
-<td align="right">0.7923889</td>
+<td align="right">1.342635</td>
+<td align="right">2.2470812</td>
 <td align="right">3</td>
-<td align="right">-1.1343030</td>
-<td align="right">9.511379</td>
-<td align="right">3.4062625</td>
-<td align="right">12.917641</td>
+<td align="right">4.027904</td>
+<td align="right">28.17343</td>
+<td align="right">-2.0397689</td>
+<td align="right">26.13366</td>
 <td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-4.3706813</td>
-<td align="right">0.7399419</td>
-<td align="right">2</td>
-<td align="right">-8.7413625</td>
-<td align="right">-25.225508</td>
-<td align="right">-2.2413953</td>
-<td align="right">-27.466904</td>
+<td align="right">-2.809994</td>
+<td align="right">0.3593980</td>
+<td align="right">3</td>
+<td align="right">-8.429982</td>
+<td align="right">-15.24054</td>
+<td align="right">0.6928063</td>
+<td align="right">-14.54774</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">7.3515812</td>
-<td align="right">-5.6238472</td>
-<td align="right">5</td>
-<td align="right">36.7579058</td>
-<td align="right">116.798289</td>
-<td align="right">2.2112506</td>
-<td align="right">119.009540</td>
+<td align="right">7.851222</td>
+<td align="right">1.3994582</td>
+<td align="right">3</td>
+<td align="right">23.553665</td>
+<td align="right">92.41168</td>
+<td align="right">1.5752981</td>
+<td align="right">93.98697</td>
 <td align="right">4</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-0.4760464</td>
-<td align="right">-5.9062373</td>
-<td align="right">1</td>
-<td align="right">-0.4760464</td>
-<td align="right">-3.262516</td>
-<td align="right">0.4505735</td>
-<td align="right">-2.811942</td>
+<td align="right">1.545822</td>
+<td align="right">-0.7503822</td>
+<td align="right">4</td>
+<td align="right">6.183287</td>
+<td align="right">33.79948</td>
+<td align="right">0.1308905</td>
+<td align="right">33.93037</td>
 <td align="right">5</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">-6.6595804</td>
-<td align="right">3.4167372</td>
-<td align="right">1</td>
-<td align="right">-6.6595804</td>
-<td align="right">-31.040745</td>
-<td align="right">-1.9672030</td>
-<td align="right">-33.007948</td>
+<td align="right">3.262503</td>
+<td align="right">-0.2271945</td>
+<td align="right">5</td>
+<td align="right">16.312516</td>
+<td align="right">64.94785</td>
+<td align="right">1.5328137</td>
+<td align="right">66.48066</td>
 <td align="right">6</td>
 </tr>
 </tbody>
@@ -302,20 +302,20 @@ random.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class
 cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">sd =</span> <span class="kw">c</span>(<span class="fl">1.5</span>, <span class="dv">4</span>), <span class="dt">var.type =</span> <span class="kw">c</span>(<span class="st">&quot;lvl1&quot;</span>, <span class="st">&quot;lvl2&quot;</span>))
 n &lt;-<span class="st"> </span><span class="dv">150</span>
 p &lt;-<span class="st"> </span><span class="dv">30</span>
-errorVar &lt;-<span class="st"> </span><span class="dv">4</span>
+error_var &lt;-<span class="st"> </span><span class="dv">4</span>
 randCor &lt;-<span class="st"> </span><span class="dv">0</span>
-rand.dist &lt;-<span class="st"> &quot;norm&quot;</span>
-err.dist &lt;-<span class="st"> &quot;norm&quot;</span>
-serCor &lt;-<span class="st"> &quot;ID&quot;</span>
-serCorVal &lt;-<span class="st"> </span><span class="ot">NULL</span>
-data.str &lt;-<span class="st"> &quot;long&quot;</span>
-temp.long &lt;-<span class="st"> </span><span class="kw">sim.reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">random =</span> random, <span class="dt">fixed.param =</span> fixed.param, 
-                     <span class="dt">random.param =</span> random.param, <span class="dt">cov.param =</span> cov.param, <span class="dt">k =</span> <span class="ot">NULL</span>, <span class="dt">n =</span> n, <span class="dt">p =</span> p,
-                     <span class="dt">errorVar =</span> errorVar, <span class="dt">randCor =</span> randCor, <span class="dt">rand.dist =</span> rand.dist, 
-                     <span class="dt">err.dist =</span> err.dist, <span class="dt">serCor =</span> serCor, <span class="dt">serCorVal =</span> serCorVal, 
-                     <span class="dt">data.str =</span> data.str, <span class="dt">unbal =</span> <span class="ot">FALSE</span>)</code></pre>
-<p>Highlighting the new agruments needed, the first is a one sided formula <strong>random</strong>. This specifies which terms should be specified above. Related to <strong>random</strong>, <strong>random.param</strong> specifies the variance for the random effects and must be the same length as <strong>random</strong>. Although still found in the single level regression, the “var.type” portion of <strong>cov.param</strong> must not be either “lvl1” or “lvl2” to represent either level 1 or level 2 variables respectively. Note that the time variable is not included in the <strong>cov.param</strong> argument and is automatically specified as discrete starting from 0. In the future, differing time scales will be expanded.</p>
-<p>The other new terms needed are straightforward, <strong>p</strong> is the within cluster sample size (i.e. how many repeated measurements), <strong>randCor</strong> is the correlation between the random effects, <strong>rand.dist</strong> is the distribution of the random effects - see the help file for details on options here, <strong>serCor</strong> is which serial correlation structure is specified - again see details in help file for details on options, <strong>serCorVal</strong> is values passed on to the specific serial correlation structure, and lastly <strong>data.str</strong> is now “long” for longitudinal data.</p>
+rand_dist &lt;-<span class="st"> &quot;norm&quot;</span>
+rand_gen =<span class="st"> </span>rnorm
+data_str &lt;-<span class="st"> &quot;long&quot;</span>
+temp.long &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">random =</span> random, 
+                     <span class="dt">fixed.param =</span> fixed.param, 
+                     <span class="dt">random.param =</span> random.param, <span class="dt">cov.param =</span> cov.param, 
+                     <span class="dt">k =</span> <span class="ot">NULL</span>, <span class="dt">n =</span> n, <span class="dt">p =</span> p,
+                     <span class="dt">error_var =</span> error_var, <span class="dt">randCor =</span> randCor, 
+                     <span class="dt">rand_dist =</span> rand_dist, <span class="dt">rand_gen =</span> rand_gen,
+                     <span class="dt">data_str =</span> data_str, <span class="dt">unbal =</span> <span class="ot">FALSE</span>)</code></pre>
+<p>Highlighting the new agruments needed, the first is a one sided formula <code>random</code>. This specifies which terms should be specified above. Related to <code>random</code>, <code>random.param</code> specifies the variance for the random effects and must be the same length as <code>random</code>. Although still found in the single level regression, the “var.type” portion of <code>cov.param</code> must not be either “lvl1” or “lvl2” to represent either level 1 or level 2 variables respectively. Note that the time variable is not included in the <code>cov.param</code> argument and is automatically specified as discrete starting from 0. In the future, differing time scales will be expanded.</p>
+<p>The other new terms needed are straightforward, <code>p</code> is the within cluster sample size (i.e. how many repeated measurements), <code>randCor</code> is the correlation between the random effects, <code>rand_dist</code> is the distribution of the random effects - see the help file for details on options here, and lastly <code>data_str</code> is now “long” for longitudinal data.</p>
 <p>The simulated data now look like the following:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(temp.long)</code></pre>
 <table>
@@ -341,96 +341,96 @@ temp.long &lt;-<span class="st"> </span><span class="kw">sim.reg</span>(<span cl
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">1.1123407</td>
-<td align="right">9.587434</td>
+<td align="right">0.6941562</td>
+<td align="right">8.101937</td>
 <td align="right">0.000000</td>
-<td align="right">0.0325508</td>
-<td align="right">0.3456289</td>
-<td align="right">-1.182227</td>
-<td align="right">32.72514</td>
-<td align="right">-1.2824889</td>
-<td align="right">1.1055173</td>
-<td align="right">32.54817</td>
+<td align="right">5.616211</td>
+<td align="right">-0.3726639</td>
+<td align="right">0.4209945</td>
+<td align="right">26.79939</td>
+<td align="right">5.908447</td>
+<td align="right">-1.2875472</td>
+<td align="right">31.42029</td>
 <td align="right">1</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
 <td align="right">1</td>
-<td align="right">0.8639175</td>
-<td align="right">9.587434</td>
-<td align="right">9.587434</td>
-<td align="right">0.0325508</td>
-<td align="right">0.3456289</td>
-<td align="right">-1.182227</td>
-<td align="right">100.34664</td>
-<td align="right">-0.6431672</td>
-<td align="right">0.5595591</td>
-<td align="right">100.26303</td>
+<td align="right">-2.1490679</td>
+<td align="right">8.101937</td>
+<td align="right">8.101937</td>
+<td align="right">5.616211</td>
+<td align="right">-0.3726639</td>
+<td align="right">0.4209945</td>
+<td align="right">68.45360</td>
+<td align="right">4.338802</td>
+<td align="right">-0.2456562</td>
+<td align="right">72.54675</td>
 <td align="right">2</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">2</td>
-<td align="right">0.0658588</td>
-<td align="right">9.587434</td>
-<td align="right">19.174867</td>
-<td align="right">0.0325508</td>
-<td align="right">0.3456289</td>
-<td align="right">-1.182227</td>
-<td align="right">164.67032</td>
-<td align="right">0.6459485</td>
-<td align="right">0.4254162</td>
-<td align="right">165.74169</td>
+<td align="right">-3.4816556</td>
+<td align="right">8.101937</td>
+<td align="right">16.203873</td>
+<td align="right">5.616211</td>
+<td align="right">-0.3726639</td>
+<td align="right">0.4209945</td>
+<td align="right">119.17163</td>
+<td align="right">3.405126</td>
+<td align="right">1.1297959</td>
+<td align="right">123.70656</td>
 <td align="right">3</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
 <td align="right">3</td>
-<td align="right">1.5829024</td>
-<td align="right">9.587434</td>
-<td align="right">28.762301</td>
-<td align="right">0.0325508</td>
-<td align="right">0.3456289</td>
-<td align="right">-1.182227</td>
-<td align="right">242.88462</td>
-<td align="right">-0.8019130</td>
-<td align="right">0.0958694</td>
-<td align="right">242.17857</td>
+<td align="right">-0.4899703</td>
+<td align="right">8.101937</td>
+<td align="right">24.305810</td>
+<td align="right">5.616211</td>
+<td align="right">-0.3726639</td>
+<td align="right">0.4209945</td>
+<td align="right">195.83530</td>
+<td align="right">4.291945</td>
+<td align="right">2.1030905</td>
+<td align="right">202.23034</td>
 <td align="right">4</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">4</td>
-<td align="right">-1.0745199</td>
-<td align="right">9.587434</td>
-<td align="right">38.349734</td>
-<td align="right">0.0325508</td>
-<td align="right">0.3456289</td>
-<td align="right">-1.182227</td>
-<td align="right">296.05212</td>
-<td align="right">2.6853935</td>
-<td align="right">-1.9057556</td>
-<td align="right">296.83176</td>
+<td align="right">0.8012750</td>
+<td align="right">8.101937</td>
+<td align="right">32.407747</td>
+<td align="right">5.616211</td>
+<td align="right">-0.3726639</td>
+<td align="right">0.4209945</td>
+<td align="right">262.29633</td>
+<td align="right">4.462888</td>
+<td align="right">1.9179427</td>
+<td align="right">268.67716</td>
 <td align="right">5</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
 <td align="right">5</td>
-<td align="right">-0.1191019</td>
-<td align="right">9.587434</td>
-<td align="right">47.937168</td>
-<td align="right">0.0325508</td>
-<td align="right">0.3456289</td>
-<td align="right">-1.182227</td>
-<td align="right">370.89666</td>
-<td align="right">1.9015010</td>
-<td align="right">-2.3120607</td>
-<td align="right">370.48610</td>
+<td align="right">0.3883130</td>
+<td align="right">8.101937</td>
+<td align="right">40.509684</td>
+<td align="right">5.616211</td>
+<td align="right">-0.3726639</td>
+<td align="right">0.4209945</td>
+<td align="right">318.53212</td>
+<td align="right">3.916370</td>
+<td align="right">1.7111792</td>
+<td align="right">324.15967</td>
 <td align="right">6</td>
 <td align="right">1</td>
 </tr>
@@ -445,22 +445,22 @@ temp.long &lt;-<span class="st"> </span><span class="kw">sim.reg</span>(<span cl
 ## Formula: sim.data ~ 1 + time + diff + act + time:act + (1 + time + diff |  
 ##     clustID)
 ##    Data: temp.long
-## REML criterion at convergence: 21192.41
+## REML criterion at convergence: 21133.85
 ## Random effects:
-##  Groups   Name        Std.Dev. Corr       
-##  clustID  (Intercept) 2.690               
-##           time        1.948     0.03      
-##           diff        1.364    -0.01  0.06
-##  Residual             1.977               
+##  Groups   Name        Std.Dev. Corr     
+##  clustID  (Intercept) 2.438             
+##           time        1.883    0.11     
+##           diff        1.419    0.10 0.00
+##  Residual             1.971             
 ## Number of obs: 4500, groups:  clustID, 150
 ## Fixed Effects:
 ## (Intercept)         time         diff          act     time:act  
-##       4.351        1.833        6.023        2.319        6.958</code></pre>
+##       4.237        1.989        6.009        2.479        6.991</code></pre>
 <p>One note when looking at the output is that standard deviations are given, not variances as inputted into the simulation function.</p>
 <div id="cross-sectional-data" class="section level4">
 <h4>Cross-Sectional Data</h4>
-<p>A similar framework can be used for cross-sectional data, such as when students are nested within schools. The only thing that would need to be changed from the longitudinal portion above is the <strong>data.str</strong> argument from “long” to “cross” for cross-sectional data.</p>
-<p>One last note about cross-sectional data. As a default for longitudinal data, time is always considered to be in the model in some fashion (as noted above when talking about the <strong>cov.param</strong> object). Therefore, when specifying the <strong>cov.param</strong> and <strong>fact.vars</strong> objects, ensure information about all variables is there.</p>
+<p>A similar framework can be used for cross-sectional data, such as when students are nested within schools. The only thing that would need to be changed from the longitudinal portion above is the <code>data_str</code> argument from “long” to “cross” for cross-sectional data.</p>
+<p>One last note about cross-sectional data. As a default for longitudinal data, time is always considered to be in the model in some fashion (as noted above when talking about the <code>cov.param</code> object). Therefore, when specifying the <code>cov.param</code> and <code>fact.vars</code> objects, ensure information about all variables is there.</p>
 </div>
 <div id="categorical-data-for-nested-designs" class="section level4">
 <h4>Categorical Data for Nested Designs</h4>

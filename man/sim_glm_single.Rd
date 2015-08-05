@@ -4,7 +4,8 @@
 \alias{sim_glm_single}
 \title{Simulation single level logistic regression model}
 \usage{
-sim_glm_single(fixed, fixed.param, cov.param, n)
+sim_glm_single(fixed, fixed.param, cov.param, n, data_str,
+  fact.vars = list(NULL))
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -15,6 +16,12 @@ sim_glm_single(fixed, fixed.param, cov.param, n)
 interactions. Must be same order as fixed formula above.}
 
 \item{n}{Cluster sample size.}
+
+\item{data_str}{Type of data. Must be "cross", "long", or "single".}
+
+\item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
+     each list must include numlevels and var.type (must be "lvl1" or "lvl2");
+     optional specifications are: replace, prob, value.labels.}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

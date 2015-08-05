@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="date" content="2015-04-08" />
+<meta name="date" content="2015-08-05" />
 
 <title>Unbalanced Data</title>
 
@@ -52,7 +52,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 <div id="header">
 <h1 class="title">Unbalanced Data</h1>
-<h4 class="date"><em>2015-04-08</em></h4>
+<h4 class="date"><em>2015-08-05</em></h4>
 </div>
 
 
@@ -69,19 +69,19 @@ random.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class
 cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">sd =</span> <span class="kw">c</span>(<span class="fl">1.5</span>, <span class="dv">4</span>), <span class="dt">var.type =</span> <span class="kw">c</span>(<span class="st">&quot;lvl1&quot;</span>, <span class="st">&quot;lvl2&quot;</span>))
 n &lt;-<span class="st"> </span><span class="dv">150</span>
 unbal &lt;-<span class="st"> </span><span class="ot">TRUE</span>
-errorVar &lt;-<span class="st"> </span><span class="dv">4</span>
+error_var &lt;-<span class="st"> </span><span class="dv">4</span>
 randCor &lt;-<span class="st"> </span><span class="dv">0</span>
-rand.dist &lt;-<span class="st"> &quot;norm&quot;</span>
-err.dist &lt;-<span class="st"> &quot;norm&quot;</span>
-serCor &lt;-<span class="st"> &quot;ID&quot;</span>
-serCorVal &lt;-<span class="st"> </span><span class="ot">NULL</span>
-data.str &lt;-<span class="st"> &quot;cross&quot;</span>
+rand_dist &lt;-<span class="st"> &quot;norm&quot;</span>
+rand_gen &lt;-<span class="st"> </span>rnorm
+data_str &lt;-<span class="st"> &quot;cross&quot;</span>
 unbalCont &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">10</span>)
-temp.cross &lt;-<span class="st"> </span><span class="kw">sim.reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">random =</span> random, <span class="dt">fixed.param =</span> fixed.param, 
-                      <span class="dt">random.param =</span> random.param, <span class="dt">cov.param =</span> cov.param, <span class="dt">k =</span> <span class="ot">NULL</span>, <span class="dt">n =</span> n, 
-                      <span class="dt">p =</span> <span class="ot">NULL</span>, <span class="dt">errorVar =</span> errorVar, <span class="dt">randCor =</span> randCor, <span class="dt">rand.dist =</span> rand.dist, 
-                      <span class="dt">err.dist =</span> err.dist, <span class="dt">serCor =</span> serCor, <span class="dt">serCorVal =</span> serCorVal,
-                      <span class="dt">data.str =</span> data.str, <span class="dt">unbal =</span> <span class="ot">TRUE</span>, <span class="dt">unbalCont =</span> unbalCont)</code></pre>
+temp.cross &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">random =</span> random, 
+                      <span class="dt">fixed.param =</span> fixed.param, 
+                      <span class="dt">random.param =</span> random.param, <span class="dt">cov.param =</span> cov.param,
+                      <span class="dt">k =</span> <span class="ot">NULL</span>, <span class="dt">n =</span> n, <span class="dt">p =</span> <span class="ot">NULL</span>, <span class="dt">error_var =</span> error_var,
+                      <span class="dt">randCor =</span> randCor, <span class="dt">rand_dist =</span> rand_dist, 
+                      <span class="dt">rand_gen =</span> rand_gen, <span class="dt">data_str =</span> data_str, 
+                      <span class="dt">unbal =</span> <span class="ot">TRUE</span>, <span class="dt">unbalCont =</span> unbalCont)</code></pre>
 <p>The unbalanced design can be verified by running a table on the cluster ID variable. As can be seen from the output below, the sample size of the clusters ranges from a small of 3 to a maximum of 10.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(temp.cross$clustID)</code></pre>
 <pre><code>## 
@@ -120,23 +120,21 @@ k &lt;-<span class="st"> </span><span class="dv">10</span>
 n &lt;-<span class="st"> </span><span class="dv">150</span>
 unbal &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 unbal3 &lt;-<span class="st"> </span><span class="ot">FALSE</span>
-errorVar &lt;-<span class="st"> </span><span class="dv">4</span>
+error_var &lt;-<span class="st"> </span><span class="dv">4</span>
 randCor &lt;-<span class="st"> </span><span class="dv">0</span>
 randCor3 &lt;-<span class="st"> </span><span class="dv">0</span>
-rand.dist &lt;-<span class="st"> &quot;norm&quot;</span>
-err.dist &lt;-<span class="st"> &quot;norm&quot;</span>
-serCor &lt;-<span class="st"> &quot;ID&quot;</span>
-serCorVal &lt;-<span class="st"> </span><span class="ot">NULL</span>
-data.str &lt;-<span class="st"> &quot;long&quot;</span>
+rand_dist &lt;-<span class="st"> &quot;norm&quot;</span>
+rand_gen &lt;-<span class="st"> </span>rnorm
+data_str &lt;-<span class="st"> &quot;long&quot;</span>
 unbalCont &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">min =</span> <span class="dv">3</span>, <span class="dt">max =</span> <span class="dv">10</span>)
 unbalCont3 =<span class="st"> </span><span class="ot">NULL</span>
-temp.three &lt;-<span class="st"> </span><span class="kw">sim.reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">random =</span> random, <span class="dt">random3 =</span> random3,
+temp.three &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">random =</span> random, <span class="dt">random3 =</span> random3,
       <span class="dt">fixed.param =</span> fixed.param, <span class="dt">random.param =</span> random.param, 
       <span class="dt">random.param3 =</span> random.param3, <span class="dt">cov.param =</span> cov.param, <span class="dt">k =</span> k,
-      <span class="dt">n =</span> n, <span class="dt">p =</span> p, <span class="dt">unbal =</span> unbal, <span class="dt">unbal3 =</span> unbal3, <span class="dt">errorVar =</span> errorVar,
-      <span class="dt">randCor =</span> randCor, <span class="dt">randCor3 =</span> randCor3, <span class="dt">rand.dist =</span> rand.dist,
-      <span class="dt">err.dist =</span> err.dist, <span class="dt">serCor =</span> serCor, <span class="dt">serCorVal =</span> serCorVal, 
-      <span class="dt">data.str =</span> data.str, <span class="dt">unbalCont =</span> unbalCont, <span class="dt">unbalCont3 =</span> unbalCont3)</code></pre>
+      <span class="dt">n =</span> n, <span class="dt">p =</span> p, <span class="dt">unbal =</span> unbal, <span class="dt">unbal3 =</span> unbal3, <span class="dt">error_var =</span> error_var,
+      <span class="dt">randCor =</span> randCor, <span class="dt">randCor3 =</span> randCor3, <span class="dt">rand_dist =</span> rand_dist,
+      <span class="dt">rand_gen =</span> rand_gen, 
+      <span class="dt">data_str =</span> data_str, <span class="dt">unbalCont =</span> unbalCont, <span class="dt">unbalCont3 =</span> unbalCont3)</code></pre>
 <p>Checking that the data are as unbalanced at level two and balanced number of clusters within each level three cluster.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(temp.three$clustID)</code></pre>
 <pre><code>## 
@@ -175,23 +173,21 @@ cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class
 k &lt;-<span class="st"> </span><span class="dv">10</span>
 unbal &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 unbal3 &lt;-<span class="st"> </span><span class="ot">TRUE</span>
-errorVar &lt;-<span class="st"> </span><span class="dv">4</span>
+error_var &lt;-<span class="st"> </span><span class="dv">4</span>
 randCor &lt;-<span class="st"> </span><span class="dv">0</span>
 randCor3 &lt;-<span class="st"> </span><span class="dv">0</span>
-rand.dist &lt;-<span class="st"> &quot;norm&quot;</span>
-err.dist &lt;-<span class="st"> &quot;norm&quot;</span>
-serCor &lt;-<span class="st"> &quot;ID&quot;</span>
-serCorVal &lt;-<span class="st"> </span><span class="ot">NULL</span>
-data.str &lt;-<span class="st"> &quot;long&quot;</span>
+rand_dist &lt;-<span class="st"> &quot;norm&quot;</span>
+rand_gen &lt;-<span class="st"> </span>rnorm
+data_str &lt;-<span class="st"> &quot;long&quot;</span>
 unbalCont &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">min =</span> <span class="dv">3</span>, <span class="dt">max =</span> <span class="dv">30</span>)
 unbalCont3 =<span class="st"> </span><span class="kw">c</span>(<span class="dt">min =</span> <span class="dv">3</span>, <span class="dt">max =</span> <span class="dv">10</span>)
-temp.three &lt;-<span class="st"> </span><span class="kw">sim.reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">random =</span> random, <span class="dt">random3 =</span> random3,
+temp.three &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">random =</span> random, <span class="dt">random3 =</span> random3,
       <span class="dt">fixed.param =</span> fixed.param, <span class="dt">random.param =</span> random.param, 
       <span class="dt">random.param3 =</span> random.param3, <span class="dt">cov.param =</span> cov.param, <span class="dt">k =</span> k,
-      <span class="dt">n =</span> <span class="ot">NULL</span>, <span class="dt">p =</span> <span class="ot">NULL</span>, <span class="dt">unbal =</span> unbal, <span class="dt">unbal3 =</span> unbal3, <span class="dt">errorVar =</span> errorVar,
-      <span class="dt">randCor =</span> randCor, <span class="dt">randCor3 =</span> randCor3, <span class="dt">rand.dist =</span> rand.dist,
-      <span class="dt">err.dist =</span> err.dist, <span class="dt">serCor =</span> serCor, <span class="dt">serCorVal =</span> serCorVal, 
-      <span class="dt">data.str =</span> data.str, <span class="dt">unbalCont =</span> unbalCont, <span class="dt">unbalCont3 =</span> unbalCont3)</code></pre>
+      <span class="dt">n =</span> <span class="ot">NULL</span>, <span class="dt">p =</span> <span class="ot">NULL</span>, <span class="dt">unbal =</span> unbal, <span class="dt">unbal3 =</span> unbal3, <span class="dt">error_var =</span> error_var,
+      <span class="dt">randCor =</span> randCor, <span class="dt">randCor3 =</span> randCor3, <span class="dt">rand_dist =</span> rand_dist,
+      <span class="dt">rand_gen =</span> rand_gen, 
+      <span class="dt">data_str =</span> data_str, <span class="dt">unbalCont =</span> unbalCont, <span class="dt">unbalCont3 =</span> unbalCont3)</code></pre>
 <p>Lastly, showing that the design is indeed unbalanced at both levels.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(temp.three$clustID)</code></pre>
 <pre><code>## 

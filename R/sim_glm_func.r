@@ -11,7 +11,11 @@
 #' @param cov.param List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or 
 #'   interactions. Must be same order as fixed formula above.
 #' @param n Cluster sample size.
-#' 
+#' @param data_str Type of data. Must be "cross", "long", or "single".
+#' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
+#'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
+#'      optional specifications are: replace, prob, value.labels.
+#'             
 #' @examples 
 #' \donttest{
 #' # generating parameters for single level logistic regression
@@ -27,7 +31,8 @@
 #' 
 #' }
 #' @export
-sim_glm_single <- function(fixed, fixed.param, cov.param, n) {
+sim_glm_single <- function(fixed, fixed.param, cov.param, n, 
+                           data_str, fact.vars = list(NULL)) {
   
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   
@@ -72,8 +77,7 @@ sim_glm_single <- function(fixed, fixed.param, cov.param, n) {
 #'  can be TRUE, which uses additional argument, unbalCont.
 #' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum level one size,
 #'  will be drawn from a random uniform distribution with min and max specified.
-#' @param ... Additional specification needed to pass to the random generating 
-#'             function defined by rand.gen
+#'
 #' @examples
 #' \donttest{
 #' fixed <- ~1 + time + diff + act + time:act
@@ -172,8 +176,7 @@ sim_glm_nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 #'  will be drawn from a random uniform distribution with min and max specified.
 #' @param unbalCont3 When unbal3 = TRUE, this specifies the minimum and maximum level two size,
 #'  will be drawn from a random uniform distribution with min and max specified.
-#' @param ... Additional specification needed to pass to the random generating 
-#'             function defined by rand.gen.
+#' 
 #' @examples 
 #' \donttest{
 #' # Three level example

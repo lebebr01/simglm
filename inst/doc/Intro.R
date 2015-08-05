@@ -16,10 +16,10 @@ fixed <- ~ 1 + act + diff + numCourse + act:numCourse
 fixed.param <- c(2, 4, 1, 3.5, 2)
 cov.param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var.type = c("single", "single", "single"))
 n <- 150
-errorVar <- 3
-err.dist <- "norm"
-temp.single <- sim.reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param,
-n = n, errorVar = errorVar, err.dist = err.dist, data.str = "single")
+error_var <- 3
+rand_gen = rnorm
+temp.single <- sim_reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param,
+n = n, error_var = error_var, rand_gen = rand_gen, data_str = "single")
 
 ## ----printsinglelevel----------------------------------------------------
 head(temp.single)
@@ -33,10 +33,10 @@ fixed.param <- c(2, 4, 1, 3.5, 2)
 cov.param <- list(mean = c(0, 0), sd = c(4, 3), var.type = c("single", "single"))
 fact.vars <- list(numlevels = 5, var.type = "single", "single")
 n <- 150
-errorVar <- 3
-err.dist <- "norm"
-temp.single.o <- sim.reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param,
-n = n, errorVar = errorVar, err.dist = err.dist, data.str = "single", fact.vars = fact.vars)
+error_var <- 3
+rand_gen = rnorm
+temp.single.o <- sim_reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param,
+n = n, error_var = error_var, rand_gen = rand_gen, data_str = "single", fact.vars = fact.vars)
 
 ## ----printsinglelevelfact------------------------------------------------
 head(temp.single.o)
@@ -49,18 +49,18 @@ random.param <- c(7, 4, 2)
 cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
 n <- 150
 p <- 30
-errorVar <- 4
+error_var <- 4
 randCor <- 0
-rand.dist <- "norm"
-err.dist <- "norm"
-serCor <- "ID"
-serCorVal <- NULL
-data.str <- "long"
-temp.long <- sim.reg(fixed = fixed, random = random, fixed.param = fixed.param, 
-                     random.param = random.param, cov.param = cov.param, k = NULL, n = n, p = p,
-                     errorVar = errorVar, randCor = randCor, rand.dist = rand.dist, 
-                     err.dist = err.dist, serCor = serCor, serCorVal = serCorVal, 
-                     data.str = data.str, unbal = FALSE)
+rand_dist <- "norm"
+rand_gen = rnorm
+data_str <- "long"
+temp.long <- sim_reg(fixed = fixed, random = random, 
+                     fixed.param = fixed.param, 
+                     random.param = random.param, cov.param = cov.param, 
+                     k = NULL, n = n, p = p,
+                     error_var = error_var, randCor = randCor, 
+                     rand_dist = rand_dist, rand_gen = rand_gen,
+                     data_str = data_str, unbal = FALSE)
 
 ## ----longdata------------------------------------------------------------
 head(temp.long)

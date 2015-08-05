@@ -1,0 +1,64 @@
+---
+title: "Simulate Data from Generalized Linear Models"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to simReg}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+```{r setup, include=FALSE}
+library(knitr)
+library(simReg)
+knit_print.data.frame = function(x, ...) {
+  res = paste(c('', '', kable(x, output = FALSE)), collapse = '\n')
+  asis_output(res)
+}
+```
+
+# Simulated Logistic Models
+The `simReg` package offers users the ability to simulate from a variety of generalized linear models, both single level and multilevel generalized models. Instead of using the `sim_reg` function to call these, there is now a `sim_glm` function to use. 
+
+Similar to the `sim_reg` function, one benefit of this package for simulation is that the intermediate steps are returned as well. This is useful for additional processing of the data, for example to add in your own missing data function.
+
+Here is an example for simulating a single level logistic model:
+
+```{r singlelogistic}
+fixed <- ~ 1 + act + diff
+fixed.param <- c(2, 0.5, 0.3)
+cov.param <- list(mean = c(0, 0), sd = c(4, 3), 
+                  var.type = c("single", "single", "single"))
+n <- 150
+
+temp.single <- sim_glm(fixed = fixed, fixed.param = fixed.param, 
+                       cov.param = cov.param, 
+                       n = n, data_str = "single")
+head(temp.single)
+```
+
+As you can see from the code above, the syntax is virtually identical to the syntax for the `sim_reg` function. The largest difference is the omission of the `error_var` and `rand_gen` commands. The returned data frame includes the response variable in the logistic function (Fbeta), the probability found by taking $\frac{exp(logistic)}{1 + exp(logistic)}$ (logistic), and the returned 0/1 variable by using the `rbinom` function using the probabilities defined above (sim.data).
+
+## Multilevel logistic models
+Adding in additional levels is straightforward and again very similar to the `sim_reg` function. Here is a two level example with students nested in classrooms, the **act** variable is treated as a classroom variable:
+
+```{r twologistic}
+# Longitudinal linear mixed model example
+fixed <- ~1 + diff + act
+random <- ~1 
+fixed.param <- c(2, 0.5, 0.3)
+random.param <- c(7)
+cov.param <- list(mean = c(0, 0), sd = c(2, 1.4), 
+                  var.type = c("lvl1", "lvl2"))
+n <- 150
+p <- 30
+randCor <- 0
+rand_dist <- "norm"
+data_str <- "cross"
+temp.cross <- sim_glm(fixed, random, random3 = NULL, fixed.param,
+                     random.param, random.param3 = NULL,
+                     cov.param, k = NULL, n, p, randCor, 
+                     randCor3 = NULL, rand_dist, 
+                     data_str = data_str)
+```
+
+

@@ -40,11 +40,17 @@ library(simReg)
 ```
 
 ## Introduction to the simReg package
-The best way to become oriented with the *simReg* package is through the package vignette.  There are two ways to get to the vignette (both will open a browser to view the vignette):
+The best way to become oriented with the `simReg` package is through the package vignette.  There are two ways to get to the vignette (both will open a browser to view the vignette):
 
 ```{r vignette, eval=FALSE}
 browseVignettes()
 vignette("Intro", package = "simReg")
 ```
+
+Note: You may need to tell R to build the vignettes when installing the `simReg` package by doing the following:
+```{r install2, eval = FALSE}
+install_github("lebebr01/simReg", build_vignettes = TRUE)
+```
+
 
 Enjoy!

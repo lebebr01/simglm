@@ -17,16 +17,16 @@ knit_print.data.frame = function(x, ...) {
 ```
 # Introduction to simReg
 
-The *simReg* package aims to define a consistent framework for simulating regression models - including single level and multilevel models. This will hopefully allow the user to quickly simulate data for a class, project, or even a dissertation.
+The `simReg` package aims to define a consistent framework for simulating regression models - including single level and multilevel models. This will hopefully allow the user to quickly simulate data for a class, project, or even a dissertation.
 
 ## Installation
-Currently development is happening on github. To install the package, use the *devtools* package:
+Currently development is happening on github. To install the package, use the `devtools` package:
 ```{r install, eval=FALSE}
 library(devtools)
 install_github("lebebr01/simReg")
 library(simReg)
 ```
-This should load the *devtools* package, install the *simReg* package, and finally load the *simReg* package. The package has currently not been tested on a Mac machine. I do not anticipate any problems installing on a Mac however.
+This should load the `devtools` package, install the `simReg` package, and finally load the `simReg` package. The package has currently not been tested on a Mac machine. I do not anticipate any problems installing on a Mac however.
 
 ## Simulate Data
 The master function that handles the simulation grunt work is the `sim.reg()` function. As always, you can do `?sim.reg` to pull up the help file for the function. 
@@ -45,16 +45,16 @@ temp.single <- sim_reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov
 n = n, error_var = error_var, rand_gen = rand_gen, data_str = "single")
 ```
 
-A few things to highlight about the above syntax, first the object **fixed** is a one sided formula that gives the names of the variables to be included in the simulated data. The intercept is directly shown in the formulation here, but can also be omitted (similar to linear models in R). I like to include the 1 as it reminds me that I do in fact want an intercept. The next object, **fixed.param** is the regression weights for the fixed effects, this must be the same length as fixed (or one larger if the 1 is not explicitly stated in the **fixed** object). Next, **cov.param** represents the mean, standard deviation, and type of variable from the **fixed** object (must by "single" for single level regression).  The **cov.param** object must contain all variables except the intercept and any interactions.
+A few things to highlight about the above syntax, first the object `fixed` is a one sided formula that gives the names of the variables to be included in the simulated data. The intercept is directly shown in the formulation here, but can also be omitted (similar to linear models in R). I like to include the 1 as it reminds me that I do in fact want an intercept. The next object, `fixed.param` is the regression weights for the fixed effects, this must be the same length as fixed (or one larger if the 1 is not explicitly stated in the `fixed` object). Next, `cov.param` represents the mean, standard deviation, and type of variable from the `fixed` object (must by "single" for single level regression).  The `cov.param` object must contain all variables except the intercept and any interactions.
 
-The rest of the arguments are pretty straightforward, **n** is the sample size, **error_var** is the error variance, **rand_gen** is the distribution of the residuals, and finally in the function call itself, **data_str** must be "single" in this instance to reflect a single level regression.
+The rest of the arguments are pretty straightforward, `n` is the sample size, `error_var` is the error variance, `rand_gen` is the distribution of the residuals, and finally in the function call itself, `data_str` must be "single" in this instance to reflect a single level regression.
 
 Finally, looking at the output from the above call:
 ```{r printsinglelevel}
 head(temp.single)
 ```
 
-As can be seen from the data itself, the first 5 columns represent the raw data used in the simulation, the column labeled "Fbeta" is the matrix multiplication of the design matrix (first 5 columns in this case) by the **fixed.param** object above (the desired values for the fixed effects).  The "err" column is the simulated errors, the column labeled "sim.data" is the simulated data (taking "Fbeta" + "err"), and lastly an ID variable reflecting the individuals.
+As can be seen from the data itself, the first 5 columns represent the raw data used in the simulation, the column labeled "Fbeta" is the matrix multiplication of the design matrix (first 5 columns in this case) by the `fixed.param` object above (the desired values for the fixed effects).  The "err" column is the simulated errors, the column labeled "sim.data" is the simulated data (taking "Fbeta" + "err"), and lastly an ID variable reflecting the individuals.
 
 You could then use simple regression on these data to see how the simulation went:
 ```{r simpregmod}
@@ -62,7 +62,7 @@ summary(lm(sim.data ~ 1 + act + diff + numCourse + act:numCourse, data = temp.si
 ```
 
 #### Adding Factor/Categorical/Ordinal Variables
-To add a factor, categorical, or ordinal variable, just append one of the following to the end of the variable name in the **fixed** object: ".f", ".c", ".o".  These indicate the variable is a discrete variable of some sort. See below for an example.
+To add a factor, categorical, or ordinal variable, just append one of the following to the end of the variable name in the `fixed` object: ".f", ".c", ".o".  These indicate the variable is a discrete variable of some sort. See below for an example.
 ```{r singlelevelfact}
 fixed <- ~ 1 + act + diff + numCourse.o + act:numCourse.o
 fixed.param <- c(2, 4, 1, 3.5, 2)
@@ -75,7 +75,7 @@ temp.single.o <- sim_reg(fixed = fixed, fixed.param = fixed.param, cov.param = c
 n = n, error_var = error_var, rand_gen = rand_gen, data_str = "single", fact.vars = fact.vars)
 ```
 
-The next thing to add is a new object called **fact.vars**.  This object must be a list that contains **numlevels** and **var.type**. Other optional features will be added in the future to increase functionality - such as including value labels, user specified probabilities, etc. Once these are passed into the `sim.reg()` function, the simulated data now looks like the following.
+The next thing to add is a new object called `fact.vars`.  This object must be a list that contains `numlevels` and `var.type`. Other optional features will be added in the future to increase functionality - such as including value labels, user specified probabilities, etc. Once these are passed into the `sim.reg()` function, the simulated data now looks like the following.
 ```{r printsinglelevelfact}
 head(temp.single.o)
 ```
@@ -104,9 +104,9 @@ temp.long <- sim_reg(fixed = fixed, random = random,
                      data_str = data_str, unbal = FALSE)
 ```
 
-Highlighting the new agruments needed, the first is a one sided formula **random**. This specifies which terms should be specified above. Related to **random**, **random.param** specifies the variance for the random effects and must be the same length as **random**.  Although still found in the single level regression, the "var.type" portion of **cov.param** must not be either "lvl1" or "lvl2" to represent either level 1 or level 2 variables respectively. Note that the time variable is not included in the **cov.param** argument and is automatically specified as discrete starting from 0.  In the future, differing time scales will be expanded.
+Highlighting the new agruments needed, the first is a one sided formula `random`. This specifies which terms should be specified above. Related to `random`, `random.param` specifies the variance for the random effects and must be the same length as `random`.  Although still found in the single level regression, the "var.type" portion of `cov.param` must not be either "lvl1" or "lvl2" to represent either level 1 or level 2 variables respectively. Note that the time variable is not included in the `cov.param` argument and is automatically specified as discrete starting from 0.  In the future, differing time scales will be expanded.
 
-The other new terms needed are straightforward, **p** is the within cluster sample size (i.e. how many repeated measurements), **randCor** is the correlation between the random effects, **rand_dist** is the distribution of the random effects - see the help file for details on options here, and lastly **data_str** is now "long" for longitudinal data.
+The other new terms needed are straightforward, `p` is the within cluster sample size (i.e. how many repeated measurements), `randCor` is the correlation between the random effects, `rand_dist` is the distribution of the random effects - see the help file for details on options here, and lastly `data_str` is now "long" for longitudinal data.
 
 The simulated data now look like the following:
 ```{r longdata}
@@ -124,9 +124,9 @@ data = temp.long)
 One note when looking at the output is that standard deviations are given, not variances as inputted into the simulation function.
 
 #### Cross-Sectional Data
-A similar framework can be used for cross-sectional data, such as when students are nested within schools.  The only thing that would need to be changed from the longitudinal portion above is the **data_str** argument from "long" to "cross" for cross-sectional data.
+A similar framework can be used for cross-sectional data, such as when students are nested within schools.  The only thing that would need to be changed from the longitudinal portion above is the `data_str` argument from "long" to "cross" for cross-sectional data.
 
-One last note about cross-sectional data.  As a default for longitudinal data, time is always considered to be in the model in some fashion (as noted above when talking about the **cov.param** object). Therefore, when specifying the **cov.param** and **fact.vars** objects, ensure information about all variables is there.
+One last note about cross-sectional data.  As a default for longitudinal data, time is always considered to be in the model in some fashion (as noted above when talking about the `cov.param` object). Therefore, when specifying the `cov.param` and `fact.vars` objects, ensure information about all variables is there.
 
 #### Categorical Data for Nested Designs
 The same framework to specify categorical data for single level regression designs is used for nested designs. Just asign the ".f", ".c", or ".o" to the end of the name and the function will take care of the rest.

@@ -6,7 +6,7 @@
 \usage{
 sim_glm_nested(fixed, random, fixed.param, random.param, cov.param, n, p,
   randCor, rand_dist, data_str, fact.vars = list(NULL), unbal = FALSE,
-  unbalCont = NULL, ...)
+  unbalCont = NULL)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}

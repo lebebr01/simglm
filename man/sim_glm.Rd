@@ -7,7 +7,7 @@
 sim_glm(fixed, random, random3, fixed.param, random.param, random.param3,
   cov.param, k, n, p, randCor, randCor3, rand_dist, data_str,
   fact.vars = list(NULL), unbal = FALSE, unbal3 = FALSE,
-  unbalCont = NULL, unbalCont3 = NULL, ...)
+  unbalCont = NULL, unbalCont3 = NULL)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}

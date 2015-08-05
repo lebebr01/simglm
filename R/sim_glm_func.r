@@ -97,7 +97,7 @@ sim_glm_single <- function(fixed, fixed.param, cov.param, n,
 sim_glm_nested <- function(fixed, random, fixed.param, random.param, cov.param, n, p, 
                            randCor, rand_dist, 
                            data_str, fact.vars = list(NULL),
-                           unbal = FALSE, unbalCont = NULL, ...) {
+                           unbal = FALSE, unbalCont = NULL) {
   
   if(randCor > 1 | randCor < -1) stop("cor out of range")
   
@@ -204,8 +204,7 @@ sim_glm_nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 sim_glm_nested3 <- function(fixed, random, random3, fixed.param, random.param, random.param3,
                             cov.param, k, n, p, randCor, randCor3, rand_dist,
                             data_str, fact.vars = list(NULL),
-                            unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
-                            ...) {
+                            unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL) {
   
   if(randCor > 1 | randCor < -1 | randCor3 > 1 | randCor3 < -1) 
     stop("Random effect correlation out of range")

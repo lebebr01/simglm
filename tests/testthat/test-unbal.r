@@ -18,7 +18,7 @@ test_that("return error",{
   expect_error(sim_reg(fixed = fixed, random = random, fixed.param = fixed.param, 
                        random.param = random.param, cov.param = cov.param, k = NULL, 
                        n = n, p = NULL, error_var = error_var, randCor = randCor, 
-                       rand.dist = rand.dist, rand_gen = rand_gen, data_str = data.str, unbal = TRUE, 
+                       rand.dist = rand.dist, rand_gen = rand_gen, data_str = data_str, unbal = TRUE, 
                        unbalCont = unbalCont),
                "Must specify unbalCont when unbal = TRUE")
 })

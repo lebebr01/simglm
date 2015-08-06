@@ -37,3 +37,24 @@ temp.cross <- sim_glm(fixed, random, random3 = NULL, fixed.param,
                      randCor3 = NULL, rand_dist, 
                      data_str = data_str)
 
+## ----threelogistic-------------------------------------------------------
+fixed <- ~1 + diff + act + actClust
+random <- ~1
+random3 <- ~ 1
+fixed.param <- c(4, 0.8, 0.15, 1.1)
+random.param <- c(7)
+random.param3 <- c(4)
+cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
+                  var.type = c("lvl1", "lvl2", "lvl3"))
+k <- 10
+n <- 150
+p <- 30
+randCor <- 0
+randCor3 <- 0
+rand_dist <- "norm"
+data_str <- "cross"
+temp.three <- sim_glm(fixed, random, random3, fixed.param, random.param,
+                      random.param3, cov.param, k, n, p, randCor, randCor3, 
+                      rand_dist, data_str = data_str)
+head(temp.three)
+

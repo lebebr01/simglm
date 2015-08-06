@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="date" content="2015-08-05" />
+<meta name="date" content="2015-08-06" />
 
 <title>Simulate Data from Generalized Linear Models</title>
 
@@ -52,7 +52,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 <div id="header">
 <h1 class="title">Simulate Data from Generalized Linear Models</h1>
-<h4 class="date"><em>2015-08-05</em></h4>
+<h4 class="date"><em>2015-08-06</em></h4>
 </div>
 
 
@@ -86,61 +86,61 @@ temp.single &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(<span 
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">4.9132050</td>
-<td align="right">2.9762794</td>
-<td align="right">5.349486</td>
-<td align="right">0.9952719</td>
+<td align="right">-2.588007</td>
+<td align="right">6.228250</td>
+<td align="right">2.5744712</td>
+<td align="right">0.9292004</td>
 <td align="right">1</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">3.1071773</td>
-<td align="right">2.5240829</td>
-<td align="right">4.310814</td>
-<td align="right">0.9867552</td>
+<td align="right">-3.552101</td>
+<td align="right">3.927257</td>
+<td align="right">1.4021267</td>
+<td align="right">0.8025211</td>
 <td align="right">1</td>
 <td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">4.0939172</td>
-<td align="right">-5.3409509</td>
-<td align="right">2.444673</td>
-<td align="right">0.9201710</td>
-<td align="right">1</td>
+<td align="right">-7.856340</td>
+<td align="right">3.389850</td>
+<td align="right">-0.9112148</td>
+<td align="right">0.2867513</td>
+<td align="right">0</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">-7.2733928</td>
-<td align="right">-0.7125763</td>
-<td align="right">-1.850469</td>
-<td align="right">0.1358178</td>
-<td align="right">0</td>
+<td align="right">5.811499</td>
+<td align="right">2.196420</td>
+<td align="right">5.5646753</td>
+<td align="right">0.9961838</td>
+<td align="right">1</td>
 <td align="right">4</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-0.3127631</td>
-<td align="right">1.1084781</td>
-<td align="right">2.176162</td>
-<td align="right">0.8980883</td>
-<td align="right">1</td>
+<td align="right">-3.446926</td>
+<td align="right">-0.712849</td>
+<td align="right">0.0626824</td>
+<td align="right">0.5156655</td>
+<td align="right">0</td>
 <td align="right">5</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">2.2953222</td>
-<td align="right">-1.4401382</td>
-<td align="right">2.715620</td>
-<td align="right">0.9379421</td>
+<td align="right">-1.202785</td>
+<td align="right">5.662890</td>
+<td align="right">3.0974746</td>
+<td align="right">0.9567885</td>
 <td align="right">1</td>
 <td align="right">6</td>
 </tr>
 </tbody>
 </table>
-<p>As you can see from the code above, the syntax is virtually identical to the syntax for the <code>sim_reg</code> function. The largest difference is the omission of the <code>error_var</code> and <code>rand_gen</code> commands. The returned data frame includes the response variable in the logistic function (Fbeta), the probability found by taking <span class="math">\(\frac{exp(logistic)}{1 + exp(logistic)}\)</span> (logistic), and the returned 0/1 variable by using the <code>rbinom</code> function using the probabilities defined above (sim.data).</p>
+<p>As you can see from the code above, the syntax is virtually identical to the syntax for the <code>sim_reg</code> function. The largest difference is the omission of the <code>error_var</code> and <code>rand_gen</code> commands. The returned data frame includes the response variable in the logistic function (Fbeta), the probability found by taking <span class="math">\(\frac{exp(Fbeta)}{1 + exp(Fbeta)}\)</span> (logistic), and the returned 0/1 variable by using the <code>rbinom</code> function using the probabilities defined above (sim.data).</p>
 <div id="multilevel-logistic-models" class="section level2">
 <h2>Multilevel logistic models</h2>
 <p>Adding in additional levels is straightforward and again very similar to the <code>sim_reg</code> function. Here is a two level example with students nested in classrooms, the <strong>act</strong> variable is treated as a classroom variable:</p>
@@ -161,6 +161,147 @@ temp.cross &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(fixed, 
                      cov.param, <span class="dt">k =</span> <span class="ot">NULL</span>, n, p, randCor, 
                      <span class="dt">randCor3 =</span> <span class="ot">NULL</span>, rand_dist, 
                      <span class="dt">data_str =</span> data_str)</code></pre>
+</div>
+<div id="three-level-example" class="section level2">
+<h2>Three level example</h2>
+<p>Below is sample code for a three level example. Primary differences are the additional terms associated with the third level.</p>
+<pre class="sourceCode r"><code class="sourceCode r">fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>diff +<span class="st"> </span>act +<span class="st"> </span>actClust
+random &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span>
+random3 &lt;-<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="dv">1</span>
+fixed.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="fl">0.8</span>, <span class="fl">0.15</span>, <span class="fl">1.1</span>)
+random.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">7</span>)
+random.param3 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>)
+cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">sd =</span> <span class="kw">c</span>(<span class="fl">1.5</span>, <span class="dv">4</span>, <span class="dv">2</span>),
+                  <span class="dt">var.type =</span> <span class="kw">c</span>(<span class="st">&quot;lvl1&quot;</span>, <span class="st">&quot;lvl2&quot;</span>, <span class="st">&quot;lvl3&quot;</span>))
+k &lt;-<span class="st"> </span><span class="dv">10</span>
+n &lt;-<span class="st"> </span><span class="dv">150</span>
+p &lt;-<span class="st"> </span><span class="dv">30</span>
+randCor &lt;-<span class="st"> </span><span class="dv">0</span>
+randCor3 &lt;-<span class="st"> </span><span class="dv">0</span>
+rand_dist &lt;-<span class="st"> &quot;norm&quot;</span>
+data_str &lt;-<span class="st"> &quot;cross&quot;</span>
+temp.three &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(fixed, random, random3, fixed.param, random.param,
+                      random.param3, cov.param, k, n, p, randCor, randCor3, 
+                      rand_dist, <span class="dt">data_str =</span> data_str)
+<span class="kw">head</span>(temp.three)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">X.Intercept.</th>
+<th align="right">diff</th>
+<th align="right">act</th>
+<th align="right">actClust</th>
+<th align="right">b0_2</th>
+<th align="right">Fbeta</th>
+<th align="right">randEff</th>
+<th align="right">randEff3</th>
+<th align="right">logistic</th>
+<th align="right">prob</th>
+<th align="right">sim.data</th>
+<th align="right">withinID</th>
+<th align="right">clustID</th>
+<th align="right">clust3ID</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.3246091</td>
+<td align="right">-1.313862</td>
+<td align="right">-0.015444</td>
+<td align="right">1.650186</td>
+<td align="right">4.045619</td>
+<td align="right">1.650186</td>
+<td align="right">-3.030038</td>
+<td align="right">2.665768</td>
+<td align="right">0.9349762</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">1.0600089</td>
+<td align="right">-1.313862</td>
+<td align="right">-0.015444</td>
+<td align="right">1.650186</td>
+<td align="right">4.633939</td>
+<td align="right">1.650186</td>
+<td align="right">-3.030038</td>
+<td align="right">3.254088</td>
+<td align="right">0.9628197</td>
+<td align="right">1</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">-0.1496355</td>
+<td align="right">-1.313862</td>
+<td align="right">-0.015444</td>
+<td align="right">1.650186</td>
+<td align="right">3.666224</td>
+<td align="right">1.650186</td>
+<td align="right">-3.030038</td>
+<td align="right">2.286372</td>
+<td align="right">0.9077421</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">2.4987372</td>
+<td align="right">-1.313862</td>
+<td align="right">-0.015444</td>
+<td align="right">1.650186</td>
+<td align="right">5.784922</td>
+<td align="right">1.650186</td>
+<td align="right">-3.030038</td>
+<td align="right">4.405070</td>
+<td align="right">0.9879322</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">0.4447696</td>
+<td align="right">-1.313862</td>
+<td align="right">-0.015444</td>
+<td align="right">1.650186</td>
+<td align="right">4.141748</td>
+<td align="right">1.650186</td>
+<td align="right">-3.030038</td>
+<td align="right">2.761897</td>
+<td align="right">0.9405817</td>
+<td align="right">1</td>
+<td align="right">5</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">3.0366130</td>
+<td align="right">-1.313862</td>
+<td align="right">-0.015444</td>
+<td align="right">1.650186</td>
+<td align="right">6.215223</td>
+<td align="right">1.650186</td>
+<td align="right">-3.030038</td>
+<td align="right">4.835371</td>
+<td align="right">0.9921189</td>
+<td align="right">1</td>
+<td align="right">6</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 

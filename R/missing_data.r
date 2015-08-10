@@ -5,7 +5,8 @@
 #' 
 #' @param sim_data Simulated data frame
 #' @param resp_var Response variable to add missing data to
-#' @param clust_var Cluster variable used for the grouping.
+#' @param clust_var Cluster variable used for the grouping, set to 
+#'           NULL by default which means no clustering.
 #' @param miss_prop Proportion of missing data overall or a vector
 #'           the same length as the number of clusters representing the
 #'           percentage of missing data for each cluster
@@ -14,12 +15,12 @@
 #' @param miss_cov Covariate that the missing values are based on.
 #' @export 
 missing_data <- function(sim_data, resp_var = 'sim.data',
-                         clust_var = 'clustID', miss_prop,
+                         clust_var = NULL, miss_prop,
                          type = c('dropout', 'random', 'mar'),
                          miss_cov) {
   switch(type,
          dropout = dropout_missing(sim_data, resp_var, clust_var, miss_prop),
-         random = random_missing(sim_data, resp_var, clust_var, miss_prop),
+         random = random_missing(sim_data, resp_var, miss_prop, clust_var),
          mar = mar_missing(sim_data, resp_var, miss_cov, miss_prop)
          )
 }
@@ -199,12 +200,12 @@ mar_missing <- function(sim_data, resp_var, miss_cov, miss_prop) {
   uniq_vals <- dplyr::arrange(data.frame(cov = with(sim_data, unique(eval(parse(text = miss_cov))))), cov)
   
   miss_per <- cbind(miss_cov = uniq_vals, miss_prop = miss_prop,
-                    miss_obs = runif(length(miss_prop)))
+                    miss_prob = runif(length(miss_prop)))
   
   join_var <- as.character(miss_cov)
   sim_data2 <- merge(sim_data, miss_per, by.x = miss_cov, by.y = 'cov')
   
   sim_data2 <- cbind(sim_data2, sim.data2 = 
-                       with(sim_data2, ifelse(miss_obs > miss_prop, NA, eval(parse(text = resp_var)))))
+                       with(sim_data2, ifelse(miss_prob < miss_prop, NA, eval(parse(text = resp_var)))))
   return(sim_data2)
 }

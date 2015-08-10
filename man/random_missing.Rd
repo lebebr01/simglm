@@ -4,19 +4,18 @@
 \alias{random_missing}
 \title{Random Missing Data}
 \usage{
-random_missing(sim_data, resp_var = "sim.data", clust_var = "clustID",
-  miss_prop)
+random_missing(sim_data, resp_var = "sim.data", miss_prop, clust_var = NULL)
 }
 \arguments{
 \item{sim_data}{Simulated data frame}
 
 \item{resp_var}{Response variable to add missing data to}
 
-\item{clust_var}{Cluster variable used for the grouping.}
-
 \item{miss_prop}{Proportion of missing data overall or a vector
 the same length as the number of clusters representing the
 percentage of missing data for each cluster}
+
+\item{clust_var}{Cluster variable used for the grouping.}
 }
 \description{
 Function that inputs simulated data and returns data frame with

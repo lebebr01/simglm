@@ -88,7 +88,7 @@ dropout_missing <- function(sim_data, resp_var = 'sim.data',
   
   sim_data$sim.data2 <- with(sim_data, ifelse(missing == 1, NA, eval(parse(text = resp_var))))
   
-  sim_data
+  return(sim_data)
 }
 
 
@@ -118,15 +118,17 @@ random_missing <- function(sim_data, resp_var = 'sim.data', miss_prop,
   if(resp_var %ni% names(sim_data)) {
     stop(paste(resp_var, 'not found in variables of data supplied'))
   }
-  if(is.null(clust_var) == FALSE) {
+
+  if(is.null(clust_var)){
+    sim_data$miss_prob <- round(runif(nrow(sim_data)), 3)
+    sim_data$missing <- with(sim_data, ifelse(miss_prob < miss_prop, 1, 0))
+    sim_data$sim.data2 <- with(sim_data, ifelse(missing == 1, NA, 
+                                                eval(parse(text = resp_var))))
+  } else {
     if(clust_var %ni% names(sim_data)) {
       stop(paste(clust_var, 'not found in variables of data supplied'))
     }
-  }
-  
-  if(is.null(clust_var)){
     
-  } else {
     len_groups <- with(sim_data, tapply(eval(parse(text = resp_var)), 
                                         eval(parse(text = clust_var)),
                                         length))
@@ -145,7 +147,8 @@ random_missing <- function(sim_data, resp_var = 'sim.data', miss_prop,
       
       num_missing <- 0
       while(sum(num_missing) %ni% missing_range) {
-        num_missing <- round(len_groups * round(runif(n_groups, lim[1], lim[2]), 2))
+        num_missing <- round(len_groups * round(runif(n_groups, lim[1], 
+                                                      lim[2]), 2))
       }
       
     } else {
@@ -155,19 +158,16 @@ random_missing <- function(sim_data, resp_var = 'sim.data', miss_prop,
     missing_obs <- lapply(1:length(num_missing), function(xx) 
       sample(1:len_groups[xx], num_missing[xx]))
     
-    data_split <- with(sim_data, split(sim_data, eval(parse(text = clust_var))))
+    data_split <- with(sim_data, split(sim_data, 
+                                       eval(parse(text = clust_var))))
+    sim_data$missing <- do.call("c", lapply(1:length(missing_obs), function(xx)
+      ifelse(data_split[[xx]]$withinID %in% missing_obs[[xx]], 1, 0)))
     
+    sim_data$sim.data2 <- with(sim_data, ifelse(missing == 1, NA, 
+                                                eval(parse(text = resp_var))))
   }
-  
-  
-  
 
-  sim_data$missing <- do.call("c", lapply(1:length(missing_obs), function(xx)
-    ifelse(data_split[[xx]]$withinID %in% missing_obs[[xx]], 1, 0)))
-  
-  sim_data$sim.data2 <- with(sim_data, ifelse(missing == 1, NA, eval(parse(text = resp_var))))
-  
-  sim_data
+  return(sim_data)
 }
 
 #' Missing at Random

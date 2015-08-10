@@ -5,7 +5,7 @@
 \title{Master Missing Data Function}
 \usage{
 missing_data(sim_data, resp_var = "sim.data", clust_var = "clustID",
-  miss_prop, type = c("dropout", "random"))
+  miss_prop, type = c("dropout", "random", "mar"), miss_cov)
 }
 \arguments{
 \item{sim_data}{Simulated data frame}
@@ -19,7 +19,9 @@ the same length as the number of clusters representing the
 percentage of missing data for each cluster}
 
 \item{type}{The type of missing data to generate, currently supports
-droput or random missing data.}
+droput, random, or missing at random (mar) missing data.}
+
+\item{miss_cov}{Covariate that the missing values are based on.}
 }
 \description{
 This function is a wrapper to easily call the specific types of

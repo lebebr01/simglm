@@ -4,8 +4,8 @@
 \alias{sim_pow_single}
 \title{Function to simulate power.}
 \usage{
-sim_pow_single(fixed, fixed.param, cov.param, n, error_var, rand_gen, pow.param,
-  alpha, pow.dist = c("z", "t"), pow.tail = c(1, 2))
+sim_pow_single(fixed, fixed.param, cov.param, n, error_var, rand_gen, pow_param,
+  alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2))
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -22,13 +22,13 @@ interactions. Must be same order as fixed formula above.}
 \item{rand_gen}{Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod",
 "norm" is default.}
 
-\item{pow.param}{Number of parameter to calculate power includes intercept where applicable.}
+\item{pow_param}{Number of parameter to calculate power includes intercept where applicable.}
 
 \item{alpha}{What should the per test alpha rate be used for the hypothesis testing.}
 
-\item{pow.dist}{Which distribution should be used when testing hypothesis test, z or t?}
+\item{pow_dist}{Which distribution should be used when testing hypothesis test, z or t?}
 
-\item{pow.tail}{One-tailed or two-tailed test?}
+\item{pow_tail}{One-tailed or two-tailed test?}
 }
 \description{
 Input simulation conditions and which term to compute power for, export reported power.

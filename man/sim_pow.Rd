@@ -4,24 +4,30 @@
 \alias{sim_pow}
 \title{Master power simulation function.}
 \usage{
-sim_pow(fixed, random, fixed.param, random.param, w.var, cov.param, n, p,
-  error_var, randCor, rand.dist, rand_gen, arima = FALSE, data.str, pow.param,
-  alpha, pow.dist = c("z", "t"), pow.tail = c(1, 2), replicates, parallel)
+sim_pow(fixed, random, random3, fixed.param, random.param, random.param3,
+  cov.param, k, n, p, error_var, randCor, randCor3, rand_dist, rand_gen,
+  arima = FALSE, data_str, fact.vars = list(NULL), unbal = FALSE,
+  unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL, ..., pow_param,
+  alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), replicates)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
 
 \item{random}{One sided formula for random effects in the simulation. Must be a subset of fixed.}
 
+\item{random3}{One sided formula for random effects at third level in the simulation. Must be a subset of fixed
+(and likely of random).}
+
 \item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
 \item{random.param}{Variance of random effects. Must be same length as random.}
 
-\item{w.var}{Number of within cluster variables, including intercept if applicable.
-Also could be number of level one covariates for cross-sectional clustering.}
+\item{random.param3}{Variance of third level random effects. Must be same length as random3.}
 
 \item{cov.param}{List of mean and variance for fixed effects. Does not include intercept, time, or
 interactions. Must be same order as fixed formula above.}
+
+\item{k}{Number of third level clusters.}
 
 \item{n}{Cluster sample size.}
 
@@ -31,30 +37,49 @@ interactions. Must be same order as fixed formula above.}
 
 \item{randCor}{Correlation between random effects.}
 
-\item{rand.dist}{Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod",
+\item{randCor3}{Correlation between third level random effects.}
+
+\item{rand_dist}{Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod",
 "norm" is default.}
 
-\item{rand_gen}{Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod",
-"norm" is default.}
+\item{rand_gen}{Distribution function to pass on to the level one
+simulation of errors.}
 
 \item{arima}{TRUE/FALSE flag indicating whether residuals should
 be correlated. If TRUE, must specify a valid model to pass to
 arima.sim. See \code{\link{arima.sim}} for examples.}
 
-\item{data.str}{Type of data. Must be "cross", "long", or "single".}
+\item{data_str}{Type of data. Must be "cross", "long", or "single".}
 
-\item{pow.param}{Number of parameter to calculate power includes intercept where applicable.}
+\item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
+each list must include numlevels and var.type (must be "lvl1" or "lvl2");
+optional specifications are: replace, prob, value.labels.}
+
+\item{unbal}{A vector of sample sizes for the number of observations for each level 2
+cluster. Must have same length as level two sample size n. Alternative specification
+can be TRUE, which uses additional argument, unbalCont.}
+
+\item{unbal3}{A vector of sample sizes for the number of observations for each level 3
+cluster. Must have same length as level two sample size k. Alternative specification
+can be TRUE, which uses additional argument, unbalCont3.}
+
+\item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum level one size,
+will be drawn from a random uniform distribution with min and max specified.}
+
+\item{unbalCont3}{When unbal3 = TRUE, this specifies the minimum and maximum level two size,
+will be drawn from a random uniform distribution with min and max specified.}
+
+\item{...}{Additional parameters passed on to the level one error generating function}
+
+\item{pow_param}{Number of parameter to calculate power includes intercept where applicable.}
 
 \item{alpha}{What should the per test alpha rate be used for the hypothesis testing.}
 
-\item{pow.dist}{Which distribution should be used when testing hypothesis test, z or t?}
+\item{pow_dist}{Which distribution should be used when testing hypothesis test, z or t?}
 
-\item{pow.tail}{One-tailed or two-tailed test?}
+\item{pow_tail}{One-tailed or two-tailed test?}
 
 \item{replicates}{How many replications should be done (i.e. the denominator in power calculation).}
-
-\item{parallel}{Whether the computation should be done in parallel,
-must have parallel backend registered first.  Currently not supported.}
 }
 \description{
 Input simulation conditions, returns power for term.

@@ -4,9 +4,10 @@
 \alias{sim_pow_nested}
 \title{Power simulation for nested designs}
 \usage{
-sim_pow_nested(fixed, random, fixed.param, random.param, w.var, cov.param, n, p,
-  error_var, randCor, rand.dist, rand_gen, arima = FALSE, data.str, pow.param,
-  alpha, pow.dist = c("z", "t"), pow.tail = c(1, 2))
+sim_pow_nested(fixed, random, fixed.param, random.param, cov.param, n, p,
+  error_var, randCor, rand_dist, rand_gen, arima, data_str, fact.vars, unbal,
+  unbalCont, ..., pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1,
+  2))
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -17,11 +18,9 @@ sim_pow_nested(fixed, random, fixed.param, random.param, w.var, cov.param, n, p,
 
 \item{random.param}{Variance of random effects. Must be same length as random.}
 
-\item{w.var}{Number of within cluster variables, including intercept if applicable.
-Also could be number of level one covariates for cross-sectional clustering.}
-
-\item{cov.param}{List of mean and variance for fixed effects. Does not include intercept, time, or
-interactions. Must be same order as fixed formula above.}
+\item{cov.param}{List of mean, sd (standard deviations), and var.type for fixed effects.
+Does not include intercept, time, factors, or interactions.
+var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.}
 
 \item{n}{Cluster sample size.}
 
@@ -31,7 +30,7 @@ interactions. Must be same order as fixed formula above.}
 
 \item{randCor}{Correlation between random effects.}
 
-\item{rand.dist}{Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod",
+\item{rand_dist}{Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod",
 "norm" is default.}
 
 \item{rand_gen}{Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod",
@@ -41,15 +40,29 @@ interactions. Must be same order as fixed formula above.}
 be correlated. If TRUE, must specify a valid model to pass to
 arima.sim. See \code{\link{arima.sim}} for examples.}
 
-\item{data.str}{Type of data. Must be "cross", "long", or "single".}
+\item{data_str}{Type of data. Must be "cross", "long", or "single".}
 
-\item{pow.param}{Number of parameter to calculate power includes intercept where applicable.}
+\item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
+each list must include numlevels and var.type (must be "lvl1" or "lvl2");
+optional specifications are: replace, prob, value.labels.}
+
+\item{unbal}{A vector of sample sizes for the number of observations for each level 2
+cluster. Must have same length as level two sample size n. Alternative specification
+can be TRUE, which uses additional argument, unbalCont.}
+
+\item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum level one size,
+will be drawn from a random uniform distribution with min and max specified.}
+
+\item{...}{Additional specification needed to pass to the random generating
+function defined by rand.gen.}
+
+\item{pow_param}{Number of parameter to calculate power includes intercept where applicable.}
 
 \item{alpha}{What should the per test alpha rate be used for the hypothesis testing.}
 
-\item{pow.dist}{Which distribution should be used when testing hypothesis test, z or t?}
+\item{pow_dist}{Which distribution should be used when testing hypothesis test, z or t?}
 
-\item{pow.tail}{One-tailed or two-tailed test?}
+\item{pow_tail}{One-tailed or two-tailed test?}
 }
 \description{
 Takes simulation conditions as input, exports power.

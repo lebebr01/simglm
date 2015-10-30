@@ -71,14 +71,36 @@ fact.vars <- list(numlevels = 5, var.type = "single", "single")
 n <- 150
 error_var <- 3
 rand_gen = rnorm
-temp.single.o <- sim_reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param,
-n = n, error_var = error_var, rand_gen = rand_gen, data_str = "single", fact.vars = fact.vars)
+temp.single.o <- sim_reg(fixed = fixed, fixed.param = fixed.param, 
+                         cov.param = cov.param, n = n, error_var = error_var,
+                         rand_gen = rand_gen, data_str = "single", 
+                         fact.vars = fact.vars)
 ```
 
 The next thing to add is a new object called `fact.vars`.  This object must be a list that contains `numlevels` and `var.type`. Other optional features will be added in the future to increase functionality - such as including value labels, user specified probabilities, etc. Once these are passed into the `sim.reg()` function, the simulated data now looks like the following.
 ```{r printsinglelevelfact}
 head(temp.single.o)
 ```
+
+#### Correlated predictor variables
+The ability to add correlated predictor variables is an easy addition. The additional argument `cor_vars` takes a vector of correlations between predictor variables (note this does not include the intercept, factor variables, or any interaction variables). These correlations are further turned into a covariance matrix with the standard deviations specified in the `cov.param` argument. Then through cholesky decomposition, the correlations between the variables are generated prior to simulating the response variable. Below is an example.
+
+```{r corvars}
+fixed <- ~ 1 + act + diff + numCourse.o + act:numCourse.o
+fixed.param <- c(2, 4, 1, 3.5, 2)
+cov.param <- list(mean = c(0, 0), sd = c(4, 3), var.type = c("single", "single"))
+fact.vars <- list(numlevels = 5, var.type = "single", "single")
+n <- 150
+error_var <- 3
+rand_gen = rnorm
+cor_vars <- c(0.6)
+temp.single.o <- sim_reg(fixed = fixed, fixed.param = fixed.param, 
+                         cov.param = cov.param, n = n, error_var = error_var,
+                         rand_gen = rand_gen, data_str = "single", 
+                         cor_vars = cor_vars, fact.vars = fact.vars)
+cor(temp.single.o[, 2:3])
+```
+
 
 ### Nested Data
 This package currently supports the simulation of two-level nested or two-level longitudinal models. A few additional arguments are needed to do these models but much is the same.
@@ -119,7 +141,7 @@ Checking how the simulation worked with the following:
 ```{r lme4}
 library(lme4)
 lmer(sim.data ~ 1 + time + diff + act + time:act + (1 + time + diff | clustID),
-data = temp.long)
+     data = temp.long)
 ```
 One note when looking at the output is that standard deviations are given, not variances as inputted into the simulation function.
 

@@ -29,6 +29,8 @@ sim_fixef_nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data_str,
   w.var <- length(grep("lvl1", cov.param$var.type, ignore.case = TRUE))
   n.cont <- length(cov.param$mean)
   
+  cov_sd <- cov.param$sd
+  
   if(length(fact.loc) > 0){
     fixed.vars <- c(fixed.vars[-c(fact.loc, int.loc)], fixed.vars[fact.loc], fixed.vars[int.loc])
   }
@@ -58,6 +60,14 @@ sim_fixef_nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data_str,
       do.call(sim_continuous, cov.param2[[xx]])))
   }
   
+  if(is.null(cor_vars) == FALSE) {
+    c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
+    diag(c_mat) <- 1
+    c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
+    cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
+    Xmat <- Xmat %*% chol(cov)
+  }
+  
   if(length(fact.loc > 0)){
     fact.vars <- lapply(1:length(fact.vars), function(xx) 
       list(k = 0, n = n, p = lvl1ss, numlevels = fact.vars$numlevels[xx], 
@@ -66,14 +76,6 @@ sim_fixef_nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data_str,
               function(xx) do.call(sim_factor, fact.vars[[xx]]))))
   }
   
-  if(is.null(cor_vars) == FALSE) {
-    c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
-    diag(c_mat) <- 1
-    c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
-    cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
-    Xmat <- Xmat %*% chol(cov)
-  }
-
    if(n.int == 0){
      colnames(Xmat) <- fixed.vars
    } else {
@@ -116,6 +118,8 @@ sim_fixef_nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data_str,
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed.vars, ignore.case = TRUE) 
   n.cont <- length(cov.param$mean)
   
+  cov_sd <- cov.param$sd
+  
   if(length(fact.loc) > 0){
     fixed.vars <- c(fixed.vars[-c(fact.loc, int.loc)], fixed.vars[fact.loc], fixed.vars[int.loc])
   }
@@ -143,20 +147,20 @@ sim_fixef_nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data_str,
       do.call(sim_continuous, cov.param2[[xx]])))
   }
   
-  if(length(fact.loc > 0)){
-    fact.vars <- lapply(1:length(fact.vars), function(xx) 
-      list(k = k, n = n, p = p, numlevels = fact.vars$numlevels[xx], 
-           var.type = fact.vars$var.type[xx]))
-    Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
-                function(xx) do.call(sim_factor, fact.vars[[xx]]))))
-  }
-  
   if(is.null(cor_vars) == FALSE) {
     c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
     diag(c_mat) <- 1
     c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
     cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
     Xmat <- Xmat %*% chol(cov)
+  }
+  
+  if(length(fact.loc > 0)){
+    fact.vars <- lapply(1:length(fact.vars), function(xx) 
+      list(k = k, n = n, p = p, numlevels = fact.vars$numlevels[xx], 
+           var.type = fact.vars$var.type[xx]))
+    Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
+                function(xx) do.call(sim_factor, fact.vars[[xx]]))))
   }
   
   if(n.int == 0){
@@ -215,6 +219,14 @@ sim_fixef_single <- function(fixed, fixed.vars, n, cov.param, cor_vars = NULL,
   Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
     do.call(sim_continuous, cov.param[[xx]])))
   
+  if(is.null(cor_vars) == FALSE) {
+    c_mat <- matrix(nrow = n.cont, ncol = n.cont)
+    diag(c_mat) <- 1
+    c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
+    cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
+    Xmat <- Xmat %*% chol(cov)
+  }
+  
   if(length(fact.loc > 0)){
     #op <- names(fact.vars)
     fact.vars <- lapply(1:n.fact, function(xx) 
@@ -222,14 +234,6 @@ sim_fixef_single <- function(fixed, fixed.vars, n, cov.param, cor_vars = NULL,
            var.type = fact.vars$var.type[xx]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
             function(xx) do.call(sim_factor, fact.vars[[xx]]))))
-  }
-  
-  if(is.null(cor_vars) == FALSE) {
-    c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
-    diag(c_mat) <- 1
-    c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
-    cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
-    Xmat <- Xmat %*% chol(cov)
   }
   
   if(n.int == 0){

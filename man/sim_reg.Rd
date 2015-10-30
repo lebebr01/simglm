@@ -6,8 +6,9 @@
 \usage{
 sim_reg(fixed, random, random3, fixed.param, random.param, random.param3,
   cov.param, k, n, p, error_var, randCor, randCor3, rand_dist, rand_gen,
-  arima = FALSE, data_str, fact.vars = list(NULL), unbal = FALSE,
-  unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL, ...)
+  arima = FALSE, data_str, cor_vars = NULL, fact.vars = list(NULL),
+  unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
+  ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -49,6 +50,8 @@ be correlated. If TRUE, must specify a valid model to pass to
 arima.sim. See \code{\link{arima.sim}} for examples.}
 
 \item{data_str}{Type of data. Must be "cross", "long", or "single".}
+
+\item{cor_vars}{A vector of correlations between variables.}
 
 \item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
 each list must include numlevels and var.type (must be "lvl1" or "lvl2");

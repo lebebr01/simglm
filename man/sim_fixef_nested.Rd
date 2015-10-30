@@ -5,7 +5,7 @@
 \title{Simulates design matrix.}
 \usage{
 sim_fixef_nested(fixed, fixed.vars, cov.param, n, lvl1ss, data_str,
-  fact.vars = list(NULL))
+  cor_vars = NULL, fact.vars = list(NULL))
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.}
@@ -21,6 +21,8 @@ var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 \item{lvl1ss}{Number of within cluster units.}
 
 \item{data_str}{Type of data. Must be "cross", or "long".}
+
+\item{cor_vars}{A vector of correlations between variables.}
 
 \item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
 each list must include numlevels and var.type (must be "lvl1" or "lvl2");

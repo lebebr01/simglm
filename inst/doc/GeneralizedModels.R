@@ -36,6 +36,7 @@ temp.cross <- sim_glm(fixed, random, random3 = NULL, fixed.param,
                      cov.param, k = NULL, n, p, randCor, 
                      randCor3 = NULL, rand_dist, 
                      data_str = data_str)
+head(temp.cross)
 
 ## ----threelogistic-------------------------------------------------------
 fixed <- ~1 + diff + act + actClust

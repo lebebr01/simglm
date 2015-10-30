@@ -12,6 +12,7 @@
 #'   interactions. Must be same order as fixed formula above.
 #' @param n Cluster sample size.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
+#' @param cor_vars A vector of correlations between variables.
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
@@ -32,13 +33,13 @@
 #' }
 #' @export
 sim_glm_single <- function(fixed, fixed.param, cov.param, n, 
-                           data_str, fact.vars = list(NULL)) {
+                           data_str, cor_vars = NULL, fact.vars = list(NULL)) {
   
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   
   if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
   
-  Xmat <- sim_fixef_single(fixed, fixed.vars, n, cov.param, fact.vars)
+  Xmat <- sim_fixef_single(fixed, fixed.vars, n, cov.param, cor_vars, fact.vars)
   
   sim.data <- data_glm_single(Xmat, fixed.param, n)
   
@@ -69,6 +70,7 @@ sim_glm_single <- function(fixed, fixed.param, cov.param, n,
 #' @param rand_dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
+#' @param cor_vars A vector of correlations between variables.
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
@@ -96,7 +98,7 @@ sim_glm_single <- function(fixed, fixed.param, cov.param, n,
 #' @export
 sim_glm_nested <- function(fixed, random, fixed.param, random.param, cov.param, n, p, 
                            randCor, rand_dist, 
-                           data_str, fact.vars = list(NULL),
+                           data_str, cor_vars = NULL, fact.vars = list(NULL),
                            unbal = FALSE, unbalCont = NULL) {
   
   if(randCor > 1 | randCor < -1) stop("cor out of range")
@@ -118,7 +120,7 @@ sim_glm_nested <- function(fixed, random, fixed.param, random.param, cov.param, 
   rand.eff <- sim_rand_eff(random.param, randCor, n, rand_dist)
   
   Xmat <- sim_fixef_nested(fixed, fixed.vars, cov.param, n, lvl1ss, 
-                           data_str = data_str, fact.vars = fact.vars)
+                           data_str = data_str, cor_vars = cor_vars, fact.vars = fact.vars)
   
   reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
     rep(rand.eff[,xx], times = lvl1ss)))
@@ -163,6 +165,7 @@ sim_glm_nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 #' @param rand_dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
+#' @param cor_vars A vector of correlations between variables.
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
@@ -203,7 +206,7 @@ sim_glm_nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 #' @export 
 sim_glm_nested3 <- function(fixed, random, random3, fixed.param, random.param, random.param3,
                             cov.param, k, n, p, randCor, randCor3, rand_dist,
-                            data_str, fact.vars = list(NULL),
+                            data_str, cor_vars = NULL, fact.vars = list(NULL),
                             unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL) {
   
   if(randCor > 1 | randCor < -1 | randCor3 > 1 | randCor3 < -1) 
@@ -245,7 +248,8 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed.param, random.param, r
   rand.eff3 <- sim_rand_eff3(random.param3, randCor3, k)
   
   Xmat <- sim_fixef_nested3(fixed, fixed.vars, cov.param, k, n = lvl2ss, 
-                            p = lvl1ss, data_str = data_str, fact.vars = fact.vars)
+                            p = lvl1ss, data_str = data_str, cor_vars = cor_vars, 
+                            fact.vars = fact.vars)
   
   reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
     rep(rand.eff[,xx], times = lvl1ss)))
@@ -261,7 +265,7 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed.param, random.param, r
   sim.data <- data_glm_nested3(Xmat, Zmat, Zmat3, fixed.param, rand.eff, rand.eff3,
                                k, n = lvl2ss, p = lvl1ss)
   
-  Xmat <- data.frame(Xmat,reff,sim.data)
+  Xmat <- data.frame(Xmat, reff, sim.data)
   Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
   Xmat$clustID <- rep(1:n, times = lvl1ss)
   Xmat$clust3ID <- rep(1:k, times = lvl3ss)

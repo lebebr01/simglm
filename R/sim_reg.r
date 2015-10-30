@@ -33,6 +33,7 @@
 #'             be correlated. If TRUE, must specify a valid model to pass to 
 #'             arima.sim. See \code{\link{arima.sim}} for examples.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
+#' @param cor_vars A vector of correlations between variables.
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
@@ -113,21 +114,23 @@
 #' }
 sim_reg <- function(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k, n, p, 
                     error_var, randCor, randCor3, rand_dist, rand_gen, arima = FALSE,
-                    data_str, fact.vars = list(NULL), unbal = FALSE, unbal3 = FALSE, 
+                    data_str, cor_vars = NULL, fact.vars = list(NULL), unbal = FALSE, unbal3 = FALSE, 
                     unbalCont = NULL, unbalCont3 = NULL,
                     ...) {
   
   if(data_str == "single"){
-    sim_reg_single(fixed, fixed.param, cov.param, n, error_var, rand_gen, arima, data_str, fact.vars, ...)
+    sim_reg_single(fixed, fixed.param, cov.param, n, error_var, rand_gen, arima, data_str, 
+                   cor_vars, fact.vars, ...)
   } else {
   	if (is.null(k)){
   	  sim_reg_nested(fixed, random, fixed.param, random.param, cov.param, n, p, 
   	                 error_var, randCor, rand_dist, rand_gen, arima,
-  	                 data_str, fact.vars, unbal, unbalCont, ...)
+  	                 data_str, cor_vars, fact.vars, unbal, unbalCont, ...)
   } else {
-    sim_reg_nested3(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k, n, p, 
+    sim_reg_nested3(fixed, random, random3, fixed.param, random.param, random.param3, 
+                    cov.param, k, n, p, 
                     error_var, randCor, randCor3, rand_dist, rand_gen, arima,
-                    data_str, fact.vars, unbal, unbal3, unbalCont, unbalCont3, ...)
+                    data_str, cor_vars, fact.vars, unbal, unbal3, unbalCont, unbalCont3, ...)
   }
  }
 }
@@ -227,21 +230,22 @@ sim_reg <- function(fixed, random, random3, fixed.param, random.param, random.pa
 sim_glm <- function(fixed, random, random3, fixed.param, random.param, random.param3,
                     cov.param, k, n, p, 
                     randCor, randCor3, rand_dist,
-                    data_str, fact.vars = list(NULL), unbal = FALSE, unbal3 = FALSE, 
+                    data_str, cor_vars = NULL, fact.vars = list(NULL), 
+                    unbal = FALSE, unbal3 = FALSE, 
                     unbalCont = NULL, unbalCont3 = NULL) {
   
   if(data_str == "single"){
-    sim_glm_single(fixed, fixed.param, cov.param, n, data_str, fact.vars)
+    sim_glm_single(fixed, fixed.param, cov.param, n, data_str, cor_vars, fact.vars)
   } else {
     if (is.null(k)){
       sim_glm_nested(fixed, random, fixed.param, random.param, cov.param, n, p, 
                      randCor, rand_dist,
-                     data_str, fact.vars, unbal, unbalCont)
+                     data_str, cor_vars, fact.vars, unbal, unbalCont)
     } else {
       sim_glm_nested3(fixed, random, random3, fixed.param, random.param, random.param3,
                       cov.param, k, n, p, 
                       randCor, randCor3, rand_dist,
-                      data_str, fact.vars, unbal, unbal3, unbalCont, unbalCont3)
+                      data_str, cor_vars, fact.vars, unbal, unbal3, unbalCont, unbalCont3)
     }
   }
 }

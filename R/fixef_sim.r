@@ -14,12 +14,13 @@
 #' @param n Number of clusters.
 #' @param lvl1ss Number of within cluster units.
 #' @param data_str Type of data. Must be "cross", or "long".
+#' @param cor_vars A vector of correlations between variables.
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
 sim_fixef_nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data_str, 
-                             fact.vars = list(NULL)){
+                             cor_vars = NULL, fact.vars = list(NULL)){
   
   n.vars <- length(fixed.vars)
   n.int <- length(grep(":",fixed.vars))
@@ -93,12 +94,13 @@ sim_fixef_nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data_str,
 #' @param n Number of clusters.
 #' @param p Number of within cluster units.
 #' @param data_str Type of data. Must be "cross", or "long".
+#' @param cor_vars A vector of correlations between variables.
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1", "lvl2", or "lvl3");
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
 sim_fixef_nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data_str, 
-                             fact.vars = list(NULL)){
+                             cor_vars = NULL, fact.vars = list(NULL)){
   
   n.vars <- length(fixed.vars)
   n.int <- length(grep(":",fixed.vars))

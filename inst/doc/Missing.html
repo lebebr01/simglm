@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="date" content="2015-08-10" />
+<meta name="date" content="2015-10-29" />
 
 <title>Simulate Missing Data</title>
 
@@ -17,23 +17,41 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
+div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
 table.sourceCode { width: 100%; line-height: 100%; }
 td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
 td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; }
-code > span.dt { color: #902000; }
-code > span.dv { color: #40a070; }
-code > span.bn { color: #40a070; }
-code > span.fl { color: #40a070; }
-code > span.ch { color: #4070a0; }
-code > span.st { color: #4070a0; }
-code > span.co { color: #60a0b0; font-style: italic; }
-code > span.ot { color: #007020; }
-code > span.al { color: #ff0000; font-weight: bold; }
-code > span.fu { color: #06287e; }
-code > span.er { color: #ff0000; font-weight: bold; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 <style type="text/css">
   pre:not([class]) {
@@ -42,7 +60,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </style>
 
 
-<link href="data:text/css,body%20%7B%0A%20%20background%2Dcolor%3A%20%23fff%3B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20max%2Dwidth%3A%20700px%3B%0A%20%20overflow%3A%20visible%3B%0A%20%20padding%2Dleft%3A%202em%3B%0A%20%20padding%2Dright%3A%202em%3B%0A%20%20font%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0A%20%20font%2Dsize%3A%2014px%3B%0A%20%20line%2Dheight%3A%201%2E35%3B%0A%7D%0A%0A%23header%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0A%0A%23TOC%20%7B%0A%20%20clear%3A%20both%3B%0A%20%20margin%3A%200%200%2010px%2010px%3B%0A%20%20padding%3A%204px%3B%0A%20%20width%3A%20400px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20border%2Dradius%3A%205px%3B%0A%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20font%2Dsize%3A%2013px%3B%0A%20%20line%2Dheight%3A%201%2E3%3B%0A%7D%0A%20%20%23TOC%20%2Etoctitle%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%20%20font%2Dsize%3A%2015px%3B%0A%20%20%20%20margin%2Dleft%3A%205px%3B%0A%20%20%7D%0A%0A%20%20%23TOC%20ul%20%7B%0A%20%20%20%20padding%2Dleft%3A%2040px%3B%0A%20%20%20%20margin%2Dleft%3A%20%2D1%2E5em%3B%0A%20%20%20%20margin%2Dtop%3A%205px%3B%0A%20%20%20%20margin%2Dbottom%3A%205px%3B%0A%20%20%7D%0A%20%20%23TOC%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dleft%3A%20%2D2em%3B%0A%20%20%7D%0A%20%20%23TOC%20li%20%7B%0A%20%20%20%20line%2Dheight%3A%2016px%3B%0A%20%20%7D%0A%0Atable%20%7B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dcolor%3A%20%23DDDDDD%3B%0A%20%20border%2Dstyle%3A%20outset%3B%0A%20%20border%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0A%20%20border%2Dwidth%3A%202px%3B%0A%20%20padding%3A%205px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%20%20line%2Dheight%3A%2018px%3B%0A%20%20padding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0A%20%20border%2Dleft%2Dstyle%3A%20none%3B%0A%20%20border%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Ap%20%7B%0A%20%20margin%3A%200%2E5em%200%3B%0A%7D%0A%0Ablockquote%20%7B%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20padding%3A%200%2E25em%200%2E75em%3B%0A%7D%0A%0Ahr%20%7B%0A%20%20border%2Dstyle%3A%20solid%3B%0A%20%20border%3A%20none%3B%0A%20%20border%2Dtop%3A%201px%20solid%20%23777%3B%0A%20%20margin%3A%2028px%200%3B%0A%7D%0A%0Adl%20%7B%0A%20%20margin%2Dleft%3A%200%3B%0A%7D%0A%20%20dl%20dd%20%7B%0A%20%20%20%20margin%2Dbottom%3A%2013px%3B%0A%20%20%20%20margin%2Dleft%3A%2013px%3B%0A%20%20%7D%0A%20%20dl%20dt%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%7D%0A%0Aul%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%7D%0A%20%20ul%20li%20%7B%0A%20%20%20%20list%2Dstyle%3A%20circle%20outside%3B%0A%20%20%7D%0A%20%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dbottom%3A%200%3B%0A%20%20%7D%0A%0Apre%2C%20code%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20color%3A%20%23333%3B%0A%7D%0Apre%20%7B%0A%20%20white%2Dspace%3A%20pre%2Dwrap%3B%20%20%20%20%2F%2A%20Wrap%20long%20lines%20%2A%2F%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20margin%3A%205px%200px%2010px%200px%3B%0A%20%20padding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Acode%20%7B%0A%20%20font%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0A%20%20font%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0A%20%20padding%3A%202px%200px%3B%0A%7D%0A%0Adiv%2Efigure%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0A%20%20background%2Dcolor%3A%20%23FFFFFF%3B%0A%20%20padding%3A%202px%3B%0A%20%20border%3A%201px%20solid%20%23DDDDDD%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20margin%3A%200%205px%3B%0A%7D%0A%0Ah1%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%20%20font%2Dsize%3A%2035px%3B%0A%20%20line%2Dheight%3A%2040px%3B%0A%7D%0A%0Ah2%20%7B%0A%20%20border%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20padding%2Dbottom%3A%202px%3B%0A%20%20font%2Dsize%3A%20145%25%3B%0A%7D%0A%0Ah3%20%7B%0A%20%20border%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20font%2Dsize%3A%20120%25%3B%0A%7D%0A%0Ah4%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0A%20%20margin%2Dleft%3A%208px%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Ah5%2C%20h6%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23ccc%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Aa%20%7B%0A%20%20color%3A%20%230033dd%3B%0A%20%20text%2Ddecoration%3A%20none%3B%0A%7D%0A%20%20a%3Ahover%20%7B%0A%20%20%20%20color%3A%20%236666ff%3B%20%7D%0A%20%20a%3Avisited%20%7B%0A%20%20%20%20color%3A%20%23800080%3B%20%7D%0A%20%20a%3Avisited%3Ahover%20%7B%0A%20%20%20%20color%3A%20%23BB00BB%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%0A%2F%2A%20Class%20described%20in%20https%3A%2F%2Fbenjeffrey%2Ecom%2Fposts%2Fpandoc%2Dsyntax%2Dhighlighting%2Dcss%0A%20%20%20Colours%20from%20https%3A%2F%2Fgist%2Egithub%2Ecom%2Frobsimmons%2F1172277%20%2A%2F%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Keyword%20%2A%2F%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%2F%2A%20DataType%20%2A%2F%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%2F%2A%20DecVal%20%28decimal%20values%29%20%2A%2F%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20BaseN%20%2A%2F%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Float%20%2A%2F%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Char%20%2A%2F%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20String%20%2A%2F%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%2F%2A%20Comment%20%2A%2F%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%2F%2A%20OtherToken%20%2A%2F%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20AlertToken%20%2A%2F%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Function%20calls%20%2A%2F%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%2F%2A%20ErrorTok%20%2A%2F%0A%0A" rel="stylesheet" type="text/css" />
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0A%7D%0Apre%20%7B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -52,7 +70,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 <div id="header">
 <h1 class="title">Simulate Missing Data</h1>
-<h4 class="date"><em>2015-08-10</em></h4>
+<h4 class="date"><em>2015-10-29</em></h4>
 </div>
 
 
@@ -65,7 +83,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <p>The <code>simReg</code> package currently supports simulation of MCAR and MAR mechanisms. Two MAR missing data mechanisms are currently built in, one being dropout missing data and another called <strong>mar</strong> missing data. Dropout missing data typically would be valid for longitudinal data and represents the situation where the respondent stops participating in the study. For example, they participate the first 3 weeks of the study, but move out of state after the third week and no further data is collected on that individual. The missing data for this type of individual is likely tied strictly to time, so therefore controlling for the time variable in the study would then lead to MAR missing data.</p>
 <div id="dropout-missing-data-example" class="section level3">
 <h3>Dropout Missing Data Example</h3>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Simulate longitudinal data</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Simulate longitudinal data</span>
 fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>time +<span class="st"> </span>diff +<span class="st"> </span>act +<span class="st"> </span>time:act
 random &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>time +<span class="st"> </span>diff
 fixed.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">6</span>, <span class="fl">2.3</span>, <span class="dv">7</span>)
@@ -84,7 +102,7 @@ temp.long &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(fixed, r
 
 <span class="co"># simulate missing data</span>
 temp.long.miss &lt;-<span class="st"> </span><span class="kw">missing_data</span>(temp.long, <span class="dt">miss_prop =</span> .<span class="dv">25</span>, <span class="dt">type =</span> <span class="st">'dropout'</span>, <span class="dt">clust_var =</span> <span class="st">'clustID'</span>)
-<span class="kw">head</span>(temp.long.miss)</code></pre>
+<span class="kw">head</span>(temp.long.miss)</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -110,127 +128,127 @@ temp.long.miss &lt;-<span class="st"> </span><span class="kw">missing_data</span
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">2.2652615</td>
-<td align="right">-0.7389114</td>
-<td align="right">0.0000000</td>
-<td align="right">2.121528</td>
-<td align="right">-2.048049</td>
-<td align="right">-1.997875</td>
-<td align="right">15.892073</td>
-<td align="right">-2.404181</td>
-<td align="right">-2.174076</td>
-<td align="right">11.3138164</td>
+<td align="right">1.3775557</td>
+<td align="right">1.828675</td>
+<td align="right">0.000000</td>
+<td align="right">-1.972034</td>
+<td align="right">-2.159297</td>
+<td align="right">-0.0150733</td>
+<td align="right">16.47129</td>
+<td align="right">-1.992798</td>
+<td align="right">0.8451558</td>
+<td align="right">15.323645</td>
 <td align="right">1</td>
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">11.3138164</td>
+<td align="right">15.323645</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
 <td align="right">1</td>
-<td align="right">-0.5080034</td>
-<td align="right">-0.7389114</td>
-<td align="right">-0.7389114</td>
-<td align="right">2.121528</td>
-<td align="right">-2.048049</td>
-<td align="right">-1.997875</td>
-<td align="right">-3.919896</td>
-<td align="right">1.088406</td>
-<td align="right">2.625335</td>
-<td align="right">-0.2061555</td>
+<td align="right">-2.0102883</td>
+<td align="right">1.828675</td>
+<td align="right">1.828675</td>
+<td align="right">-1.972034</td>
+<td align="right">-2.159297</td>
+<td align="right">-0.0150733</td>
+<td align="right">10.94495</td>
+<td align="right">-4.101029</td>
+<td align="right">3.0336118</td>
+<td align="right">9.877533</td>
 <td align="right">2</td>
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">-0.2061555</td>
+<td align="right">9.877533</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">2</td>
-<td align="right">0.2879769</td>
-<td align="right">-0.7389114</td>
-<td align="right">-1.4778228</td>
-<td align="right">2.121528</td>
-<td align="right">-2.048049</td>
-<td align="right">-1.997875</td>
-<td align="right">-2.316394</td>
-<td align="right">-2.549912</td>
-<td align="right">-1.415607</td>
-<td align="right">-6.2819138</td>
+<td align="right">1.2881284</td>
+<td align="right">1.828675</td>
+<td align="right">3.657351</td>
+<td align="right">-1.972034</td>
+<td align="right">-2.159297</td>
+<td align="right">-0.0150733</td>
+<td align="right">45.53618</td>
+<td align="right">-6.310045</td>
+<td align="right">-0.3473823</td>
+<td align="right">38.878750</td>
 <td align="right">3</td>
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">-6.2819138</td>
+<td align="right">38.878750</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
 <td align="right">3</td>
-<td align="right">-0.8449431</td>
-<td align="right">-0.7389114</td>
-<td align="right">-2.2167342</td>
-<td align="right">2.121528</td>
-<td align="right">-2.048049</td>
-<td align="right">-1.997875</td>
-<td align="right">-12.286294</td>
-<td align="right">-2.334530</td>
-<td align="right">1.241130</td>
-<td align="right">-13.3796941</td>
+<td align="right">-2.5928977</td>
+<td align="right">1.828675</td>
+<td align="right">5.486026</td>
+<td align="right">-1.972034</td>
+<td align="right">-2.159297</td>
+<td align="right">-0.0150733</td>
+<td align="right">37.05075</td>
+<td align="right">-8.410842</td>
+<td align="right">0.7145334</td>
+<td align="right">29.354440</td>
 <td align="right">4</td>
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">-13.3796941</td>
+<td align="right">29.354440</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">4</td>
-<td align="right">-0.7610276</td>
-<td align="right">-0.7389114</td>
-<td align="right">-2.9556456</td>
-<td align="right">2.121528</td>
-<td align="right">-2.048049</td>
-<td align="right">-1.997875</td>
-<td align="right">-14.955181</td>
-<td align="right">-4.550232</td>
-<td align="right">1.901038</td>
-<td align="right">-17.6043744</td>
+<td align="right">0.5008356</td>
+<td align="right">1.828675</td>
+<td align="right">7.314701</td>
+<td align="right">-1.972034</td>
+<td align="right">-2.159297</td>
+<td align="right">-0.0150733</td>
+<td align="right">70.41388</td>
+<td align="right">-10.616772</td>
+<td align="right">-4.4129437</td>
+<td align="right">55.384159</td>
 <td align="right">5</td>
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">-17.6043744</td>
+<td align="right">55.384159</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
 <td align="right">5</td>
-<td align="right">0.1840632</td>
-<td align="right">-0.7389114</td>
-<td align="right">-3.6945570</td>
-<td align="right">2.121528</td>
-<td align="right">-2.048049</td>
-<td align="right">-1.997875</td>
-<td align="right">-12.457016</td>
-<td align="right">-8.486454</td>
-<td align="right">-1.288184</td>
-<td align="right">-22.2316545</td>
+<td align="right">0.3811714</td>
+<td align="right">1.828675</td>
+<td align="right">9.143377</td>
+<td align="right">-1.972034</td>
+<td align="right">-2.159297</td>
+<td align="right">-0.0150733</td>
+<td align="right">84.49662</td>
+<td align="right">-12.774266</td>
+<td align="right">-2.1826095</td>
+<td align="right">69.539742</td>
 <td align="right">6</td>
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">-22.2316545</td>
+<td align="right">69.539742</td>
 </tr>
 </tbody>
 </table>
 <p>From the example above, first two level longitudinal data are simulated. Then the <code>missing_data</code> function is used to generate the missing data. The function call includes the data frame to generate missing data, the proportion of values that are missing (in this case approximately 25% of the data will be identified as missing), the type is dropout, and the cluster ID variable is named as ‘clustID’. The output shows that two additional variables are added, a dichotomous variable reflecting whether the outcome is missing (a value of 1) or not (0) and a new outcome variable (labeled as <em>sim.data2</em>) to reflect the new outcome with missing data. To verify that indeed about 25% of the data are now missing:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(<span class="kw">table</span>(temp.long.miss$missing))</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(<span class="kw">table</span>(temp.long.miss$missing))</code></pre></div>
 <pre><code>## 
 ##         0         1 
-## 0.7486667 0.2513333</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(<span class="kw">table</span>(<span class="kw">is.na</span>(temp.long.miss$sim.data2)))</code></pre>
+## 0.7515556 0.2484444</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(<span class="kw">table</span>(<span class="kw">is.na</span>(temp.long.miss$sim.data2)))</code></pre></div>
 <pre><code>## 
 ##     FALSE      TRUE 
-## 0.7486667 0.2513333</code></pre>
+## 0.7515556 0.2484444</code></pre>
 </div>
 <div id="mar-missing-data-example" class="section level3">
 <h3>MAR Missing Data Example</h3>
 <p>The mar missing data is similar to that of dropout missing data, but instead of being conditional on time, a third variable can be added to base the missing data on. For example, in a study, perhaps those individuals with lower income are less likely to report the outcome of the study. As such, the mar missing data implementation in <code>simReg</code> allows you to simulate missing data in a similar framework as the example above. Below is an example from a single level regression (assumed that the covariates are grand mean centered).</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># simulate data</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># simulate data</span>
 fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>age +<span class="st"> </span>income
 fixed.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">0.3</span>, <span class="fl">1.3</span>)
 cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">sd =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">3</span>), 
@@ -248,7 +266,7 @@ miss_prop &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="f
 miss_prop &lt;-<span class="st"> </span><span class="kw">rep</span>(miss_prop, <span class="dt">each =</span> <span class="dv">15</span>)
 tmp.single.miss &lt;-<span class="st"> </span><span class="kw">missing_data</span>(temp.single, <span class="dt">miss_prop =</span> miss_prop, 
                                 <span class="dt">type =</span> <span class="st">'mar'</span>, <span class="dt">miss_cov =</span> <span class="st">'income'</span>)
-<span class="kw">head</span>(tmp.single.miss)</code></pre>
+<span class="kw">head</span>(tmp.single.miss)</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -266,102 +284,102 @@ tmp.single.miss &lt;-<span class="st"> </span><span class="kw">missing_data</spa
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">-7.048209</td>
+<td align="right">-6.236339</td>
 <td align="right">1</td>
-<td align="right">4.128032</td>
-<td align="right">-5.924262</td>
-<td align="right">1.6770251</td>
-<td align="right">-4.247237</td>
-<td align="right">3</td>
-<td align="right">0.5</td>
-<td align="right">0.7153124</td>
-<td align="right">-4.247237</td>
-</tr>
-<tr class="even">
-<td align="right">-6.240048</td>
-<td align="right">1</td>
-<td align="right">2.827878</td>
-<td align="right">-5.263699</td>
-<td align="right">1.5551240</td>
-<td align="right">-3.708575</td>
-<td align="right">80</td>
-<td align="right">0.5</td>
-<td align="right">0.5612251</td>
-<td align="right">-3.708575</td>
-</tr>
-<tr class="odd">
-<td align="right">-5.930116</td>
-<td align="right">1</td>
-<td align="right">1.800113</td>
-<td align="right">-5.169117</td>
-<td align="right">-0.7254745</td>
-<td align="right">-5.894591</td>
-<td align="right">43</td>
-<td align="right">0.5</td>
-<td align="right">0.2349436</td>
-<td align="right">NA</td>
-</tr>
-<tr class="even">
-<td align="right">-5.476524</td>
-<td align="right">1</td>
-<td align="right">-1.428225</td>
-<td align="right">-5.547949</td>
-<td align="right">1.6138747</td>
-<td align="right">-3.934074</td>
+<td align="right">-1.782195</td>
+<td align="right">-6.641900</td>
+<td align="right">-0.8004894</td>
+<td align="right">-7.442389</td>
 <td align="right">113</td>
 <td align="right">0.5</td>
-<td align="right">0.8943566</td>
-<td align="right">-3.934074</td>
+<td align="right">0.6435632</td>
+<td align="right">-7.442389</td>
+</tr>
+<tr class="even">
+<td align="right">-6.130106</td>
+<td align="right">1</td>
+<td align="right">-6.901636</td>
+<td align="right">-8.039628</td>
+<td align="right">0.8262691</td>
+<td align="right">-7.213359</td>
+<td align="right">107</td>
+<td align="right">0.5</td>
+<td align="right">0.6874420</td>
+<td align="right">-7.213359</td>
 </tr>
 <tr class="odd">
-<td align="right">-5.259721</td>
+<td align="right">-6.047320</td>
 <td align="right">1</td>
-<td align="right">-5.323036</td>
-<td align="right">-6.434547</td>
-<td align="right">4.4713425</td>
-<td align="right">-1.963205</td>
-<td align="right">86</td>
+<td align="right">1.445920</td>
+<td align="right">-5.427741</td>
+<td align="right">0.5739452</td>
+<td align="right">-4.853795</td>
+<td align="right">6</td>
 <td align="right">0.5</td>
-<td align="right">0.1362829</td>
+<td align="right">0.3441904</td>
 <td align="right">NA</td>
 </tr>
 <tr class="even">
-<td align="right">-5.244200</td>
+<td align="right">-5.236823</td>
 <td align="right">1</td>
-<td align="right">4.492445</td>
-<td align="right">-3.469727</td>
-<td align="right">-1.5694965</td>
-<td align="right">-5.039223</td>
-<td align="right">63</td>
+<td align="right">-10.169911</td>
+<td align="right">-7.858843</td>
+<td align="right">0.1780988</td>
+<td align="right">-7.680745</td>
+<td align="right">17</td>
 <td align="right">0.5</td>
-<td align="right">0.5264726</td>
-<td align="right">-5.039223</td>
+<td align="right">0.0695945</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="right">-5.201609</td>
+<td align="right">1</td>
+<td align="right">4.369011</td>
+<td align="right">-3.451388</td>
+<td align="right">-1.2237719</td>
+<td align="right">-4.675160</td>
+<td align="right">102</td>
+<td align="right">0.5</td>
+<td align="right">0.9391183</td>
+<td align="right">-4.675160</td>
+</tr>
+<tr class="even">
+<td align="right">-4.717468</td>
+<td align="right">1</td>
+<td align="right">6.388615</td>
+<td align="right">-2.216124</td>
+<td align="right">-1.1007326</td>
+<td align="right">-3.316857</td>
+<td align="right">87</td>
+<td align="right">0.5</td>
+<td align="right">0.9344582</td>
+<td align="right">-3.316857</td>
 </tr>
 </tbody>
 </table>
 <p>First single level data are simulated for 150 individuals. Missing proportions are then generated. In this example, 10 different proportions are created in decreasing order. This is important as the data generation arranges the covariate from smallest to largest. Then the missing proportions are repeated so that the <code>miss_prop</code> vector is the same length as the number of individuals. The second new addition is the argument <code>miss_cov</code>, this is the covariate that is used to generate the missing data. In this example, the covariate <em>income</em> is used.</p>
 <p>Three additional variables are added in this function, <strong>miss_prop</strong>, <strong>miss_prob</strong>, and <strong>sim.data2</strong> which reflect the missing proportion, the missing probability, and the new simulated data with missing data included. The missing data are generated if the <strong>miss_prob</strong> variable is greater than <strong>miss_prop</strong>, then the value is NA, otherwise it is not. The percentages can be summarized with the following table to show the structure of missing data depends on the variable <strong>income</strong>.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(tmp.single.miss$miss_prop,<span class="kw">is.na</span>(tmp.single.miss$sim.data2))</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(tmp.single.miss$miss_prop,<span class="kw">is.na</span>(tmp.single.miss$sim.data2))</code></pre></div>
 <pre><code>##       
 ##        FALSE TRUE
-##   0.05    15    0
+##   0.05    14    1
 ##   0.1     14    1
-##   0.15    13    2
+##   0.15    12    3
 ##   0.2     12    3
 ##   0.25    11    4
-##   0.3     10    5
-##   0.35    12    3
-##   0.4      9    6
-##   0.45     7    8
+##   0.3      4   11
+##   0.35    11    4
+##   0.4     10    5
+##   0.45     5   10
 ##   0.5      7    8</code></pre>
 </div>
 </div>
 <div id="mcar-missing-data-example" class="section level2">
 <h2>MCAR Missing Data Example</h2>
 <p>Missing completely at random is also included in the package, and can be called with the <code>missing_data</code> function with <code>type = 'random'</code>. Using the single level example from above.</p>
-<pre class="sourceCode r"><code class="sourceCode r">tmp.single.miss &lt;-<span class="st"> </span><span class="kw">missing_data</span>(temp.single, <span class="dt">miss_prop =</span> .<span class="dv">25</span>, 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tmp.single.miss &lt;-<span class="st"> </span><span class="kw">missing_data</span>(temp.single, <span class="dt">miss_prop =</span> .<span class="dv">25</span>, 
                                 <span class="dt">type =</span> <span class="st">'random'</span>, <span class="dt">clust_var =</span> <span class="ot">NULL</span>)
-<span class="kw">head</span>(tmp.single.miss)</code></pre>
+<span class="kw">head</span>(tmp.single.miss)</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -380,83 +398,83 @@ tmp.single.miss &lt;-<span class="st"> </span><span class="kw">missing_data</spa
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-1.054561</td>
-<td align="right">0.0922928</td>
-<td align="right">1.8036124</td>
-<td align="right">0.5739453</td>
-<td align="right">2.3775577</td>
+<td align="right">-5.171250</td>
+<td align="right">-2.549899</td>
+<td align="right">-2.866244</td>
+<td align="right">-0.0950638</td>
+<td align="right">-2.9613074</td>
 <td align="right">1</td>
-<td align="right">0.544</td>
+<td align="right">0.493</td>
 <td align="right">0</td>
-<td align="right">2.3775577</td>
+<td align="right">-2.961307</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">4.736606</td>
-<td align="right">-3.7169666</td>
-<td align="right">-1.4110747</td>
-<td align="right">-1.2161190</td>
-<td align="right">-2.6271937</td>
+<td align="right">-6.395661</td>
+<td align="right">-3.026497</td>
+<td align="right">-3.853145</td>
+<td align="right">2.8705910</td>
+<td align="right">-0.9825539</td>
 <td align="right">2</td>
-<td align="right">0.331</td>
-<td align="right">0</td>
-<td align="right">-2.6271937</td>
+<td align="right">0.181</td>
+<td align="right">1</td>
+<td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">4.128032</td>
-<td align="right">-7.0482087</td>
-<td align="right">-5.9242618</td>
-<td align="right">1.6770251</td>
-<td align="right">-4.2472366</td>
+<td align="right">3.924922</td>
+<td align="right">2.428317</td>
+<td align="right">6.334289</td>
+<td align="right">0.6699223</td>
+<td align="right">7.0042115</td>
 <td align="right">3</td>
-<td align="right">0.686</td>
+<td align="right">0.917</td>
 <td align="right">0</td>
-<td align="right">-4.2472366</td>
+<td align="right">7.004212</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">3.453726</td>
-<td align="right">1.9078731</td>
-<td align="right">5.5163528</td>
-<td align="right">0.3020582</td>
-<td align="right">5.8184109</td>
+<td align="right">-4.469961</td>
+<td align="right">-2.856614</td>
+<td align="right">-3.054587</td>
+<td align="right">-0.0436859</td>
+<td align="right">-3.0982729</td>
 <td align="right">4</td>
-<td align="right">0.085</td>
-<td align="right">1</td>
-<td align="right">NA</td>
+<td align="right">0.252</td>
+<td align="right">0</td>
+<td align="right">-3.098273</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-7.020709</td>
-<td align="right">3.9508288</td>
-<td align="right">5.0298649</td>
-<td align="right">-0.5299681</td>
-<td align="right">4.4998968</td>
+<td align="right">-2.148044</td>
+<td align="right">1.621797</td>
+<td align="right">3.463923</td>
+<td align="right">1.3365914</td>
+<td align="right">4.8005142</td>
 <td align="right">5</td>
-<td align="right">0.051</td>
-<td align="right">1</td>
-<td align="right">NA</td>
+<td align="right">0.895</td>
+<td align="right">0</td>
+<td align="right">4.800514</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">-3.202505</td>
-<td align="right">-0.9710834</td>
-<td align="right">-0.2231599</td>
-<td align="right">0.0046498</td>
-<td align="right">-0.2185101</td>
+<td align="right">1.445920</td>
+<td align="right">-6.047320</td>
+<td align="right">-5.427741</td>
+<td align="right">0.5739452</td>
+<td align="right">-4.8537954</td>
 <td align="right">6</td>
-<td align="right">0.503</td>
+<td align="right">0.822</td>
 <td align="right">0</td>
-<td align="right">-0.2185101</td>
+<td align="right">-4.853795</td>
 </tr>
 </tbody>
 </table>
 <p>When generating missing data from a single level data set, the <code>clust_var</code> argument must be set to <code>NULL</code>. The rest of the function call is very similar to past calls to the <code>missing_data</code> function. Three additional variables are created, <strong>miss_prob</strong>, <strong>missing</strong>, and <strong>sim.data2</strong> which reflect the missing probability, a dichotomous missing variable, and the new generated missing data. The data is generated as missing if the <strong>miss_prob</strong> variable is less than the miss_prop argument above (0.25 in this case).</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(<span class="kw">table</span>(<span class="kw">is.na</span>(tmp.single.miss$sim.data2)))</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(<span class="kw">table</span>(<span class="kw">is.na</span>(tmp.single.miss$sim.data2)))</code></pre></div>
 <pre><code>## 
-## FALSE  TRUE 
-##  0.72  0.28</code></pre>
+##     FALSE      TRUE 
+## 0.7866667 0.2133333</code></pre>
 <!--
 Data can also be simulated as MCAR at the cluster level. Using the longitudinal example from above.
 

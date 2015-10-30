@@ -19,6 +19,7 @@
 #'               be correlated. If TRUE, must specify a valid model to pass to 
 #'               arima.sim. See \code{\link{arima.sim}} for examples.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
+#' @param cor_vars A vector of correlations between variables.
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
@@ -26,13 +27,13 @@
 #'             function defined by rand.gen.
 #' @export 
 sim_reg_single <- function(fixed, fixed.param, cov.param, n, error_var, rand_gen,
-                           arima = FALSE, data_str, fact.vars = list(NULL), ...) {
+                           arima = FALSE, data_str, cor_vars = NULL, fact.vars = list(NULL), ...) {
   
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   
   if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
   
-  Xmat <- sim_fixef_single(fixed, fixed.vars, n, cov.param, fact.vars)
+  Xmat <- sim_fixef_single(fixed, fixed.vars, n, cov.param, cor_vars, fact.vars)
   
   err <- sim_err_single(error_var, n, rand_gen, arima = arima, ...)
   
@@ -73,6 +74,7 @@ sim_reg_single <- function(fixed, fixed.param, cov.param, n, error_var, rand_gen
 #'             be correlated. If TRUE, must specify a valid model to pass to 
 #'             arima.sim. See \code{\link{arima.sim}} for examples.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
+#' @param cor_vars A vector of correlations between variables.
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
@@ -86,7 +88,7 @@ sim_reg_single <- function(fixed, fixed.param, cov.param, n, error_var, rand_gen
 #' @export 
 sim_reg_nested <- function(fixed, random, fixed.param, random.param, cov.param, n, p, 
                            error_var, randCor, rand_dist, rand_gen, arima = FALSE, 
-                           data_str, fact.vars = list(NULL),
+                           data_str, cor_vars = NULL, fact.vars = list(NULL),
                            unbal = FALSE, unbalCont = NULL, ...) {
 
   if(randCor > 1 | randCor < -1) stop("cor out of range")
@@ -108,7 +110,7 @@ sim_reg_nested <- function(fixed, random, fixed.param, random.param, cov.param, 
   rand.eff <- sim_rand_eff(random.param, randCor, n, rand_dist)
 
   Xmat <- sim_fixef_nested(fixed, fixed.vars, cov.param, n, lvl1ss, 
-                            data_str = data_str, fact.vars = fact.vars)
+                            data_str = data_str, cor_vars = cor_vars, fact.vars = fact.vars)
   
   reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
     rep(rand.eff[,xx], times = lvl1ss)))
@@ -161,6 +163,7 @@ sim_reg_nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 #'               be correlated. If TRUE, must specify a valid model to pass to 
 #'               arima.sim. See \code{\link{arima.sim}} for examples.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
+#' @param cor_vars A vector of correlations between variables.
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
@@ -179,7 +182,7 @@ sim_reg_nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 #' @export 
 sim_reg_nested3 <- function(fixed, random, random3, fixed.param, random.param, random.param3, cov.param, k, n, p, 
                             error_var, randCor, randCor3, rand_dist, rand_gen, arima = FALSE,
-                            data_str, fact.vars = list(NULL),
+                            data_str, cor_vars = NULL, fact.vars = list(NULL),
                             unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
                             ...) {
 
@@ -221,7 +224,8 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed.param, random.param, r
   rand.eff3 <- sim_rand_eff3(random.param3, randCor3, k)
    
   Xmat <- sim_fixef_nested3(fixed, fixed.vars, cov.param, k, n = lvl2ss, 
-                            p = lvl1ss, data_str = data_str, fact.vars = fact.vars)
+                            p = lvl1ss, data_str = data_str, cor_vars = cor_vars, 
+                            fact.vars = fact.vars)
   
   reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
     rep(rand.eff[,xx], times = lvl1ss)))

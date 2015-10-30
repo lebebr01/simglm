@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="date" content="2015-08-10" />
+<meta name="date" content="2015-10-29" />
 
 <title>Introduction to simReg</title>
 
@@ -17,23 +17,41 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
+div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
 table.sourceCode { width: 100%; line-height: 100%; }
 td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
 td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; }
-code > span.dt { color: #902000; }
-code > span.dv { color: #40a070; }
-code > span.bn { color: #40a070; }
-code > span.fl { color: #40a070; }
-code > span.ch { color: #4070a0; }
-code > span.st { color: #4070a0; }
-code > span.co { color: #60a0b0; font-style: italic; }
-code > span.ot { color: #007020; }
-code > span.al { color: #ff0000; font-weight: bold; }
-code > span.fu { color: #06287e; }
-code > span.er { color: #ff0000; font-weight: bold; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 <style type="text/css">
   pre:not([class]) {
@@ -42,7 +60,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </style>
 
 
-<link href="data:text/css,body%20%7B%0A%20%20background%2Dcolor%3A%20%23fff%3B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20max%2Dwidth%3A%20700px%3B%0A%20%20overflow%3A%20visible%3B%0A%20%20padding%2Dleft%3A%202em%3B%0A%20%20padding%2Dright%3A%202em%3B%0A%20%20font%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0A%20%20font%2Dsize%3A%2014px%3B%0A%20%20line%2Dheight%3A%201%2E35%3B%0A%7D%0A%0A%23header%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0A%0A%23TOC%20%7B%0A%20%20clear%3A%20both%3B%0A%20%20margin%3A%200%200%2010px%2010px%3B%0A%20%20padding%3A%204px%3B%0A%20%20width%3A%20400px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20border%2Dradius%3A%205px%3B%0A%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20font%2Dsize%3A%2013px%3B%0A%20%20line%2Dheight%3A%201%2E3%3B%0A%7D%0A%20%20%23TOC%20%2Etoctitle%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%20%20font%2Dsize%3A%2015px%3B%0A%20%20%20%20margin%2Dleft%3A%205px%3B%0A%20%20%7D%0A%0A%20%20%23TOC%20ul%20%7B%0A%20%20%20%20padding%2Dleft%3A%2040px%3B%0A%20%20%20%20margin%2Dleft%3A%20%2D1%2E5em%3B%0A%20%20%20%20margin%2Dtop%3A%205px%3B%0A%20%20%20%20margin%2Dbottom%3A%205px%3B%0A%20%20%7D%0A%20%20%23TOC%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dleft%3A%20%2D2em%3B%0A%20%20%7D%0A%20%20%23TOC%20li%20%7B%0A%20%20%20%20line%2Dheight%3A%2016px%3B%0A%20%20%7D%0A%0Atable%20%7B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dcolor%3A%20%23DDDDDD%3B%0A%20%20border%2Dstyle%3A%20outset%3B%0A%20%20border%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0A%20%20border%2Dwidth%3A%202px%3B%0A%20%20padding%3A%205px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%20%20line%2Dheight%3A%2018px%3B%0A%20%20padding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0A%20%20border%2Dleft%2Dstyle%3A%20none%3B%0A%20%20border%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Ap%20%7B%0A%20%20margin%3A%200%2E5em%200%3B%0A%7D%0A%0Ablockquote%20%7B%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20padding%3A%200%2E25em%200%2E75em%3B%0A%7D%0A%0Ahr%20%7B%0A%20%20border%2Dstyle%3A%20solid%3B%0A%20%20border%3A%20none%3B%0A%20%20border%2Dtop%3A%201px%20solid%20%23777%3B%0A%20%20margin%3A%2028px%200%3B%0A%7D%0A%0Adl%20%7B%0A%20%20margin%2Dleft%3A%200%3B%0A%7D%0A%20%20dl%20dd%20%7B%0A%20%20%20%20margin%2Dbottom%3A%2013px%3B%0A%20%20%20%20margin%2Dleft%3A%2013px%3B%0A%20%20%7D%0A%20%20dl%20dt%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%7D%0A%0Aul%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%7D%0A%20%20ul%20li%20%7B%0A%20%20%20%20list%2Dstyle%3A%20circle%20outside%3B%0A%20%20%7D%0A%20%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dbottom%3A%200%3B%0A%20%20%7D%0A%0Apre%2C%20code%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20color%3A%20%23333%3B%0A%7D%0Apre%20%7B%0A%20%20white%2Dspace%3A%20pre%2Dwrap%3B%20%20%20%20%2F%2A%20Wrap%20long%20lines%20%2A%2F%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20margin%3A%205px%200px%2010px%200px%3B%0A%20%20padding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Acode%20%7B%0A%20%20font%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0A%20%20font%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0A%20%20padding%3A%202px%200px%3B%0A%7D%0A%0Adiv%2Efigure%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0A%20%20background%2Dcolor%3A%20%23FFFFFF%3B%0A%20%20padding%3A%202px%3B%0A%20%20border%3A%201px%20solid%20%23DDDDDD%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20margin%3A%200%205px%3B%0A%7D%0A%0Ah1%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%20%20font%2Dsize%3A%2035px%3B%0A%20%20line%2Dheight%3A%2040px%3B%0A%7D%0A%0Ah2%20%7B%0A%20%20border%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20padding%2Dbottom%3A%202px%3B%0A%20%20font%2Dsize%3A%20145%25%3B%0A%7D%0A%0Ah3%20%7B%0A%20%20border%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20font%2Dsize%3A%20120%25%3B%0A%7D%0A%0Ah4%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0A%20%20margin%2Dleft%3A%208px%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Ah5%2C%20h6%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23ccc%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Aa%20%7B%0A%20%20color%3A%20%230033dd%3B%0A%20%20text%2Ddecoration%3A%20none%3B%0A%7D%0A%20%20a%3Ahover%20%7B%0A%20%20%20%20color%3A%20%236666ff%3B%20%7D%0A%20%20a%3Avisited%20%7B%0A%20%20%20%20color%3A%20%23800080%3B%20%7D%0A%20%20a%3Avisited%3Ahover%20%7B%0A%20%20%20%20color%3A%20%23BB00BB%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%0A%2F%2A%20Class%20described%20in%20https%3A%2F%2Fbenjeffrey%2Ecom%2Fposts%2Fpandoc%2Dsyntax%2Dhighlighting%2Dcss%0A%20%20%20Colours%20from%20https%3A%2F%2Fgist%2Egithub%2Ecom%2Frobsimmons%2F1172277%20%2A%2F%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Keyword%20%2A%2F%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%2F%2A%20DataType%20%2A%2F%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%2F%2A%20DecVal%20%28decimal%20values%29%20%2A%2F%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20BaseN%20%2A%2F%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Float%20%2A%2F%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Char%20%2A%2F%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20String%20%2A%2F%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%2F%2A%20Comment%20%2A%2F%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%2F%2A%20OtherToken%20%2A%2F%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20AlertToken%20%2A%2F%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Function%20calls%20%2A%2F%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%2F%2A%20ErrorTok%20%2A%2F%0A%0A" rel="stylesheet" type="text/css" />
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0A%7D%0Apre%20%7B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -52,7 +70,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 <div id="header">
 <h1 class="title">Introduction to simReg</h1>
-<h4 class="date"><em>2015-08-10</em></h4>
+<h4 class="date"><em>2015-10-29</em></h4>
 </div>
 
 
@@ -62,9 +80,9 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="installation" class="section level2">
 <h2>Installation</h2>
 <p>Currently development is happening on github. To install the package, use the <code>devtools</code> package:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(devtools)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(devtools)
 <span class="kw">install_github</span>(<span class="st">&quot;lebebr01/simReg&quot;</span>)
-<span class="kw">library</span>(simReg)</code></pre>
+<span class="kw">library</span>(simReg)</code></pre></div>
 <p>This should load the <code>devtools</code> package, install the <code>simReg</code> package, and finally load the <code>simReg</code> package. The package has currently not been tested on a Mac machine. I do not anticipate any problems installing on a Mac however.</p>
 </div>
 <div id="simulate-data" class="section level2">
@@ -73,18 +91,18 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="single-level" class="section level3">
 <h3>Single Level</h3>
 <p>Let’s look at a simple single level regression example to get started:</p>
-<pre class="sourceCode r"><code class="sourceCode r">fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>act +<span class="st"> </span>diff +<span class="st"> </span>numCourse +<span class="st"> </span>act:numCourse
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>act +<span class="st"> </span>diff +<span class="st"> </span>numCourse +<span class="st"> </span>act:numCourse
 fixed.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="fl">3.5</span>, <span class="dv">2</span>)
 cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">sd =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">3</span>), <span class="dt">var.type =</span> <span class="kw">c</span>(<span class="st">&quot;single&quot;</span>, <span class="st">&quot;single&quot;</span>, <span class="st">&quot;single&quot;</span>))
 n &lt;-<span class="st"> </span><span class="dv">150</span>
 error_var &lt;-<span class="st"> </span><span class="dv">3</span>
 rand_gen =<span class="st"> </span>rnorm
 temp.single &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">fixed.param =</span> fixed.param, <span class="dt">cov.param =</span> cov.param,
-<span class="dt">n =</span> n, <span class="dt">error_var =</span> error_var, <span class="dt">rand_gen =</span> rand_gen, <span class="dt">data_str =</span> <span class="st">&quot;single&quot;</span>)</code></pre>
+<span class="dt">n =</span> n, <span class="dt">error_var =</span> error_var, <span class="dt">rand_gen =</span> rand_gen, <span class="dt">data_str =</span> <span class="st">&quot;single&quot;</span>)</code></pre></div>
 <p>A few things to highlight about the above syntax, first the object <code>fixed</code> is a one sided formula that gives the names of the variables to be included in the simulated data. The intercept is directly shown in the formulation here, but can also be omitted (similar to linear models in R). I like to include the 1 as it reminds me that I do in fact want an intercept. The next object, <code>fixed.param</code> is the regression weights for the fixed effects, this must be the same length as fixed (or one larger if the 1 is not explicitly stated in the <code>fixed</code> object). Next, <code>cov.param</code> represents the mean, standard deviation, and type of variable from the <code>fixed</code> object (must by “single” for single level regression). The <code>cov.param</code> object must contain all variables except the intercept and any interactions.</p>
 <p>The rest of the arguments are pretty straightforward, <code>n</code> is the sample size, <code>error_var</code> is the error variance, <code>rand_gen</code> is the distribution of the residuals, and finally in the function call itself, <code>data_str</code> must be “single” in this instance to reflect a single level regression.</p>
 <p>Finally, looking at the output from the above call:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(temp.single)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(temp.single)</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -102,75 +120,75 @@ temp.single &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span 
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-9.204284</td>
-<td align="right">0.5682873</td>
-<td align="right">3.701987</td>
-<td align="right">-34.074143</td>
-<td align="right">-89.4401783</td>
-<td align="right">1.5919926</td>
-<td align="right">-87.8481857</td>
+<td align="right">0.1568019</td>
+<td align="right">-1.6970354</td>
+<td align="right">2.7953495</td>
+<td align="right">0.4383160</td>
+<td align="right">11.590527</td>
+<td align="right">0.5846858</td>
+<td align="right">12.1752131</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">1.382085</td>
-<td align="right">-5.1421380</td>
-<td align="right">-4.774556</td>
-<td align="right">-6.598844</td>
-<td align="right">-27.5224316</td>
-<td align="right">0.9359783</td>
-<td align="right">-26.5864533</td>
+<td align="right">-0.5433454</td>
+<td align="right">-4.5979707</td>
+<td align="right">-2.7249543</td>
+<td align="right">1.4805913</td>
+<td align="right">-11.347510</td>
+<td align="right">3.2319921</td>
+<td align="right">-8.1155174</td>
 <td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-1.417593</td>
-<td align="right">-1.8020391</td>
-<td align="right">-2.296948</td>
-<td align="right">3.256137</td>
-<td align="right">-6.9994541</td>
-<td align="right">-2.1963626</td>
-<td align="right">-9.1958167</td>
+<td align="right">-1.0076277</td>
+<td align="right">0.2495464</td>
+<td align="right">0.3979468</td>
+<td align="right">-0.4009822</td>
+<td align="right">-1.190115</td>
+<td align="right">0.4723454</td>
+<td align="right">-0.7177695</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">3.123687</td>
-<td align="right">0.3896793</td>
-<td align="right">-1.589341</td>
-<td align="right">-4.964604</td>
-<td align="right">-0.6074716</td>
-<td align="right">-0.0506568</td>
-<td align="right">-0.6581284</td>
+<td align="right">3.8427138</td>
+<td align="right">-1.6862400</td>
+<td align="right">-2.8050895</td>
+<td align="right">-10.7791563</td>
+<td align="right">-15.691510</td>
+<td align="right">-0.7557886</td>
+<td align="right">-16.4472991</td>
 <td align="right">4</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-8.818928</td>
-<td align="right">10.7810439</td>
-<td align="right">1.656780</td>
-<td align="right">-14.611020</td>
-<td align="right">-45.9179807</td>
-<td align="right">-0.3370237</td>
-<td align="right">-46.2550044</td>
+<td align="right">-1.2684813</td>
+<td align="right">-4.0948689</td>
+<td align="right">-3.1431411</td>
+<td align="right">3.9870158</td>
+<td align="right">-10.195756</td>
+<td align="right">-0.5831789</td>
+<td align="right">-10.7789354</td>
 <td align="right">5</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">1.847340</td>
-<td align="right">0.1833849</td>
-<td align="right">1.433299</td>
-<td align="right">2.647791</td>
-<td align="right">19.8848744</td>
-<td align="right">-0.9395512</td>
-<td align="right">18.9453232</td>
+<td align="right">-3.6268157</td>
+<td align="right">-0.9331664</td>
+<td align="right">0.8017829</td>
+<td align="right">-2.9079187</td>
+<td align="right">-16.450027</td>
+<td align="right">3.1209661</td>
+<td align="right">-13.3290604</td>
 <td align="right">6</td>
 </tr>
 </tbody>
 </table>
 <p>As can be seen from the data itself, the first 5 columns represent the raw data used in the simulation, the column labeled “Fbeta” is the matrix multiplication of the design matrix (first 5 columns in this case) by the <code>fixed.param</code> object above (the desired values for the fixed effects). The “err” column is the simulated errors, the column labeled “sim.data” is the simulated data (taking “Fbeta” + “err”), and lastly an ID variable reflecting the individuals.</p>
 <p>You could then use simple regression on these data to see how the simulation went:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">lm</span>(sim.data ~<span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>act +<span class="st"> </span>diff +<span class="st"> </span>numCourse +<span class="st"> </span>act:numCourse, <span class="dt">data =</span> temp.single))</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">lm</span>(sim.data ~<span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>act +<span class="st"> </span>diff +<span class="st"> </span>numCourse +<span class="st"> </span>act:numCourse, <span class="dt">data =</span> temp.single))</code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = sim.data ~ 1 + act + diff + numCourse + act:numCourse, 
@@ -178,25 +196,25 @@ temp.single &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span 
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -3.6086 -1.0512 -0.0007  1.0387  4.2035 
+## -5.3300 -1.1733 -0.0977  1.3392  4.2848 
 ## 
 ## Coefficients:
 ##               Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)    2.32492    0.13266   17.52   &lt;2e-16 ***
-## act            4.08485    0.03411  119.77   &lt;2e-16 ***
-## diff           1.02358    0.04598   22.26   &lt;2e-16 ***
-## numCourse      3.55315    0.04317   82.31   &lt;2e-16 ***
-## act:numCourse  2.02871    0.01179  172.12   &lt;2e-16 ***
+## (Intercept)    1.93910    0.14302   13.56   &lt;2e-16 ***
+## act            4.05131    0.03679  110.13   &lt;2e-16 ***
+## diff           0.98154    0.04540   21.62   &lt;2e-16 ***
+## numCourse      3.43115    0.04673   73.42   &lt;2e-16 ***
+## act:numCourse  1.98096    0.01360  145.63   &lt;2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 1.579 on 145 degrees of freedom
-## Multiple R-squared:  0.9966, Adjusted R-squared:  0.9966 
-## F-statistic: 1.077e+04 on 4 and 145 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 1.715 on 145 degrees of freedom
+## Multiple R-squared:  0.9961, Adjusted R-squared:  0.996 
+## F-statistic:  9182 on 4 and 145 DF,  p-value: &lt; 2.2e-16</code></pre>
 <div id="adding-factorcategoricalordinal-variables" class="section level4">
 <h4>Adding Factor/Categorical/Ordinal Variables</h4>
 <p>To add a factor, categorical, or ordinal variable, just append one of the following to the end of the variable name in the <code>fixed</code> object: “.f”, “.c”, “.o”. These indicate the variable is a discrete variable of some sort. See below for an example.</p>
-<pre class="sourceCode r"><code class="sourceCode r">fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>act +<span class="st"> </span>diff +<span class="st"> </span>numCourse.o +<span class="st"> </span>act:numCourse.o
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>act +<span class="st"> </span>diff +<span class="st"> </span>numCourse.o +<span class="st"> </span>act:numCourse.o
 fixed.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="fl">3.5</span>, <span class="dv">2</span>)
 cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">sd =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">3</span>), <span class="dt">var.type =</span> <span class="kw">c</span>(<span class="st">&quot;single&quot;</span>, <span class="st">&quot;single&quot;</span>))
 fact.vars &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">numlevels =</span> <span class="dv">5</span>, <span class="dt">var.type =</span> <span class="st">&quot;single&quot;</span>, <span class="st">&quot;single&quot;</span>)
@@ -204,9 +222,9 @@ n &lt;-<span class="st"> </span><span class="dv">150</span>
 error_var &lt;-<span class="st"> </span><span class="dv">3</span>
 rand_gen =<span class="st"> </span>rnorm
 temp.single.o &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">fixed.param =</span> fixed.param, <span class="dt">cov.param =</span> cov.param,
-<span class="dt">n =</span> n, <span class="dt">error_var =</span> error_var, <span class="dt">rand_gen =</span> rand_gen, <span class="dt">data_str =</span> <span class="st">&quot;single&quot;</span>, <span class="dt">fact.vars =</span> fact.vars)</code></pre>
+<span class="dt">n =</span> n, <span class="dt">error_var =</span> error_var, <span class="dt">rand_gen =</span> rand_gen, <span class="dt">data_str =</span> <span class="st">&quot;single&quot;</span>, <span class="dt">fact.vars =</span> fact.vars)</code></pre></div>
 <p>The next thing to add is a new object called <code>fact.vars</code>. This object must be a list that contains <code>numlevels</code> and <code>var.type</code>. Other optional features will be added in the future to increase functionality - such as including value labels, user specified probabilities, etc. Once these are passed into the <code>sim.reg()</code> function, the simulated data now looks like the following.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(temp.single.o)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(temp.single.o)</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -224,68 +242,68 @@ temp.single.o &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<spa
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-2.6570354</td>
-<td align="right">5.3037132</td>
-<td align="right">2</td>
-<td align="right">-5.314071</td>
-<td align="right">-6.952570</td>
-<td align="right">2.3370205</td>
-<td align="right">-4.615550</td>
+<td align="right">-0.6288632</td>
+<td align="right">2.9645116</td>
+<td align="right">5</td>
+<td align="right">-3.144316</td>
+<td align="right">13.66043</td>
+<td align="right">-4.0100695</td>
+<td align="right">9.650357</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">-5.3643237</td>
-<td align="right">-3.2226629</td>
+<td align="right">2.9292813</td>
+<td align="right">0.4649556</td>
 <td align="right">1</td>
-<td align="right">-5.364324</td>
-<td align="right">-29.908605</td>
-<td align="right">2.3060353</td>
-<td align="right">-27.602570</td>
+<td align="right">2.929281</td>
+<td align="right">23.54064</td>
+<td align="right">2.4750556</td>
+<td align="right">26.015699</td>
 <td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-0.4373586</td>
-<td align="right">0.3403044</td>
-<td align="right">3</td>
-<td align="right">-1.312076</td>
-<td align="right">8.466718</td>
-<td align="right">0.2138401</td>
-<td align="right">8.680558</td>
+<td align="right">-6.2600579</td>
+<td align="right">0.7638735</td>
+<td align="right">2</td>
+<td align="right">-12.520116</td>
+<td align="right">-40.31659</td>
+<td align="right">-1.2594033</td>
+<td align="right">-41.575993</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">-1.1858447</td>
-<td align="right">4.1400839</td>
-<td align="right">5</td>
-<td align="right">-5.929223</td>
-<td align="right">7.038258</td>
-<td align="right">0.0813246</td>
-<td align="right">7.119583</td>
+<td align="right">-6.7212742</td>
+<td align="right">5.7718738</td>
+<td align="right">1</td>
+<td align="right">-6.721274</td>
+<td align="right">-29.05577</td>
+<td align="right">0.4623253</td>
+<td align="right">-28.593446</td>
 <td align="right">4</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-0.7706143</td>
-<td align="right">-2.9995098</td>
-<td align="right">3</td>
-<td align="right">-2.311843</td>
-<td align="right">1.794347</td>
-<td align="right">-0.6208247</td>
-<td align="right">1.173522</td>
+<td align="right">1.9557222</td>
+<td align="right">-3.2100882</td>
+<td align="right">2</td>
+<td align="right">3.911444</td>
+<td align="right">21.43569</td>
+<td align="right">0.5342185</td>
+<td align="right">21.969908</td>
 <td align="right">5</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">-1.9718329</td>
-<td align="right">-1.7798544</td>
-<td align="right">4</td>
-<td align="right">-7.887332</td>
-<td align="right">-9.441849</td>
-<td align="right">-0.2746034</td>
-<td align="right">-9.716453</td>
+<td align="right">3.1261360</td>
+<td align="right">-3.5520706</td>
+<td align="right">2</td>
+<td align="right">6.252272</td>
+<td align="right">30.45702</td>
+<td align="right">-0.5774447</td>
+<td align="right">29.879573</td>
 <td align="right">6</td>
 </tr>
 </tbody>
@@ -295,7 +313,7 @@ temp.single.o &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<spa
 <div id="nested-data" class="section level3">
 <h3>Nested Data</h3>
 <p>This package currently supports the simulation of two-level nested or two-level longitudinal models. A few additional arguments are needed to do these models but much is the same.</p>
-<pre class="sourceCode r"><code class="sourceCode r">fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>time +<span class="st"> </span>diff +<span class="st"> </span>act +<span class="st"> </span>time:act
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>time +<span class="st"> </span>diff +<span class="st"> </span>act +<span class="st"> </span>time:act
 random &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>time +<span class="st"> </span>diff
 fixed.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">6</span>, <span class="fl">2.3</span>, <span class="dv">7</span>)
 random.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">7</span>, <span class="dv">4</span>, <span class="dv">2</span>)
@@ -313,11 +331,11 @@ temp.long &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span cl
                      <span class="dt">k =</span> <span class="ot">NULL</span>, <span class="dt">n =</span> n, <span class="dt">p =</span> p,
                      <span class="dt">error_var =</span> error_var, <span class="dt">randCor =</span> randCor, 
                      <span class="dt">rand_dist =</span> rand_dist, <span class="dt">rand_gen =</span> rand_gen,
-                     <span class="dt">data_str =</span> data_str, <span class="dt">unbal =</span> <span class="ot">FALSE</span>)</code></pre>
+                     <span class="dt">data_str =</span> data_str, <span class="dt">unbal =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p>Highlighting the new agruments needed, the first is a one sided formula <code>random</code>. This specifies which terms should be specified above. Related to <code>random</code>, <code>random.param</code> specifies the variance for the random effects and must be the same length as <code>random</code>. Although still found in the single level regression, the “var.type” portion of <code>cov.param</code> must not be either “lvl1” or “lvl2” to represent either level 1 or level 2 variables respectively. Note that the time variable is not included in the <code>cov.param</code> argument and is automatically specified as discrete starting from 0. In the future, differing time scales will be expanded.</p>
 <p>The other new terms needed are straightforward, <code>p</code> is the within cluster sample size (i.e. how many repeated measurements), <code>randCor</code> is the correlation between the random effects, <code>rand_dist</code> is the distribution of the random effects - see the help file for details on options here, and lastly <code>data_str</code> is now “long” for longitudinal data.</p>
 <p>The simulated data now look like the following:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(temp.long)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(temp.long)</code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -341,96 +359,96 @@ temp.long &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span cl
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">1.3149443</td>
-<td align="right">-2.376711</td>
-<td align="right">0.000000</td>
-<td align="right">2.758299</td>
-<td align="right">-2.980889</td>
-<td align="right">-1.278815</td>
-<td align="right">6.423231</td>
-<td align="right">1.076729</td>
-<td align="right">-1.9737020</td>
-<td align="right">5.526258</td>
+<td align="right">-0.9481125</td>
+<td align="right">-0.1756873</td>
+<td align="right">0.0000000</td>
+<td align="right">5.444726</td>
+<td align="right">1.495529</td>
+<td align="right">0.1409542</td>
+<td align="right">-2.0927557</td>
+<td align="right">5.311085</td>
+<td align="right">0.2191962</td>
+<td align="right">3.437526</td>
 <td align="right">1</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
 <td align="right">1</td>
-<td align="right">-2.6866679</td>
-<td align="right">-2.376711</td>
-<td align="right">-2.376711</td>
-<td align="right">2.758299</td>
-<td align="right">-2.980889</td>
-<td align="right">-1.278815</td>
-<td align="right">-32.223418</td>
-<td align="right">3.213160</td>
-<td align="right">-0.5333606</td>
-<td align="right">-29.543618</td>
+<td align="right">1.5338687</td>
+<td align="right">-0.1756873</td>
+<td align="right">-0.1756873</td>
+<td align="right">5.444726</td>
+<td align="right">1.495529</td>
+<td align="right">0.1409542</td>
+<td align="right">13.5693201</td>
+<td align="right">7.156460</td>
+<td align="right">-0.6602801</td>
+<td align="right">20.065500</td>
 <td align="right">2</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">2</td>
-<td align="right">-0.9702206</td>
-<td align="right">-2.376711</td>
-<td align="right">-4.753422</td>
-<td align="right">2.758299</td>
-<td align="right">-2.980889</td>
-<td align="right">-1.278815</td>
-<td align="right">-36.561709</td>
-<td align="right">-1.962747</td>
-<td align="right">2.7199348</td>
-<td align="right">-35.804521</td>
+<td align="right">0.7990474</td>
+<td align="right">-0.1756873</td>
+<td align="right">-0.3513747</td>
+<td align="right">5.444726</td>
+<td align="right">1.495529</td>
+<td align="right">0.1409542</td>
+<td align="right">9.9305812</td>
+<td align="right">8.548413</td>
+<td align="right">-2.6470366</td>
+<td align="right">15.831957</td>
 <td align="right">3</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
 <td align="right">3</td>
-<td align="right">-1.6043533</td>
-<td align="right">-2.376711</td>
-<td align="right">-7.130132</td>
-<td align="right">2.758299</td>
-<td align="right">-2.980889</td>
-<td align="right">-1.278815</td>
-<td align="right">-55.003481</td>
-<td align="right">-4.132697</td>
-<td align="right">-2.3704979</td>
-<td align="right">-61.506677</td>
+<td align="right">0.0505800</td>
+<td align="right">-0.1756873</td>
+<td align="right">-0.5270620</td>
+<td align="right">5.444726</td>
+<td align="right">1.495529</td>
+<td align="right">0.1409542</td>
+<td align="right">6.2099656</td>
+<td align="right">9.938442</td>
+<td align="right">-2.3224267</td>
+<td align="right">13.825981</td>
 <td align="right">4</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">4</td>
-<td align="right">0.3038797</td>
-<td align="right">-2.376711</td>
-<td align="right">-9.506843</td>
-<td align="right">2.758299</td>
-<td align="right">-2.980889</td>
-<td align="right">-1.278815</td>
-<td align="right">-58.191059</td>
-<td align="right">-9.553863</td>
-<td align="right">0.1218960</td>
-<td align="right">-67.623025</td>
+<td align="right">0.3393718</td>
+<td align="right">-0.1756873</td>
+<td align="right">-0.7027493</td>
+<td align="right">5.444726</td>
+<td align="right">1.495529</td>
+<td align="right">0.1409542</td>
+<td align="right">8.7129051</td>
+<td align="right">11.474677</td>
+<td align="right">0.4703295</td>
+<td align="right">20.657912</td>
 <td align="right">5</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
 <td align="right">5</td>
-<td align="right">-1.6499135</td>
-<td align="right">-2.376711</td>
-<td align="right">-11.883554</td>
-<td align="right">2.758299</td>
-<td align="right">-2.980889</td>
-<td align="right">-1.278815</td>
-<td align="right">-84.550793</td>
-<td align="right">-10.036213</td>
-<td align="right">3.8163767</td>
-<td align="right">-90.770629</td>
+<td align="right">-1.2823861</td>
+<td align="right">-0.1756873</td>
+<td align="right">-0.8784366</td>
+<td align="right">5.444726</td>
+<td align="right">1.495529</td>
+<td align="right">0.1409542</td>
+<td align="right">-0.2474542</td>
+<td align="right">12.741612</td>
+<td align="right">2.8478871</td>
+<td align="right">15.342045</td>
 <td align="right">6</td>
 <td align="right">1</td>
 </tr>
@@ -438,24 +456,24 @@ temp.long &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span cl
 </table>
 <p>This structure is very similar to before, except now there are columns for the specific random effects as denoted by the lower case b’s, a column reflecting the contribution for the random effects combined and lastly now two ID variables, one reflecting the within cluster ID and another being the cluster ID.</p>
 <p>Checking how the simulation worked with the following:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lme4)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lme4)
 <span class="kw">lmer</span>(sim.data ~<span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>time +<span class="st"> </span>diff +<span class="st"> </span>act +<span class="st"> </span>time:act +<span class="st"> </span>(<span class="dv">1</span> +<span class="st"> </span>time +<span class="st"> </span>diff |<span class="st"> </span>clustID),
-<span class="dt">data =</span> temp.long)</code></pre>
+<span class="dt">data =</span> temp.long)</code></pre></div>
 <pre><code>## Linear mixed model fit by REML ['lmerMod']
 ## Formula: sim.data ~ 1 + time + diff + act + time:act + (1 + time + diff |  
 ##     clustID)
 ##    Data: temp.long
-## REML criterion at convergence: 21318.01
+## REML criterion at convergence: 21336.41
 ## Random effects:
-##  Groups   Name        Std.Dev. Corr       
-##  clustID  (Intercept) 2.848               
-##           time        2.045     0.05      
-##           diff        1.380    -0.06  0.04
-##  Residual             1.999               
+##  Groups   Name        Std.Dev. Corr     
+##  clustID  (Intercept) 2.372             
+##           time        1.954    0.06     
+##           diff        1.405    0.02 0.14
+##  Residual             2.020             
 ## Number of obs: 4500, groups:  clustID, 150
 ## Fixed Effects:
 ## (Intercept)         time         diff          act     time:act  
-##       4.158        2.022        5.739        2.233        7.044</code></pre>
+##       4.273        1.753        5.919        2.438        7.013</code></pre>
 <p>One note when looking at the output is that standard deviations are given, not variances as inputted into the simulation function.</p>
 <div id="cross-sectional-data" class="section level4">
 <h4>Cross-Sectional Data</h4>

@@ -5,7 +5,7 @@
 \title{Master generalized simulation function.}
 \usage{
 sim_glm(fixed, random, random3, fixed.param, random.param, random.param3,
-  cov.param, k, n, p, randCor, randCor3, rand_dist, data_str,
+  cov.param, k, n, p, randCor, randCor3, rand_dist, data_str, cor_vars = NULL,
   fact.vars = list(NULL), unbal = FALSE, unbal3 = FALSE,
   unbalCont = NULL, unbalCont3 = NULL)
 }

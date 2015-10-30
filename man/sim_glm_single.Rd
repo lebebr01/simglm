@@ -4,7 +4,7 @@
 \alias{sim_glm_single}
 \title{Simulation single level logistic regression model}
 \usage{
-sim_glm_single(fixed, fixed.param, cov.param, n, data_str,
+sim_glm_single(fixed, fixed.param, cov.param, n, data_str, cor_vars = NULL,
   fact.vars = list(NULL))
 }
 \arguments{
@@ -18,6 +18,8 @@ interactions. Must be same order as fixed formula above.}
 \item{n}{Cluster sample size.}
 
 \item{data_str}{Type of data. Must be "cross", "long", or "single".}
+
+\item{cor_vars}{A vector of correlations between variables.}
 
 \item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
      each list must include numlevels and var.type (must be "lvl1" or "lvl2");

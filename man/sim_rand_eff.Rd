@@ -4,17 +4,14 @@
 \alias{sim_rand_eff}
 \title{Function to simulate random effects.}
 \usage{
-<<<<<<< HEAD
-sim_rand_eff(random.param, cor_re, n, dist = c("lap", "chi", "norm", "bimod"),
-  num.dist)
-=======
 sim_rand_eff(random.param, cor, n, rand_gen, ther, ther_sim = FALSE, ...)
->>>>>>> devel
+
+sim_rand_eff(random.param, cor, n, rand_gen, ther, ther_sim = FALSE, ...)
 }
 \arguments{
 \item{random.param}{Variance of random effects. Must be same length as random.}
 
-\item{cor_re}{cor_rerelation between random effects.}
+\item{cor}{Correlation between random effects.}
 
 \item{n}{Cluster sample size.}
 
@@ -33,14 +30,32 @@ used for standardization be simulated.}
 \item{...}{Additional values that need to be passed to the function
 called from rand_gen.}
 
+\item{cor_re}{cor_rerelation between random effects.}
+
+\item{dist}{Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod",
+"norm" is default.}
+
+\item{num.dist}{Number of distributions for bimod random variables}
+
+\item{random.param}{Variance of random effects. Must be same length as random.}
+
+\item{n}{Cluster sample size.}
+
 \item{arima}{TRUE/FALSE flag indicating whether residuals should
 be correlated. If TRUE, must specify a valid model to pass to
 arima.sim, See \code{\link{arima.sim}} for examples.}
 }
 \description{
 Input simulation parameters and returns random effects.
+
+Input simulation parameters and returns random effects.
 }
 \details{
+Simulates random effects for the master function \code{\link{sim_reg}} when
+simulating a linear mixed model, both cross sectional and longitudinal.  Allows
+the ability to simulate random effects from a Laplace, chi-square (1), mixture
+normal, or normal distribution.
+
 Simulates random effects for the master function \code{\link{sim_reg}} when
 simulating a linear mixed model, both cross sectional and longitudinal.  Allows
 the ability to simulate random effects from a Laplace, chi-square (1), mixture

@@ -7,12 +7,8 @@ sudo: required
 env:
  global:
    - CRAN: http://cran.rstudio.com
-<<<<<<< HEAD
-   
 r_packages: 
    - rmarkdown
-=======
->>>>>>> devel
 
 notifications:
   email:

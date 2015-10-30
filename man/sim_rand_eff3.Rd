@@ -4,19 +4,34 @@
 \alias{sim_rand_eff3}
 \title{Function to simulate third level random effects.}
 \usage{
-sim_rand_eff3(random.param3, cor_re, k)
+sim_rand_eff3(random.param3, cor, k)
+
+sim_rand_eff3(random.param3, cor, k)
 }
 \arguments{
 \item{random.param3}{Variance of random effects. Currently only supports a single random effect for third level.}
 
+\item{cor}{Correlation between level 3 random effects.}
+
+\item{k}{Number of third level clusters.}
+
 \item{cor_re}{cor_rerelation between level 3 random effects.}
+
+\item{random.param3}{Variance of random effects. Currently only supports a single random effect for third level.}
 
 \item{k}{Number of third level clusters.}
 }
 \description{
 Input simulation parameters and returns random effects.
+
+Input simulation parameters and returns random effects.
 }
 \details{
+Simulates random effects for the master function \code{\link{sim_reg}} when
+simulating a linear mixed model, both cross sectional and longitudinal.  Allows
+the ability to simulate random effects from a Laplace, chi-square (1), mixture
+normal, or normal distribution.
+
 Simulates random effects for the master function \code{\link{sim_reg}} when
 simulating a linear mixed model, both cross sectional and longitudinal.  Allows
 the ability to simulate random effects from a Laplace, chi-square (1), mixture

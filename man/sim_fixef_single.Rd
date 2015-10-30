@@ -4,7 +4,8 @@
 \alias{sim_fixef_single}
 \title{Simulates design matrix for single level model.}
 \usage{
-sim_fixef_single(fixed, fixed.vars, n, cov.param, fact.vars = list(NULL))
+sim_fixef_single(fixed, fixed.vars, n, cov.param, cor_vars = NULL,
+  fact.vars = list(NULL))
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.}
@@ -15,6 +16,8 @@ sim_fixef_single(fixed, fixed.vars, n, cov.param, fact.vars = list(NULL))
 
 \item{cov.param}{List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or
 interactions. Must be same order as fixed formula above.}
+
+\item{cor_vars}{A vector of correlations between variables.}
 
 \item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
 each list must include numlevels and var.type (must be "lvl1" or "lvl2");

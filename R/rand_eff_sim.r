@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #' Function to simulate random effects.
 #' 
 #' Input simulation parameters and returns random effects.
@@ -73,7 +72,6 @@ sim_rand_eff3 <- function(random.param3, cor_re, k){
   return(reff1)
 
 }
-=======
 #' Function to simulate random effects.
 #' 
 #' Input simulation parameters and returns random effects.
@@ -172,5 +170,3 @@ sim_rand_eff3 <- function(random.param3, cor, k){
   return(reff1)
 
 }
-
->>>>>>> devel

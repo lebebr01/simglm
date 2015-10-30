@@ -32,12 +32,7 @@ export(sim_reg)
 export(sim_reg_nested)
 export(sim_reg_nested3)
 export(sim_reg_single)
-<<<<<<< HEAD
 importFrom(MASS,mvrnorm)
 importFrom(Matrix,bdiag)
 importFrom(VGAM,rlaplace)
 importFrom(dplyr,arrange)
-=======
-importFrom(Matrix,bdiag)
-importFrom(nlme,lme)
->>>>>>> devel

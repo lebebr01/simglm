@@ -3,13 +3,13 @@ title: "Simulate Missing Data"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to simReg}
+  %\VignetteIndexEntry{Introduction to simglm}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 ```{r setup, include=FALSE}
 library(knitr)
-library(simReg)
+library(simglm)
 knit_print.data.frame = function(x, ...) {
   res = paste(c('', '', kable(x, output = FALSE)), collapse = '\n')
   asis_output(res)
@@ -17,12 +17,12 @@ knit_print.data.frame = function(x, ...) {
 ```
 
 # Missing Data
-Missing data tends to be prolific in real world data, as such, it should also be included in any simulated data. This can help extend the external validity of the results based on simulated data. The `simReg` package builds this support directly into the simulation process. A master function, `missing_data`, takes a simulated data set and processes it to return missing data. The additional benefit to the `missing_data` function is that the original data remain and another variable is added to the simulated data that reflect the values that are assigned to a missing value. The ability for the researcher to check that the missing data was generated properly can be an important step.
+Missing data tends to be prolific in real world data, as such, it should also be included in any simulated data. This can help extend the external validity of the results based on simulated data. The `simglm` package builds this support directly into the simulation process. A master function, `missing_data`, takes a simulated data set and processes it to return missing data. The additional benefit to the `missing_data` function is that the original data remain and another variable is added to the simulated data that reflect the values that are assigned to a missing value. The ability for the researcher to check that the missing data was generated properly can be an important step.
 
 ## Types of Missing Data
 The modern missing data literature can be traced back to Rubin where he defined three different missing data mechanisms, missing completely at random (MCAR), missing at random (MAR), and not missing at random (NMAR). In general, if the missing data is either MCAR or MAR, unbiased estimates can be obtained, however, when the missing data is NMAR, bias can be introduced. 
 
-The `simReg` package currently supports simulation of MCAR and MAR mechanisms. Two MAR missing data mechanisms are currently built in, one being dropout missing data and another called **mar** missing data. Dropout missing data typically would be valid for longitudinal data and represents the situation where the respondent stops participating in the study. For example, they participate the first 3 weeks of the study, but move out of state after the third week and no further data is collected on that individual. The missing data for this type of individual is likely tied strictly to time, so therefore controlling for the time variable in the study would then lead to MAR missing data.
+The `simglm` package currently supports simulation of MCAR and MAR mechanisms. Two MAR missing data mechanisms are currently built in, one being dropout missing data and another called **mar** missing data. Dropout missing data typically would be valid for longitudinal data and represents the situation where the respondent stops participating in the study. For example, they participate the first 3 weeks of the study, but move out of state after the third week and no further data is collected on that individual. The missing data for this type of individual is likely tied strictly to time, so therefore controlling for the time variable in the study would then lead to MAR missing data.
 
 ### Dropout Missing Data Example
 ```{r dropout}
@@ -56,7 +56,7 @@ prop.table(table(is.na(temp.long.miss$sim.data2)))
 ```
 
 ### MAR Missing Data Example
-The mar missing data is similar to that of dropout missing data, but instead of being conditional on time, a third variable can be added to base the missing data on. For example, in a study, perhaps those individuals with lower income are less likely to report the outcome of the study. As such, the mar missing data implementation in `simReg` allows you to simulate missing data in a similar framework as the example above. Below is an example from a single level regression (assumed that the covariates are grand mean centered).
+The mar missing data is similar to that of dropout missing data, but instead of being conditional on time, a third variable can be added to base the missing data on. For example, in a study, perhaps those individuals with lower income are less likely to report the outcome of the study. As such, the mar missing data implementation in `simglm` allows you to simulate missing data in a similar framework as the example above. Below is an example from a single level regression (assumed that the covariates are grand mean centered).
 
 ```{r marexamp}
 # simulate data

@@ -1,10 +1,10 @@
-Package: simReg
+Package: simglm
 Type: Package
 Maintainer: Brandon LeBeau <lebebr01+simReg@gmail.com>
 Author: Brandon LeBeau <lebebr01+simReg@gmail.com>
 Version: 0.3.0
 License: GPL (>= 2)
-Title: Simulate Regression Models
+Title: Simulate Models based on the general linear model
 Description: This package easily simulates regression models,
     this includes both simple regression and linear mixed
     models. It also aims to do power simulations for specific

@@ -1,6 +1,6 @@
 Regression simulation function
 
-[![Build Status](https://travis-ci.org/lebebr01/simReg.svg?branch=master)](https://travis-ci.org/lebebr01/simReg)
+[![Build Status](https://travis-ci.org/lebebr01/simglm.svg?branch=master)](https://travis-ci.org/lebebr01/simglm)
 
 A flexible suite of functions to simulate nested data.  
 Currently supports the following features:

@@ -1,32 +1,32 @@
 ---
-title: "Introduction to simReg"
+title: "Introduction to simglm"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to simReg}
+  %\VignetteIndexEntry{Introduction to simglm}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 ```{r setup, include=FALSE}
 library(knitr)
-library(simReg)
+library(simglm)
 knit_print.data.frame = function(x, ...) {
   res = paste(c('', '', kable(x, output = FALSE)), collapse = '\n')
   asis_output(res)
 }
 ```
-# Introduction to simReg
+# Introduction to simglm
 
-The `simReg` package aims to define a consistent framework for simulating regression models - including single level and multilevel models. This will hopefully allow the user to quickly simulate data for a class, project, or even a dissertation.
+The `simglm` package aims to define a consistent framework for simulating regression models - including single level and multilevel models. This will hopefully allow the user to quickly simulate data for a class, project, or even a dissertation.
 
 ## Installation
 Currently development is happening on github. To install the package, use the `devtools` package:
 ```{r install, eval=FALSE}
 library(devtools)
-install_github("lebebr01/simReg")
-library(simReg)
+install_github("lebebr01/simglm")
+library(simglm)
 ```
-This should load the `devtools` package, install the `simReg` package, and finally load the `simReg` package. The package has currently not been tested on a Mac machine. I do not anticipate any problems installing on a Mac however.
+This should load the `devtools` package, install the `simglm` package, and finally load the `simglm` package. The package has currently not been tested on a Mac machine. I do not anticipate any problems installing on a Mac however.
 
 ## Simulate Data
 The master function that handles the simulation grunt work is the `sim.reg()` function. As always, you can do `?sim.reg` to pull up the help file for the function. 
@@ -132,5 +132,5 @@ One last note about cross-sectional data.  As a default for longitudinal data, t
 The same framework to specify categorical data for single level regression designs is used for nested designs. Just asign the ".f", ".c", or ".o" to the end of the name and the function will take care of the rest.
 
 ## Bugs/Feature Requests
-Lastly, for any bugs or feature requests go to the github repository to create post an issue. I will work to resolve them as quickly as possible. See [simReg github repository](https://github.com/lebebr01/simReg)
+Lastly, for any bugs or feature requests go to the github repository to create post an issue. I will work to resolve them as quickly as possible. See [simglm github repository](https://github.com/lebebr01/simglm)
 

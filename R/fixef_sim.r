@@ -65,6 +65,14 @@ sim_fixef_nested <- function(fixed, fixed.vars, cov.param, n, lvl1ss, data_str,
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
               function(xx) do.call(sim_factor, fact.vars[[xx]]))))
   }
+  
+  if(is.null(cor_vars) == FALSE) {
+    c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
+    diag(c_mat) <- 1
+    c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
+    cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
+    Xmat <- Xmat %*% chol(cov)
+  }
 
    if(n.int == 0){
      colnames(Xmat) <- fixed.vars
@@ -141,6 +149,14 @@ sim_fixef_nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data_str,
            var.type = fact.vars$var.type[xx]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
                 function(xx) do.call(sim_factor, fact.vars[[xx]]))))
+  }
+  
+  if(is.null(cor_vars) == FALSE) {
+    c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
+    diag(c_mat) <- 1
+    c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
+    cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
+    Xmat <- Xmat %*% chol(cov)
   }
   
   if(n.int == 0){

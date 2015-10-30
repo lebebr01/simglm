@@ -164,11 +164,13 @@ sim_fixef_nested3 <- function(fixed, fixed.vars, cov.param, k, n, p, data.str,
 #' @param n Number of clusters.
 #' @param cov.param List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or 
 #'   interactions. Must be same order as fixed formula above.
+#' @param cor_vars A vector of correlations between variables.
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
-sim_fixef_single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(NULL)){
+sim_fixef_single <- function(fixed, fixed.vars, n, cov.param, cor_vars = NULL, 
+                             fact.vars = list(NULL)){
   
   n.vars <- length(fixed.vars)
   n.int <- length(grep(":",fixed.vars))
@@ -176,6 +178,8 @@ sim_fixef_single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed.vars, ignore.case = TRUE)  
   n.fact <- length(fact.loc[fact.loc != int.loc])
   n.cont <- length(cov.param$mean)
+  
+  cov_sd <- cov.param$sd
   
   if(length(fact.loc)> 0){
     fixed.vars <- c(fixed.vars[-c(fact.loc, int.loc)], fixed.vars[fact.loc], fixed.vars[int.loc])
@@ -200,6 +204,14 @@ sim_fixef_single <- function(fixed, fixed.vars, n, cov.param, fact.vars = list(N
            var.type = fact.vars$var.type[xx]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
             function(xx) do.call(sim_factor, fact.vars[[xx]]))))
+  }
+  
+  if(is.null(cor_vars) == FALSE) {
+    c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
+    diag(c_mat) <- 1
+    c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
+    cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
+    Xmat <- Xmat %*% chol(cov)
   }
   
   if(n.int == 0){

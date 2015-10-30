@@ -164,6 +164,7 @@ sim_reg <- function(fixed, random, random3, fixed.param, random.param, random.pa
 #' @param rand_dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
 #' "norm" is default.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
+#' @param cor_vars A vector of correlations between variables.
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.

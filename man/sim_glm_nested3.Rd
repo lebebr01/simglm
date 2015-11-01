@@ -4,10 +4,10 @@
 \alias{sim_glm_nested3}
 \title{Function to simulate three level nested data}
 \usage{
-sim_glm_nested3(fixed, random, random3, fixed.param, random.param,
-  random.param3, cov.param, k, n, p, randCor, randCor3, rand_dist, data_str,
-  cor_vars = NULL, fact.vars = list(NULL), unbal = FALSE,
-  unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL)
+sim_glm_nested3(fixed, random, random3, fixed.param, random_param = list(),
+  random_param3 = list(), cov.param, k, n, p, data_str, cor_vars = NULL,
+  fact.vars = list(NULL), unbal = FALSE, unbal3 = FALSE,
+  unbalCont = NULL, unbalCont3 = NULL)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -19,9 +19,23 @@ sim_glm_nested3(fixed, random, random3, fixed.param, random.param,
 
 \item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
-\item{random.param}{Variance of random effects. Must be same length as random.}
+\item{random_param}{A list of named elements that must contain:
+   random.param = variance of random parameters,
+   rand_gen = Name of simulation function for random effects.
+Optional elements are:
+   ther: Theorectial mean and variance from rand_gen,
+   ther_sim: Simulate mean/variance for standardization purposes,
+   cor_vars: Correlation between random effects,
+   ...: Additional parameters needed for rand_gen function.}
 
-\item{random.param3}{Variance of level 3 random effects. Must be same length as random3.}
+\item{random_param3}{A list of named elements that must contain:
+   random.param = variance of random parameters,
+   rand_gen = Name of simulation function for random effects.
+Optional elements are:
+   ther: Theorectial mean and variance from rand_gen,
+   ther_sim: Simulate mean/variance for standardization purposes,
+   cor_vars: Correlation between random effects,
+   ...: Additional parameters needed for rand_gen function.}
 
 \item{cov.param}{List of mean, sd (standard deviations), and var.type for fixed effects.
 Does not include intercept, time, factors, or interactions.
@@ -32,13 +46,6 @@ var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 \item{n}{Cluster sample size.}
 
 \item{p}{Within cluster sample size.}
-
-\item{randCor}{Correlation between random effects.}
-
-\item{randCor3}{Correlation between level 3 random effects.}
-
-\item{rand_dist}{Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod",
-"norm" is default.}
 
 \item{data_str}{Type of data. Must be "cross", "long", or "single".}
 

@@ -4,8 +4,8 @@
 \alias{sim_glm}
 \title{Master generalized simulation function.}
 \usage{
-sim_glm(fixed, random, random3, fixed.param, random.param, random.param3,
-  cov.param, k, n, p, randCor, randCor3, rand_dist, data_str, cor_vars = NULL,
+sim_glm(fixed, random, random3, fixed.param, random_param = list(),
+  random_param3 = list(), cov.param, k, n, p, data_str, cor_vars = NULL,
   fact.vars = list(NULL), unbal = FALSE, unbal3 = FALSE,
   unbalCont = NULL, unbalCont3 = NULL)
 }
@@ -19,9 +19,23 @@ sim_glm(fixed, random, random3, fixed.param, random.param, random.param3,
 
 \item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
-\item{random.param}{Variance of random effects. Must be same length as random.}
+\item{random_param}{A list of named elements that must contain:
+   random.param = variance of random parameters,
+   rand_gen = Name of simulation function for random effects.
+Optional elements are:
+   ther: Theorectial mean and variance from rand_gen,
+   ther_sim: Simulate mean/variance for standardization purposes,
+   cor_vars: Correlation between random effects,
+   ...: Additional parameters needed for rand_gen function.}
 
-\item{random.param3}{Variance of third level random effects. Must be same length as random3.}
+\item{random_param3}{A list of named elements that must contain:
+   random.param = variance of random parameters,
+   rand_gen = Name of simulation function for random effects.
+Optional elements are:
+   ther: Theorectial mean and variance from rand_gen,
+   ther_sim: Simulate mean/variance for standardization purposes,
+   cor_vars: Correlation between random effects,
+   ...: Additional parameters needed for rand_gen function.}
 
 \item{cov.param}{List of mean and variance for fixed effects. Does not include intercept, time, or
 interactions. Must be same order as fixed formula above.}
@@ -31,13 +45,6 @@ interactions. Must be same order as fixed formula above.}
 \item{n}{Cluster sample size.}
 
 \item{p}{Within cluster sample size.}
-
-\item{randCor}{Correlation between random effects.}
-
-\item{randCor3}{Correlation between third level random effects.}
-
-\item{rand_dist}{Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod",
-"norm" is default.}
 
 \item{data_str}{Type of data. Must be "cross", "long", or "single".}
 
@@ -87,16 +94,13 @@ n = n, data_str = "single")
 fixed <- ~1 + time + diff + act + time:act
 random <- ~1 + time + diff
 fixed.param <- c(4, 2, 6, 2.3, 7)
-random.param <- c(7, 4, 2)
+random_param <- list(random.param = c(7, 4, 2), rand_gen = 'rnorm')
 cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
 n <- 150
 p <- 30
-randCor <- 0
-rand_dist <- "norm"
 data_str <- "long"
-temp.long <- sim_glm(fixed, random, random3 = NULL, fixed.param, random.param, random.param3 = NULL,
- cov.param, k = NULL, n, p, randCor, randCor3 = NULL, rand_dist,
- data_str = data_str)
+temp.long <- sim_glm(fixed, random, random3 = NULL, fixed.param, random_param, random_param3 = NULL,
+ cov.param, k = NULL, n, p, data_str = data_str)
 
 
 # Three level example
@@ -104,20 +108,16 @@ fixed <- ~1 + time + diff + act + actClust + time:act
 random <- ~1 + time + diff
 random3 <- ~ 1 + time
 fixed.param <- c(4, 2, 6, 2.3, 7, 0)
-random.param <- c(7, 4, 2)
-random.param3 <- c(4, 2)
+random_param <- list(random.param = c(7, 4, 2), rand_gen = 'rnorm')
+random_param3 <- list(random.param = c(4, 2), rand_gen = 'rnorm')
 cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
 var.type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
 n <- 150
 p <- 30
-randCor <- 0
-randCor3 <- 0
-rand_dist <- "norm"
 data_str <- "long"
-temp.three <- sim_glm(fixed, random, random3, fixed.param, random.param,
-random.param3, cov.param, k,n, p, randCor, randCor3, rand_dist,
-data_str = data_str)
+temp.three <- sim_glm(fixed, random, random3, fixed.param, random_param,
+random_param3, cov.param, k,n, p, data_str = data_str)
 
 
 }

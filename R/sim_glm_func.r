@@ -60,15 +60,19 @@ sim_glm_single <- function(fixed, fixed.param, cov.param, n,
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
-#' @param random.param Variance of random effects. Must be same length as random.
+#' @param random_param A list of named elements that must contain: 
+#'             random.param = variance of random parameters,
+#'             rand_gen = Name of simulation function for random effects.
+#'          Optional elements are:
+#'             ther: Theorectial mean and variance from rand_gen,
+#'             ther_sim: Simulate mean/variance for standardization purposes,
+#'             cor_vars: Correlation between random effects,
+#'             ...: Additional parameters needed for rand_gen function.
 #' @param cov.param List of mean, sd (standard deviations), and var.type for fixed effects. 
 #'  Does not include intercept, time, factors, or interactions. 
 #'  var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
-#' @param randCor Correlation between random effects.
-#' @param rand_dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
-#' "norm" is default.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
 #' @param cor_vars A vector of correlations between variables.
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
@@ -85,23 +89,20 @@ sim_glm_single <- function(fixed, fixed.param, cov.param, n,
 #' fixed <- ~1 + time + diff + act + time:act
 #' random <- ~1
 #' fixed.param <- c(0.2, 1.5, 0.8, 1.2, 1.1)
-#' random.param <- c(3)
+#' random_param <- list(random.param = 3, rand_gen = 'rnorm')
 #' cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
 #' n <- 100
 #' p <- 10
-#' randCor <- 0
-#' rand_dist <- "norm"
 #' data_str <- "long"
-#' temp.long <- sim_glm_nested(fixed, random, fixed.param, random.param,
-#'  cov.param, n, p, randCor, rand_dist, data_str = data_str)
+#' temp.long <- sim_glm_nested(fixed, random, fixed.param, random_param,
+#'  cov.param, n, p, rand_dist, data_str = data_str)
 #' }
 #' @export
-sim_glm_nested <- function(fixed, random, fixed.param, random.param, cov.param, n, p, 
-                           randCor, rand_dist, 
+sim_glm_nested <- function(fixed, random, fixed.param, random_param = list(), cov.param, n, p, 
                            data_str, cor_vars = NULL, fact.vars = list(NULL),
                            unbal = FALSE, unbalCont = NULL) {
   
-  if(randCor > 1 | randCor < -1) stop("cor out of range")
+  #if(randCor > 1 | randCor < -1) stop("cor out of range")
   
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
@@ -117,7 +118,7 @@ sim_glm_nested <- function(fixed, random, fixed.param, random.param, cov.param, 
     lvl1ss <- round(runif(n = n, min = min(unbalCont), max = max(unbalCont)), 0)
   }
   
-  rand.eff <- sim_rand_eff(random.param, randCor, n, rand_dist)
+  rand.eff <- do.call(sim_rand_eff, c(random_param, n = n))
   
   Xmat <- sim_fixef_nested(fixed, fixed.vars, cov.param, n, lvl1ss, 
                            data_str = data_str, cor_vars = cor_vars, fact.vars = fact.vars)
@@ -152,18 +153,28 @@ sim_glm_nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 #' @param random3 One sided formula for random effects at third level in the simulation. Must be a subset of fixed
 #'  (and likely of random).
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
-#' @param random.param Variance of random effects. Must be same length as random.
-#' @param random.param3 Variance of level 3 random effects. Must be same length as random3.
+#' @param random_param A list of named elements that must contain: 
+#'             random.param = variance of random parameters,
+#'             rand_gen = Name of simulation function for random effects.
+#'          Optional elements are:
+#'             ther: Theorectial mean and variance from rand_gen,
+#'             ther_sim: Simulate mean/variance for standardization purposes,
+#'             cor_vars: Correlation between random effects,
+#'             ...: Additional parameters needed for rand_gen function.
+#' @param random_param3 A list of named elements that must contain: 
+#'             random.param = variance of random parameters,
+#'             rand_gen = Name of simulation function for random effects.
+#'          Optional elements are:
+#'             ther: Theorectial mean and variance from rand_gen,
+#'             ther_sim: Simulate mean/variance for standardization purposes,
+#'             cor_vars: Correlation between random effects,
+#'             ...: Additional parameters needed for rand_gen function.
 #' @param cov.param List of mean, sd (standard deviations), and var.type for fixed effects. 
 #'  Does not include intercept, time, factors, or interactions. 
 #'  var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
 #' @param k Number of third level clusters.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
-#' @param randCor Correlation between random effects.
-#' @param randCor3 Correlation between level 3 random effects.
-#' @param rand_dist Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod", 
-#' "norm" is default.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
 #' @param cor_vars A vector of correlations between variables.
 #' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
@@ -187,30 +198,26 @@ sim_glm_nested <- function(fixed, random, fixed.param, random.param, cov.param, 
 #' random <- ~1 + time + diff
 #' random3 <- ~ 1 + time
 #' fixed.param <- c(4, 2, 6, 2.3, 7, 0)
-#' random.param <- c(7, 4, 2)
-#' random.param3 <- c(4, 2)
+#' random_param <- list(random.param = c(7, 4, 2), rand_gen = 'rnorm')
+#' random_param3 <- list(random.param = c(4, 2), rand_gen = 'rnorm')
 #' cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
 #' var.type = c("lvl1", "lvl2", "lvl3"))
 #' k <- 10
 #' n <- 150
 #' p <- 30
-#' randCor <- 0
-#' randCor3 <- 0
-#' rand_dist <- "norm"
 #' data_str <- "long"
-#' temp.three <- sim_glm_nested3(fixed, random, random3, fixed.param, random.param,
-#' random.param3, cov.param, k, n, p, randCor, randCor3, rand_dist,
-#' data_str = data_str)
+#' temp.three <- sim_glm_nested3(fixed, random, random3, fixed.param, random_param,
+#' random_param3, cov.param, k, n, p, data_str = data_str)
 #' head(temp.three)
 #' }
 #' @export 
-sim_glm_nested3 <- function(fixed, random, random3, fixed.param, random.param, random.param3,
-                            cov.param, k, n, p, randCor, randCor3, rand_dist,
+sim_glm_nested3 <- function(fixed, random, random3, fixed.param, random_param = list(), 
+                            random_param3 = list(), cov.param, k, n, p,
                             data_str, cor_vars = NULL, fact.vars = list(NULL),
                             unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL) {
   
-  if(randCor > 1 | randCor < -1 | randCor3 > 1 | randCor3 < -1) 
-    stop("Random effect correlation out of range")
+  # if(randCor > 1 | randCor < -1 | randCor3 > 1 | randCor3 < -1) 
+  #   stop("Random effect correlation out of range")
   
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
@@ -244,8 +251,8 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed.param, random.param, r
   lvl3ss <- sapply(lapply(1:length(beg), function(xx) 
     lvl1ss[beg[xx]:end[xx]]), sum)
   
-  rand.eff <- sim_rand_eff(random.param, randCor, n, rand_dist)
-  rand.eff3 <- sim_rand_eff3(random.param3, randCor3, k)
+  rand.eff <- do.call(sim_rand_eff, c(random_param, n = n))
+  rand.eff3 <- do.call(sim_rand_eff, c(random_param3, n = k))
   
   Xmat <- sim_fixef_nested3(fixed, fixed.vars, cov.param, k, n = lvl2ss, 
                             p = lvl1ss, data_str = data_str, cor_vars = cor_vars, 

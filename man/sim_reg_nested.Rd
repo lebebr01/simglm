@@ -4,10 +4,9 @@
 \alias{sim_reg_nested}
 \title{Function to simulate nested data}
 \usage{
-sim_reg_nested(fixed, random, fixed.param, random.param, cov.param, n, p,
-  error_var, randCor, rand_dist, rand_gen, arima = FALSE, data_str,
-  cor_vars = NULL, fact.vars = list(NULL), unbal = FALSE,
-  unbalCont = NULL, ...)
+sim_reg_nested(fixed, random, fixed.param, random_param = list(), cov.param,
+  n, p, error_var, with_err_gen, arima = FALSE, data_str, cor_vars = NULL,
+  fact.vars = list(NULL), unbal = FALSE, unbalCont = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -16,7 +15,14 @@ sim_reg_nested(fixed, random, fixed.param, random.param, cov.param, n, p,
 
 \item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
-\item{random.param}{Variance of random effects. Must be same length as random.}
+\item{random_param}{A list of named elements that must contain:
+   random.param = variance of random parameters,
+   rand_gen = Name of simulation function for random effects.
+Optional elements are:
+   ther: Theorectial mean and variance from rand_gen,
+   ther_sim: Simulate mean/variance for standardization purposes,
+   cor_vars: Correlation between random effects,
+   ...: Additional parameters needed for rand_gen function.}
 
 \item{cov.param}{List of mean, sd (standard deviations), and var.type for fixed effects.
 Does not include intercept, time, factors, or interactions.
@@ -28,13 +34,8 @@ var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 
 \item{error_var}{Scalar of error variance.}
 
-\item{randCor}{Correlation between random effects.}
-
-\item{rand_dist}{Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod",
-"norm" is default.}
-
-\item{rand_gen}{Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod",
-"norm" is default.}
+\item{with_err_gen}{Simulated within cluster error distribution. Must be a quoted 'r' distribution
+function.}
 
 \item{arima}{TRUE/FALSE flag indicating whether residuals should
 be correlated. If TRUE, must specify a valid model to pass to

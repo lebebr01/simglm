@@ -19,9 +19,6 @@ interactions. Must be same order as fixed formula above.}
 
 \item{error_var}{Scalar of error variance.}
 
-\item{rand_gen}{Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod",
-"norm" is default.}
-
 \item{arima}{TRUE/FALSE flag indicating whether residuals should
 be correlated. If TRUE, must specify a valid model to pass to
 arima.sim. See \code{\link{arima.sim}} for examples.}
@@ -36,6 +33,9 @@ optional specifications are: replace, prob, value.labels.}
 
 \item{...}{Additional specification needed to pass to the random generating
 function defined by rand.gen.}
+
+\item{with_err_gen}{Simulated within cluster error distribution. Must be a quoted 'r' distribution
+function.}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

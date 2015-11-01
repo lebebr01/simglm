@@ -4,8 +4,8 @@
 \alias{sim_reg}
 \title{Master continuous simulation function.}
 \usage{
-sim_reg(fixed, random, random3, fixed.param, random.param, random.param3,
-  cov.param, k, n, p, error_var, randCor, randCor3, rand_dist, rand_gen,
+sim_reg(fixed, random, random3, fixed.param, random_param = list(),
+  random_param3 = list(), cov.param, k, n, p, error_var, with_err_gen,
   arima = FALSE, data_str, cor_vars = NULL, fact.vars = list(NULL),
   unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
   ...)
@@ -20,9 +20,23 @@ sim_reg(fixed, random, random3, fixed.param, random.param, random.param3,
 
 \item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
-\item{random.param}{Variance of random effects. Must be same length as random.}
+\item{random_param}{A list of named elements that must contain:
+   random.param = variance of random parameters,
+   rand_gen = Name of simulation function for random effects.
+Optional elements are:
+   ther: Theorectial mean and variance from rand_gen,
+   ther_sim: Simulate mean/variance for standardization purposes,
+   cor_vars: Correlation between random effects,
+   ...: Additional parameters needed for rand_gen function.}
 
-\item{random.param3}{Variance of third level random effects. Must be same length as random3.}
+\item{random_param3}{A list of named elements that must contain:
+   random.param = variance of random parameters,
+   rand_gen = Name of simulation function for random effects.
+Optional elements are:
+   ther: Theorectial mean and variance from rand_gen,
+   ther_sim: Simulate mean/variance for standardization purposes,
+   cor_vars: Correlation between random effects,
+   ...: Additional parameters needed for rand_gen function.}
 
 \item{cov.param}{List of mean and variance for fixed effects. Does not include intercept, time, or
 interactions. Must be same order as fixed formula above.}
@@ -35,14 +49,7 @@ interactions. Must be same order as fixed formula above.}
 
 \item{error_var}{Scalar of error variance.}
 
-\item{randCor}{Correlation between random effects.}
-
-\item{randCor3}{Correlation between third level random effects.}
-
-\item{rand_dist}{Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod",
-"norm" is default.}
-
-\item{rand_gen}{Distribution function to pass on to the level one
+\item{with_err_gen}{Distribution function to pass on to the level one
 simulation of errors.}
 
 \item{arima}{TRUE/FALSE flag indicating whether residuals should
@@ -93,9 +100,9 @@ fixed.param <- c(2, 4, 1, 3.5, 2)
 cov.param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var.type = c("single", "single", "single"))
 n <- 150
 error_var <- 3
-rand_gen <- rnorm
+with_err_gen <- 'rnorm'
 temp.single <- sim_reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param,
-n = n, error_var = error_var, rand_gen = rand_gen, data_str = "single")
+n = n, error_var = error_var, with_err_gen = with_err_gen, data_str = "single")
 # Fitting regression to obtain parameter estimates
 summary(lm(sim.data ~ 1 + act + diff + numCourse + act:numCourse, data = temp.single))
 
@@ -103,18 +110,15 @@ summary(lm(sim.data ~ 1 + act + diff + numCourse + act:numCourse, data = temp.si
 fixed <- ~1 + time + diff + act + time:act
 random <- ~1 + time + diff
 fixed.param <- c(4, 2, 6, 2.3, 7)
-random.param <- c(7, 4, 2)
+random_param <- list(random.param = c(7, 4, 2), rand_gen = 'rnorm')
 cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
 n <- 150
 p <- 30
 error_var <- 4
-randCor <- 0
-rand_dist <- "norm"
-rand_gen <- rnorm
+with_err_gen <- 'rnorm'
 data_str <- "long"
-temp.long <- sim_reg(fixed, random, random3 = NULL, fixed.param, random.param, random.param3 = NULL,
- cov.param, k = NULL, n, p, error_var, randCor, randCor3 = NULL, rand_dist, rand_gen,
- data_str = data_str)
+temp.long <- sim_reg(fixed, random, random3 = NULL, fixed.param, random_param, random_param3 = NULL,
+ cov.param, k = NULL, n, p, error_var, with_err_gen, data_str = data_str)
 
 ## fitting lmer model
 library(lme4)
@@ -126,22 +130,18 @@ fixed <- ~1 + time + diff + act + actClust + time:act
 random <- ~1 + time + diff
 random3 <- ~ 1 + time
 fixed.param <- c(4, 2, 6, 2.3, 7, 0)
-random.param <- c(7, 4, 2)
-random.param3 <- c(4, 2)
+random_param <- list(random.param = c(7, 4, 2), rand_gen = 'rnorm')
+random_param3 <- list(random.param = c(4, 2), rand_gen = 'rnorm')
 cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
 var.type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
 n <- 150
 p <- 30
 error_var <- 4
-randCor <- 0
-randCor3 <- 0
-rand_dist <- "norm"
-rand_gen <- rnorm
+with_err_gen <- 'rnorm'
 data_str <- "long"
-temp.three <- sim_reg(fixed, random, random3, fixed.param, random.param,
-random.param3, cov.param, k,n, p, error_var, randCor, randCor3, rand_dist,
-rand_gen, data_str = data_str)
+temp.three <- sim_reg(fixed, random, random3, fixed.param, random_param,
+random_param3, cov.param, k,n, p, error_var, with_err_gen, data_str = data_str)
 
 library(lme4)
 lmer(sim.data ~ 1 + time + diff + act + actClust + time:act + (1 + time + diff | clustID) +

@@ -60,15 +60,13 @@ other variables to help when running simulation studies.
 fixed <- ~1 + time + diff + act + time:act
 random <- ~1
 fixed.param <- c(0.2, 1.5, 0.8, 1.2, 1.1)
-random.param <- c(3)
+random_param <- list(random.param = 3, rand_gen = 'rnorm')
 cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
 n <- 100
 p <- 10
-randCor <- 0
-rand_dist <- "norm"
 data_str <- "long"
-temp.long <- sim_glm_nested(fixed, random, fixed.param, random.param,
- cov.param, n, p, randCor, rand_dist, data_str = data_str)
+temp.long <- sim_glm_nested(fixed, random, fixed.param, random_param,
+ cov.param, n, p, rand_dist, data_str = data_str)
 }
 }
 

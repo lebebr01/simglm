@@ -100,7 +100,7 @@ sim_reg_nested <- function(fixed, random, fixed.param, random_param = list(), co
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
 
-     if(length(rand.vars)+1 != length(random.param)) stop("Random lengths not equal")
+     if(length(rand.vars)+1 != length(random_param$random.param)) stop("Random lengths not equal")
      if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
 
   if(unbal == FALSE) {
@@ -207,8 +207,8 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed.param,
   rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
   rand.vars3 <- attr(terms(random3),"term.labels")   ##Extracting random effect term labels
 
-     if(length(rand.vars)+1 != length(random.param)) stop("Random lengths not equal")
-     if(length(rand.vars3)+1 != length(random.param3)) stop("Third level random lengths not equal")
+     if(length(rand.vars)+1 != length(random_param$random.param)) stop("Random lengths not equal")
+     if(length(rand.vars3)+1 != length(random_param3$random.param)) stop("Third level random lengths not equal")
      if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
   
   if(unbal3 == FALSE) {

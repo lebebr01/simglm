@@ -1,25 +1,3 @@
-#' Function to simulate third level random effects.
-#' 
-#' Input simulation parameters and returns random effects.
-#' 
-#' Simulates random effects for the master function \code{\link{sim_reg}} when
-#' simulating a linear mixed model, both cross sectional and longitudinal.  Allows
-#' the ability to simulate random effects from a Laplace, chi-square (1), mixture 
-#' normal, or normal distribution.
-#' 
-#' @param random.param3 Variance of random effects. Currently only supports a single random effect for third level.
-#' @param cor_re cor_rerelation between level 3 random effects.
-#' @param k Number of third level clusters.
-#' @export 
-sim_rand_eff3 <- function(random.param3, cor_re, k){
-
-  c <- varcov_randeff(random.param3, cor_re)
-  reff1 <- mvrnorm(k, rep.int(0, length(random.param3)), c)
-  
-  return(reff1)
-
-}
-
 #' Function to simulate random effects.
 #'
 #' Input simulation parameters and returns random effects.

@@ -4,20 +4,30 @@
 \alias{sim_rand_eff}
 \title{Function to simulate random effects.}
 \usage{
-sim_rand_eff(random.param, cor_re, n, dist = c("lap", "chi", "norm", "bimod"),
-  num.dist)
+sim_rand_eff(random.param, n, rand_gen, ther = c(0, 1), ther_sim = FALSE,
+  cor_vars = NULL, ...)
 }
 \arguments{
 \item{random.param}{Variance of random effects. Must be same length as random.}
 
-\item{cor_re}{cor_rerelation between random effects.}
-
 \item{n}{Cluster sample size.}
 
-\item{dist}{Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod",
-"norm" is default.}
+\item{rand_gen}{The generating function used.}
 
-\item{num.dist}{Number of distributions for bimod random variables}
+\item{ther}{A vector of length two that specifies the theoretical mean and
+standard deviation of the rand_gen. This would commonly be used
+to standardize the generating variable to have a mean of 0 and
+standard deviation of 1 to meet model assumptions. The variable
+is then rescaled to have the variance specified by random.param.}
+
+\item{ther_sim}{A TRUE/FALSE flag indicating whether the error simulation function
+should be simulated, that is should the mean and standard deviation
+used for standardization be simulated.}
+
+\item{cor_vars}{A vector of correlations between random effects.}
+
+\item{...}{Additional values that need to be passed to the function
+called from rand_gen.}
 }
 \description{
 Input simulation parameters and returns random effects.

@@ -21,7 +21,7 @@
 #'             function defined by rand.gen.
 #' @export 
 sim_err_nested <- function(error_var, n, p, rand_gen, arima = FALSE,
-                           ther = c(0, 1), ther_sim = FALSE,...){
+                           ther = c(0, 1), ther_sim = FALSE, ...){
   
   # Look to edit this with match.arg and switch
   #n <- length(p)

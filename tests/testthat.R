@@ -1,4 +1,4 @@
 library(testthat)
-library(simReg)
+library(simglm)
 
 test_check("simReg")

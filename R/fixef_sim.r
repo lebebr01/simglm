@@ -208,7 +208,7 @@ sim_fixef_single <- function(fixed, fixed.vars, n, cov.param, cor_vars = NULL,
   }
   
   if(n.fact > 0){
-    if(all(grepl("single", fact.vars$var.type)) == FALSE){
+    if(any(grepl("single", fact.vars$var.type)) == FALSE){
       stop("All variables must have var.type = 'single'")
     }
   }

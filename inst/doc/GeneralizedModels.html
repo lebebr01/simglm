@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="date" content="2015-10-29" />
+<meta name="date" content="2015-11-01" />
 
 <title>Simulate Data from Generalized Linear Models</title>
 
@@ -70,13 +70,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <div id="header">
 <h1 class="title">Simulate Data from Generalized Linear Models</h1>
-<h4 class="date"><em>2015-10-29</em></h4>
+<h4 class="date"><em>2015-11-01</em></h4>
 </div>
 
 
 <div id="simulated-logistic-models" class="section level1">
 <h1>Simulated Logistic Models</h1>
-<p>The <code>simReg</code> package offers users the ability to simulate from a variety of generalized linear models, both single level and multilevel generalized models. Instead of using the <code>sim_reg</code> function to call these, there is now a <code>sim_glm</code> function to use.</p>
+<p>The <code>simglm</code> package offers users the ability to simulate from a variety of generalized linear models, both single level and multilevel generalized models. Instead of using the <code>sim_reg</code> function to call these, there is now a <code>sim_glm</code> function to use.</p>
 <p>Similar to the <code>sim_reg</code> function, one benefit of this package for simulation is that the intermediate steps are returned as well. This is useful for additional processing of the data, for example to add in your own missing data function.</p>
 <p>Here is an example for simulating a single level logistic model:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>act +<span class="st"> </span>diff
@@ -104,55 +104,55 @@ temp.single &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(<span 
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">2.784706</td>
-<td align="right">-0.8188522</td>
-<td align="right">3.1466973</td>
-<td align="right">0.9587784</td>
+<td align="right">2.3707129</td>
+<td align="right">-1.054089</td>
+<td align="right">2.869130</td>
+<td align="right">0.9462991</td>
 <td align="right">1</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">-3.493656</td>
-<td align="right">0.9923450</td>
-<td align="right">0.5508755</td>
-<td align="right">0.6343387</td>
+<td align="right">-5.9654999</td>
+<td align="right">-1.416545</td>
+<td align="right">-1.407714</td>
+<td align="right">0.1965949</td>
 <td align="right">1</td>
 <td align="right">2</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-5.788249</td>
-<td align="right">-2.5436671</td>
-<td align="right">-1.6572246</td>
-<td align="right">0.1601349</td>
-<td align="right">0</td>
+<td align="right">-1.6771188</td>
+<td align="right">4.454810</td>
+<td align="right">2.497884</td>
+<td align="right">0.9239933</td>
+<td align="right">1</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">1.364787</td>
-<td align="right">-0.4985209</td>
-<td align="right">2.5328373</td>
-<td align="right">0.9264120</td>
+<td align="right">0.8449355</td>
+<td align="right">4.593244</td>
+<td align="right">3.800441</td>
+<td align="right">0.9781282</td>
 <td align="right">1</td>
 <td align="right">4</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-0.709173</td>
-<td align="right">1.0441177</td>
-<td align="right">1.9586488</td>
-<td align="right">0.8763866</td>
-<td align="right">1</td>
+<td align="right">2.4641828</td>
+<td align="right">-3.663639</td>
+<td align="right">2.133000</td>
+<td align="right">0.8940694</td>
+<td align="right">0</td>
 <td align="right">5</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">2.520915</td>
-<td align="right">-1.6421489</td>
-<td align="right">2.7678127</td>
-<td align="right">0.9409115</td>
+<td align="right">5.5162139</td>
+<td align="right">-4.255806</td>
+<td align="right">3.481365</td>
+<td align="right">0.9701529</td>
 <td align="right">1</td>
 <td align="right">6</td>
 </tr>
@@ -166,18 +166,15 @@ temp.single &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(<span 
 fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>diff +<span class="st"> </span>act
 random &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> 
 fixed.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">0.5</span>, <span class="fl">0.3</span>)
-random.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">7</span>)
+random_param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">random.param =</span> <span class="dv">7</span>, <span class="dt">rand_gen =</span> <span class="st">&quot;rnorm&quot;</span>, <span class="dt">ther_sim =</span> <span class="ot">TRUE</span>)
 cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">sd =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">1.4</span>), 
                   <span class="dt">var.type =</span> <span class="kw">c</span>(<span class="st">&quot;lvl1&quot;</span>, <span class="st">&quot;lvl2&quot;</span>))
 n &lt;-<span class="st"> </span><span class="dv">150</span>
 p &lt;-<span class="st"> </span><span class="dv">30</span>
-randCor &lt;-<span class="st"> </span><span class="dv">0</span>
-rand_dist &lt;-<span class="st"> &quot;norm&quot;</span>
 data_str &lt;-<span class="st"> &quot;cross&quot;</span>
 temp.cross &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(fixed, random, <span class="dt">random3 =</span> <span class="ot">NULL</span>, fixed.param,
-                     random.param, <span class="dt">random.param3 =</span> <span class="ot">NULL</span>,
-                     cov.param, <span class="dt">k =</span> <span class="ot">NULL</span>, n, p, randCor, 
-                     <span class="dt">randCor3 =</span> <span class="ot">NULL</span>, rand_dist, 
+                     random_param, <span class="dt">random_param3 =</span> <span class="ot">NULL</span>,
+                     cov.param, <span class="dt">k =</span> <span class="ot">NULL</span>, n, p,
                      <span class="dt">data_str =</span> data_str)
 <span class="kw">head</span>(temp.cross)</code></pre></div>
 <table>
@@ -199,79 +196,79 @@ temp.cross &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(fixed, 
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">3.7007686</td>
-<td align="right">-1.248337</td>
-<td align="right">5.823559</td>
-<td align="right">3.475883</td>
-<td align="right">5.823559</td>
-<td align="right">9.299442</td>
-<td align="right">0.9999085</td>
+<td align="right">2.9971077</td>
+<td align="right">-1.863713</td>
+<td align="right">-1.633367</td>
+<td align="right">2.9394400</td>
+<td align="right">-1.633367</td>
+<td align="right">1.3060727</td>
+<td align="right">0.7868552</td>
 <td align="right">1</td>
 <td align="right">1</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">2.5041858</td>
-<td align="right">-1.248337</td>
-<td align="right">5.823559</td>
-<td align="right">2.877592</td>
-<td align="right">5.823559</td>
-<td align="right">8.701151</td>
-<td align="right">0.9998336</td>
-<td align="right">1</td>
+<td align="right">-0.5339325</td>
+<td align="right">-1.863713</td>
+<td align="right">-1.633367</td>
+<td align="right">1.1739198</td>
+<td align="right">-1.633367</td>
+<td align="right">-0.4594474</td>
+<td align="right">0.3871169</td>
+<td align="right">0</td>
 <td align="right">2</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">0.7286086</td>
-<td align="right">-1.248337</td>
-<td align="right">5.823559</td>
-<td align="right">1.989803</td>
-<td align="right">5.823559</td>
-<td align="right">7.813363</td>
-<td align="right">0.9995959</td>
-<td align="right">1</td>
+<td align="right">0.8977269</td>
+<td align="right">-1.863713</td>
+<td align="right">-1.633367</td>
+<td align="right">1.8897495</td>
+<td align="right">-1.633367</td>
+<td align="right">0.2563823</td>
+<td align="right">0.5637468</td>
+<td align="right">0</td>
 <td align="right">3</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">0.3911774</td>
-<td align="right">-1.248337</td>
-<td align="right">5.823559</td>
-<td align="right">1.821087</td>
-<td align="right">5.823559</td>
-<td align="right">7.644647</td>
-<td align="right">0.9995216</td>
-<td align="right">1</td>
+<td align="right">-3.9011955</td>
+<td align="right">-1.863713</td>
+<td align="right">-1.633367</td>
+<td align="right">-0.5097116</td>
+<td align="right">-1.633367</td>
+<td align="right">-2.1430789</td>
+<td align="right">0.1049797</td>
+<td align="right">0</td>
 <td align="right">4</td>
 <td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">5.0324081</td>
-<td align="right">-1.248337</td>
-<td align="right">5.823559</td>
-<td align="right">4.141703</td>
-<td align="right">5.823559</td>
-<td align="right">9.965262</td>
-<td align="right">0.9999530</td>
+<td align="right">-0.9069978</td>
+<td align="right">-1.863713</td>
+<td align="right">-1.633367</td>
+<td align="right">0.9873872</td>
+<td align="right">-1.633367</td>
+<td align="right">-0.6459801</td>
+<td align="right">0.3438960</td>
 <td align="right">1</td>
 <td align="right">5</td>
 <td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">1.3628067</td>
-<td align="right">-1.248337</td>
-<td align="right">5.823559</td>
-<td align="right">2.306902</td>
-<td align="right">5.823559</td>
-<td align="right">8.130462</td>
-<td align="right">0.9997057</td>
-<td align="right">1</td>
+<td align="right">-3.4700244</td>
+<td align="right">-1.863713</td>
+<td align="right">-1.633367</td>
+<td align="right">-0.2941261</td>
+<td align="right">-1.633367</td>
+<td align="right">-1.9274934</td>
+<td align="right">0.1270283</td>
+<td align="right">0</td>
 <td align="right">6</td>
 <td align="right">1</td>
 </tr>
@@ -285,20 +282,16 @@ temp.cross &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(fixed, 
 random &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span>
 random3 &lt;-<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="dv">1</span>
 fixed.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="fl">0.8</span>, <span class="fl">0.15</span>, <span class="fl">1.1</span>)
-random.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">7</span>)
-random.param3 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>)
+random_param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">random.param =</span> <span class="dv">7</span>, <span class="dt">rand_gen =</span> <span class="st">&quot;rnorm&quot;</span>)
+random_param3 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">random.param =</span> <span class="dv">4</span>, <span class="dt">rand_gen =</span> <span class="st">&quot;rnorm&quot;</span>)
 cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">sd =</span> <span class="kw">c</span>(<span class="fl">1.5</span>, <span class="dv">4</span>, <span class="dv">2</span>),
                   <span class="dt">var.type =</span> <span class="kw">c</span>(<span class="st">&quot;lvl1&quot;</span>, <span class="st">&quot;lvl2&quot;</span>, <span class="st">&quot;lvl3&quot;</span>))
 k &lt;-<span class="st"> </span><span class="dv">10</span>
 n &lt;-<span class="st"> </span><span class="dv">150</span>
 p &lt;-<span class="st"> </span><span class="dv">30</span>
-randCor &lt;-<span class="st"> </span><span class="dv">0</span>
-randCor3 &lt;-<span class="st"> </span><span class="dv">0</span>
-rand_dist &lt;-<span class="st"> &quot;norm&quot;</span>
 data_str &lt;-<span class="st"> &quot;cross&quot;</span>
-temp.three &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(fixed, random, random3, fixed.param, random.param,
-                      random.param3, cov.param, k, n, p, randCor, randCor3, 
-                      rand_dist, <span class="dt">data_str =</span> data_str)
+temp.three &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(fixed, random, random3, fixed.param, random_param,
+                      random_param3, cov.param, k, n, p, <span class="dt">data_str =</span> data_str)
 <span class="kw">head</span>(temp.three)</code></pre></div>
 <table>
 <thead>
@@ -322,15 +315,15 @@ temp.three &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(fixed, 
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-1.5296671</td>
-<td align="right">-2.392862</td>
-<td align="right">0.2237809</td>
-<td align="right">-0.5539117</td>
-<td align="right">2.663496</td>
-<td align="right">-0.5539117</td>
-<td align="right">2.791394</td>
-<td align="right">4.900978</td>
-<td align="right">0.9926156</td>
+<td align="right">0.8402176</td>
+<td align="right">3.398379</td>
+<td align="right">2.0728</td>
+<td align="right">1.028059</td>
+<td align="right">7.462011</td>
+<td align="right">1.028059</td>
+<td align="right">1.369053</td>
+<td align="right">9.859124</td>
+<td align="right">0.9999477</td>
 <td align="right">1</td>
 <td align="right">1</td>
 <td align="right">1</td>
@@ -338,15 +331,15 @@ temp.three &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(fixed, 
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">-1.8628609</td>
-<td align="right">-2.392862</td>
-<td align="right">0.2237809</td>
-<td align="right">-0.5539117</td>
-<td align="right">2.396941</td>
-<td align="right">-0.5539117</td>
-<td align="right">2.791394</td>
-<td align="right">4.634423</td>
-<td align="right">0.9903817</td>
+<td align="right">-1.5282035</td>
+<td align="right">3.398379</td>
+<td align="right">2.0728</td>
+<td align="right">1.028059</td>
+<td align="right">5.567274</td>
+<td align="right">1.028059</td>
+<td align="right">1.369053</td>
+<td align="right">7.964387</td>
+<td align="right">0.9996525</td>
 <td align="right">1</td>
 <td align="right">2</td>
 <td align="right">1</td>
@@ -354,15 +347,15 @@ temp.three &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(fixed, 
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-0.4982065</td>
-<td align="right">-2.392862</td>
-<td align="right">0.2237809</td>
-<td align="right">-0.5539117</td>
-<td align="right">3.488665</td>
-<td align="right">-0.5539117</td>
-<td align="right">2.791394</td>
-<td align="right">5.726147</td>
-<td align="right">0.9967510</td>
+<td align="right">-0.1605617</td>
+<td align="right">3.398379</td>
+<td align="right">2.0728</td>
+<td align="right">1.028059</td>
+<td align="right">6.661388</td>
+<td align="right">1.028059</td>
+<td align="right">1.369053</td>
+<td align="right">9.058500</td>
+<td align="right">0.9998836</td>
 <td align="right">1</td>
 <td align="right">3</td>
 <td align="right">1</td>
@@ -370,15 +363,15 @@ temp.three &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(fixed, 
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">0.3353152</td>
-<td align="right">-2.392862</td>
-<td align="right">0.2237809</td>
-<td align="right">-0.5539117</td>
-<td align="right">4.155482</td>
-<td align="right">-0.5539117</td>
-<td align="right">2.791394</td>
-<td align="right">6.392964</td>
-<td align="right">0.9983295</td>
+<td align="right">-1.9526051</td>
+<td align="right">3.398379</td>
+<td align="right">2.0728</td>
+<td align="right">1.028059</td>
+<td align="right">5.227753</td>
+<td align="right">1.028059</td>
+<td align="right">1.369053</td>
+<td align="right">7.624865</td>
+<td align="right">0.9995121</td>
 <td align="right">1</td>
 <td align="right">4</td>
 <td align="right">1</td>
@@ -386,15 +379,15 @@ temp.three &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(fixed, 
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">1.1196508</td>
-<td align="right">-2.392862</td>
-<td align="right">0.2237809</td>
-<td align="right">-0.5539117</td>
-<td align="right">4.782950</td>
-<td align="right">-0.5539117</td>
-<td align="right">2.791394</td>
-<td align="right">7.020433</td>
-<td align="right">0.9991074</td>
+<td align="right">-2.4135706</td>
+<td align="right">3.398379</td>
+<td align="right">2.0728</td>
+<td align="right">1.028059</td>
+<td align="right">4.858981</td>
+<td align="right">1.028059</td>
+<td align="right">1.369053</td>
+<td align="right">7.256093</td>
+<td align="right">0.9992946</td>
 <td align="right">1</td>
 <td align="right">5</td>
 <td align="right">1</td>
@@ -402,15 +395,15 @@ temp.three &lt;-<span class="st"> </span><span class="kw">sim_glm</span>(fixed, 
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">-2.7011475</td>
-<td align="right">-2.392862</td>
-<td align="right">0.2237809</td>
-<td align="right">-0.5539117</td>
-<td align="right">1.726312</td>
-<td align="right">-0.5539117</td>
-<td align="right">2.791394</td>
-<td align="right">3.963794</td>
-<td align="right">0.9813630</td>
+<td align="right">0.1518417</td>
+<td align="right">3.398379</td>
+<td align="right">2.0728</td>
+<td align="right">1.028059</td>
+<td align="right">6.911310</td>
+<td align="right">1.028059</td>
+<td align="right">1.369053</td>
+<td align="right">9.308423</td>
+<td align="right">0.9999094</td>
 <td align="right">1</td>
 <td align="right">6</td>
 <td align="right">1</td>

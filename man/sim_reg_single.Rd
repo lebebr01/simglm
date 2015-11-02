@@ -4,7 +4,7 @@
 \alias{sim_reg_single}
 \title{Master function to simulate single level data.}
 \usage{
-sim_reg_single(fixed, fixed.param, cov.param, n, error_var, rand_gen,
+sim_reg_single(fixed, fixed.param, cov.param, n, error_var, with_err_gen,
   arima = FALSE, data_str, cor_vars = NULL, fact.vars = list(NULL), ...)
 }
 \arguments{
@@ -18,6 +18,9 @@ interactions. Must be same order as fixed formula above.}
 \item{n}{Cluster sample size.}
 
 \item{error_var}{Scalar of error variance.}
+
+\item{with_err_gen}{Simulated within cluster error distribution. Must be a quoted 'r' distribution
+function.}
 
 \item{arima}{TRUE/FALSE flag indicating whether residuals should
 be correlated. If TRUE, must specify a valid model to pass to
@@ -33,9 +36,6 @@ optional specifications are: replace, prob, value.labels.}
 
 \item{...}{Additional specification needed to pass to the random generating
 function defined by rand.gen.}
-
-\item{with_err_gen}{Simulated within cluster error distribution. Must be a quoted 'r' distribution
-function.}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

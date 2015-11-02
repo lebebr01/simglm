@@ -1,6 +1,6 @@
 ## ----setup, include=FALSE------------------------------------------------
 library(knitr)
-library(simReg)
+library(simglm)
 knit_print.data.frame = function(x, ...) {
   res = paste(c('', '', kable(x, output = FALSE)), collapse = '\n')
   asis_output(res)
@@ -11,18 +11,15 @@ knit_print.data.frame = function(x, ...) {
 fixed <- ~1 + time + diff + act + time:act
 random <- ~1 + time + diff
 fixed.param <- c(4, 2, 6, 2.3, 7)
-random.param <- c(7, 4, 2)
+random_param <- list(random.param = c(7, 4, 2), rand_gen = "rnorm")
 cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
 n <- 150
 p <- 30
 error_var <- 4
-randCor <- 0
-rand_dist <- "norm"
-rand_gen <- rnorm
+with_err_gen <- 'rnorm'
 data_str <- "long"
-temp.long <- sim_reg(fixed, random, random3 = NULL, fixed.param, random.param, random.param3 = NULL,
- cov.param, k = NULL, n, p, error_var, randCor, randCor3 = NULL, rand_dist, rand_gen,
- data_str = data_str)
+temp.long <- sim_reg(fixed, random, random3 = NULL, fixed.param, random_param, random_param3 = NULL,
+ cov.param, k = NULL, n, p, error_var, with_err_gen, data_str = data_str)
 
 # simulate missing data
 temp.long.miss <- missing_data(temp.long, miss_prop = .25, type = 'dropout', clust_var = 'clustID')
@@ -40,10 +37,10 @@ cov.param <- list(mean = c(0, 0), sd = c(4, 3),
                   var.type = c("single", "single"))
 n <- 150
 error_var <- 3
-rand_gen <- rnorm
+with_err_gen <- 'rnorm'
 temp.single <- sim_reg(fixed = fixed, fixed.param = fixed.param,
                        cov.param = cov.param,
-                       n = n, error_var = error_var, rand_gen = rand_gen,
+                       n = n, error_var = error_var, with_err_gen = with_err_gen,
                        data_str = "single")
 
 # generate missing data

@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="date" content="2015-10-29" />
+<meta name="date" content="2015-11-01" />
 
 <title>Unbalanced Data</title>
 
@@ -70,35 +70,32 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <div id="header">
 <h1 class="title">Unbalanced Data</h1>
-<h4 class="date"><em>2015-10-29</em></h4>
+<h4 class="date"><em>2015-11-01</em></h4>
 </div>
 
 
 <div id="unbalanced-data" class="section level3">
 <h3>Unbalanced Data</h3>
-<p>Unbalanced data tends to be the rule rather than the exception with real world data. As such, when simulating data it is better to replicate data that matches real world data conditions. The <em>simReg</em> package by default generates data for a balanced design. This means that the number of level one units within each level two cluster is the same.</p>
+<p>Unbalanced data tends to be the rule rather than the exception with real world data. As such, when simulating data it is better to replicate data that matches real world data conditions. The <em>simglm</em> package by default generates data for a balanced design. This means that the number of level one units within each level two cluster is the same.</p>
 <p>To override the default and generate unbalanced data where the number of observations within each level two cluster differ, two new arguments need to be passed to the <em>sim.reg</em> function. First, the argument <strong>unbal</strong> needs to be set to TRUE. This overrides the default of a balanced design. Next, the argument <strong>unbalCont</strong> is a vector of two values. The two values represent the minimum number of values per cluster and the maximum number of values per cluster. They can be specified in any order. The number of observations per cluster is then simulated from a random uniform distribution with the minimum and maximum values specified in the <strong>unbalCont</strong> argument.</p>
 <p>The following is an example of an unbalanced two level design. Note, the <strong>p</strong> argument (level one sample size) is set to NULL as the level one sample size is specified in the <strong>unbalCont</strong> argument.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(simReg)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(simglm)
 fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>diff +<span class="st"> </span>act +<span class="st"> </span>diff:act
 random &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st">  </span>diff
 fixed.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="fl">2.3</span>, <span class="dv">7</span>)
-random.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">7</span>, <span class="dv">2</span>)
+random_param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">random.param =</span> <span class="kw">c</span>(<span class="dv">7</span>, <span class="dv">2</span>), <span class="dt">rand_gen =</span> <span class="st">'rnorm'</span>)
 cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">sd =</span> <span class="kw">c</span>(<span class="fl">1.5</span>, <span class="dv">4</span>), <span class="dt">var.type =</span> <span class="kw">c</span>(<span class="st">&quot;lvl1&quot;</span>, <span class="st">&quot;lvl2&quot;</span>))
 n &lt;-<span class="st"> </span><span class="dv">150</span>
 unbal &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 error_var &lt;-<span class="st"> </span><span class="dv">4</span>
-randCor &lt;-<span class="st"> </span><span class="dv">0</span>
-rand_dist &lt;-<span class="st"> &quot;norm&quot;</span>
-rand_gen &lt;-<span class="st"> </span>rnorm
+with_err_gen &lt;-<span class="st"> 'rnorm'</span>
 data_str &lt;-<span class="st"> &quot;cross&quot;</span>
 unbalCont &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">10</span>)
 temp.cross &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">random =</span> random, 
                       <span class="dt">fixed.param =</span> fixed.param, 
-                      <span class="dt">random.param =</span> random.param, <span class="dt">cov.param =</span> cov.param,
+                      <span class="dt">random_param =</span> random_param, <span class="dt">cov.param =</span> cov.param,
                       <span class="dt">k =</span> <span class="ot">NULL</span>, <span class="dt">n =</span> n, <span class="dt">p =</span> <span class="ot">NULL</span>, <span class="dt">error_var =</span> error_var,
-                      <span class="dt">randCor =</span> randCor, <span class="dt">rand_dist =</span> rand_dist, 
-                      <span class="dt">rand_gen =</span> rand_gen, <span class="dt">data_str =</span> data_str, 
+                      <span class="dt">with_err_gen =</span> with_err_gen, <span class="dt">data_str =</span> data_str, 
                       <span class="dt">unbal =</span> <span class="ot">TRUE</span>, <span class="dt">unbalCont =</span> unbalCont)</code></pre></div>
 <p>The unbalanced design can be verified by running a table on the cluster ID variable. As can be seen from the output below, the sample size of the clusters ranges from a small of 3 to a maximum of 10.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(temp.cross$clustID)</code></pre></div>
@@ -125,13 +122,13 @@ temp.cross &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span c
 <h4>Three Level Models</h4>
 <p>Moving from two level to three level models is straightforward. Now there are four arguments instead of just two. The same <strong>unbal</strong> and <strong>unbalCont</strong> control whether the data is balanced for each level two cluster, but two additional arguments control whether the data is balanced for each level three cluster. These two new arguments are <strong>unbal3</strong> and <strong>unbalCont3</strong>. They behave identically to the two balanced case.</p>
 <p>To specify a design that has an unbalanced number of observations within each level two cluster, but balanced level two units within each level three cluster, the following code can be used. Notice here that <strong>unbal</strong> is set to TRUE, but <strong>unbal3</strong> is set to FALSE. Similarly, <strong>unbalCont</strong> specifies the minimum and maximum values for the number of observations within each level two cluster and <strong>unbalCont3</strong> is set to NULL.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(simReg)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(simglm)
 fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>time +<span class="st"> </span>diff +<span class="st"> </span>act +<span class="st"> </span>actClust +<span class="st"> </span>time:act
 random &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>time +<span class="st"> </span>diff
 random3 &lt;-<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>time
 fixed.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">6</span>, <span class="fl">2.3</span>, <span class="dv">7</span>, <span class="dv">0</span>)
-random.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">7</span>, <span class="dv">4</span>, <span class="dv">2</span>)
-random.param3 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>)
+random_param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">random.param =</span> <span class="kw">c</span>(<span class="dv">7</span>, <span class="dv">4</span>, <span class="dv">2</span>), <span class="dt">rand_gen =</span> <span class="st">&quot;rnorm&quot;</span>)
+random_param3 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">random.param =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>), <span class="dt">rand_gen =</span> <span class="st">'rnorm'</span>)
 cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">sd =</span> <span class="kw">c</span>(<span class="fl">1.5</span>, <span class="dv">4</span>, <span class="dv">2</span>),
 <span class="dt">var.type =</span> <span class="kw">c</span>(<span class="st">&quot;lvl1&quot;</span>, <span class="st">&quot;lvl2&quot;</span>, <span class="st">&quot;lvl3&quot;</span>))
 k &lt;-<span class="st"> </span><span class="dv">10</span>
@@ -139,19 +136,15 @@ n &lt;-<span class="st"> </span><span class="dv">150</span>
 unbal &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 unbal3 &lt;-<span class="st"> </span><span class="ot">FALSE</span>
 error_var &lt;-<span class="st"> </span><span class="dv">4</span>
-randCor &lt;-<span class="st"> </span><span class="dv">0</span>
-randCor3 &lt;-<span class="st"> </span><span class="dv">0</span>
-rand_dist &lt;-<span class="st"> &quot;norm&quot;</span>
-rand_gen &lt;-<span class="st"> </span>rnorm
+with_err_gen &lt;-<span class="st"> 'rnorm'</span>
 data_str &lt;-<span class="st"> &quot;long&quot;</span>
 unbalCont &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">min =</span> <span class="dv">3</span>, <span class="dt">max =</span> <span class="dv">10</span>)
 unbalCont3 =<span class="st"> </span><span class="ot">NULL</span>
 temp.three &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">random =</span> random, <span class="dt">random3 =</span> random3,
-      <span class="dt">fixed.param =</span> fixed.param, <span class="dt">random.param =</span> random.param, 
-      <span class="dt">random.param3 =</span> random.param3, <span class="dt">cov.param =</span> cov.param, <span class="dt">k =</span> k,
+      <span class="dt">fixed.param =</span> fixed.param, <span class="dt">random_param =</span> random_param, 
+      <span class="dt">random_param3 =</span> random_param3, <span class="dt">cov.param =</span> cov.param, <span class="dt">k =</span> k,
       <span class="dt">n =</span> n, <span class="dt">p =</span> p, <span class="dt">unbal =</span> unbal, <span class="dt">unbal3 =</span> unbal3, <span class="dt">error_var =</span> error_var,
-      <span class="dt">randCor =</span> randCor, <span class="dt">randCor3 =</span> randCor3, <span class="dt">rand_dist =</span> rand_dist,
-      <span class="dt">rand_gen =</span> rand_gen, 
+      <span class="dt">with_err_gen =</span> with_err_gen, 
       <span class="dt">data_str =</span> data_str, <span class="dt">unbalCont =</span> unbalCont, <span class="dt">unbalCont3 =</span> unbalCont3)</code></pre></div>
 <p>Checking that the data are as unbalanced at level two and balanced number of clusters within each level three cluster.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(temp.three$clustID)</code></pre></div>
@@ -179,32 +172,28 @@ temp.three &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span c
 <pre><code>##  1  2  3  4  5  6  7  8  9 10 
 ## 15 15 15 15 15 15 15 15 15 15</code></pre>
 <p>Moving to a design that is unbalanced at both levels is straightforward. Now the <strong>unbal3</strong> argument is set to TRUE and the <strong>unbalCont3</strong> argument is a vector that contains the minimum and maximum number of level two clusters that are contained within a level three cluster. Note that now only the number of clusters needs to be specified, the number of level one and two clusters are randomly generated.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(simReg)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(simglm)
 fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>time +<span class="st"> </span>diff +<span class="st"> </span>act +<span class="st"> </span>actClust +<span class="st"> </span>time:act
 random &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>time +<span class="st"> </span>diff
 random3 &lt;-<span class="st"> </span><span class="er">~</span><span class="st"> </span><span class="dv">1</span> +<span class="st"> </span>time
 fixed.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">6</span>, <span class="fl">2.3</span>, <span class="dv">7</span>, <span class="dv">0</span>)
-random.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">7</span>, <span class="dv">4</span>, <span class="dv">2</span>)
-random.param3 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>)
+random_param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">random.param =</span> <span class="kw">c</span>(<span class="dv">7</span>, <span class="dv">4</span>, <span class="dv">2</span>), <span class="dt">rand_gen =</span> <span class="st">'rnorm'</span>)
+random_param3 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">random.param =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>), <span class="dt">rand_gen =</span> <span class="st">'rnorm'</span>)
 cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">sd =</span> <span class="kw">c</span>(<span class="fl">1.5</span>, <span class="dv">4</span>, <span class="dv">2</span>),
 <span class="dt">var.type =</span> <span class="kw">c</span>(<span class="st">&quot;lvl1&quot;</span>, <span class="st">&quot;lvl2&quot;</span>, <span class="st">&quot;lvl3&quot;</span>))
 k &lt;-<span class="st"> </span><span class="dv">10</span>
 unbal &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 unbal3 &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 error_var &lt;-<span class="st"> </span><span class="dv">4</span>
-randCor &lt;-<span class="st"> </span><span class="dv">0</span>
-randCor3 &lt;-<span class="st"> </span><span class="dv">0</span>
-rand_dist &lt;-<span class="st"> &quot;norm&quot;</span>
-rand_gen &lt;-<span class="st"> </span>rnorm
+with_err_gen &lt;-<span class="st"> 'rnorm'</span>
 data_str &lt;-<span class="st"> &quot;long&quot;</span>
 unbalCont &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">min =</span> <span class="dv">3</span>, <span class="dt">max =</span> <span class="dv">30</span>)
 unbalCont3 =<span class="st"> </span><span class="kw">c</span>(<span class="dt">min =</span> <span class="dv">3</span>, <span class="dt">max =</span> <span class="dv">10</span>)
 temp.three &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">random =</span> random, <span class="dt">random3 =</span> random3,
-      <span class="dt">fixed.param =</span> fixed.param, <span class="dt">random.param =</span> random.param, 
-      <span class="dt">random.param3 =</span> random.param3, <span class="dt">cov.param =</span> cov.param, <span class="dt">k =</span> k,
+      <span class="dt">fixed.param =</span> fixed.param, <span class="dt">random_param =</span> random_param, 
+      <span class="dt">random_param3 =</span> random_param3, <span class="dt">cov.param =</span> cov.param, <span class="dt">k =</span> k,
       <span class="dt">n =</span> <span class="ot">NULL</span>, <span class="dt">p =</span> <span class="ot">NULL</span>, <span class="dt">unbal =</span> unbal, <span class="dt">unbal3 =</span> unbal3, <span class="dt">error_var =</span> error_var,
-      <span class="dt">randCor =</span> randCor, <span class="dt">randCor3 =</span> randCor3, <span class="dt">rand_dist =</span> rand_dist,
-      <span class="dt">rand_gen =</span> rand_gen, 
+      <span class="dt">with_err_gen =</span> with_err_gen, 
       <span class="dt">data_str =</span> data_str, <span class="dt">unbalCont =</span> unbalCont, <span class="dt">unbalCont3 =</span> unbalCont3)</code></pre></div>
 <p>Lastly, showing that the design is indeed unbalanced at both levels.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(temp.three$clustID)</code></pre></div>

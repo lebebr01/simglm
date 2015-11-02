@@ -26,7 +26,7 @@
 #' @param ... Additional specification needed to pass to the random generating 
 #'             function defined by rand.gen.
 #' @export 
-sim_reg_single <- function(fixed, fixed.param, cov.param, n, error_var, rand_gen,
+sim_reg_single <- function(fixed, fixed.param, cov.param, n, error_var, with_err_gen,
                            arima = FALSE, data_str, cor_vars = NULL, fact.vars = list(NULL), ...) {
   
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
@@ -35,7 +35,7 @@ sim_reg_single <- function(fixed, fixed.param, cov.param, n, error_var, rand_gen
   
   Xmat <- sim_fixef_single(fixed, fixed.vars, n, cov.param, cor_vars, fact.vars)
   
-  err <- sim_err_single(error_var, n, rand_gen, arima = arima, ...)
+  err <- sim_err_single(error_var, n, with_err_gen, arima = arima, ...)
   
   sim.data <- data_reg_single(Xmat, fixed.param, n, err)
   

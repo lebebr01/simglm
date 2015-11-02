@@ -9,7 +9,7 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="date" content="2015-10-29" />
+<meta name="date" content="2015-11-01" />
 
 <title>Simulate Missing Data</title>
 
@@ -70,35 +70,32 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <div id="header">
 <h1 class="title">Simulate Missing Data</h1>
-<h4 class="date"><em>2015-10-29</em></h4>
+<h4 class="date"><em>2015-11-01</em></h4>
 </div>
 
 
 <div id="missing-data" class="section level1">
 <h1>Missing Data</h1>
-<p>Missing data tends to be prolific in real world data, as such, it should also be included in any simulated data. This can help extend the external validity of the results based on simulated data. The <code>simReg</code> package builds this support directly into the simulation process. A master function, <code>missing_data</code>, takes a simulated data set and processes it to return missing data. The additional benefit to the <code>missing_data</code> function is that the original data remain and another variable is added to the simulated data that reflect the values that are assigned to a missing value. The ability for the researcher to check that the missing data was generated properly can be an important step.</p>
+<p>Missing data tends to be prolific in real world data, as such, it should also be included in any simulated data. This can help extend the external validity of the results based on simulated data. The <code>simglm</code> package builds this support directly into the simulation process. A master function, <code>missing_data</code>, takes a simulated data set and processes it to return missing data. The additional benefit to the <code>missing_data</code> function is that the original data remain and another variable is added to the simulated data that reflect the values that are assigned to a missing value. The ability for the researcher to check that the missing data was generated properly can be an important step.</p>
 <div id="types-of-missing-data" class="section level2">
 <h2>Types of Missing Data</h2>
 <p>The modern missing data literature can be traced back to Rubin where he defined three different missing data mechanisms, missing completely at random (MCAR), missing at random (MAR), and not missing at random (NMAR). In general, if the missing data is either MCAR or MAR, unbiased estimates can be obtained, however, when the missing data is NMAR, bias can be introduced.</p>
-<p>The <code>simReg</code> package currently supports simulation of MCAR and MAR mechanisms. Two MAR missing data mechanisms are currently built in, one being dropout missing data and another called <strong>mar</strong> missing data. Dropout missing data typically would be valid for longitudinal data and represents the situation where the respondent stops participating in the study. For example, they participate the first 3 weeks of the study, but move out of state after the third week and no further data is collected on that individual. The missing data for this type of individual is likely tied strictly to time, so therefore controlling for the time variable in the study would then lead to MAR missing data.</p>
+<p>The <code>simglm</code> package currently supports simulation of MCAR and MAR mechanisms. Two MAR missing data mechanisms are currently built in, one being dropout missing data and another called <strong>mar</strong> missing data. Dropout missing data typically would be valid for longitudinal data and represents the situation where the respondent stops participating in the study. For example, they participate the first 3 weeks of the study, but move out of state after the third week and no further data is collected on that individual. The missing data for this type of individual is likely tied strictly to time, so therefore controlling for the time variable in the study would then lead to MAR missing data.</p>
 <div id="dropout-missing-data-example" class="section level3">
 <h3>Dropout Missing Data Example</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Simulate longitudinal data</span>
 fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>time +<span class="st"> </span>diff +<span class="st"> </span>act +<span class="st"> </span>time:act
 random &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>time +<span class="st"> </span>diff
 fixed.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">6</span>, <span class="fl">2.3</span>, <span class="dv">7</span>)
-random.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">7</span>, <span class="dv">4</span>, <span class="dv">2</span>)
+random_param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">random.param =</span> <span class="kw">c</span>(<span class="dv">7</span>, <span class="dv">4</span>, <span class="dv">2</span>), <span class="dt">rand_gen =</span> <span class="st">&quot;rnorm&quot;</span>)
 cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">mean =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="dt">sd =</span> <span class="kw">c</span>(<span class="fl">1.5</span>, <span class="dv">4</span>), <span class="dt">var.type =</span> <span class="kw">c</span>(<span class="st">&quot;lvl1&quot;</span>, <span class="st">&quot;lvl2&quot;</span>))
 n &lt;-<span class="st"> </span><span class="dv">150</span>
 p &lt;-<span class="st"> </span><span class="dv">30</span>
 error_var &lt;-<span class="st"> </span><span class="dv">4</span>
-randCor &lt;-<span class="st"> </span><span class="dv">0</span>
-rand_dist &lt;-<span class="st"> &quot;norm&quot;</span>
-rand_gen &lt;-<span class="st"> </span>rnorm
+with_err_gen &lt;-<span class="st"> 'rnorm'</span>
 data_str &lt;-<span class="st"> &quot;long&quot;</span>
-temp.long &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(fixed, random, <span class="dt">random3 =</span> <span class="ot">NULL</span>, fixed.param, random.param, <span class="dt">random.param3 =</span> <span class="ot">NULL</span>,
- cov.param, <span class="dt">k =</span> <span class="ot">NULL</span>, n, p, error_var, randCor, <span class="dt">randCor3 =</span> <span class="ot">NULL</span>, rand_dist, rand_gen,
- <span class="dt">data_str =</span> data_str)
+temp.long &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(fixed, random, <span class="dt">random3 =</span> <span class="ot">NULL</span>, fixed.param, random_param, <span class="dt">random_param3 =</span> <span class="ot">NULL</span>,
+ cov.param, <span class="dt">k =</span> <span class="ot">NULL</span>, n, p, error_var, with_err_gen, <span class="dt">data_str =</span> data_str)
 
 <span class="co"># simulate missing data</span>
 temp.long.miss &lt;-<span class="st"> </span><span class="kw">missing_data</span>(temp.long, <span class="dt">miss_prop =</span> .<span class="dv">25</span>, <span class="dt">type =</span> <span class="st">'dropout'</span>, <span class="dt">clust_var =</span> <span class="st">'clustID'</span>)
@@ -128,110 +125,110 @@ temp.long.miss &lt;-<span class="st"> </span><span class="kw">missing_data</span
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">1.3775557</td>
-<td align="right">1.828675</td>
+<td align="right">-1.5868435</td>
+<td align="right">1.026839</td>
 <td align="right">0.000000</td>
-<td align="right">-1.972034</td>
-<td align="right">-2.159297</td>
-<td align="right">-0.0150733</td>
-<td align="right">16.47129</td>
-<td align="right">-1.992798</td>
-<td align="right">0.8451558</td>
-<td align="right">15.323645</td>
+<td align="right">0.6080403</td>
+<td align="right">-0.0367766</td>
+<td align="right">-0.8250231</td>
+<td align="right">-3.159332</td>
+<td align="right">1.9172228</td>
+<td align="right">2.2708360</td>
+<td align="right">1.028726</td>
 <td align="right">1</td>
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">15.323645</td>
+<td align="right">1.028726</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
 <td align="right">1</td>
-<td align="right">-2.0102883</td>
-<td align="right">1.828675</td>
-<td align="right">1.828675</td>
-<td align="right">-1.972034</td>
-<td align="right">-2.159297</td>
-<td align="right">-0.0150733</td>
-<td align="right">10.94495</td>
-<td align="right">-4.101029</td>
-<td align="right">3.0336118</td>
-<td align="right">9.877533</td>
+<td align="right">-0.2280469</td>
+<td align="right">1.026839</td>
+<td align="right">1.026839</td>
+<td align="right">0.6080403</td>
+<td align="right">-0.0367766</td>
+<td align="right">-0.8250231</td>
+<td align="right">14.181317</td>
+<td align="right">0.7594077</td>
+<td align="right">-2.0710313</td>
+<td align="right">12.869694</td>
 <td align="right">2</td>
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">9.877533</td>
+<td align="right">12.869694</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">2</td>
-<td align="right">1.2881284</td>
-<td align="right">1.828675</td>
-<td align="right">3.657351</td>
-<td align="right">-1.972034</td>
-<td align="right">-2.159297</td>
-<td align="right">-0.0150733</td>
-<td align="right">45.53618</td>
-<td align="right">-6.310045</td>
-<td align="right">-0.3473823</td>
-<td align="right">38.878750</td>
+<td align="right">-1.0127395</td>
+<td align="right">1.026839</td>
+<td align="right">2.053677</td>
+<td align="right">0.6080403</td>
+<td align="right">-0.0367766</td>
+<td align="right">-0.8250231</td>
+<td align="right">18.661031</td>
+<td align="right">1.3700205</td>
+<td align="right">0.0632232</td>
+<td align="right">20.094275</td>
 <td align="right">3</td>
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">38.878750</td>
+<td align="right">20.094275</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
 <td align="right">3</td>
-<td align="right">-2.5928977</td>
-<td align="right">1.828675</td>
-<td align="right">5.486026</td>
-<td align="right">-1.972034</td>
-<td align="right">-2.159297</td>
-<td align="right">-0.0150733</td>
-<td align="right">37.05075</td>
-<td align="right">-8.410842</td>
-<td align="right">0.7145334</td>
-<td align="right">29.354440</td>
+<td align="right">-0.1640486</td>
+<td align="right">1.026839</td>
+<td align="right">3.080516</td>
+<td align="right">0.6080403</td>
+<td align="right">-0.0367766</td>
+<td align="right">-0.8250231</td>
+<td align="right">32.941047</td>
+<td align="right">0.6330543</td>
+<td align="right">-0.5500900</td>
+<td align="right">33.024011</td>
 <td align="right">4</td>
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">29.354440</td>
+<td align="right">33.024011</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">4</td>
-<td align="right">0.5008356</td>
-<td align="right">1.828675</td>
-<td align="right">7.314701</td>
-<td align="right">-1.972034</td>
-<td align="right">-2.159297</td>
-<td align="right">-0.0150733</td>
-<td align="right">70.41388</td>
-<td align="right">-10.616772</td>
-<td align="right">-4.4129437</td>
-<td align="right">55.384159</td>
+<td align="right">-2.5149126</td>
+<td align="right">1.026839</td>
+<td align="right">4.107354</td>
+<td align="right">0.6080403</td>
+<td align="right">-0.0367766</td>
+<td align="right">-0.8250231</td>
+<td align="right">28.023733</td>
+<td align="right">2.5357947</td>
+<td align="right">-1.0172771</td>
+<td align="right">29.542251</td>
 <td align="right">5</td>
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">55.384159</td>
+<td align="right">29.542251</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
 <td align="right">5</td>
-<td align="right">0.3811714</td>
-<td align="right">1.828675</td>
-<td align="right">9.143377</td>
-<td align="right">-1.972034</td>
-<td align="right">-2.159297</td>
-<td align="right">-0.0150733</td>
-<td align="right">84.49662</td>
-<td align="right">-12.774266</td>
-<td align="right">-2.1826095</td>
-<td align="right">69.539742</td>
+<td align="right">0.0643622</td>
+<td align="right">1.026839</td>
+<td align="right">5.134193</td>
+<td align="right">0.6080403</td>
+<td align="right">-0.0367766</td>
+<td align="right">-0.8250231</td>
+<td align="right">52.687252</td>
+<td align="right">0.3710569</td>
+<td align="right">1.9384893</td>
+<td align="right">54.996798</td>
 <td align="right">6</td>
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">69.539742</td>
+<td align="right">54.996798</td>
 </tr>
 </tbody>
 </table>
@@ -239,15 +236,15 @@ temp.long.miss &lt;-<span class="st"> </span><span class="kw">missing_data</span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(<span class="kw">table</span>(temp.long.miss$missing))</code></pre></div>
 <pre><code>## 
 ##         0         1 
-## 0.7515556 0.2484444</code></pre>
+## 0.7446667 0.2553333</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(<span class="kw">table</span>(<span class="kw">is.na</span>(temp.long.miss$sim.data2)))</code></pre></div>
 <pre><code>## 
 ##     FALSE      TRUE 
-## 0.7515556 0.2484444</code></pre>
+## 0.7446667 0.2553333</code></pre>
 </div>
 <div id="mar-missing-data-example" class="section level3">
 <h3>MAR Missing Data Example</h3>
-<p>The mar missing data is similar to that of dropout missing data, but instead of being conditional on time, a third variable can be added to base the missing data on. For example, in a study, perhaps those individuals with lower income are less likely to report the outcome of the study. As such, the mar missing data implementation in <code>simReg</code> allows you to simulate missing data in a similar framework as the example above. Below is an example from a single level regression (assumed that the covariates are grand mean centered).</p>
+<p>The mar missing data is similar to that of dropout missing data, but instead of being conditional on time, a third variable can be added to base the missing data on. For example, in a study, perhaps those individuals with lower income are less likely to report the outcome of the study. As such, the mar missing data implementation in <code>simglm</code> allows you to simulate missing data in a similar framework as the example above. Below is an example from a single level regression (assumed that the covariates are grand mean centered).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># simulate data</span>
 fixed &lt;-<span class="st"> </span><span class="er">~</span><span class="dv">1</span> +<span class="st"> </span>age +<span class="st"> </span>income
 fixed.param &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">2</span>, <span class="fl">0.3</span>, <span class="fl">1.3</span>)
@@ -255,10 +252,10 @@ cov.param &lt;-<span class="st"> </span><span class="kw">list</span>(<span class
                   <span class="dt">var.type =</span> <span class="kw">c</span>(<span class="st">&quot;single&quot;</span>, <span class="st">&quot;single&quot;</span>))
 n &lt;-<span class="st"> </span><span class="dv">150</span>
 error_var &lt;-<span class="st"> </span><span class="dv">3</span>
-rand_gen &lt;-<span class="st"> </span>rnorm
+with_err_gen &lt;-<span class="st"> 'rnorm'</span>
 temp.single &lt;-<span class="st"> </span><span class="kw">sim_reg</span>(<span class="dt">fixed =</span> fixed, <span class="dt">fixed.param =</span> fixed.param,
                        <span class="dt">cov.param =</span> cov.param,
-                       <span class="dt">n =</span> n, <span class="dt">error_var =</span> error_var, <span class="dt">rand_gen =</span> rand_gen,
+                       <span class="dt">n =</span> n, <span class="dt">error_var =</span> error_var, <span class="dt">with_err_gen =</span> with_err_gen,
                        <span class="dt">data_str =</span> <span class="st">&quot;single&quot;</span>)
 
 <span class="co"># generate missing data</span>
@@ -284,76 +281,76 @@ tmp.single.miss &lt;-<span class="st"> </span><span class="kw">missing_data</spa
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">-6.236339</td>
+<td align="right">-9.322165</td>
 <td align="right">1</td>
-<td align="right">-1.782195</td>
-<td align="right">-6.641900</td>
-<td align="right">-0.8004894</td>
-<td align="right">-7.442389</td>
-<td align="right">113</td>
+<td align="right">0.4969517</td>
+<td align="right">-9.969729</td>
+<td align="right">2.7620638</td>
+<td align="right">-7.2076650</td>
+<td align="right">111</td>
 <td align="right">0.5</td>
-<td align="right">0.6435632</td>
-<td align="right">-7.442389</td>
+<td align="right">0.6525528</td>
+<td align="right">-7.2076650</td>
 </tr>
 <tr class="even">
-<td align="right">-6.130106</td>
+<td align="right">-6.191241</td>
 <td align="right">1</td>
-<td align="right">-6.901636</td>
-<td align="right">-8.039628</td>
-<td align="right">0.8262691</td>
-<td align="right">-7.213359</td>
-<td align="right">107</td>
+<td align="right">6.3060070</td>
+<td align="right">-4.156811</td>
+<td align="right">1.4348623</td>
+<td align="right">-2.7219486</td>
+<td align="right">9</td>
 <td align="right">0.5</td>
-<td align="right">0.6874420</td>
-<td align="right">-7.213359</td>
-</tr>
-<tr class="odd">
-<td align="right">-6.047320</td>
-<td align="right">1</td>
-<td align="right">1.445920</td>
-<td align="right">-5.427741</td>
-<td align="right">0.5739452</td>
-<td align="right">-4.853795</td>
-<td align="right">6</td>
-<td align="right">0.5</td>
-<td align="right">0.3441904</td>
-<td align="right">NA</td>
-</tr>
-<tr class="even">
-<td align="right">-5.236823</td>
-<td align="right">1</td>
-<td align="right">-10.169911</td>
-<td align="right">-7.858843</td>
-<td align="right">0.1780988</td>
-<td align="right">-7.680745</td>
-<td align="right">17</td>
-<td align="right">0.5</td>
-<td align="right">0.0695945</td>
+<td align="right">0.3115214</td>
 <td align="right">NA</td>
 </tr>
 <tr class="odd">
-<td align="right">-5.201609</td>
+<td align="right">-5.918731</td>
 <td align="right">1</td>
-<td align="right">4.369011</td>
-<td align="right">-3.451388</td>
-<td align="right">-1.2237719</td>
-<td align="right">-4.675160</td>
-<td align="right">102</td>
+<td align="right">11.3218624</td>
+<td align="right">-2.297792</td>
+<td align="right">2.1637897</td>
+<td align="right">-0.1340024</td>
+<td align="right">142</td>
 <td align="right">0.5</td>
-<td align="right">0.9391183</td>
-<td align="right">-4.675160</td>
+<td align="right">0.9087762</td>
+<td align="right">-0.1340024</td>
 </tr>
 <tr class="even">
-<td align="right">-4.717468</td>
+<td align="right">-5.868360</td>
 <td align="right">1</td>
-<td align="right">6.388615</td>
-<td align="right">-2.216124</td>
-<td align="right">-1.1007326</td>
-<td align="right">-3.316857</td>
-<td align="right">87</td>
+<td align="right">2.6349428</td>
+<td align="right">-4.838385</td>
+<td align="right">-1.3958543</td>
+<td align="right">-6.2342395</td>
+<td align="right">129</td>
 <td align="right">0.5</td>
-<td align="right">0.9344582</td>
-<td align="right">-3.316857</td>
+<td align="right">0.9930541</td>
+<td align="right">-6.2342395</td>
+</tr>
+<tr class="odd">
+<td align="right">-5.691145</td>
+<td align="right">1</td>
+<td align="right">-0.5891007</td>
+<td align="right">-5.575219</td>
+<td align="right">-3.3931389</td>
+<td align="right">-8.9683573</td>
+<td align="right">141</td>
+<td align="right">0.5</td>
+<td align="right">0.7626738</td>
+<td align="right">-8.9683573</td>
+</tr>
+<tr class="even">
+<td align="right">-5.624036</td>
+<td align="right">1</td>
+<td align="right">5.2639095</td>
+<td align="right">-3.732075</td>
+<td align="right">0.8552985</td>
+<td align="right">-2.8767761</td>
+<td align="right">71</td>
+<td align="right">0.5</td>
+<td align="right">0.7182084</td>
+<td align="right">-2.8767761</td>
 </tr>
 </tbody>
 </table>
@@ -363,15 +360,15 @@ tmp.single.miss &lt;-<span class="st"> </span><span class="kw">missing_data</spa
 <pre><code>##       
 ##        FALSE TRUE
 ##   0.05    14    1
-##   0.1     14    1
+##   0.1     13    2
 ##   0.15    12    3
 ##   0.2     12    3
-##   0.25    11    4
-##   0.3      4   11
-##   0.35    11    4
-##   0.4     10    5
-##   0.45     5   10
-##   0.5      7    8</code></pre>
+##   0.25     9    6
+##   0.3     10    5
+##   0.35    12    3
+##   0.4      7    8
+##   0.45     4   11
+##   0.5      9    6</code></pre>
 </div>
 </div>
 <div id="mcar-missing-data-example" class="section level2">
@@ -398,75 +395,75 @@ tmp.single.miss &lt;-<span class="st"> </span><span class="kw">missing_data</spa
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-5.171250</td>
-<td align="right">-2.549899</td>
-<td align="right">-2.866244</td>
-<td align="right">-0.0950638</td>
-<td align="right">-2.9613074</td>
+<td align="right">1.7467950</td>
+<td align="right">0.9438642</td>
+<td align="right">3.7510619</td>
+<td align="right">-0.0292124</td>
+<td align="right">3.7218495</td>
 <td align="right">1</td>
-<td align="right">0.493</td>
+<td align="right">0.652</td>
 <td align="right">0</td>
-<td align="right">-2.961307</td>
+<td align="right">3.721849</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">-6.395661</td>
-<td align="right">-3.026497</td>
-<td align="right">-3.853145</td>
-<td align="right">2.8705910</td>
-<td align="right">-0.9825539</td>
+<td align="right">-0.7122196</td>
+<td align="right">0.1691220</td>
+<td align="right">2.0061927</td>
+<td align="right">0.1951048</td>
+<td align="right">2.2012975</td>
 <td align="right">2</td>
-<td align="right">0.181</td>
+<td align="right">0.364</td>
+<td align="right">0</td>
+<td align="right">2.201297</td>
+</tr>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">-2.4184063</td>
+<td align="right">0.5066119</td>
+<td align="right">1.9330736</td>
+<td align="right">0.6510223</td>
+<td align="right">2.5840959</td>
+<td align="right">3</td>
+<td align="right">0.441</td>
+<td align="right">0</td>
+<td align="right">2.584096</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">1.7873300</td>
+<td align="right">-1.4171033</td>
+<td align="right">0.6939647</td>
+<td align="right">-1.6637577</td>
+<td align="right">-0.9697931</td>
+<td align="right">4</td>
+<td align="right">0.186</td>
 <td align="right">1</td>
 <td align="right">NA</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">3.924922</td>
-<td align="right">2.428317</td>
-<td align="right">6.334289</td>
-<td align="right">0.6699223</td>
-<td align="right">7.0042115</td>
-<td align="right">3</td>
-<td align="right">0.917</td>
-<td align="right">0</td>
-<td align="right">7.004212</td>
-</tr>
-<tr class="even">
-<td align="right">1</td>
-<td align="right">-4.469961</td>
-<td align="right">-2.856614</td>
-<td align="right">-3.054587</td>
-<td align="right">-0.0436859</td>
-<td align="right">-3.0982729</td>
-<td align="right">4</td>
-<td align="right">0.252</td>
-<td align="right">0</td>
-<td align="right">-3.098273</td>
-</tr>
-<tr class="odd">
-<td align="right">1</td>
-<td align="right">-2.148044</td>
-<td align="right">1.621797</td>
-<td align="right">3.463923</td>
-<td align="right">1.3365914</td>
-<td align="right">4.8005142</td>
+<td align="right">6.8734862</td>
+<td align="right">-1.9790192</td>
+<td align="right">1.4893210</td>
+<td align="right">1.9239966</td>
+<td align="right">3.4133176</td>
 <td align="right">5</td>
-<td align="right">0.895</td>
+<td align="right">0.274</td>
 <td align="right">0</td>
-<td align="right">4.800514</td>
+<td align="right">3.413318</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
-<td align="right">1.445920</td>
-<td align="right">-6.047320</td>
-<td align="right">-5.427741</td>
-<td align="right">0.5739452</td>
-<td align="right">-4.8537954</td>
+<td align="right">0.3014420</td>
+<td align="right">-1.1257845</td>
+<td align="right">0.6269128</td>
+<td align="right">1.3179413</td>
+<td align="right">1.9448541</td>
 <td align="right">6</td>
-<td align="right">0.822</td>
+<td align="right">0.583</td>
 <td align="right">0</td>
-<td align="right">-4.853795</td>
+<td align="right">1.944854</td>
 </tr>
 </tbody>
 </table>
@@ -474,7 +471,7 @@ tmp.single.miss &lt;-<span class="st"> </span><span class="kw">missing_data</spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(<span class="kw">table</span>(<span class="kw">is.na</span>(tmp.single.miss$sim.data2)))</code></pre></div>
 <pre><code>## 
 ##     FALSE      TRUE 
-## 0.7866667 0.2133333</code></pre>
+## 0.8066667 0.1933333</code></pre>
 <!--
 Data can also be simulated as MCAR at the cluster level. Using the longitudinal example from above.
 

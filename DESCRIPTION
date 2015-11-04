@@ -4,7 +4,7 @@ Maintainer: Brandon LeBeau <lebebr01+simReg@gmail.com>
 Author: Brandon LeBeau <lebebr01+simReg@gmail.com>
 Version: 0.3.0
 License: GPL (>= 2)
-Title: Simulate Models based on the general linear model
+Title: Simulate Models Based on the General(-ized) Linear Model
 Description: This package easily simulates regression models,
     this includes both simple regression and linear mixed
     models. It also aims to do power simulations for specific

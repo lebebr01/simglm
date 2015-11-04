@@ -4,7 +4,7 @@ test_that("return error",{
   fixed <- ~1 + diff + act + diff:act
   random <- ~1 +  diff
   fixed.param <- c(4, 6, 2.3, 7)
-  random_param <- list(random.param = c(7, 2), rand_gen = 'rnorm')
+  random_param <- list(random_var = c(7, 2), rand_gen = 'rnorm')
   cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
   n <- 150
   p <- 30

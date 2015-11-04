@@ -20,7 +20,7 @@ sim_glm(fixed, random, random3, fixed.param, random_param = list(),
 \item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
 \item{random_param}{A list of named elements that must contain:
-   random.param = variance of random parameters,
+   random_var = variance of random parameters,
    rand_gen = Name of simulation function for random effects.
 Optional elements are:
    ther: Theorectial mean and variance from rand_gen,
@@ -29,7 +29,7 @@ Optional elements are:
    ...: Additional parameters needed for rand_gen function.}
 
 \item{random_param3}{A list of named elements that must contain:
-   random.param = variance of random parameters,
+   random_var = variance of random parameters,
    rand_gen = Name of simulation function for random effects.
 Optional elements are:
    ther: Theorectial mean and variance from rand_gen,
@@ -81,7 +81,6 @@ models, including single level models and cross sectional or longitudinal
 linear mixed models (aka. hierarchical linear models or multilevel models).
 }
 \examples{
-\donttest{
 # generating parameters for single level regression
 fixed <- ~1 + act + diff + numCourse + act:numCourse
 fixed.param <- c(2, 4, 1, 3.5, 2)
@@ -94,7 +93,7 @@ n = n, data_str = "single")
 fixed <- ~1 + time + diff + act + time:act
 random <- ~1 + time + diff
 fixed.param <- c(4, 2, 6, 2.3, 7)
-random_param <- list(random.param = c(7, 4, 2), rand_gen = 'rnorm')
+random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
 n <- 150
 p <- 30
@@ -108,8 +107,8 @@ fixed <- ~1 + time + diff + act + actClust + time:act
 random <- ~1 + time + diff
 random3 <- ~ 1 + time
 fixed.param <- c(4, 2, 6, 2.3, 7, 0)
-random_param <- list(random.param = c(7, 4, 2), rand_gen = 'rnorm')
-random_param3 <- list(random.param = c(4, 2), rand_gen = 'rnorm')
+random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
+random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
 cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
 var.type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
@@ -118,8 +117,5 @@ p <- 30
 data_str <- "long"
 temp.three <- sim_glm(fixed, random, random3, fixed.param, random_param,
 random_param3, cov.param, k,n, p, data_str = data_str)
-
-
-}
 }
 

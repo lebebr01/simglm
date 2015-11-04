@@ -59,7 +59,7 @@ sim_reg_single <- function(fixed, fixed.param, cov.param, n, error_var, with_err
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
 #' @param random_param A list of named elements that must contain: 
-#'             random.param = variance of random parameters,
+#'             random_var = variance of random parameters,
 #'             rand_gen = Name of simulation function for random effects.
 #'          Optional elements are:
 #'             ther: Theorectial mean and variance from rand_gen,
@@ -100,7 +100,7 @@ sim_reg_nested <- function(fixed, random, fixed.param, random_param = list(), co
   fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
 
-     if(length(rand.vars)+1 != length(random_param$random.param)) stop("Random lengths not equal")
+     if(length(rand.vars)+1 != length(random_param$random_var)) stop("Random lengths not equal")
      if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
 
   if(unbal == FALSE) {
@@ -149,7 +149,7 @@ sim_reg_nested <- function(fixed, random, fixed.param, random_param = list(), co
 #'  (and likely of random).
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
 #' @param random_param A list of named elements that must contain: 
-#'             random.param = variance of random parameters,
+#'             random_var = variance of random parameters,
 #'             rand_gen = Name of simulation function for random effects.
 #'          Optional elements are:
 #'             ther: Theorectial mean and variance from rand_gen,
@@ -157,7 +157,7 @@ sim_reg_nested <- function(fixed, random, fixed.param, random_param = list(), co
 #'             cor_vars: Correlation between random effects,
 #'             ...: Additional parameters needed for rand_gen function.
 #' @param random_param3 A list of named elements that must contain: 
-#'             random.param = variance of random parameters,
+#'             random_var = variance of random parameters,
 #'             rand_gen = Name of simulation function for random effects.
 #'          Optional elements are:
 #'             ther: Theorectial mean and variance from rand_gen,
@@ -207,8 +207,8 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed.param,
   rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
   rand.vars3 <- attr(terms(random3),"term.labels")   ##Extracting random effect term labels
 
-     if(length(rand.vars)+1 != length(random_param$random.param)) stop("Random lengths not equal")
-     if(length(rand.vars3)+1 != length(random_param3$random.param)) stop("Third level random lengths not equal")
+     if(length(rand.vars)+1 != length(random_param$random_var)) stop("Random lengths not equal")
+     if(length(rand.vars3)+1 != length(random_param3$random_var)) stop("Third level random lengths not equal")
      if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
   
   if(unbal3 == FALSE) {

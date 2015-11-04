@@ -25,7 +25,7 @@ library(simglm)
 fixed <- ~1 + diff + act + diff:act
 random <- ~1 +  diff
 fixed.param <- c(4, 6, 2.3, 7)
-random_param <- list(random.param = c(7, 2), rand_gen = 'rnorm')
+random_param <- list(random_var = c(7, 2), rand_gen = 'rnorm')
 cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
 n <- 150
 unbal <- TRUE
@@ -33,7 +33,7 @@ error_var <- 4
 with_err_gen <- 'rnorm'
 data_str <- "cross"
 unbalCont <- c(3, 10)
-temp.cross <- sim_reg(fixed = fixed, random = random, 
+temp_cross <- sim_reg(fixed = fixed, random = random, 
                       fixed.param = fixed.param, 
                       random_param = random_param, cov.param = cov.param,
                       k = NULL, n = n, p = NULL, error_var = error_var,
@@ -43,7 +43,7 @@ temp.cross <- sim_reg(fixed = fixed, random = random,
 
 The unbalanced design can be verified by running a table on the cluster ID variable. As can be seen from the output below, the sample size of the clusters ranges from a small of 3 to a maximum of 10.
 ```{r clustValue}
-table(temp.cross$clustID)
+table(temp_cross$clustID)
 ```
 
 #### Three Level Models
@@ -56,8 +56,8 @@ fixed <- ~1 + time + diff + act + actClust + time:act
 random <- ~1 + time + diff
 random3 <- ~ 1 + time
 fixed.param <- c(4, 2, 6, 2.3, 7, 0)
-random_param <- list(random.param = c(7, 4, 2), rand_gen = "rnorm")
-random_param3 <- list(random.param = c(4, 2), rand_gen = 'rnorm')
+random_param <- list(random_var = c(7, 4, 2), rand_gen = "rnorm")
+random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
 cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
 var.type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
@@ -69,7 +69,7 @@ with_err_gen <- 'rnorm'
 data_str <- "long"
 unbalCont <- c(min = 3, max = 10)
 unbalCont3 = NULL
-temp.three <- sim_reg(fixed = fixed, random = random, random3 = random3,
+temp_three <- sim_reg(fixed = fixed, random = random, random3 = random3,
       fixed.param = fixed.param, random_param = random_param, 
       random_param3 = random_param3, cov.param = cov.param, k = k,
       n = n, p = p, unbal = unbal, unbal3 = unbal3, error_var = error_var,
@@ -79,9 +79,9 @@ temp.three <- sim_reg(fixed = fixed, random = random, random3 = random3,
 
 Checking that the data are as unbalanced at level two and balanced number of clusters within each level three cluster.
 ```{r threecheck}
-table(temp.three$clustID)
-func.temp <- function(x) length(unique(x))
-tapply(temp.three$clustID, temp.three$clust3ID, func.temp)
+table(temp_three$clustID)
+func_temp <- function(x) length(unique(x))
+tapply(temp_three$clustID, temp_three$clust3ID, func_temp)
 ```
 
 Moving to a design that is unbalanced at both levels is straightforward. Now the **unbal3** argument is set to TRUE and the **unbalCont3** argument is a vector that contains the minimum and maximum number of level two clusters that are contained within a level three cluster. Note that now only the number of clusters needs to be specified, the number of level one and two clusters are randomly generated.
@@ -91,8 +91,8 @@ fixed <- ~1 + time + diff + act + actClust + time:act
 random <- ~1 + time + diff
 random3 <- ~ 1 + time
 fixed.param <- c(4, 2, 6, 2.3, 7, 0)
-random_param <- list(random.param = c(7, 4, 2), rand_gen = 'rnorm')
-random_param3 <- list(random.param = c(4, 2), rand_gen = 'rnorm')
+random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
+random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
 cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
 var.type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
@@ -103,7 +103,7 @@ with_err_gen <- 'rnorm'
 data_str <- "long"
 unbalCont <- c(min = 3, max = 30)
 unbalCont3 = c(min = 3, max = 10)
-temp.three <- sim_reg(fixed = fixed, random = random, random3 = random3,
+temp_three <- sim_reg(fixed = fixed, random = random, random3 = random3,
       fixed.param = fixed.param, random_param = random_param, 
       random_param3 = random_param3, cov.param = cov.param, k = k,
       n = NULL, p = NULL, unbal = unbal, unbal3 = unbal3, error_var = error_var,
@@ -113,9 +113,8 @@ temp.three <- sim_reg(fixed = fixed, random = random, random3 = random3,
 
 Lastly, showing that the design is indeed unbalanced at both levels.
 ```{r unbal3}
-table(temp.three$clustID)
-func.temp <- function(x) length(unique(x))
-tapply(temp.three$clustID, temp.three$clust3ID, func.temp)
+table(temp_three$clustID)
+tapply(temp_three$clustID, temp_three$clust3ID, func_temp)
 ```
 
 

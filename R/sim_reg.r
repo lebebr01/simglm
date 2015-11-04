@@ -16,7 +16,7 @@
 #'  (and likely of random).
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
 #' @param random_param A list of named elements that must contain: 
-#'             random.param = variance of random parameters,
+#'             random_var = variance of random parameters,
 #'             rand_gen = Name of simulation function for random effects.
 #'          Optional elements are:
 #'             ther: Theorectial mean and variance from rand_gen,
@@ -24,7 +24,7 @@
 #'             cor_vars: Correlation between random effects,
 #'             ...: Additional parameters needed for rand_gen function.
 #' @param random_param3 A list of named elements that must contain: 
-#'             random.param = variance of random parameters,
+#'             random_var = variance of random parameters,
 #'             rand_gen = Name of simulation function for random effects.
 #'          Optional elements are:
 #'             ther: Theorectial mean and variance from rand_gen,
@@ -77,7 +77,7 @@
 #' fixed <- ~1 + time + diff + act + time:act
 #' random <- ~1 + time + diff
 #' fixed.param <- c(4, 2, 6, 2.3, 7)
-#' random_param <- list(random.param = c(7, 4, 2), rand_gen = 'rnorm')
+#' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 #' cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
 #' n <- 150
 #' p <- 30
@@ -97,8 +97,8 @@
 #' random <- ~1 + time + diff
 #' random3 <- ~ 1 + time
 #' fixed.param <- c(4, 2, 6, 2.3, 7, 0)
-#' random_param <- list(random.param = c(7, 4, 2), rand_gen = 'rnorm')
-#' random_param3 <- list(random.param = c(4, 2), rand_gen = 'rnorm')
+#' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
+#' random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
 #' cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
 #' var.type = c("lvl1", "lvl2", "lvl3"))
 #' k <- 10
@@ -157,7 +157,7 @@ sim_reg <- function(fixed, random, random3, fixed.param,
 #'  (and likely of random).
 #' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
 #' @param random_param A list of named elements that must contain: 
-#'             random.param = variance of random parameters,
+#'             random_var = variance of random parameters,
 #'             rand_gen = Name of simulation function for random effects.
 #'          Optional elements are:
 #'             ther: Theorectial mean and variance from rand_gen,
@@ -165,7 +165,7 @@ sim_reg <- function(fixed, random, random3, fixed.param,
 #'             cor_vars: Correlation between random effects,
 #'             ...: Additional parameters needed for rand_gen function.
 #' @param random_param3 A list of named elements that must contain: 
-#'             random.param = variance of random parameters,
+#'             random_var = variance of random parameters,
 #'             rand_gen = Name of simulation function for random effects.
 #'          Optional elements are:
 #'             ther: Theorectial mean and variance from rand_gen,
@@ -195,7 +195,6 @@ sim_reg <- function(fixed, random, random3, fixed.param,
 #' @export 
 #' 
 #' @examples
-#' \donttest{
 #' # generating parameters for single level regression
 #' fixed <- ~1 + act + diff + numCourse + act:numCourse
 #' fixed.param <- c(2, 4, 1, 3.5, 2)
@@ -208,7 +207,7 @@ sim_reg <- function(fixed, random, random3, fixed.param,
 #' fixed <- ~1 + time + diff + act + time:act
 #' random <- ~1 + time + diff
 #' fixed.param <- c(4, 2, 6, 2.3, 7)
-#' random_param <- list(random.param = c(7, 4, 2), rand_gen = 'rnorm')
+#' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 #' cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
 #' n <- 150
 #' p <- 30
@@ -222,8 +221,8 @@ sim_reg <- function(fixed, random, random3, fixed.param,
 #' random <- ~1 + time + diff
 #' random3 <- ~ 1 + time
 #' fixed.param <- c(4, 2, 6, 2.3, 7, 0)
-#' random_param <- list(random.param = c(7, 4, 2), rand_gen = 'rnorm')
-#' random_param3 <- list(random.param = c(4, 2), rand_gen = 'rnorm')
+#' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
+#' random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
 #' cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
 #' var.type = c("lvl1", "lvl2", "lvl3"))
 #' k <- 10
@@ -234,7 +233,6 @@ sim_reg <- function(fixed, random, random3, fixed.param,
 #' random_param3, cov.param, k,n, p, data_str = data_str)
 #' 
 #' 
-#' }
 sim_glm <- function(fixed, random, random3, fixed.param, random_param = list(), 
                     random_param3 = list(), cov.param, k, n, p, 
                     data_str, cor_vars = NULL, fact.vars = list(NULL), 

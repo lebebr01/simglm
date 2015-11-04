@@ -4,11 +4,11 @@
 \alias{sim_rand_eff}
 \title{Function to simulate random effects.}
 \usage{
-sim_rand_eff(random.param, n, rand_gen, ther = c(0, 1), ther_sim = FALSE,
+sim_rand_eff(random_var, n, rand_gen, ther = c(0, 1), ther_sim = FALSE,
   cor_vars = NULL, ...)
 }
 \arguments{
-\item{random.param}{Variance of random effects. Must be same length as random.}
+\item{random_var}{Variance of random effects. Must be same length as random.}
 
 \item{n}{Cluster sample size.}
 
@@ -18,7 +18,7 @@ sim_rand_eff(random.param, n, rand_gen, ther = c(0, 1), ther_sim = FALSE,
 standard deviation of the rand_gen. This would commonly be used
 to standardize the generating variable to have a mean of 0 and
 standard deviation of 1 to meet model assumptions. The variable
-is then rescaled to have the variance specified by random.param.}
+is then rescaled to have the variance specified by random_var.}
 
 \item{ther_sim}{A TRUE/FALSE flag indicating whether the error simulation function
 should be simulated, that is should the mean and standard deviation

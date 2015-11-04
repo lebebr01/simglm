@@ -16,7 +16,7 @@ sim_reg_nested(fixed, random, fixed.param, random_param = list(), cov.param,
 \item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
 \item{random_param}{A list of named elements that must contain:
-   random.param = variance of random parameters,
+   random_var = variance of random parameters,
    rand_gen = Name of simulation function for random effects.
 Optional elements are:
    ther: Theorectial mean and variance from rand_gen,

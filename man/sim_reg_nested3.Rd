@@ -21,7 +21,7 @@ sim_reg_nested3(fixed, random, random3, fixed.param, random_param = list(),
 \item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
 \item{random_param}{A list of named elements that must contain:
-   random.param = variance of random parameters,
+   random_var = variance of random parameters,
    rand_gen = Name of simulation function for random effects.
 Optional elements are:
    ther: Theorectial mean and variance from rand_gen,
@@ -30,7 +30,7 @@ Optional elements are:
    ...: Additional parameters needed for rand_gen function.}
 
 \item{random_param3}{A list of named elements that must contain:
-   random.param = variance of random parameters,
+   random_var = variance of random parameters,
    rand_gen = Name of simulation function for random effects.
 Optional elements are:
    ther: Theorectial mean and variance from rand_gen,

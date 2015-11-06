@@ -4,15 +4,15 @@
 \alias{sim_reg_single}
 \title{Master function to simulate single level data.}
 \usage{
-sim_reg_single(fixed, fixed.param, cov.param, n, error_var, with_err_gen,
-  arima = FALSE, data_str, cor_vars = NULL, fact.vars = list(NULL), ...)
+sim_reg_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen,
+  arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL), ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
 
-\item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
+\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
-\item{cov.param}{List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or
+\item{cov_param}{List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or
 interactions. Must be same order as fixed formula above.}
 
 \item{n}{Cluster sample size.}
@@ -30,12 +30,12 @@ arima.sim. See \code{\link{arima.sim}} for examples.}
 
 \item{cor_vars}{A vector of correlations between variables.}
 
-\item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
-each list must include numlevels and var.type (must be "lvl1" or "lvl2");
+\item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification,
+each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 optional specifications are: replace, prob, value.labels.}
 
 \item{...}{Additional specification needed to pass to the random generating
-function defined by rand.gen.}
+function defined by with_err_gen.}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

@@ -29,27 +29,28 @@ The `simglm` package currently supports simulation of MCAR and MAR mechanisms. T
 # Simulate longitudinal data
 fixed <- ~1 + time + diff + act + time:act
 random <- ~1 + time + diff
-fixed.param <- c(4, 2, 6, 2.3, 7)
+fixed_param <- c(4, 2, 6, 2.3, 7)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = "rnorm")
-cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
+cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
 n <- 150
 p <- 30
 error_var <- 4
 with_err_gen <- 'rnorm'
 data_str <- "long"
-temp_long <- sim_reg(fixed, random, random3 = NULL, fixed.param, random_param, random_param3 = NULL,
- cov.param, k = NULL, n, p, error_var, with_err_gen, data_str = data_str)
+temp_long <- sim_reg(fixed, random, random3 = NULL, fixed_param, random_param, random_param3 = NULL,
+ cov_param, k = NULL, n, p, error_var, with_err_gen, data_str = data_str)
 
 # simulate missing data
-temp_long_miss <- missing_data(temp_long, miss_prop = .25, type = 'dropout', clust_var = 'clustID')
+temp_long_miss <- missing_data(temp_long, miss_prop = .25, type = 'dropout', 
+                               clust_var = 'clustID', within_id = 'withinID')
 head(temp_long_miss)
 ```
 
-From the example above, first two level longitudinal data are simulated. Then the `missing_data` function is used to generate the missing data. The function call includes the data frame to generate missing data, the proportion of values that are missing (in this case approximately 25% of the data will be identified as missing), the type is dropout, and the cluster ID variable is named as 'clustID'. The output shows that two additional variables are added, a dichotomous variable reflecting whether the outcome is missing (a value of 1) or not (0) and a new outcome variable (labeled as *sim.data2*) to reflect the new outcome with missing data. To verify that indeed about 25% of the data are now missing:
+From the example above, first two level longitudinal data are simulated. Then the `missing_data` function is used to generate the missing data. The function call includes the data frame to generate missing data, the proportion of values that are missing (in this case approximately 25% of the data will be identified as missing), the type is dropout, and the cluster ID variable is named as 'clustID'. The output shows that two additional variables are added, a dichotomous variable reflecting whether the outcome is missing (a value of 1) or not (0) and a new outcome variable (labeled as *sim_data2*) to reflect the new outcome with missing data. To verify that indeed about 25% of the data are now missing:
 
 ```{r propmissing}
 prop.table(table(temp_long_miss$missing))
-prop.table(table(is.na(temp_long_miss$sim.data2)))
+prop.table(table(is.na(temp_long_miss$sim_data2)))
 ```
 
 ### MAR Missing Data Example
@@ -58,14 +59,14 @@ The mar missing data is similar to that of dropout missing data, but instead of 
 ```{r marexamp}
 # simulate data
 fixed <- ~1 + age + income
-fixed.param <- c(2, 0.3, 1.3)
-cov.param <- list(mean = c(0, 0), sd = c(4, 3), 
-                  var.type = c("single", "single"))
+fixed_param <- c(2, 0.3, 1.3)
+cov_param <- list(mean = c(0, 0), sd = c(4, 3), 
+                  var_type = c("single", "single"))
 n <- 150
 error_var <- 3
 with_err_gen <- 'rnorm'
-temp_single <- sim_reg(fixed = fixed, fixed.param = fixed.param,
-                       cov.param = cov.param,
+temp_single <- sim_reg(fixed = fixed, fixed_param = fixed_param,
+                       cov_param = cov_param,
                        n = n, error_var = error_var, with_err_gen = with_err_gen,
                        data_str = "single")
 
@@ -79,11 +80,11 @@ head(tmp_single_miss)
 
 First single level data are simulated for 150 individuals. Missing proportions are then generated. In this example, 10 different proportions are created in decreasing order. This is important as the data generation arranges the covariate from smallest to largest. Then the missing proportions are repeated so that the `miss_prop` vector is the same length as the number of individuals. The second new addition is the argument `miss_cov`, this is the covariate that is used to generate the missing data. In this example, the covariate *income* is used.
 
-Three additional variables are added in this function, **miss_prop**, **miss_prob**, and **sim.data2** which reflect the missing proportion, the missing probability, and the new simulated data with missing data included. The missing data are generated if the **miss_prob** variable is greater than **miss_prop**, then the value is NA, otherwise it is not. The percentages can be summarized with the following table to show the structure of missing data depends on the variable **income**.
+Three additional variables are added in this function, **miss_prop**, **miss_prob**, and **sim_data2** which reflect the missing proportion, the missing probability, and the new simulated data with missing data included. The missing data are generated if the **miss_prob** variable is greater than **miss_prop**, then the value is NA, otherwise it is not. The percentages can be summarized with the following table to show the structure of missing data depends on the variable **income**.
 
 
 ```{r marmisscheck}
-table(tmp_single_miss$miss_prop,is.na(tmp_single_miss$sim.data2))
+table(tmp_single_miss$miss_prop,is.na(tmp_single_miss$sim_data2))
 ```
 
 ## MCAR Missing Data Example
@@ -95,10 +96,10 @@ tmp_single_miss <- missing_data(temp_single, miss_prop = .25,
 head(tmp_single_miss)
 ```
 
-When generating missing data from a single level data set, the `clust_var` argument must be set to `NULL`. The rest of the function call is very similar to past calls to the `missing_data` function. Three additional variables are created, **miss_prob**, **missing**, and **sim.data2** which reflect the missing probability, a dichotomous missing variable, and the new generated missing data. The data is generated as missing if the **miss_prob** variable is less than the miss_prop argument above (0.25 in this case).
+When generating missing data from a single level data set, the `clust_var` argument must be set to `NULL`. The rest of the function call is very similar to past calls to the `missing_data` function. Three additional variables are created, **miss_prob**, **missing**, and **sim_data2** which reflect the missing probability, a dichotomous missing variable, and the new generated missing data. The data is generated as missing if the **miss_prob** variable is less than the miss_prop argument above (0.25 in this case).
 
 ```{r mcarmissverify}
-prop.table(table(is.na(tmp_single_miss$sim.data2)))
+prop.table(table(is.na(tmp_single_miss$sim_data2)))
 ```
 <!--
 Data can also be simulated as MCAR at the cluster level. Using the longitudinal example from above.

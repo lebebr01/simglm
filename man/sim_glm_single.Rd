@@ -4,15 +4,15 @@
 \alias{sim_glm_single}
 \title{Simulation single level logistic regression model}
 \usage{
-sim_glm_single(fixed, fixed.param, cov.param, n, data_str, cor_vars = NULL,
-  fact.vars = list(NULL))
+sim_glm_single(fixed, fixed_param, cov_param, n, data_str, cor_vars = NULL,
+  fact_vars = list(NULL))
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
 
-\item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
+\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
-\item{cov.param}{List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or
+\item{cov_param}{List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or
 interactions. Must be same order as fixed formula above.}
 
 \item{n}{Cluster sample size.}
@@ -21,8 +21,8 @@ interactions. Must be same order as fixed formula above.}
 
 \item{cor_vars}{A vector of correlations between variables.}
 
-\item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
-     each list must include numlevels and var.type (must be "lvl1" or "lvl2");
+\item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification,
+     each list must include numlevels and var_type (must be "lvl1" or "lvl2");
      optional specifications are: replace, prob, value.labels.}
 }
 \description{
@@ -37,13 +37,13 @@ to help when running simulation studies.
 \donttest{
 # generating parameters for single level logistic regression
 fixed <- ~1 + act + diff + numCourse + act:numCourse
-fixed.param <- c(0.2, 1.5, 0.8, 1.2, 1.1)
-cov.param <- list(mean = c(0, 0, 0), sd = c(1, 1, 1), var.type = c("single", "single", "single"))
+fixed_param <- c(0.2, 1.5, 0.8, 1.2, 1.1)
+cov_param <- list(mean = c(0, 0, 0), sd = c(1, 1, 1), var_type = c("single", "single", "single"))
 n <- 150
-temp.single <- sim_glm_single(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param,
+temp.single <- sim_glm_single(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
 n = n)
 # Fitting regression to obtain parameter estimates
-summary(glm(sim.data ~ 1 + act + diff + numCourse + act:numCourse, data = temp.single,
+summary(glm(sim_data ~ 1 + act + diff + numCourse + act:numCourse, data = temp.single,
 family = "binomial"))
 
 }

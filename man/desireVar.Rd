@@ -4,14 +4,14 @@
 \alias{desireVar}
 \title{Computes mixture normal variance}
 \usage{
-desireVar(desVar, num.dist, means, equalWeight = TRUE)
+desireVar(desVar, num_dist, means, equalWeight = TRUE)
 }
 \arguments{
 \item{desVar}{Desired overall variance of mixture normal distribution.}
 
-\item{num.dist}{Number of normal distributions.}
+\item{num_dist}{Number of normal distributions.}
 
-\item{means}{Vector of means for each normal distribution.  Must equal num.dist.}
+\item{means}{Vector of means for each normal distribution.  Must equal num_dist.}
 
 \item{equalWeight}{Should equal weights be used, only TRUE is currently supported.}
 }

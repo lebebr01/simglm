@@ -7,43 +7,43 @@
 #' to help when running simulation studies.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
-#' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
-#' @param cov.param List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or 
+#' @param fixed_param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
+#' @param cov_param List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or 
 #'   interactions. Must be same order as fixed formula above.
 #' @param n Cluster sample size.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
 #' @param cor_vars A vector of correlations between variables.
-#' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
-#'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
+#' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
+#'      each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
 #'             
 #' @examples 
 #' \donttest{
 #' # generating parameters for single level logistic regression
 #' fixed <- ~1 + act + diff + numCourse + act:numCourse
-#' fixed.param <- c(0.2, 1.5, 0.8, 1.2, 1.1)
-#' cov.param <- list(mean = c(0, 0, 0), sd = c(1, 1, 1), var.type = c("single", "single", "single"))
+#' fixed_param <- c(0.2, 1.5, 0.8, 1.2, 1.1)
+#' cov_param <- list(mean = c(0, 0, 0), sd = c(1, 1, 1), var_type = c("single", "single", "single"))
 #' n <- 150
-#' temp.single <- sim_glm_single(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param, 
+#' temp.single <- sim_glm_single(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param, 
 #' n = n)
 #' # Fitting regression to obtain parameter estimates
-#' summary(glm(sim.data ~ 1 + act + diff + numCourse + act:numCourse, data = temp.single,
+#' summary(glm(sim_data ~ 1 + act + diff + numCourse + act:numCourse, data = temp.single,
 #' family = "binomial"))
 #' 
 #' }
 #' @export
-sim_glm_single <- function(fixed, fixed.param, cov.param, n, 
-                           data_str, cor_vars = NULL, fact.vars = list(NULL)) {
+sim_glm_single <- function(fixed, fixed_param, cov_param, n, 
+                           data_str, cor_vars = NULL, fact_vars = list(NULL)) {
   
-  fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
+  fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   
-  if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
+  if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
   
-  Xmat <- sim_fixef_single(fixed, fixed.vars, n, cov.param, cor_vars, fact.vars)
+  Xmat <- sim_fixef_single(fixed, fixed_vars, n, cov_param, cor_vars, fact_vars)
   
-  sim.data <- data_glm_single(Xmat, fixed.param, n)
+  sim_data <- data_glm_single(Xmat, fixed_param, n)
   
-  Xmat <- data.frame(Xmat,sim.data)
+  Xmat <- data.frame(Xmat,sim_data)
   Xmat$ID <- 1:n
   return(Xmat)
   
@@ -59,7 +59,7 @@ sim_glm_single <- function(fixed, fixed.param, cov.param, n,
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
-#' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
+#' @param fixed_param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
 #' @param random_param A list of named elements that must contain: 
 #'             random_var = variance of random parameters,
 #'             rand_gen = Name of simulation function for random effects.
@@ -68,15 +68,15 @@ sim_glm_single <- function(fixed, fixed.param, cov.param, n,
 #'             ther_sim: Simulate mean/variance for standardization purposes,
 #'             cor_vars: Correlation between random effects,
 #'             ...: Additional parameters needed for rand_gen function.
-#' @param cov.param List of mean, sd (standard deviations), and var.type for fixed effects. 
+#' @param cov_param List of mean, sd (standard deviations), and var_type for fixed effects. 
 #'  Does not include intercept, time, factors, or interactions. 
-#'  var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
+#'  var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
 #' @param cor_vars A vector of correlations between variables.
-#' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
-#'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
+#' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
+#'      each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
 #' @param unbal A vector of sample sizes for the number of observations for each level 2
 #'  cluster. Must have same length as level two sample size n. Alternative specification
@@ -88,27 +88,27 @@ sim_glm_single <- function(fixed, fixed.param, cov.param, n,
 #' \donttest{
 #' fixed <- ~1 + time + diff + act + time:act
 #' random <- ~1
-#' fixed.param <- c(0.2, 1.5, 0.8, 1.2, 1.1)
+#' fixed_param <- c(0.2, 1.5, 0.8, 1.2, 1.1)
 #' random_param <- list(random_var = 3, rand_gen = 'rnorm')
-#' cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
+#' cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
 #' n <- 100
 #' p <- 10
 #' data_str <- "long"
-#' temp.long <- sim_glm_nested(fixed, random, fixed.param, random_param,
-#'  cov.param, n, p, rand_dist, data_str = data_str)
+#' temp.long <- sim_glm_nested(fixed, random, fixed_param, random_param,
+#'  cov_param, n, p, rand_dist, data_str = data_str)
 #' }
 #' @export
-sim_glm_nested <- function(fixed, random, fixed.param, random_param = list(), cov.param, n, p, 
-                           data_str, cor_vars = NULL, fact.vars = list(NULL),
+sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), cov_param, n, p, 
+                           data_str, cor_vars = NULL, fact_vars = list(NULL),
                            unbal = FALSE, unbalCont = NULL) {
   
   #if(randCor > 1 | randCor < -1) stop("cor out of range")
   
-  fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
+  fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
   
   if(length(rand.vars)+1 != length(random_param$random_var)) stop("Random lengths not equal")
-  if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
+  if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
   
   if(unbal == FALSE) {
     lvl1ss <- rep(p, n)
@@ -118,20 +118,20 @@ sim_glm_nested <- function(fixed, random, fixed.param, random_param = list(), co
     lvl1ss <- round(runif(n = n, min = min(unbalCont), max = max(unbalCont)), 0)
   }
   
-  rand.eff <- do.call(sim_rand_eff, c(random_param, n = n))
+  rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
   
-  Xmat <- sim_fixef_nested(fixed, fixed.vars, cov.param, n, lvl1ss, 
-                           data_str = data_str, cor_vars = cor_vars, fact.vars = fact.vars)
+  Xmat <- sim_fixef_nested(fixed, fixed_vars, cov_param, n, lvl1ss, 
+                           data_str = data_str, cor_vars = cor_vars, fact_vars = fact_vars)
   
-  reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
-    rep(rand.eff[,xx], times = lvl1ss)))
-  colnames(reff) <- c(unlist(lapply(1:ncol(rand.eff), function(xx) paste("b", xx-1, sep = ""))))
+  reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx) 
+    rep(rand_eff[,xx], times = lvl1ss)))
+  colnames(reff) <- c(unlist(lapply(1:ncol(rand_eff), function(xx) paste("b", xx-1, sep = ""))))
   
   Zmat <- model.matrix(random, data.frame(Xmat))
 
-  sim.data <- data_glm_nested(Xmat, Zmat, fixed.param, rand.eff, n, p = lvl1ss)
+  sim_data <- data_glm_nested(Xmat, Zmat, fixed_param, rand_eff, n, p = lvl1ss)
   
-  Xmat <- data.frame(Xmat,reff,sim.data)
+  Xmat <- data.frame(Xmat,reff,sim_data)
   Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
   Xmat$clustID <- rep(1:n, times = lvl1ss)
   return(Xmat)
@@ -152,7 +152,7 @@ sim_glm_nested <- function(fixed, random, fixed.param, random_param = list(), co
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
 #' @param random3 One sided formula for random effects at third level in the simulation. Must be a subset of fixed
 #'  (and likely of random).
-#' @param fixed.param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
+#' @param fixed_param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
 #' @param random_param A list of named elements that must contain: 
 #'             random_var = variance of random parameters,
 #'             rand_gen = Name of simulation function for random effects.
@@ -169,16 +169,16 @@ sim_glm_nested <- function(fixed, random, fixed.param, random_param = list(), co
 #'             ther_sim: Simulate mean/variance for standardization purposes,
 #'             cor_vars: Correlation between random effects,
 #'             ...: Additional parameters needed for rand_gen function.
-#' @param cov.param List of mean, sd (standard deviations), and var.type for fixed effects. 
+#' @param cov_param List of mean, sd (standard deviations), and var_type for fixed effects. 
 #'  Does not include intercept, time, factors, or interactions. 
-#'  var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
+#'  var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
 #' @param k Number of third level clusters.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
 #' @param cor_vars A vector of correlations between variables.
-#' @param fact.vars A nested list of factor, categorical, or ordinal variable specification, 
-#'      each list must include numlevels and var.type (must be "lvl1" or "lvl2");
+#' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
+#'      each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
 #' @param unbal A vector of sample sizes for the number of observations for each level 2
 #'  cluster. Must have same length as level two sample size n. Alternative specification
@@ -197,35 +197,35 @@ sim_glm_nested <- function(fixed, random, fixed.param, random_param = list(), co
 #' fixed <- ~1 + time + diff + act + actClust + time:act
 #' random <- ~1 + time + diff
 #' random3 <- ~ 1 + time
-#' fixed.param <- c(4, 2, 6, 2.3, 7, 0)
+#' fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 #' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 #' random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-#' cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
-#' var.type = c("lvl1", "lvl2", "lvl3"))
+#' cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
+#' var_type = c("lvl1", "lvl2", "lvl3"))
 #' k <- 10
 #' n <- 150
 #' p <- 30
 #' data_str <- "long"
-#' temp.three <- sim_glm_nested3(fixed, random, random3, fixed.param, random_param,
-#' random_param3, cov.param, k, n, p, data_str = data_str)
+#' temp.three <- sim_glm_nested3(fixed, random, random3, fixed_param, random_param,
+#' random_param3, cov_param, k, n, p, data_str = data_str)
 #' head(temp.three)
 #' }
 #' @export 
-sim_glm_nested3 <- function(fixed, random, random3, fixed.param, random_param = list(), 
-                            random_param3 = list(), cov.param, k, n, p,
-                            data_str, cor_vars = NULL, fact.vars = list(NULL),
+sim_glm_nested3 <- function(fixed, random, random3, fixed_param, random_param = list(), 
+                            random_param3 = list(), cov_param, k, n, p,
+                            data_str, cor_vars = NULL, fact_vars = list(NULL),
                             unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL) {
   
   # if(randCor > 1 | randCor < -1 | randCor3 > 1 | randCor3 < -1) 
   #   stop("Random effect correlation out of range")
   
-  fixed.vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
+  fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
   rand.vars3 <- attr(terms(random3),"term.labels")   ##Extracting random effect term labels
   
   if(length(rand.vars)+1 != length(random_param$random_var)) stop("Random lengths not equal")
   if(length(rand.vars3)+1 != length(random_param3$random_var)) stop("Third level random lengths not equal")
-  if({length(fixed.vars)+1} != {length(fixed.param)}) stop("Fixed lengths not equal")
+  if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
   
   if(unbal3 == FALSE) {
     lvl2ss <- rep(n/k, k)
@@ -251,28 +251,28 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed.param, random_param = 
   lvl3ss <- sapply(lapply(1:length(beg), function(xx) 
     lvl1ss[beg[xx]:end[xx]]), sum)
   
-  rand.eff <- do.call(sim_rand_eff, c(random_param, n = n))
-  rand.eff3 <- do.call(sim_rand_eff, c(random_param3, n = k))
+  rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
+  rand_eff3 <- do.call(sim_rand_eff, c(random_param3, n = k))
   
-  Xmat <- sim_fixef_nested3(fixed, fixed.vars, cov.param, k, n = lvl2ss, 
+  Xmat <- sim_fixef_nested3(fixed, fixed_vars, cov_param, k, n = lvl2ss, 
                             p = lvl1ss, data_str = data_str, cor_vars = cor_vars, 
-                            fact.vars = fact.vars)
+                            fact_vars = fact_vars)
   
-  reff <- do.call("cbind", lapply(1:ncol(rand.eff), function(xx) 
-    rep(rand.eff[,xx], times = lvl1ss)))
-  colnames(reff) <- c(unlist(lapply(1:ncol(rand.eff), function(xx) paste("b", xx-1, "_2", sep = ""))))
+  reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx) 
+    rep(rand_eff[,xx], times = lvl1ss)))
+  colnames(reff) <- c(unlist(lapply(1:ncol(rand_eff), function(xx) paste("b", xx-1, "_2", sep = ""))))
   
-  reff3 <- do.call("cbind", lapply(1:ncol(rand.eff3), function(xx) 
-    rep(rand.eff3[,xx], times = lvl2ss)))
-  colnames(reff3) <- c(unlist(lapply(1:ncol(rand.eff3), function(xx) paste("b", xx-1, "_3", sep = ""))))
+  reff3 <- do.call("cbind", lapply(1:ncol(rand_eff3), function(xx) 
+    rep(rand_eff3[,xx], times = lvl2ss)))
+  colnames(reff3) <- c(unlist(lapply(1:ncol(rand_eff3), function(xx) paste("b", xx-1, "_3", sep = ""))))
   
   Zmat <- model.matrix(random, data.frame(Xmat))
   Zmat3 <- model.matrix(random3, data.frame(Xmat))
   
-  sim.data <- data_glm_nested3(Xmat, Zmat, Zmat3, fixed.param, rand.eff, rand.eff3,
+  sim_data <- data_glm_nested3(Xmat, Zmat, Zmat3, fixed_param, rand_eff, rand_eff3,
                                k, n = lvl2ss, p = lvl1ss)
   
-  Xmat <- data.frame(Xmat, reff, sim.data)
+  Xmat <- data.frame(Xmat, reff, sim_data)
   Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
   Xmat$clustID <- rep(1:n, times = lvl1ss)
   Xmat$clust3ID <- rep(1:k, times = lvl3ss)

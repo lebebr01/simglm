@@ -4,7 +4,7 @@
 \alias{data_reg_nested3}
 \title{Simulates three level nested data with a single third level random effect}
 \usage{
-data_reg_nested3(Xmat, Zmat, Zmat3, beta, rand.eff, rand.eff3, k, n, p, err)
+data_reg_nested3(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3, k, n, p, err)
 }
 \arguments{
 \item{Xmat}{A matrix of covariates.}
@@ -15,9 +15,9 @@ data_reg_nested3(Xmat, Zmat, Zmat3, beta, rand.eff, rand.eff3, k, n, p, err)
 
 \item{beta}{A vector of regression parameters.}
 
-\item{rand.eff}{A vector of random effects, must be stacked.}
+\item{rand_eff}{A vector of random effects, must be stacked.}
 
-\item{rand.eff3}{A vector of level 3 random effects, must be stacked.}
+\item{rand_eff3}{A vector of level 3 random effects, must be stacked.}
 
 \item{k}{Number of third level clusters.}
 

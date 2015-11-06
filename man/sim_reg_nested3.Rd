@@ -4,9 +4,9 @@
 \alias{sim_reg_nested3}
 \title{Function to simulate three level nested data}
 \usage{
-sim_reg_nested3(fixed, random, random3, fixed.param, random_param = list(),
-  random_param3 = list(), cov.param, k, n, p, error_var, with_err_gen,
-  arima = FALSE, data_str, cor_vars = NULL, fact.vars = list(NULL),
+sim_reg_nested3(fixed, random, random3, fixed_param, random_param = list(),
+  random_param3 = list(), cov_param, k, n, p, error_var, with_err_gen,
+  arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL),
   unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
   ...)
 }
@@ -18,7 +18,7 @@ sim_reg_nested3(fixed, random, random3, fixed.param, random_param = list(),
 \item{random3}{One sided formula for random effects at third level in the simulation. Must be a subset of fixed
 (and likely of random).}
 
-\item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
+\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
 \item{random_param}{A list of named elements that must contain:
    random_var = variance of random parameters,
@@ -38,9 +38,9 @@ Optional elements are:
    cor_vars: Correlation between random effects,
    ...: Additional parameters needed for rand_gen function.}
 
-\item{cov.param}{List of mean, sd (standard deviations), and var.type for fixed effects.
+\item{cov_param}{List of mean, sd (standard deviations), and var_type for fixed effects.
 Does not include intercept, time, factors, or interactions.
-var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.}
+var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.}
 
 \item{k}{Number of third level clusters.}
 
@@ -61,8 +61,8 @@ arima.sim. See \code{\link{arima.sim}} for examples.}
 
 \item{cor_vars}{A vector of correlations between variables.}
 
-\item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
-each list must include numlevels and var.type (must be "lvl1" or "lvl2");
+\item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification,
+each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 optional specifications are: replace, prob, value.labels.}
 
 \item{unbal}{A vector of sample sizes for the number of observations for each level 2
@@ -80,7 +80,7 @@ will be drawn from a random uniform distribution with min and max specified.}
 will be drawn from a random uniform distribution with min and max specified.}
 
 \item{...}{Additional specification needed to pass to the random generating
-function defined by rand.gen.}
+function defined by with_err_gen.}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

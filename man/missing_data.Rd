@@ -4,8 +4,9 @@
 \alias{missing_data}
 \title{Master Missing Data Function}
 \usage{
-missing_data(sim_data, resp_var = "sim.data", clust_var = NULL, miss_prop,
-  type = c("dropout", "random", "mar"), miss_cov)
+missing_data(sim_data, resp_var = "sim_data", clust_var = NULL,
+  within_id = NULL, miss_prop, type = c("dropout", "random", "mar"),
+  miss_cov)
 }
 \arguments{
 \item{sim_data}{Simulated data frame}
@@ -14,6 +15,8 @@ missing_data(sim_data, resp_var = "sim.data", clust_var = NULL, miss_prop,
 
 \item{clust_var}{Cluster variable used for the grouping, set to
 NULL by default which means no clustering.}
+
+\item{within_id}{ID variable within each cluster.}
 
 \item{miss_prop}{Proportion of missing data overall or a vector
 the same length as the number of clusters representing the

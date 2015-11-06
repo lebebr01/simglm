@@ -4,17 +4,17 @@
 \alias{sim_fixef_nested}
 \title{Simulates design matrix.}
 \usage{
-sim_fixef_nested(fixed, fixed.vars, cov.param, n, lvl1ss, data_str,
-  cor_vars = NULL, fact.vars = list(NULL))
+sim_fixef_nested(fixed, fixed_vars, cov_param, n, lvl1ss, data_str,
+  cor_vars = NULL, fact_vars = list(NULL))
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.}
 
-\item{fixed.vars}{Character vector of covariates for design matrix.}
+\item{fixed_vars}{Character vector of covariates for design matrix.}
 
-\item{cov.param}{List of mean, sd (standard deviations), and var.type for fixed effects.
+\item{cov_param}{List of mean, sd (standard deviations), and var_type for fixed effects.
 Does not include intercept, time, factors, or interactions.
-var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.}
+var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.}
 
 \item{n}{Number of clusters.}
 
@@ -24,8 +24,8 @@ var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 
 \item{cor_vars}{A vector of correlations between variables.}
 
-\item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
-each list must include numlevels and var.type (must be "lvl1" or "lvl2");
+\item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification,
+each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 optional specifications are: replace, prob, value.labels.}
 }
 \description{

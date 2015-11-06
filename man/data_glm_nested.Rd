@@ -4,7 +4,7 @@
 \alias{data_glm_nested}
 \title{Generate logistic regression outcome}
 \usage{
-data_glm_nested(Xmat, Zmat, beta, rand.eff, n, p)
+data_glm_nested(Xmat, Zmat, beta, rand_eff, n, p)
 }
 \arguments{
 \item{Xmat}{A matrix of covariates.}
@@ -13,7 +13,7 @@ data_glm_nested(Xmat, Zmat, beta, rand.eff, n, p)
 
 \item{beta}{A vector of regression parameters.}
 
-\item{rand.eff}{A vector of random effects, must be stacked.}
+\item{rand_eff}{A vector of random effects, must be stacked.}
 
 \item{n}{Number of clusters.}
 

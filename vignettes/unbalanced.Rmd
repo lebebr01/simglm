@@ -12,7 +12,7 @@ vignette: >
 
 Unbalanced data tends to be the rule rather than the exception with real world data. As such, when simulating data it is better to replicate data that matches real world data conditions. The *simglm* package by default generates data for a balanced design. This means that the number of level one units within each level two cluster is the same.
 
-To override the default and generate unbalanced data where the number of observations within each level two cluster differ, two new arguments need to be passed to the *sim.reg* function. First, the argument **unbal** needs to be set to TRUE. This overrides the default of a balanced design. Next, the argument **unbalCont** is a vector of two values. The two values represent the minimum number of values per cluster and the maximum number of values per cluster. They can be specified in any order. The number of observations per cluster is then simulated from a random uniform distribution with the minimum and maximum values specified in the **unbalCont** argument.
+To override the default and generate unbalanced data where the number of observations within each level two cluster differ, two new arguments need to be passed to the *sim_reg* function. First, the argument **unbal** needs to be set to TRUE. This overrides the default of a balanced design. Next, the argument **unbalCont** is a vector of two values. The two values represent the minimum number of values per cluster and the maximum number of values per cluster. They can be specified in any order. The number of observations per cluster is then simulated from a random uniform distribution with the minimum and maximum values specified in the **unbalCont** argument.
 
 The following is an example of an unbalanced two level design. Note, the **p** argument (level one sample size) is set to NULL as the level one sample size is specified in the **unbalCont** argument.
 
@@ -24,9 +24,9 @@ set.seed(100)
 library(simglm)
 fixed <- ~1 + diff + act + diff:act
 random <- ~1 +  diff
-fixed.param <- c(4, 6, 2.3, 7)
+fixed_param <- c(4, 6, 2.3, 7)
 random_param <- list(random_var = c(7, 2), rand_gen = 'rnorm')
-cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
+cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
 n <- 150
 unbal <- TRUE
 error_var <- 4
@@ -34,8 +34,8 @@ with_err_gen <- 'rnorm'
 data_str <- "cross"
 unbalCont <- c(3, 10)
 temp_cross <- sim_reg(fixed = fixed, random = random, 
-                      fixed.param = fixed.param, 
-                      random_param = random_param, cov.param = cov.param,
+                      fixed_param = fixed_param, 
+                      random_param = random_param, cov_param = cov_param,
                       k = NULL, n = n, p = NULL, error_var = error_var,
                       with_err_gen = with_err_gen, data_str = data_str, 
                       unbal = TRUE, unbalCont = unbalCont)
@@ -55,11 +55,11 @@ library(simglm)
 fixed <- ~1 + time + diff + act + actClust + time:act
 random <- ~1 + time + diff
 random3 <- ~ 1 + time
-fixed.param <- c(4, 2, 6, 2.3, 7, 0)
+fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = "rnorm")
 random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
-var.type = c("lvl1", "lvl2", "lvl3"))
+cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
+var_type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
 n <- 150
 unbal <- TRUE
@@ -70,8 +70,8 @@ data_str <- "long"
 unbalCont <- c(min = 3, max = 10)
 unbalCont3 = NULL
 temp_three <- sim_reg(fixed = fixed, random = random, random3 = random3,
-      fixed.param = fixed.param, random_param = random_param, 
-      random_param3 = random_param3, cov.param = cov.param, k = k,
+      fixed_param = fixed_param, random_param = random_param, 
+      random_param3 = random_param3, cov_param = cov_param, k = k,
       n = n, p = p, unbal = unbal, unbal3 = unbal3, error_var = error_var,
       with_err_gen = with_err_gen, 
       data_str = data_str, unbalCont = unbalCont, unbalCont3 = unbalCont3)
@@ -90,11 +90,11 @@ library(simglm)
 fixed <- ~1 + time + diff + act + actClust + time:act
 random <- ~1 + time + diff
 random3 <- ~ 1 + time
-fixed.param <- c(4, 2, 6, 2.3, 7, 0)
+fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
-var.type = c("lvl1", "lvl2", "lvl3"))
+cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
+var_type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
 unbal <- TRUE
 unbal3 <- TRUE
@@ -104,8 +104,8 @@ data_str <- "long"
 unbalCont <- c(min = 3, max = 30)
 unbalCont3 = c(min = 3, max = 10)
 temp_three <- sim_reg(fixed = fixed, random = random, random3 = random3,
-      fixed.param = fixed.param, random_param = random_param, 
-      random_param3 = random_param3, cov.param = cov.param, k = k,
+      fixed_param = fixed_param, random_param = random_param, 
+      random_param3 = random_param3, cov_param = cov_param, k = k,
       n = NULL, p = NULL, unbal = unbal, unbal3 = unbal3, error_var = error_var,
       with_err_gen = with_err_gen, 
       data_str = data_str, unbalCont = unbalCont, unbalCont3 = unbalCont3)

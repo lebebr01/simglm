@@ -4,7 +4,7 @@
 \alias{data_reg_nested}
 \title{Simulates two level nested data}
 \usage{
-data_reg_nested(Xmat, Zmat, beta, rand.eff, n, p, err)
+data_reg_nested(Xmat, Zmat, beta, rand_eff, n, p, err)
 }
 \arguments{
 \item{Xmat}{A matrix of covariates.}
@@ -13,7 +13,7 @@ data_reg_nested(Xmat, Zmat, beta, rand.eff, n, p, err)
 
 \item{beta}{A vector of regression parameters.}
 
-\item{rand.eff}{A vector of random effects, must be stacked.}
+\item{rand_eff}{A vector of random effects, must be stacked.}
 
 \item{n}{Number of clusters.}
 

@@ -4,7 +4,8 @@
 \alias{random_missing}
 \title{Random Missing Data}
 \usage{
-random_missing(sim_data, resp_var = "sim.data", miss_prop, clust_var = NULL)
+random_missing(sim_data, resp_var = "sim_data", miss_prop, clust_var = NULL,
+  within_id = "withinID")
 }
 \arguments{
 \item{sim_data}{Simulated data frame}
@@ -16,6 +17,8 @@ the same length as the number of clusters representing the
 percentage of missing data for each cluster}
 
 \item{clust_var}{Cluster variable used for the grouping.}
+
+\item{within_id}{ID variable within each cluster.}
 }
 \description{
 Function that inputs simulated data and returns data frame with
@@ -28,6 +31,6 @@ The function returns two new variables to the original data frame.
 The first is a dichotomous variable representing whether the response
 variable would be marked as NA (1) or not (0). The second is a
 re-representation of the response variable with the values coded as
-NA named 'sim.data2'.
+NA named 'sim_data2'.
 }
 

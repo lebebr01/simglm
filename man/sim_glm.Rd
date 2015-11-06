@@ -4,9 +4,9 @@
 \alias{sim_glm}
 \title{Master generalized simulation function.}
 \usage{
-sim_glm(fixed, random, random3, fixed.param, random_param = list(),
-  random_param3 = list(), cov.param, k, n, p, data_str, cor_vars = NULL,
-  fact.vars = list(NULL), unbal = FALSE, unbal3 = FALSE,
+sim_glm(fixed, random, random3, fixed_param, random_param = list(),
+  random_param3 = list(), cov_param, k, n, p, data_str, cor_vars = NULL,
+  fact_vars = list(NULL), unbal = FALSE, unbal3 = FALSE,
   unbalCont = NULL, unbalCont3 = NULL)
 }
 \arguments{
@@ -17,7 +17,7 @@ sim_glm(fixed, random, random3, fixed.param, random_param = list(),
 \item{random3}{One sided formula for random effects at third level in the simulation. Must be a subset of fixed
 (and likely of random).}
 
-\item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
+\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
 \item{random_param}{A list of named elements that must contain:
    random_var = variance of random parameters,
@@ -37,7 +37,7 @@ Optional elements are:
    cor_vars: Correlation between random effects,
    ...: Additional parameters needed for rand_gen function.}
 
-\item{cov.param}{List of mean and variance for fixed effects. Does not include intercept, time, or
+\item{cov_param}{List of mean and variance for fixed effects. Does not include intercept, time, or
 interactions. Must be same order as fixed formula above.}
 
 \item{k}{Number of third level clusters.}
@@ -50,8 +50,8 @@ interactions. Must be same order as fixed formula above.}
 
 \item{cor_vars}{A vector of correlations between variables.}
 
-\item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
-each list must include numlevels and var.type (must be "lvl1" or "lvl2");
+\item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification,
+each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 optional specifications are: replace, prob, value.labels.}
 
 \item{unbal}{A vector of sample sizes for the number of observations for each level 2
@@ -83,39 +83,39 @@ linear mixed models (aka. hierarchical linear models or multilevel models).
 \examples{
 # generating parameters for single level regression
 fixed <- ~1 + act + diff + numCourse + act:numCourse
-fixed.param <- c(2, 4, 1, 3.5, 2)
-cov.param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var.type = c("single", "single", "single"))
+fixed_param <- c(2, 4, 1, 3.5, 2)
+cov_param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var_type = c("single", "single", "single"))
 n <- 150
-temp.single <- sim_glm(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param,
+temp.single <- sim_glm(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
 n = n, data_str = "single")
 
 # Longitudinal linear mixed model example
 fixed <- ~1 + time + diff + act + time:act
 random <- ~1 + time + diff
-fixed.param <- c(4, 2, 6, 2.3, 7)
+fixed_param <- c(4, 2, 6, 2.3, 7)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
-cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
+cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
 n <- 150
 p <- 30
 data_str <- "long"
-temp.long <- sim_glm(fixed, random, random3 = NULL, fixed.param, random_param, random_param3 = NULL,
- cov.param, k = NULL, n, p, data_str = data_str)
+temp.long <- sim_glm(fixed, random, random3 = NULL, fixed_param, random_param, random_param3 = NULL,
+ cov_param, k = NULL, n, p, data_str = data_str)
 
 
 # Three level example
 fixed <- ~1 + time + diff + act + actClust + time:act
 random <- ~1 + time + diff
 random3 <- ~ 1 + time
-fixed.param <- c(4, 2, 6, 2.3, 7, 0)
+fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
-var.type = c("lvl1", "lvl2", "lvl3"))
+cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
+var_type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
 n <- 150
 p <- 30
 data_str <- "long"
-temp.three <- sim_glm(fixed, random, random3, fixed.param, random_param,
-random_param3, cov.param, k,n, p, data_str = data_str)
+temp.three <- sim_glm(fixed, random, random3, fixed_param, random_param,
+random_param3, cov_param, k,n, p, data_str = data_str)
 }
 

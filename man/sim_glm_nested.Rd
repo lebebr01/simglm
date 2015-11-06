@@ -4,8 +4,8 @@
 \alias{sim_glm_nested}
 \title{Simulate two level logistic regression model}
 \usage{
-sim_glm_nested(fixed, random, fixed.param, random_param = list(), cov.param,
-  n, p, data_str, cor_vars = NULL, fact.vars = list(NULL), unbal = FALSE,
+sim_glm_nested(fixed, random, fixed_param, random_param = list(), cov_param,
+  n, p, data_str, cor_vars = NULL, fact_vars = list(NULL), unbal = FALSE,
   unbalCont = NULL)
 }
 \arguments{
@@ -13,7 +13,7 @@ sim_glm_nested(fixed, random, fixed.param, random_param = list(), cov.param,
 
 \item{random}{One sided formula for random effects in the simulation. Must be a subset of fixed.}
 
-\item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
+\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
 \item{random_param}{A list of named elements that must contain:
    random_var = variance of random parameters,
@@ -24,9 +24,9 @@ Optional elements are:
    cor_vars: Correlation between random effects,
    ...: Additional parameters needed for rand_gen function.}
 
-\item{cov.param}{List of mean, sd (standard deviations), and var.type for fixed effects.
+\item{cov_param}{List of mean, sd (standard deviations), and var_type for fixed effects.
 Does not include intercept, time, factors, or interactions.
-var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.}
+var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.}
 
 \item{n}{Cluster sample size.}
 
@@ -36,8 +36,8 @@ var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 
 \item{cor_vars}{A vector of correlations between variables.}
 
-\item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
-each list must include numlevels and var.type (must be "lvl1" or "lvl2");
+\item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification,
+each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 optional specifications are: replace, prob, value.labels.}
 
 \item{unbal}{A vector of sample sizes for the number of observations for each level 2
@@ -59,14 +59,14 @@ other variables to help when running simulation studies.
 \donttest{
 fixed <- ~1 + time + diff + act + time:act
 random <- ~1
-fixed.param <- c(0.2, 1.5, 0.8, 1.2, 1.1)
+fixed_param <- c(0.2, 1.5, 0.8, 1.2, 1.1)
 random_param <- list(random_var = 3, rand_gen = 'rnorm')
-cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
+cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
 n <- 100
 p <- 10
 data_str <- "long"
-temp.long <- sim_glm_nested(fixed, random, fixed.param, random_param,
- cov.param, n, p, rand_dist, data_str = data_str)
+temp.long <- sim_glm_nested(fixed, random, fixed_param, random_param,
+ cov_param, n, p, rand_dist, data_str = data_str)
 }
 }
 

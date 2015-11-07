@@ -46,6 +46,7 @@
 #' @param pow_tail One-tailed or two-tailed test?
 #' @param ... Additional specification needed to pass to the random generating 
 #'             function defined by with_err_gen.
+#' @importFrom nlme lme
 #' @export 
 sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(), cov_param, n, p, 
                            error_var, with_err_gen, arima = FALSE, 

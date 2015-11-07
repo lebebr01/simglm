@@ -82,10 +82,10 @@ sim_pow <- function(fixed, random, random3, fixed_param,
       #               with_err_gen, pow_param, alpha, pow_dist, pow_tail))
     #})
   } else {
-    temp_pow <- replicate(replicates, sim_pow_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 
-                                                     error_var, with_err_gen, arima,
-                                                     data_str, fact_vars, unbal, unbalCont, ..., pow_param, alpha, 
-                                                     pow_dist, pow_tail))
+    temp_pow <- do.call('rbind', lapply(1:replicates, function(xx) 
+      sim_pow_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 
+                     error_var, with_err_gen, arima, data_str, cor_vars, fact_vars, 
+                     unbal, unbalCont, pow_param, alpha, pow_dist, pow_tail, ...)))
   }
   
   power <- temp_pow %>%

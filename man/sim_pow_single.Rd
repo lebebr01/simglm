@@ -4,31 +4,48 @@
 \alias{sim_pow_single}
 \title{Function to simulate power.}
 \usage{
-sim_pow_single(fixed, fixed.param, cov.param, n, error_var, rand_gen, pow_param,
-  alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2))
+sim_pow_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen,
+  arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL),
+  pow_param = NULL, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2),
+  ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
 
-\item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
+\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
-\item{cov.param}{List of mean and standard deviation for fixed effects. Does not include intercept, time, or
+\item{cov_param}{List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or
 interactions. Must be same order as fixed formula above.}
 
 \item{n}{Cluster sample size.}
 
 \item{error_var}{Scalar of error variance.}
 
-\item{rand_gen}{Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod",
-"norm" is default.}
+\item{with_err_gen}{Simulated within cluster error distribution. Must be a quoted 'r' distribution
+function.}
 
-\item{pow_param}{Number of parameter to calculate power includes intercept where applicable.}
+\item{arima}{TRUE/FALSE flag indicating whether residuals should
+be correlated. If TRUE, must specify a valid model to pass to
+arima.sim. See \code{\link{arima.sim}} for examples.}
+
+\item{data_str}{Type of data. Must be "cross", "long", or "single".}
+
+\item{cor_vars}{A vector of correlations between variables.}
+
+\item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification,
+each list must include numlevels and var_type (must be "lvl1" or "lvl2");
+optional specifications are: replace, prob, value.labels.}
+
+\item{pow_param}{Name of variable to calculate power for, must be a name from fixed.}
 
 \item{alpha}{What should the per test alpha rate be used for the hypothesis testing.}
 
 \item{pow_dist}{Which distribution should be used when testing hypothesis test, z or t?}
 
 \item{pow_tail}{One-tailed or two-tailed test?}
+
+\item{...}{Additional specification needed to pass to the random generating
+function defined by with_err_gen.}
 }
 \description{
 Input simulation conditions and which term to compute power for, export reported power.

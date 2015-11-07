@@ -4,11 +4,12 @@
 \alias{sim_pow}
 \title{Master power simulation function.}
 \usage{
-sim_pow(fixed, random, random3, fixed.param, random.param, random.param3,
-  cov.param, k, n, p, error_var, randCor, randCor3, rand_dist, rand_gen,
-  arima = FALSE, data_str, fact.vars = list(NULL), unbal = FALSE,
-  unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL, ..., pow_param,
-  alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), replicates)
+sim_pow(fixed, random, random3, fixed_param, random_param = list(),
+  random_param3 = list(), cov_param, k, n, p, error_var, with_err_gen,
+  arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL),
+  unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
+  pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), replicates,
+  ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -18,13 +19,27 @@ sim_pow(fixed, random, random3, fixed.param, random.param, random.param3,
 \item{random3}{One sided formula for random effects at third level in the simulation. Must be a subset of fixed
 (and likely of random).}
 
-\item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
+\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
-\item{random.param}{Variance of random effects. Must be same length as random.}
+\item{random_param}{A list of named elements that must contain:
+   random_var = variance of random parameters,
+   rand_gen = Name of simulation function for random effects.
+Optional elements are:
+   ther: Theorectial mean and variance from rand_gen,
+   ther_sim: Simulate mean/variance for standardization purposes,
+   cor_vars: Correlation between random effects,
+   ...: Additional parameters needed for rand_gen function.}
 
-\item{random.param3}{Variance of third level random effects. Must be same length as random3.}
+\item{random_param3}{A list of named elements that must contain:
+   random_var = variance of random parameters,
+   rand_gen = Name of simulation function for random effects.
+Optional elements are:
+   ther: Theorectial mean and variance from rand_gen,
+   ther_sim: Simulate mean/variance for standardization purposes,
+   cor_vars: Correlation between random effects,
+   ...: Additional parameters needed for rand_gen function.}
 
-\item{cov.param}{List of mean and variance for fixed effects. Does not include intercept, time, or
+\item{cov_param}{List of mean and variance for fixed effects. Does not include intercept, time, or
 interactions. Must be same order as fixed formula above.}
 
 \item{k}{Number of third level clusters.}
@@ -35,14 +50,7 @@ interactions. Must be same order as fixed formula above.}
 
 \item{error_var}{Scalar of error variance.}
 
-\item{randCor}{Correlation between random effects.}
-
-\item{randCor3}{Correlation between third level random effects.}
-
-\item{rand_dist}{Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod",
-"norm" is default.}
-
-\item{rand_gen}{Distribution function to pass on to the level one
+\item{with_err_gen}{Distribution function to pass on to the level one
 simulation of errors.}
 
 \item{arima}{TRUE/FALSE flag indicating whether residuals should
@@ -51,8 +59,10 @@ arima.sim. See \code{\link{arima.sim}} for examples.}
 
 \item{data_str}{Type of data. Must be "cross", "long", or "single".}
 
-\item{fact.vars}{A nested list of factor, categorical, or ordinal variable specification,
-each list must include numlevels and var.type (must be "lvl1" or "lvl2");
+\item{cor_vars}{A vector of correlations between variables.}
+
+\item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification,
+each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 optional specifications are: replace, prob, value.labels.}
 
 \item{unbal}{A vector of sample sizes for the number of observations for each level 2
@@ -69,8 +79,6 @@ will be drawn from a random uniform distribution with min and max specified.}
 \item{unbalCont3}{When unbal3 = TRUE, this specifies the minimum and maximum level two size,
 will be drawn from a random uniform distribution with min and max specified.}
 
-\item{...}{Additional parameters passed on to the level one error generating function}
-
 \item{pow_param}{Number of parameter to calculate power includes intercept where applicable.}
 
 \item{alpha}{What should the per test alpha rate be used for the hypothesis testing.}
@@ -80,6 +88,8 @@ will be drawn from a random uniform distribution with min and max specified.}
 \item{pow_tail}{One-tailed or two-tailed test?}
 
 \item{replicates}{How many replications should be done (i.e. the denominator in power calculation).}
+
+\item{...}{Additional parameters passed on to the level one error generating function}
 }
 \description{
 Input simulation conditions, returns power for term.

@@ -4,21 +4,21 @@
 \alias{sim_pow_nested}
 \title{Power simulation for nested designs}
 \usage{
-sim_pow_nested(fixed, random, fixed.param, random.param, cov.param, n, p,
-  error_var, randCor, rand_dist, rand_gen, arima, data_str, fact.vars, unbal,
-  unbalCont, ..., pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1,
-  2))
+sim_pow_nested(fixed, random, fixed_param, random.param, cov_param, n, p,
+  error_var, randCor, rand_dist, with_err_gen, arima, data_str, fact.vars,
+  unbal, unbalCont, ..., pow_param, alpha, pow_dist = c("z", "t"),
+  pow_tail = c(1, 2))
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
 
 \item{random}{One sided formula for random effects in the simulation. Must be a subset of fixed.}
 
-\item{fixed.param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
+\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
 \item{random.param}{Variance of random effects. Must be same length as random.}
 
-\item{cov.param}{List of mean, sd (standard deviations), and var.type for fixed effects.
+\item{cov_param}{List of mean, sd (standard deviations), and var.type for fixed effects.
 Does not include intercept, time, factors, or interactions.
 var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.}
 
@@ -33,7 +33,7 @@ var.type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 \item{rand_dist}{Simulated random effect distribution.  Must be "lap", "chi", "norm", "bimod",
 "norm" is default.}
 
-\item{rand_gen}{Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod",
+\item{with_err_gen}{Simulated within cluster error distribution. Must be "lap", "chi", "norm", "bimod",
 "norm" is default.}
 
 \item{arima}{TRUE/FALSE flag indicating whether residuals should

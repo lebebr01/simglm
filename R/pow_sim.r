@@ -46,7 +46,6 @@
 #' @param pow_tail One-tailed or two-tailed test?
 #' @param ... Additional specification needed to pass to the random generating 
 #'             function defined by with_err_gen.
-#' @importFrom nlme lme
 #' @export 
 sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(), cov_param, n, p, 
                            error_var, with_err_gen, arima = FALSE, 
@@ -64,11 +63,11 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(), co
                               data_str, cor_vars, fact_vars, unbal, unbalCont, ...)
   
   if(arima) {
-    fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
-    ran1 <- paste("~", paste(rand_vars, collapse = "+"), "|clustID", sep = "")
-    
-    temp_mod <- nlme::lme(fixed = as.formula(fix1), data = temp_nest, random = as.formula(ran1))
-    test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
+    # fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
+    # ran1 <- paste("~", paste(rand_vars, collapse = "+"), "|clustID", sep = "")
+    # 
+    # temp_mod <- nlme::lme(fixed = as.formula(fix1), data = temp_nest, random = as.formula(ran1))
+    # test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
   } else {
     fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
     ran1 <- paste("(", paste(rand_vars, collapse = "+"), "|clustID)", sep = "")

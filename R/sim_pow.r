@@ -61,6 +61,7 @@
 #' @param ... Additional parameters passed on to the level one error generating function
 #' @importFrom dplyr group_by
 #' @importFrom dplyr summarise
+#' @importFrom dplyr '%>%'
 #' @export 
 sim_pow <- function(fixed, random, random3, fixed_param, 
                     random_param = list(), random_param3 = list(), cov_param, k, n, p, 

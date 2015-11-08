@@ -1,0 +1,105 @@
+---
+title: "Power with simglm"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Power with simglm}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+```{r setup, include=FALSE}
+library(knitr)
+library(simglm)
+knit_print.data.frame = function(x, ...) {
+  res = paste(c('', '', kable(x, output = FALSE)), collapse = '\n')
+  asis_output(res)
+}
+```
+# Power Analysis with simglm
+
+The `simglm` package allows the ability to conduct a power analysis through simulation. This will be particularly helpful with multilevel models and generalized linear models. To show the process, we will start with basic regression models.
+
+## Single Level Power Analysis
+Let's look at a simple single level regression example to get started:
+
+```{r singlelevel}
+fixed <- ~ 1 + act + diff + numCourse + act:numCourse
+fixed_param <- c(0.5, 1.1, 0.6, 0.9, 1.1)
+cov_param <- list(mean = c(0, 0, 0), sd = c(2, 2, 1), var_type = c("single", "single", "single"))
+n <- 150
+error_var <- 20
+with_err_gen <- 'rnorm'
+pow_param <- c('(Intercept)', 'act', 'diff', 'numCourse')
+alpha <- .01
+pow_dist = "t"
+pow_tail = 2
+replicates = 100
+power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
+                       n = n, error_var = error_var, with_err_gen = with_err_gen, 
+                       data_str = "single", pow_param = pow_param, alpha = alpha,
+                       pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
+```
+
+Much of the output here is the same from the `sim_reg` function. The additional arguments, `pow_param` represents the terms to conduct a power analysis for and must be a subset of the `fixed` argument, `alpha` represents the per term level of significance, `pow_dist` represents the sampling distribution to refer to, either 'z' or 't', `pow_tail` represents whether a one or two tailed hypothesis is being tested, and `replicates` represents the number of simulations to conduct. Note, to do a power analysis for the intercept, '(Intercept)' must be used. By default, if pow_param is not specified power is conducted for all terms. 
+
+Finally, looking at the output from the above call:
+```{r printsinglelevel}
+power_out
+```
+
+The output contains the variable name, the average test statistic, the standard deviation of the test statistic, the power rate, the number of null hypotheses rejects, and the total number of replications. Increasing the number of replications would increase the precision of the power analysis, however may significantly increase the computational time.
+
+### Standardized Coefficients
+By default, the `simglm` package uses unstandardized regression coefficients when doing the simulation. A way to use standardized coefficients however, would be to generate standardized variables. For example:
+```{r standardized}
+fixed <- ~ 1 + act + diff + numCourse + act:numCourse
+fixed_param <- c(0.2, 0.4, 0.25, 0.7, 0.1)
+cov_param <- list(mean = c(0, 0, 0), sd = c(1, 1, 1), var_type = c("single", "single", "single"))
+n <- 150
+error_var <- 1
+with_err_gen <- 'rnorm'
+pow_param <- c('(Intercept)', 'act', 'diff', 'numCourse')
+alpha <- .01
+pow_dist = "t"
+pow_tail = 2
+replicates = 100
+power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
+                       n = n, error_var = error_var, with_err_gen = with_err_gen, 
+                       data_str = "single", pow_param = pow_param, alpha = alpha,
+                       pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
+power_out
+```
+
+## Nested Data
+Extending the power analysis to two level models is a straightforward addition. 
+```{r longsim}
+fixed <- ~1 + time + diff + act + time:act
+random <- ~1 + time
+fixed_param <- c(0, 0.2, 0.1, 0.3, 0.05)
+random_param <- list(random_var = c(7, 4), rand_gen = "rnorm")
+cov_param <- list(mean = c(0, 0), sd = c(1, 1), var_type = c("lvl1", "lvl2"))
+n <- 150
+p <- 30
+error_var <- 1
+data_str <- "long"
+pow_param <- c('time', 'diff', 'act')
+alpha <- .01
+pow_dist = "t"
+pow_tail = 2
+replicates = 50
+power_out <- sim_pow(fixed = fixed, random = random, 
+                     fixed_param = fixed_param, 
+                     random_param = random_param, cov_param = cov_param, 
+                     k = NULL, n = n, p = p,
+                     error_var = error_var, with_err_gen = "rnorm",
+                     data_str = data_str, unbal = FALSE, pow_param = pow_param, alpha = alpha,
+                     pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
+```
+
+A few notes about the `sim_pow` function in relation to nested data. First, the `lmer` function from the `lme4` package is used to fit the models. When `arima = TRUE`, then the nlme package is used, but this is currently not supported. One note, the power simulation takes more computational time compared to the single level example.
+
+The power output is identical to the single level model above:
+```{r longdata}
+power_out
+```
+

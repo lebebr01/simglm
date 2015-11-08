@@ -56,7 +56,7 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(), co
   fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   rand_vars <- attr(terms(random),"term.labels")
   
-  if(any(pow_param %ni% fixed_vars)) { stop('pow_param must be a subset of ')}
+  if(any(pow_param %ni% c(fixed_vars, '(Intercept)'))) { stop('pow_param must be a subset of fixed')}
 
   temp_nest <- sim_reg_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 
                               error_var, with_err_gen, arima,
@@ -132,7 +132,7 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var, with_err
   
   fixed_vars <- attr(terms(fixed),"term.labels")
   
-  if(any(pow_param %ni% fixed_vars)) { stop('pow_param must be a subset of ')}
+  if(any(pow_param %ni% c(fixed_vars, '(Intercept)'))) { stop('pow_param must be a subset of fixed')}
   
   temp_single <- sim_reg_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen, 
                                 arima, data_str, 

@@ -59,7 +59,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, lvl1ss, data_str,
              var_type = cov_param$var_type[xx]))
       Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
         do.call(sim_continuous, cov_param2[[xx]])))
-    }
+    } 
     
     if(is.null(cor_vars) == FALSE) {
       c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
@@ -68,6 +68,8 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, lvl1ss, data_str,
       cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
       Xmat <- Xmat %*% chol(cov)
     }
+  } else {
+    Xmat <- NULL
   }
 
   if(length(fact.loc > 0)){
@@ -157,6 +159,8 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
       cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
       Xmat <- Xmat %*% chol(cov)
     }
+  } else {
+    Xmat <- NULL
   }
   
   if(length(fact.loc > 0)){
@@ -230,6 +234,8 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
       cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
       Xmat <- Xmat %*% chol(cov)
     }
+  } else {
+    Xmat <- NULL
   }
 
   if(length(fact.loc > 0)){
@@ -272,16 +278,20 @@ sim_factor <- function(k, n, p, numlevels, replace = TRUE, prob = NULL, var_type
   #if(is.null(prob) == FALSE & (length(prob) == numlevels | length(prob) == length(numlevels)) == FALSE) {
   #  stop("prob must be same length as numlevels")
   #}
-  if(replace == FALSE & (var_type == "single" | var_type == "lvl2") & numlevels < n) {
-    stop("If replace = FALSE, numlevels must be greater than n for lvl2 or single")
+  if(var_type == 'single' | var_type == 'lvl2') {
+    if(replace == FALSE & numlevels < n) {
+      stop("If replace = FALSE, numlevels must be greater than n for lvl2 or single")
+    }
   }
   if(var_type == "lvl1") {
     if(replace == FALSE & numlevels < n*p){
       stop("If replace = FALSE, numlevels must be greater than n*p for lvl1")
     }
   }
-  if(replace == FALSE & var_type == "lvl3" & numlevels < k) {
-    stop("If replace = FALSE, numlevels must be greater than k for lvl3")
+  if(var_type == "lvl3") {
+    if(replace == FALSE & numlevels < k) {
+      stop("If replace = FALSE, numlevels must be greater than k for lvl3")
+    }
   }
   
   var_type <- match.arg(var_type)

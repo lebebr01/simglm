@@ -44,30 +44,32 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, lvl1ss, data_str,
     n.fact <- 0
   } 
 
-  if(data_str == "long") {
+  if(is.null(cov_param) == FALSE) {
+    if(data_str == "long") {
+      
+      Xmat <- unlist(lapply(1:length(lvl1ss), function(xx) (1:lvl1ss[xx])-1))
+      cov_param2 <- lapply(1:n.cont, function(xx) 
+        list(k = 0, n = n, p = lvl1ss, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
+             var_type = cov_param$var_type[xx]))
+      Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.cont, function(xx) 
+        do.call(sim_continuous, cov_param2[[xx]]))))
+    } else {
+      cov_param2 <- lapply(1:n.cont, function(xx) 
+        list(k = 0, n = n, p = lvl1ss, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
+             var_type = cov_param$var_type[xx]))
+      Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
+        do.call(sim_continuous, cov_param2[[xx]])))
+    }
     
-    Xmat <- unlist(lapply(1:length(lvl1ss), function(xx) (1:lvl1ss[xx])-1))
-    cov_param2 <- lapply(1:n.cont, function(xx) 
-      list(k = 0, n = n, p = lvl1ss, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-           var_type = cov_param$var_type[xx]))
-    Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.cont, function(xx) 
-      do.call(sim_continuous, cov_param2[[xx]]))))
-  } else {
-    cov_param2 <- lapply(1:n.cont, function(xx) 
-      list(k = 0, n = n, p = lvl1ss, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-           var_type = cov_param$var_type[xx]))
-    Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
-      do.call(sim_continuous, cov_param2[[xx]])))
+    if(is.null(cor_vars) == FALSE) {
+      c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
+      diag(c_mat) <- 1
+      c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
+      cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
+      Xmat <- Xmat %*% chol(cov)
+    }
   }
-  
-  if(is.null(cor_vars) == FALSE) {
-    c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
-    diag(c_mat) <- 1
-    c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
-    cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
-    Xmat <- Xmat %*% chol(cov)
-  }
-  
+
   if(length(fact.loc > 0)){
     fact_vars <- lapply(1:length(fact_vars), function(xx) 
       list(k = 0, n = n, p = lvl1ss, numlevels = fact_vars$numlevels[xx], 
@@ -131,28 +133,30 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     n.fact <- 0
   } 
   
- if(data_str == "long") {
-    Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx]) - 1))
-    #Xmat <- rep.int((1:p) - 1, times = n)
-    cov_param2 <- lapply(1:n.cont, function(xx) 
-      list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-           var_type = cov_param$var_type[xx]))
-    Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.cont, function(xx) 
-      do.call(sim_continuous, cov_param2[[xx]]))))
-  } else {
-    cov_param2 <- lapply(1:n.cont, function(xx) 
-      list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-           var_type = cov_param$var_type[xx]))
-    Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
-      do.call(sim_continuous, cov_param2[[xx]])))
-  }
-  
-  if(is.null(cor_vars) == FALSE) {
-    c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
-    diag(c_mat) <- 1
-    c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
-    cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
-    Xmat <- Xmat %*% chol(cov)
+  if(is.null(cov_param) == FALSE) {
+    if(data_str == "long") {
+      Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx]) - 1))
+      #Xmat <- rep.int((1:p) - 1, times = n)
+      cov_param2 <- lapply(1:n.cont, function(xx) 
+        list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
+             var_type = cov_param$var_type[xx]))
+      Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.cont, function(xx) 
+        do.call(sim_continuous, cov_param2[[xx]]))))
+    } else {
+      cov_param2 <- lapply(1:n.cont, function(xx) 
+        list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
+             var_type = cov_param$var_type[xx]))
+      Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
+        do.call(sim_continuous, cov_param2[[xx]])))
+    }
+    
+    if(is.null(cor_vars) == FALSE) {
+      c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
+      diag(c_mat) <- 1
+      c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
+      cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
+      Xmat <- Xmat %*% chol(cov)
+    }
   }
   
   if(length(fact.loc > 0)){
@@ -212,21 +216,22 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
       stop("All variables must have var_type = 'single'")
     }
   }
-  
-  cov_param <- lapply(1:n.cont, function(xx) 
-    list(k = 0, n = n, p = 0, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-         var_type = cov_param$var_type[xx]))
-  Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
-    do.call(sim_continuous, cov_param[[xx]])))
-  
-  if(is.null(cor_vars) == FALSE) {
-    c_mat <- matrix(nrow = n.cont, ncol = n.cont)
-    diag(c_mat) <- 1
-    c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
-    cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
-    Xmat <- Xmat %*% chol(cov)
+  if(is.null(cov_param) == FALSE) {
+    cov_param <- lapply(1:n.cont, function(xx) 
+      list(k = 0, n = n, p = 0, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
+           var_type = cov_param$var_type[xx]))
+    Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
+      do.call(sim_continuous, cov_param[[xx]])))
+    
+    if(is.null(cor_vars) == FALSE) {
+      c_mat <- matrix(nrow = n.cont, ncol = n.cont)
+      diag(c_mat) <- 1
+      c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
+      cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
+      Xmat <- Xmat %*% chol(cov)
+    }
   }
-  
+
   if(length(fact.loc > 0)){
     #op <- names(fact_vars)
     fact_vars <- lapply(1:n.fact, function(xx) 

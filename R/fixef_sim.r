@@ -73,8 +73,8 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, lvl1ss, data_str,
   }
 
   if(length(fact.loc > 0)){
-    fact_vars <- lapply(1:length(fact_vars), function(xx) 
-      list(k = 0, n = n, p = lvl1ss, numlevels = fact_vars$numlevels[xx], 
+    fact_vars <- lapply(1:n.fact, function(xx) 
+      list(k = NULL, n = n, p = lvl1ss, numlevels = fact_vars$numlevels[xx], 
            var_type = fact_vars$var_type[xx]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
               function(xx) do.call(sim_factor, fact_vars[[xx]]))))
@@ -164,7 +164,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   }
   
   if(length(fact.loc > 0)){
-    fact_vars <- lapply(1:length(fact_vars), function(xx) 
+    fact_vars <- lapply(1:n.fact, function(xx) 
       list(k = k, n = n, p = p, numlevels = fact_vars$numlevels[xx], 
            var_type = fact_vars$var_type[xx]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 

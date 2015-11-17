@@ -17,5 +17,6 @@ Depends:
 Suggests: 
     knitr,
     lme4,
+    nlme,
     testthat
 VignetteBuilder: knitr

@@ -2,13 +2,16 @@
 
 language: r
 warnings_are_errors: true
-sudo: required
+sudo: false
+cache: packages
 
-env:
- global:
-   - CRAN: http://cran.rstudio.com
+cran: https://cran.rstudio.com/
 r_packages: 
    - rmarkdown
+   - covr
+   
+after_success:
+   - Rscript -e 'library(covr); codecov()'
 
 notifications:
   email:

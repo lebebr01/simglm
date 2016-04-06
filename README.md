@@ -1,6 +1,7 @@
 Regression simulation function
 
 [![Build Status](https://travis-ci.org/lebebr01/simglm.svg?branch=master)](https://travis-ci.org/lebebr01/simglm)
+[![codecov.io](https://codecov.io/github/lebebr01/simglm/coverage.svg?branch=master)](https://codecov.io/github/lebebr01/simglm?branch=master)
 
 A flexible suite of functions to simulate nested data.  
 Currently supports the following features:

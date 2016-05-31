@@ -18,6 +18,7 @@ Suggests:
     knitr,
     lme4,
     nlme,
-    testthat
+    testthat,
+    shiny
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1

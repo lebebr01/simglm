@@ -76,8 +76,9 @@ can be TRUE, which uses additional argument, unbalCont3.}
 will be drawn from a random uniform distribution with min and max specified.}
 
 \item{unbalCont3}{When unbal3 = TRUE, this specifies the minimum and maximum level two size,
-will be drawn from a random uniform distribution with min and max specified.
-@param ... Additional parameters passed on to the level one error generating function}
+will be drawn from a random uniform distribution with min and max specified.}
+
+\item{...}{Additional parameters passed on to the level one error generating function}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

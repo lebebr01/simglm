@@ -57,7 +57,8 @@
 #'  will be drawn from a random uniform distribution with min and max specified.
 #' @param unbalCont3 When unbal3 = TRUE, this specifies the minimum and maximum level two size,
 #'  will be drawn from a random uniform distribution with min and max specified.
-#'  @param ... Additional parameters passed on to the level one error generating function
+#' @param ... Additional parameters passed on to the level one error generating function
+#' @import stats
 #' @export 
 #' @examples
 #' \donttest{

@@ -8,7 +8,7 @@
 #' 
 #' @export
 run_shiny <- function() {
-  appDir <- system.file("shiny-examples", "demo", package = "simglm")
+  appDir <- system.file("shiny_examples", "demo", package = "simglm")
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `simglm`.", call. = FALSE)
   }

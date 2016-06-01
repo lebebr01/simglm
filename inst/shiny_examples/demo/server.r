@@ -24,9 +24,16 @@ server <- function(input, output, session) {
                       sd = c(as.numeric(unlist(strsplit(input$sd_cov, split = ',')))),
                       var_type = c(gsub('^\\s+|\\s+$', '', 
                                                      unlist(strsplit(input$type_cov, split = ',')))))
-    sim_reg(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
+    if(input$lvl1_err_misc != '') {
+      opt_args <- list(eval(parse(text = input$lvl1_err_misc)))
+      sim_reg(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
+              n = n, error_var = error_var, with_err_gen = with_err_gen,
+              data_str = "single", opt_args)
+    } else {
+      sim_reg(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
               n = n, error_var = error_var, with_err_gen = with_err_gen,
               data_str = "single")
+    }
   })
   
   output$gen_examp <- renderDataTable({

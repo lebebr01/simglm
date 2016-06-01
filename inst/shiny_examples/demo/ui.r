@@ -45,6 +45,8 @@ ui <- dashboardPage(skin = "purple",
                               value = 5),
                     textInput('lvl1_err_dist', 'Level 1 Error Dist',
                               value = 'rnorm'),
+                    textInput('lvl1_err_misc', 'Level 1 Dist Params (separate by ";")',
+                              value = ''),
                     conditionalPanel(
                       condition = 'input.type_model ==2 || input.type_model == 3',
                       numericInput('lvl2_err', 'Level 2 Error Variance',

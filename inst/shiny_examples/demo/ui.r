@@ -8,6 +8,7 @@ ui <- dashboardPage(skin = "purple",
       menuItem('Introduction', tabName = 'intro', icon = icon('info-circle')),
       menuItem('Generate', tabName = 'generate', icon = icon('table')),
       menuItem('View Data', tabName = 'view_data', icon = icon('table')),
+      menuItem('Verify Data Sim', tabName = 'verify', icon = icon('check-circle')),
       menuItem('Power', tabName = 'power', icon = icon('bolt'))
     )
   ),
@@ -100,6 +101,10 @@ ui <- dashboardPage(skin = "purple",
       tabItem(tabName = 'view_data',
               h2('View Data from Generate Tab')
               ),
+      tabItem(tabName = 'verify',
+              h2('Verify Data Simulation')
+              
+      ),
       tabItem(tabName = 'power',
               h2('Power Analysis')
               )

@@ -37,23 +37,23 @@ This package can be installed by using the devtools package.
 
 ```r
 library(devtools)
-install_github("lebebr01/simReg")
-library(simReg)
+install_github("lebebr01/simglm")
+library(simglm)
 ```
 
-## Introduction to the simReg package
-The best way to become oriented with the `simReg` package is through the package vignette.  There are two ways to get to the vignette (both will open a browser to view the vignette):
+## Introduction to the simglm package
+The best way to become oriented with the `simglm` package is through the package vignette.  There are two ways to get to the vignette (both will open a browser to view the vignette):
 
 
 ```r
 browseVignettes()
-vignette("Intro", package = "simReg")
+vignette("Intro", package = "simglm")
 ```
 
-Note: You may need to tell R to build the vignettes when installing the `simReg` package by doing the following:
+Note: You may need to tell R to build the vignettes when installing the `simglm` package by doing the following:
 
 ```r
-install_github("lebebr01/simReg", build_vignettes = TRUE)
+install_github("lebebr01/simglm", build_vignettes = TRUE)
 ```
 
 

@@ -21,22 +21,23 @@ ui <- dashboardPage(skin = "purple",
                     collapsible = TRUE, width = 3, collapsed = FALSE,
                     radioButtons('type_model', 'Type of Model:',
                                  choices = c('Single Level' = 1, 
-                                             'Two-Level' = 2, 
-                                             'Three-Level' = 3),
-                                 selected = 1)
+                                             'Two-Level' = 2),
+                                 selected = 1),
+                    conditionalPanel(
+                      condition = 'input.type_model == 2',
+                      radioButtons('type_nested', 'Type of Nesting:',
+                                   choices = c('Cross-Sectional' = 1,
+                                               'Longitudinal' = 2),
+                                   selected = 1)
+                    )
                 ),
                 box(title = 'Sample Sizes', 
                     collapsible = TRUE, width = 3, collapsed = FALSE,
                     numericInput('samp_size_lvl1', 'Sample Size Level 1', 
                                  value = 10),
                     conditionalPanel(
-                      condition = 'input.type_model == 2 || input.type_model == 3',
+                      condition = 'input.type_model == 2',
                       numericInput('samp_size_lvl2', 'Sample Size Level 2',
-                                   value = 2)
-                    ),
-                    conditionalPanel(
-                      condition = 'input.type_model == 3',
-                      numericInput('samp_size_lvl3', 'Sample Size Level 3',
                                    value = 2)
                     )
                     ),
@@ -49,18 +50,13 @@ ui <- dashboardPage(skin = "purple",
                     textInput('lvl1_err_misc', 'Level 1 Dist Params (separate by ";")',
                               value = ''),
                     conditionalPanel(
-                      condition = 'input.type_model ==2 || input.type_model == 3',
-                      numericInput('lvl2_err', 'Level 2 Error Variance',
-                                   value = 3),
+                      condition = 'input.type_model == 2',
+                      textInput('lvl2_err', 'Level 2 Error Variance',
+                                   value = '3'),
                       textInput('lvl2_err_dist', 'Level 2 Error Dist',
-                                value = 'rnorm')
-                    ),
-                    conditionalPanel(
-                      condition = 'input.type_model == 3',
-                      numericInput('lvl3_err', 'Level 3 Error Variance',
-                                   value = 3),
-                      textInput('lvl3_err_dist', 'Level 3 Error Dist',
-                                value = 'rnorm')
+                                value = 'rnorm'),
+                      textInput('lvl2_err_misc', 'Level 2 Dist Params (separate by ";")',
+                                value = '')
                     )
                     ),
                 box(title = 'Covariate Details', width = 3, collapsed = FALSE,
@@ -79,7 +75,7 @@ ui <- dashboardPage(skin = "purple",
                     )
               ),
               fluidRow(
-                submitButton("Update Data", icon("refresh"))
+                submitButton("Update Simulation", icon("refresh"))
               ),
               fluidRow(
                 box(width = 12,

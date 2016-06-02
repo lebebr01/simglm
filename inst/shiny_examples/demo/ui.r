@@ -18,7 +18,7 @@ ui <- dashboardPage(skin = "purple",
               h2('Introduction to simglm'),
               fluidRow(
                 box(title = 'Select Model', 
-                    collapsible = TRUE, width = 3, collapsed = FALSE,
+                    collapsible = TRUE, width = 1, collapsed = FALSE,
                     radioButtons('type_model', 'Type of Model:',
                                  choices = c('Single Level' = 1, 
                                              'Two-Level' = 2),
@@ -32,7 +32,7 @@ ui <- dashboardPage(skin = "purple",
                     )
                 ),
                 box(title = 'Sample Sizes', 
-                    collapsible = TRUE, width = 3, collapsed = FALSE,
+                    collapsible = TRUE, width = 1, collapsed = FALSE,
                     numericInput('samp_size_lvl1', 'Sample Size Level 1', 
                                  value = 10),
                     conditionalPanel(
@@ -41,7 +41,7 @@ ui <- dashboardPage(skin = "purple",
                                    value = 2)
                     )
                     ),
-                box(title = 'Random Errors', width = 3, collapsed = FALSE,
+                box(title = 'Random Errors', width = 2, collapsed = FALSE,
                     collapsible = TRUE,
                     numericInput('lvl1_err', 'Level 1 Error Variance',
                               value = 5),
@@ -59,23 +59,27 @@ ui <- dashboardPage(skin = "purple",
                                 value = '')
                     )
                     ),
-                box(title = 'Covariate Details', width = 3, collapsed = FALSE,
+                box(title = 'Covariate Details', width = 8, collapsed = FALSE,
                     collapsible = TRUE,
                     checkboxInput('incl_int', 'Include Intercept?', TRUE),
                     numericInput('number_cov', 'Number of Covariates',
                                  value = 3),
-                    textInput('beta', 'Regression Coefficients',
-                              value = '1, 1, 1, 1'),
-                    textInput('mean_cov', 'Mean of Covariate(s)',
-                                 value = '0, 5, 2'),
-                    textInput('sd_cov', 'SD of Covariate(s)',
-                              value = '2, 4, 3'),
-                    textInput('type_cov', 'Level of Covariate(s)',
-                              value = 'single, single, single')
+                    uiOutput('beta'),
+                    uiOutput('mean_cov'),
+                    uiOutput('sd_cov'),
+                    uiOutput('type_cov')
+                    # textInput('beta', 'Regression Coefficients',
+                    #           value = '1, 1, 1, 1'),
+                    # textInput('mean_cov', 'Mean of Covariate(s)',
+                    #              value = '0, 5, 2'),
+                    # textInput('sd_cov', 'SD of Covariate(s)',
+                    #           value = '2, 4, 3'),
+                    # textInput('type_cov', 'Level of Covariate(s)',
+                    #           value = 'single, single, single')
                     )
               ),
               fluidRow(
-                submitButton("Update Simulation", icon("refresh"))
+                actionButton('update', "Update Simulation", icon("refresh"))
               ),
               fluidRow(
                 box(width = 12,

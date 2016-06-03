@@ -63,8 +63,14 @@ server <- function(input, output, session) {
             textInput(paste0('type', i), label = cov_names[i], value = 'lvl1', width = '75px'))
       )
     }
-
   })
+  
+  # output$lvl1_err_misc <- renderUI({
+  #   miss_args <- extract_needed_args(input$lvl1err, remove_n = TRUE)
+  #   lapply(1:length(miss_args), function(i)
+  #     textInput(miss_args[i], label = miss_args[i], value = '')
+  #   )
+  # })
   
   gen_code <- eventReactive(input$update, {
     if(input$type_model == 1) {
@@ -96,16 +102,16 @@ server <- function(input, output, session) {
                         sd = sd_cov,
                         var_type = type_cov)
       
-      if(input$lvl1_err_misc != '') {
-        opt_args <- list(eval(parse(text = input$lvl1_err_misc)))
-        sim_reg(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
-                n = n, error_var = error_var, with_err_gen = with_err_gen,
-                data_str = "single", opt_args)
-      } else {
+      # if(input$lvl1_err_misc != '') {
+      #   opt_args <- list(eval(parse(text = input$lvl1_err_misc)))
+      #   sim_reg(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
+      #           n = n, error_var = error_var, with_err_gen = with_err_gen,
+      #           data_str = "single", opt_args)
+      # } else {
         sim_reg(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
                 n = n, error_var = error_var, with_err_gen = with_err_gen,
                 data_str = "single")
-      }
+      # }
     } else {
       p <- input$samp_size_lvl1
       n <- input$samp_size_lvl2
@@ -156,22 +162,22 @@ server <- function(input, output, session) {
       cov_param <- list(mean = mean_cov,
                         sd = sd_cov,
                         var_type = type_cov)
-      if(input$lvl1_err_misc != '') {
-        # opt_args <- list(eval(parse(text = input$lvl1_err_misc)))
+      # if(input$lvl1_err_misc != '') {
+      #   # opt_args <- list(eval(parse(text = input$lvl1_err_misc)))
+      #   sim_reg(fixed = fixed, random = random, 
+      #           fixed_param = fixed_param, 
+      #           random_param = random_param, cov_param = cov_param, 
+      #           k = NULL, n = n, p = p,
+      #           error_var = error_var, with_err_gen = with_err_gen,
+      #           data_str = data_str, unbal = FALSE)
+      # } else {
         sim_reg(fixed = fixed, random = random, 
                 fixed_param = fixed_param, 
                 random_param = random_param, cov_param = cov_param, 
                 k = NULL, n = n, p = p,
                 error_var = error_var, with_err_gen = with_err_gen,
                 data_str = data_str, unbal = FALSE)
-      } else {
-        sim_reg(fixed = fixed, random = random, 
-                fixed_param = fixed_param, 
-                random_param = random_param, cov_param = cov_param, 
-                k = NULL, n = n, p = p,
-                error_var = error_var, with_err_gen = with_err_gen,
-                data_str = data_str, unbal = FALSE)
-      }
+      # }
     }
     
   })

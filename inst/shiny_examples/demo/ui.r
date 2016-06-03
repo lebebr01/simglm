@@ -6,7 +6,7 @@ ui <- dashboardPage(skin = "green",
   dashboardSidebar(
     sidebarMenu(
       menuItem('Introduction', tabName = 'intro', icon = icon('info-circle')),
-      menuItem('Generate', tabName = 'generate', icon = icon('table')),
+      menuItem('Optional Arguments', tabName = 'generate', icon = icon('plus-circle')),
       menuItem('View Data', tabName = 'view_data', icon = icon('table')),
       menuItem('Verify Data Sim', tabName = 'verify', icon = icon('check-circle')),
       menuItem('Power', tabName = 'power', icon = icon('bolt'))
@@ -21,10 +21,11 @@ ui <- dashboardPage(skin = "green",
                     collapsible = TRUE, width = 2, collapsed = FALSE,
                     radioButtons('type_model', 'Type of Model:',
                                  choices = c('Single Level' = 1, 
-                                             'Two-Level' = 2),
+                                             'Two-Level' = 2,
+                                             'Three-Level' = 3),
                                  selected = 1),
                     conditionalPanel(
-                      condition = 'input.type_model == 2',
+                      condition = 'input.type_model == 2 || input.type_model == 3',
                       radioButtons('type_nested', 'Type of Nesting:',
                                    choices = c('Cross-Sectional' = 1,
                                                'Longitudinal' = 2),
@@ -34,10 +35,15 @@ ui <- dashboardPage(skin = "green",
                 box(title = 'Sample Sizes', status = 'primary',
                     collapsible = TRUE, width = 2, collapsed = FALSE,
                     numericInput('samp_size_lvl1', 'Sample Size Level 1', 
-                                 value = 10),
+                                 value = 4),
                     conditionalPanel(
-                      condition = 'input.type_model == 2',
+                      condition = 'input.type_model == 2 || input.type_model == 3',
                       numericInput('samp_size_lvl2', 'Sample Size Level 2',
+                                   value = 2)
+                    ),
+                    conditionalPanel(
+                      condition = 'input.type_model == 3',
+                      numericInput('samp_size_lvl3', 'Sample Size Level 3',
                                    value = 2)
                     )
                     ),
@@ -45,19 +51,23 @@ ui <- dashboardPage(skin = "green",
                     collapsible = TRUE, status = 'primary',
                     numericInput('lvl1_err', 'Level 1 Error Variance',
                               value = 5),
-                    textInput('lvl1_err_dist', 'Level 1 Error Dist',
-                              value = 'rnorm'),
+                    # textInput('lvl1_err_dist', 'Level 1 Error Dist',
+                    #           value = 'rnorm'),
                     # uiOutput('lvl1_err_misc'),
                     # textInput('lvl1_err_misc', 'Level 1 Dist Params (separate by ";")',
                     #           value = ''),
                     conditionalPanel(
-                      condition = 'input.type_model == 2',
-                      textInput('lvl2_err', 'Level 2 Error Variance',
-                                   value = '3'),
-                      textInput('lvl2_err_dist', 'Level 2 Error Dist',
-                                value = 'rnorm')
+                      condition = 'input.type_model == 2 || input.type_model == 3',
+                      uiOutput('lvl2_err')
+                      # textInput('lvl2_err_dist', 'Level 2 Error Dist',
+                      #           value = 'rnorm')
                       # textInput('lvl2_err_misc', 'Level 2 Dist Params (separate by ";")',
                       #           value = '')
+                    ),
+                    conditionalPanel(
+                      condition = 'input.type_model == 3',
+                      numericInput('lvl3_err', 'Level 3 Error Variance',
+                                value = 1)
                     )
                     ),
                 box(title = 'Covariate Details', width = 6, collapsed = FALSE,

@@ -204,7 +204,6 @@ server <- function(input, output, session) {
          rand_gen = 'rnorm')
   })
   
-  
   gen_code <- eventReactive(input$update, {
     if(input$type_model == 1) {
       sim_reg(fixed = fixed(), fixed_param = fixed_param(), cov_param = cov_param(),
@@ -432,12 +431,13 @@ server <- function(input, output, session) {
   })
   
   power_sim <- eventReactive(input$update_power, {
+    if(input$incl_int) {
+      pow_param <- c('(Intercept)', attr(terms(fixed()),"term.labels"))
+    } else {
+      pow_param <- attr(terms(fixed()),"term.labels")
+    }
+    
     if(input$type_model == 1) {
-      if(input$incl_int) {
-        pow_param <- c('Intercept', attr(terms(fixed()),"term.labels"))
-      } else {
-        pow_param <- attr(terms(fixed()),"term.labels")
-      }
       alpha <- input$alpha
       pow_dist = input$type_dist
       pow_tail = as.numeric(as.character(input$tails))
@@ -454,7 +454,6 @@ server <- function(input, output, session) {
         
       }
     }
-    
   })
   
   output$power_table <- renderDataTable({

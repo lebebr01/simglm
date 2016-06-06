@@ -251,6 +251,10 @@ server <- function(input, output, session) {
     datatable(gen_code())
   })
   
+  output$gen_examp_2 <- renderDataTable({
+    datatable(gen_code())
+  })
+  
   output$gen_examp_code <- renderUI({
     if(input$type_model == 1) {
       str1 <- paste0('n <- ', input$samp_size_lvl1)
@@ -289,7 +293,7 @@ server <- function(input, output, session) {
       str7 <- 'temp_single <- sim_reg(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param, <br/>
       n = n, error_var = error_var, with_err_gen = with_err_gen, <br/>
       data_str = "single")'
-      HTML(paste(str1, str2, str3, str4, str5, str6, str7, sep = '<br/>'))
+      code(HTML(paste(str1, str2, str3, str4, str5, str6, str7, sep = '<br/>')))
     } else {
       if(input$type_model == 2) {
         str1 <- paste0('n <- ', input$samp_size_lvl2)
@@ -361,8 +365,8 @@ server <- function(input, output, session) {
         str7 <- 'temp_nested <- sim_reg(fixed = fixed, random = random, fixed_param = fixed_param, <br/>
       random_param = random_param, cov_param = cov_param, k = NULL, n = n, p = p, <br/>
       error_var = error_var, with_err_gen = with_err_gen, data_str = data_str, unbal = FALSE)'
-        HTML(paste(str1, str_p, str2, str3, str4, str_random, 
-                   str5, str_randparam, str6, str_data, str7, sep = '<br/>'))
+        code(HTML(paste(str1, str_p, str2, str3, str4, str_random, 
+                   str5, str_randparam, str6, str_data, str7, sep = '<br/>')))
       } 
       else {
         str1 <- paste0('n <- ', input$samp_size_lvl2)
@@ -438,13 +442,38 @@ server <- function(input, output, session) {
         str7 <- 'temp_nested <- sim_reg(fixed, random, random3, fixed_param, random_param, <br/>
                 random_param3, cov_param, k,n, p, error_var, with_err_gen, <br/>
                 data_str = data_str)'
-        HTML(paste(str1, str_p, str_k, str2, str3, str4, str_random, str_random3,
+        code(HTML(paste(str1, str_p, str_k, str2, str3, str4, str_random, str_random3,
                    str5, str_randparam, str_randparam3, str6, str_data, str7, 
-                   sep = '<br/>'))
+                   sep = '<br/>')))
       }
       
     }
     
+  })
+  
+  power_sim <- eventReactive(input$update_power, {
+    if(input$type_model == 1) {
+      alpha <- input$alpha
+      pow_dist = input$type_dist
+      pow_tail = as.numeric(input$tails)
+      replicates = input$repl
+      
+      sim_pow(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
+              n = n, error_var = error_var, with_err_gen = with_err_gen, 
+              data_str = 'single', pow_param = pow_param, alpha = alpha,
+              pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
+    } else {
+      if(input$type_model == 2) {
+        
+      } else {
+        
+      }
+    }
+    
+  })
+  
+  output$power_table <- renderDataTable({
+    datatable(power_sim())
   })
   
 }

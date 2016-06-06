@@ -15,6 +15,18 @@ extract_needed_args <- function(func, remove_n = TRUE) {
 
 server <- function(input, output, session) {
   
+  output$change_cov <- renderUI({
+    num_covs <- input$number_cov
+    if(input$type_nested == 2) {
+      num_covs <- num_covs + 1
+    }
+    lapply(1:num_covs, function(i)
+    div(style = 'display:inline-block',
+        textInput(paste0('cov', i), label = paste0('Cov', i), 
+                  value = 'cov', width = '75px'))
+    )
+  })
+  
   output$beta <- renderUI({
     num_covs <- input$number_cov
     if(input$type_nested == 2) {

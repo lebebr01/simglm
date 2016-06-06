@@ -120,7 +120,7 @@ ui <- dashboardPage(skin = "green",
                                              'Binary' = 2),
                                  selected = 1)
                 ),
-                box(width = 3, collapsible = TRUE, collapsed = FALSE,
+                box(width = 2, collapsible = TRUE, collapsed = FALSE,
                     title = 'Unbalanced', status = 'warning',
                     checkboxInput('unbal_lvl2', 'Unbalanced Lvl 2 Clusters?',
                                   value = FALSE),
@@ -141,7 +141,7 @@ ui <- dashboardPage(skin = "green",
                           numericInput('max_cl3', 'Max Clust. Lvl 3', value = 5, width = '100px'))
                     )
                 ),
-                box(width = 3, collapsible = TRUE, collapsed = FALSE,
+                box(width = 2, collapsible = TRUE, collapsed = FALSE,
                     title = 'Missing Data', status = 'warning',
                     checkboxInput('missing', 'Simulate Missing Data?',
                                   value = FALSE),
@@ -154,7 +154,7 @@ ui <- dashboardPage(skin = "green",
                                    selected = 1)
                     )
                 ),
-                box(width = 3, collapsible = TRUE, collapsed = FALSE,
+                box(width = 2, collapsible = TRUE, collapsed = FALSE,
                     title = 'Serial Correlation', status = 'warning',
                     checkboxInput('sc', 'Simulated Serial Correlation?',
                                   value = FALSE),
@@ -163,6 +163,26 @@ ui <- dashboardPage(skin = "green",
                       radioButtons('type_sc', 'Type of Serial Correlation:',
                                    choices = c(''))
                     )
+                ),
+                box(width = 2, collapsible = TRUE, collapsed = FALSE,
+                    title = 'Covariate Misc', status = 'warning',
+                    checkboxInput('change_name', 'Specify Covariate Name?',
+                                  value = FALSE),
+                    conditionalPanel(
+                      condition = 'input.change_name == true',
+                      uiOutput('change_cov')
+                    )
+                    ),
+                box(
+                  width = 2, collapsible = TRUE, collapsed = FALSE,
+                  title = 'Random Error Dist', status = 'warning',
+                  checkboxInput('change_error_dist', 'Change Random Dist?',
+                                value = FALSE),
+                  conditionalPanel(
+                    condition = 'input.change_error_dist == true',
+                    textInput('lvl1_err_dist', 'Level 1 Error Dist',
+                              value = 'rnorm', width = '75px')
+                  )
                 )
               ),
               fluidRow(

@@ -84,167 +84,147 @@ server <- function(input, output, session) {
     }
   })
   
-  gen_code <- eventReactive(input$update, {
-    if(input$type_model == 1) {
-      n <- input$samp_size_lvl1
-      error_var <- input$lvl1_err
-      with_err_gen <- 'rnorm'
-      if(input$incl_int) {
-        fixed <- as.formula(paste0('~ 1 + ', 
-                                   paste(paste('cov', 1:input$number_cov, sep = '_'), 
-                                         collapse = ' + ')))
-      } else {
-        fixed <- as.formula(paste0('~ 0 + ', 
-                                   paste(paste('cov', 1:input$number_cov, sep = '_'), 
-                                         collapse = ' + ')))
-      }
-      num_betas <- input$number_cov
-      if(input$incl_int) {
-        num_betas <- num_betas + 1
-      }
-      beta <- sapply(1:num_betas, function(i) input[[paste0('beta', i)]])
-      fixed_param <- beta
-      
-      num_cov <- input$number_cov
-      mean_cov <- sapply(1:num_cov, function(i) input[[paste0('mean', i)]])
-      sd_cov <- sapply(1:num_cov, function(i) input[[paste0('sd', i)]])
-      type_cov <- sapply(1:num_cov, function(i) input[[paste0('type', i)]])
-      
-      cov_param <- list(mean = mean_cov,
-                        sd = sd_cov,
-                        var_type = type_cov)
-      
-      sim_reg(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
-              n = n, error_var = error_var, with_err_gen = with_err_gen,
-              data_str = "single")
+  n <- eventReactive(input$update, {
+    if(input$type_model == 2 | input$type_model == 3) {
+      input$samp_size_lvl2
     } else {
-      if(input$type_model == 2) {
-        p <- input$samp_size_lvl1
-        n <- input$samp_size_lvl2
-        error_var <- input$lvl1_err
-        with_err_gen <- 'rnorm'
-        if(input$type_nested == 1) {
-          random <- ~ 1
-          data_str <- 'cross'
-          ran_var <- input[['var_int']]
-          random_param <- list(random_var = ran_var,
-                               rand_gen = 'rnorm')
-          if(input$incl_int) {
-            fixed <- as.formula(paste0('~ 1 + ', 
-                                       paste(paste('cov', 1:input$number_cov, sep = '_'), 
-                                             collapse = ' + ')))
-          } else {
-            fixed <- as.formula(paste0('~ 0 + ', 
-                                       paste(paste('cov', 1:input$number_cov, sep = '_'), 
-                                             collapse = ' + ')))
-          }
-        } else {
-          data_str <- 'long'
-          random <- ~ 1 + time
-          ran_var <- sapply(c('int', 'time'), function(i) input[[paste0('var_', i)]])
-          random_param <- list(random_var = ran_var,
-                               rand_gen = 'rnorm')
-          if(input$incl_int) {
-            fixed <- as.formula(paste0('~ 1 + time + ', 
-                                       paste(paste('cov', 1:input$number_cov, sep = '_'), 
-                                             collapse = ' + ')))
-          } else {
-            fixed <- as.formula(paste0('~ 0 + time + ', 
-                                       paste(paste('cov', 1:input$number_cov, sep = '_'), 
-                                             collapse = ' + ')))
-          }
-        }
-        
-        num_betas <- input$number_cov
-        if(input$type_nested == 2) {
-          num_betas <- num_betas + 1
-        }
-        if(input$incl_int) {
-          num_betas <- num_betas + 1
-        }
-        beta <- sapply(1:num_betas, function(i) input[[paste0('beta', i)]])
-        fixed_param <- beta
-        
-        num_cov <- input$number_cov
-        mean_cov <- sapply(1:num_cov, function(i) input[[paste0('mean', i)]])
-        sd_cov <- sapply(1:num_cov, function(i) input[[paste0('sd', i)]])
-        type_cov <- sapply(1:num_cov, function(i) input[[paste0('type', i)]])
-        
-        cov_param <- list(mean = mean_cov,
-                          sd = sd_cov,
-                          var_type = type_cov)
-        sim_reg(fixed = fixed, random = random, 
-                fixed_param = fixed_param, 
-                random_param = random_param, cov_param = cov_param, 
-                k = NULL, n = n, p = p,
-                error_var = error_var, with_err_gen = with_err_gen,
-                data_str = data_str, unbal = FALSE)
+      input$samp_size_lvl1
+    }
+  })
+  p <- eventReactive(input$update, {
+    if(input$type_model == 2 | input$type_model == 3) {
+      input$samp_size_lvl1
+    } else {
+      input$samp_size_lvl2
+    }
+  })
+  k <- eventReactive(input$update, {
+    input$samp_size_lvl3
+  })
+  error_var <- eventReactive(input$update, {
+    input$lvl1_err
+  })
+  with_err_gen <- eventReactive(input$update, {
+    'rnorm'
+  })
+  fixed <- eventReactive(input$update, {
+    if(input$type_model == 1) {
+      if(input$incl_int) {
+        as.formula(paste0('~ 1 + ', 
+                          paste(paste('cov', 1:input$number_cov, sep = '_'), 
+                                collapse = ' + ')))
       } else {
-        p <- input$samp_size_lvl1
-        n <- input$samp_size_lvl2
-        k <- input$samp_size_lvl3
-        error_var <- input$lvl1_err
-        with_err_gen <- 'rnorm'
+        as.formula(paste0('~ 0 + ', 
+                          paste(paste('cov', 1:input$number_cov, sep = '_'), 
+                                collapse = ' + ')))
+      }
+    } else {
+      if(input$type_model == 2 | input$type_model == 3) {
         if(input$type_nested == 1) {
-          random <- ~ 1
-          data_str <- 'cross'
-          ran_var <- input[['var_int']]
-          random_param <- list(random_var = ran_var,
-                               rand_gen = 'rnorm')
           if(input$incl_int) {
-            fixed <- as.formula(paste0('~ 1 + ', 
-                                       paste(paste('cov', 1:input$number_cov, sep = '_'), 
+            fixed <- as.formula(paste0('~ 1 + ',
+                                       paste(paste('cov', 1:input$number_cov, sep = '_'),
                                              collapse = ' + ')))
           } else {
-            fixed <- as.formula(paste0('~ 0 + ', 
-                                       paste(paste('cov', 1:input$number_cov, sep = '_'), 
+            fixed <- as.formula(paste0('~ 0 + ',
+                                       paste(paste('cov', 1:input$number_cov, sep = '_'),
                                              collapse = ' + ')))
           }
         } else {
-          data_str <- 'long'
-          random <- ~ 1 + time
-          ran_var <- sapply(c('int', 'time'), function(i) input[[paste0('var_', i)]])
-          random_param <- list(random_var = ran_var,
-                               rand_gen = 'rnorm')
           if(input$incl_int) {
-            fixed <- as.formula(paste0('~ 1 + time + ', 
-                                       paste(paste('cov', 1:input$number_cov, sep = '_'), 
+            fixed <- as.formula(paste0('~ 1 + time + ',
+                                       paste(paste('cov', 1:input$number_cov, sep = '_'),
                                              collapse = ' + ')))
           } else {
-            fixed <- as.formula(paste0('~ 0 + time + ', 
-                                       paste(paste('cov', 1:input$number_cov, sep = '_'), 
+            fixed <- as.formula(paste0('~ 0 + time + ',
+                                       paste(paste('cov', 1:input$number_cov, sep = '_'),
                                              collapse = ' + ')))
           }
         }
-        
-        num_betas <- input$number_cov
-        if(input$type_nested == 2) {
-          num_betas <- num_betas + 1
-        }
-        if(input$incl_int) {
-          num_betas <- num_betas + 1
-        }
-        beta <- sapply(1:num_betas, function(i) input[[paste0('beta', i)]])
-        fixed_param <- beta
-        
-        num_cov <- input$number_cov
-        mean_cov <- sapply(1:num_cov, function(i) input[[paste0('mean', i)]])
-        sd_cov <- sapply(1:num_cov, function(i) input[[paste0('sd', i)]])
-        type_cov <- sapply(1:num_cov, function(i) input[[paste0('type', i)]])
-        
-        cov_param <- list(mean = mean_cov,
-                          sd = sd_cov,
-                          var_type = type_cov)
-        random3 <- ~ 1
-        random_param3 <- list(random_var = input$lvl3_err,
-                              rand_gen = 'rnorm')
-        
-        sim_reg(fixed, random, random3, fixed_param, random_param, 
-                random_param3, cov_param, k,n, p, error_var, with_err_gen, 
-                data_str = data_str)
       }
     }
     
+  })
+  fixed_param <- eventReactive(input$update, {
+    num_betas <- input$number_cov
+    if(input$incl_int) {
+      num_betas <- num_betas + 1
+    }
+    if(input$type_nested == 2) {
+      num_betas <- num_betas + 1
+    }
+    sapply(1:num_betas, function(i) input[[paste0('beta', i)]])
+  })
+  cov_param <- eventReactive(input$update, {
+    num_cov <- input$number_cov
+    mean_cov <- sapply(1:num_cov, function(i) input[[paste0('mean', i)]])
+    sd_cov <- sapply(1:num_cov, function(i) input[[paste0('sd', i)]])
+    type_cov <- sapply(1:num_cov, function(i) input[[paste0('type', i)]])
+    
+    list(mean = mean_cov,
+         sd = sd_cov,
+         var_type = type_cov)
+  })
+  data_str <- eventReactive(input$update, {
+    if(input$type_model == 1) {
+      'single'
+    } else {
+      if(input$type_model == 2 | input$type_model == 3){
+        if(input$type_nested == 1) {
+          'cross'
+        } else {
+          'long'
+        }
+      }
+    }
+  })
+  random <- eventReactive(input$update, {
+    if(input$type_nested == 1) {
+      random <- ~ 1
+    } else {
+      random <- ~ 1 + time
+    }
+  })
+  random_param <- eventReactive(input$update, {
+    if(input$type_nested == 1) {
+      ran_var <- input[['var_int']]
+      random_param <- list(random_var = ran_var,
+                           rand_gen = 'rnorm')
+    } else {
+      ran_var <- sapply(c('int', 'time'), function(i) input[[paste0('var_', i)]])
+      random_param <- list(random_var = ran_var,
+                           rand_gen = 'rnorm')
+    }
+  })
+  random3 <- eventReactive(input$update, {
+    ~ 1
+  })
+  random_param3 <- eventReactive(input$update, {
+    list(random_var = input$lvl3_err,
+         rand_gen = 'rnorm')
+  })
+  
+  
+  gen_code <- eventReactive(input$update, {
+    if(input$type_model == 1) {
+      sim_reg(fixed = fixed(), fixed_param = fixed_param(), cov_param = cov_param(),
+              n = n(), error_var = error_var(), with_err_gen = with_err_gen(),
+              data_str = data_str())
+    } else {
+      if(input$type_model == 2) {
+        sim_reg(fixed = fixed(), random = random(),
+                fixed_param = fixed_param(),
+                random_param = random_param(), cov_param = cov_param(),
+                k = NULL, n = n(), p = p(),
+                error_var = error_var(), with_err_gen = with_err_gen(),
+                data_str = data_str(), unbal = FALSE)
+      } else {
+        sim_reg(fixed(), random(), random3(), fixed_param(), random_param(), 
+                random_param3(), cov_param(), k(), n(), p(), 
+                error_var(), with_err_gen(),
+                data_str = data_str())
+      }
+    }
   })
   
   output$gen_examp <- renderDataTable({
@@ -453,14 +433,19 @@ server <- function(input, output, session) {
   
   power_sim <- eventReactive(input$update_power, {
     if(input$type_model == 1) {
+      if(input$incl_int) {
+        pow_param <- c('Intercept', attr(terms(fixed()),"term.labels"))
+      } else {
+        pow_param <- attr(terms(fixed()),"term.labels")
+      }
       alpha <- input$alpha
       pow_dist = input$type_dist
-      pow_tail = as.numeric(input$tails)
+      pow_tail = as.numeric(as.character(input$tails))
       replicates = input$repl
       
-      sim_pow(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
-              n = n, error_var = error_var, with_err_gen = with_err_gen, 
-              data_str = 'single', pow_param = pow_param, alpha = alpha,
+      sim_pow(fixed = fixed(), fixed_param = fixed_param(), cov_param = cov_param(),
+              n = n(), error_var = error_var(), with_err_gen = with_err_gen(), 
+              data_str = data_str(), pow_param = pow_param, alpha = alpha,
               pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
     } else {
       if(input$type_model == 2) {

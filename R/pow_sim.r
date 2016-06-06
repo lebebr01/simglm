@@ -132,7 +132,7 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var, with_err
   
   fixed_vars <- attr(terms(fixed),"term.labels")
   
-  if(any(pow_param %ni% c(fixed_vars, '(Intercept)'))) { stop('pow_param must be a subset of fixed')}
+  if(any(pow_param %ni% c(fixed_vars, '(Intercept)', 'Intercept'))) { stop('pow_param must be a subset of fixed')}
   
   temp_single <- sim_reg_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen, 
                                 arima, data_str, 

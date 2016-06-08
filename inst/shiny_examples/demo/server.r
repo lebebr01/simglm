@@ -27,6 +27,18 @@ server <- function(input, output, session) {
     )
   })
   
+  cov_names <- reactive({
+    num_covs <- input$number_cov
+    if(input$type_nested == 2) {
+      num_covs <- num_covs + 1
+    }
+    if(input$change_name == FALSE) {
+      paste('cov', 1:num_covs, sep = '_')
+    } else {
+      sapply(1:num_covs, function(i) input[[paste0('cov', i)]])
+    }
+  })
+  
   output$beta <- renderUI({
     num_covs <- input$number_cov
     if(input$type_nested == 2) {
@@ -35,7 +47,8 @@ server <- function(input, output, session) {
     if(input$incl_int) {
       num_covs <- num_covs + 1
     }
-    beta_names <- paste('Beta cov', 1:num_covs, sep = '_')
+    beta_names <- paste0('Beta ', cov_names())
+    
     if(input$type_nested == 2) {
       beta_names <- c('Beta Time', beta_names)
     }
@@ -50,7 +63,7 @@ server <- function(input, output, session) {
   
   output$mean_cov  <- renderUI({
     num_covs <- input$number_cov
-    cov_names <- paste('Mean cov', 1:num_covs, sep = '_')
+    cov_names <- paste0('Mean ', cov_names())
     lapply(1:num_covs, function(i) 
       div(style = 'display:inline-block', 
           numericInput(paste0('mean', i), label = cov_names[i], value = 0, width = '75px'))
@@ -59,7 +72,7 @@ server <- function(input, output, session) {
   
   output$sd_cov <- renderUI({
     num_covs <- input$number_cov
-    cov_names <- paste('SD cov', 1:num_covs, sep = '_')
+    cov_names <- paste0('SD ', cov_names())
     lapply(1:num_covs, function(i) 
       div(style = 'display:inline-block', 
           numericInput(paste0('sd', i), label = cov_names[i], value = 1, width = '75px'))
@@ -68,7 +81,7 @@ server <- function(input, output, session) {
   
   output$type_cov <- renderUI({
     num_covs <- input$number_cov
-    cov_names <- paste('Type cov', 1:num_covs, sep = '_')
+    cov_names <- paste0('Type ', cov_names())
     if(input$type_model == 1) {
       lapply(1:num_covs, function(i) 
         div(style = 'display:inline-block', 
@@ -123,11 +136,11 @@ server <- function(input, output, session) {
     if(input$type_model == 1) {
       if(input$incl_int) {
         as.formula(paste0('~ 1 + ', 
-                          paste(paste('cov', 1:input$number_cov, sep = '_'), 
+                          paste(cov_names(), 
                                 collapse = ' + ')))
       } else {
         as.formula(paste0('~ 0 + ', 
-                          paste(paste('cov', 1:input$number_cov, sep = '_'), 
+                          paste(cov_names(), 
                                 collapse = ' + ')))
       }
     } else {
@@ -135,21 +148,21 @@ server <- function(input, output, session) {
         if(input$type_nested == 1) {
           if(input$incl_int) {
             fixed <- as.formula(paste0('~ 1 + ',
-                                       paste(paste('cov', 1:input$number_cov, sep = '_'),
+                                       paste(cov_names(),
                                              collapse = ' + ')))
           } else {
             fixed <- as.formula(paste0('~ 0 + ',
-                                       paste(paste('cov', 1:input$number_cov, sep = '_'),
+                                       paste(cov_names(),
                                              collapse = ' + ')))
           }
         } else {
           if(input$incl_int) {
             fixed <- as.formula(paste0('~ 1 + time + ',
-                                       paste(paste('cov', 1:input$number_cov, sep = '_'),
+                                       paste(cov_names(),
                                              collapse = ' + ')))
           } else {
             fixed <- as.formula(paste0('~ 0 + time + ',
-                                       paste(paste('cov', 1:input$number_cov, sep = '_'),
+                                       paste(cov_names(),
                                              collapse = ' + ')))
           }
         }
@@ -215,8 +228,36 @@ server <- function(input, output, session) {
     list(random_var = input$lvl3_err,
          rand_gen = 'rnorm')
   })
+  unbal <- eventReactive(input$update | input$update_2, {
+    if(input$unbal_lvl2) {
+      TRUE
+    } else {
+      FALSE
+    }
+  })
+  unbalCont <- eventReactive(input$update | input$update_2, {
+    if(input$unbal_lvl2) {
+      c(input$min_cl2, input$max_cl2)
+    } else {
+      NULL
+    }
+  })
+  unbal3 <- eventReactive(input$update | input$update_2, {
+    if(input$unbal_lvl3) {
+      TRUE
+    } else {
+      FALSE
+    }
+  })
+  unbalCont3 <- eventReactive(input$update | input$update_2, {
+    if(input$unbal_lvl3) {
+      c(input$min_cl3, input$max_cl3)
+    } else {
+      NULL
+    }
+  })
   
-  gen_code <- eventReactive(input$update, {
+  gen_code <- eventReactive(input$update | input$update_2, {
     if(input$type_model == 1) {
       sim_reg(fixed = fixed(), fixed_param = fixed_param(), cov_param = cov_param(),
               n = n(), error_var = error_var(), with_err_gen = with_err_gen(),
@@ -228,12 +269,14 @@ server <- function(input, output, session) {
                 random_param = random_param(), cov_param = cov_param(),
                 k = NULL, n = n(), p = p(),
                 error_var = error_var(), with_err_gen = with_err_gen(),
-                data_str = data_str(), unbal = FALSE)
+                data_str = data_str(), unbal = unbal(), unbalCont = unbalCont()
+                )
       } else {
         sim_reg(fixed(), random(), random3(), fixed_param(), random_param(), 
                 random_param3(), cov_param(), k(), n(), p(), 
                 error_var(), with_err_gen(),
-                data_str = data_str())
+                data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
+                unbal3 = unbal3(), unbalCont3 = unbalCont3())
       }
     }
   })

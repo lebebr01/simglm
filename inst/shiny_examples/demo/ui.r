@@ -52,18 +52,9 @@ ui <- dashboardPage(skin = "green",
                     collapsible = TRUE, status = 'primary',
                     numericInput('lvl1_err', 'Level 1 Error Variance',
                               value = 5),
-                    # textInput('lvl1_err_dist', 'Level 1 Error Dist',
-                    #           value = 'rnorm'),
-                    # uiOutput('lvl1_err_misc'),
-                    # textInput('lvl1_err_misc', 'Level 1 Dist Params (separate by ";")',
-                    #           value = ''),
                     conditionalPanel(
                       condition = 'input.type_model == 2 || input.type_model == 3',
                       uiOutput('lvl2_err')
-                      # textInput('lvl2_err_dist', 'Level 2 Error Dist',
-                      #           value = 'rnorm')
-                      # textInput('lvl2_err_misc', 'Level 2 Dist Params (separate by ";")',
-                      #           value = '')
                     ),
                     conditionalPanel(
                       condition = 'input.type_model == 3',
@@ -80,14 +71,6 @@ ui <- dashboardPage(skin = "green",
                     uiOutput('mean_cov'),
                     uiOutput('sd_cov'),
                     uiOutput('type_cov')
-                    # textInput('beta', 'Regression Coefficients',
-                    #           value = '1, 1, 1, 1'),
-                    # textInput('mean_cov', 'Mean of Covariate(s)',
-                    #              value = '0, 5, 2'),
-                    # textInput('sd_cov', 'SD of Covariate(s)',
-                    #           value = '2, 4, 3'),
-                    # textInput('type_cov', 'Level of Covariate(s)',
-                    #           value = 'single, single, single')
                     )
               ),
               fluidRow(
@@ -127,18 +110,18 @@ ui <- dashboardPage(skin = "green",
                     conditionalPanel(
                       condition = 'input.unbal_lvl2 == true',
                       div(style = 'display:inline-block', 
-                          numericInput('min_cl2', 'Min Clust. Lvl 2', value = 2, width = '100px')),
+                          numericInput('min_cl2', 'Min Units Lvl 2', value = 2, width = '75px')),
                       div(style = 'display:inline-block', 
-                          numericInput('max_cl2', 'Max Clust. Lvl 2', value = 5, width = '100px'))
+                          numericInput('max_cl2', 'Max Units Lvl 2', value = 5, width = '75px'))
                     ),
                     checkboxInput('unbal_lvl3', 'Unbalanced Lvl 3 Clusters?',
                                   value = FALSE),
                     conditionalPanel(
                       condition = 'input.unbal_lvl3 == true',
                       div(style = 'display:inline-block', 
-                          numericInput('min_cl3', 'Min Clust. Lvl 3', value = 2, width = '100px')),
+                          numericInput('min_cl3', 'Min Units Lvl 3', value = 2, width = '75px')),
                       div(style = 'display:inline-block', 
-                          numericInput('max_cl3', 'Max Clust. Lvl 3', value = 5, width = '100px'))
+                          numericInput('max_cl3', 'Max Units Lvl 3', value = 5, width = '75px'))
                     )
                 ),
                 box(width = 2, collapsible = TRUE, collapsed = FALSE,
@@ -156,7 +139,7 @@ ui <- dashboardPage(skin = "green",
                 ),
                 box(width = 2, collapsible = TRUE, collapsed = FALSE,
                     title = 'Serial Correlation', status = 'warning',
-                    checkboxInput('sc', 'Simulated Serial Correlation?',
+                    checkboxInput('sc', 'Serial Correlation?',
                                   value = FALSE),
                     conditionalPanel(
                       condition = 'input.sc == true',

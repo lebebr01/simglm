@@ -256,12 +256,26 @@ server <- function(input, output, session) {
       NULL
     }
   })
+  arima <- eventReactive(input$update | input$update_2, {
+    if(input$sc) {
+      TRUE
+    } else {
+      FALSE
+    }
+  })
+  arima_model <- eventReactive(input$update | input$update_2, {
+    if(input$sc == FALSE) {
+      NULL
+    } else {
+      
+    }
+  })
   
   gen_code <- eventReactive(input$update | input$update_2, {
     if(input$type_model == 1) {
       sim_reg(fixed = fixed(), fixed_param = fixed_param(), cov_param = cov_param(),
               n = n(), error_var = error_var(), with_err_gen = with_err_gen(),
-              data_str = data_str())
+              data_str = data_str(), arima = arima())
     } else {
       if(input$type_model == 2) {
         sim_reg(fixed = fixed(), random = random(),
@@ -269,14 +283,16 @@ server <- function(input, output, session) {
                 random_param = random_param(), cov_param = cov_param(),
                 k = NULL, n = n(), p = p(),
                 error_var = error_var(), with_err_gen = with_err_gen(),
-                data_str = data_str(), unbal = unbal(), unbalCont = unbalCont()
+                data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
+                arima = arima()
                 )
       } else {
         sim_reg(fixed(), random(), random3(), fixed_param(), random_param(), 
                 random_param3(), cov_param(), k(), n(), p(), 
                 error_var(), with_err_gen(),
                 data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
-                unbal3 = unbal3(), unbalCont3 = unbalCont3())
+                unbal3 = unbal3(), unbalCont3 = unbalCont3(),
+                arima = arima())
       }
     }
   })

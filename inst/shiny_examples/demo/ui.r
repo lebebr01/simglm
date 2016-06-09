@@ -164,7 +164,8 @@ ui <- dashboardPage(skin = "green",
                   conditionalPanel(
                     condition = 'input.change_error_dist == true',
                     textInput('lvl1_err_dist', 'Level 1 Error Dist',
-                              value = 'rnorm', width = '75px')
+                              value = 'rnorm', width = '75px'),
+                    uiOutput('lvl1_err_misc')
                   )
                 )
               ),

@@ -27,6 +27,20 @@ server <- function(input, output, session) {
     )
   })
   
+  output$lvl1_err_misc <- renderUI({
+    dist <- input$lvl1_err_dist
+    args <- extract_needed_args(dist)
+    if(length(args) == 0) {
+      NULL
+    } else {
+      lapply(1:length(args), function(i)
+        div(style = 'display:inline-block', 
+            textInput(args[i], label = as.character(args[i]), 
+                      value = '', width = '75px'))
+      )
+    }
+  })
+  
   cov_names <- reactive({
     num_covs <- input$number_cov
     if(input$type_nested == 2) {
@@ -57,7 +71,8 @@ server <- function(input, output, session) {
     } 
     lapply(1:num_covs, function(i)
       div(style = 'display:inline-block',
-          numericInput(paste0('beta', i), label = beta_names[i], value = 1, width = '75px'))
+          numericInput(paste0('beta', i), label = beta_names[i], 
+                       value = 1, width = '75px'))
     )
   })
   
@@ -66,7 +81,8 @@ server <- function(input, output, session) {
     cov_names <- paste0('Mean ', cov_names())
     lapply(1:num_covs, function(i) 
       div(style = 'display:inline-block', 
-          numericInput(paste0('mean', i), label = cov_names[i], value = 0, width = '75px'))
+          numericInput(paste0('mean', i), label = cov_names[i], 
+                       value = 0, width = '75px'))
     )
   })
   
@@ -75,7 +91,8 @@ server <- function(input, output, session) {
     cov_names <- paste0('SD ', cov_names())
     lapply(1:num_covs, function(i) 
       div(style = 'display:inline-block', 
-          numericInput(paste0('sd', i), label = cov_names[i], value = 1, width = '75px'))
+          numericInput(paste0('sd', i), label = cov_names[i], 
+                       value = 1, width = '75px'))
     )
   })
   
@@ -85,12 +102,14 @@ server <- function(input, output, session) {
     if(input$type_model == 1) {
       lapply(1:num_covs, function(i) 
         div(style = 'display:inline-block', 
-            textInput(paste0('type', i), label = cov_names[i], value = 'single', width = '75px'))
+            textInput(paste0('type', i), label = cov_names[i], 
+                      value = 'single', width = '75px'))
       )
     } else {
       lapply(1:num_covs, function(i) 
         div(style = 'display:inline-block', 
-            textInput(paste0('type', i), label = cov_names[i], value = 'lvl1', width = '75px'))
+            textInput(paste0('type', i), label = cov_names[i], 
+                      value = 'lvl1', width = '75px'))
       )
     }
   })
@@ -99,7 +118,8 @@ server <- function(input, output, session) {
     if(input$type_model %in% c(2, 3) & input$type_nested == 2) {
       lapply(c('int', 'time'), function(i)
         div(style = 'display:inline-block',
-            textInput(paste0('var_', i), label = paste0('Var ', i), value = '1', width = '75px')
+            textInput(paste0('var_', i), label = paste0('Var ', i), 
+                      value = '1', width = '75px')
         )
       )
     } else {

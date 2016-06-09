@@ -55,6 +55,9 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(), co
   
   fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   rand_vars <- attr(terms(random),"term.labels")
+  if(length(rand_vars) == 0) {
+    rand_vars <- 1
+  }
   
   if(any(pow_param %ni% c(fixed_vars, '(Intercept)'))) { stop('pow_param must be a subset of fixed')}
 

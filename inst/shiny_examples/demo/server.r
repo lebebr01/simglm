@@ -17,9 +17,6 @@ server <- function(input, output, session) {
   
   output$change_cov <- renderUI({
     num_covs <- input$number_cov
-    if(input$type_nested == 2) {
-      num_covs <- num_covs + 1
-    }
     lapply(1:num_covs, function(i)
     div(style = 'display:inline-block',
         textInput(paste0('cov', i), label = paste0('Cov', i), 
@@ -69,9 +66,6 @@ server <- function(input, output, session) {
   
   cov_names <- reactive({
     num_covs <- input$number_cov
-    if(input$type_nested == 2) {
-      num_covs <- num_covs + 1
-    }
     if(input$change_name == FALSE) {
       paste('cov', 1:num_covs, sep = '_')
     } else {
@@ -576,20 +570,25 @@ server <- function(input, output, session) {
     } else {
       pow_param <- attr(terms(fixed()),"term.labels")
     }
+    alpha <- input$alpha
+    pow_dist = input$type_dist
+    pow_tail = as.numeric(as.character(input$tails))
+    replicates = input$repl
     
     if(input$type_model == 1) {
-      alpha <- input$alpha
-      pow_dist = input$type_dist
-      pow_tail = as.numeric(as.character(input$tails))
-      replicates = input$repl
-      
       sim_pow(fixed = fixed(), fixed_param = fixed_param(), cov_param = cov_param(),
               n = n(), error_var = error_var(), with_err_gen = with_err_gen(), 
               data_str = data_str(), pow_param = pow_param, alpha = alpha,
               pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
     } else {
       if(input$type_model == 2) {
-        
+        sim_pow(fixed = fixed(), random = random(), fixed_param = fixed_param(),
+                random_param = random_param(), cov_param = cov_param(), k = NULL,
+                n = n(), p = p(), error_var = error_var(), with_err_gen = with_err_gen(),
+                data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
+                pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
+                pow_tail = pow_tail, replicates = replicates
+                )
       } else {
         
       }

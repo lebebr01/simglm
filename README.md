@@ -56,5 +56,18 @@ Note: You may need to tell R to build the vignettes when installing the `simglm`
 install_github("lebebr01/simglm", build_vignettes = TRUE)
 ```
 
+### Shiny Demo Application
+There is a new shiny demo application. This is under ongoing development, therefore may be buggy or missing features. Check back regularly for updates. 
+
+Two ways to access shiny application (Note, you need to install locally the following packages: shiny, shinydashboard, DT, and simglm):
+```r
+library(simglm)
+run_shiny()
+```
+or
+```r
+shiny::runGitHub('simglm', 'lebebr01', subdir = 'inst/shiny_examples/demo')
+```
+
 
 Enjoy!

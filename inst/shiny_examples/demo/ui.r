@@ -204,8 +204,21 @@ ui <- dashboardPage(skin = "green",
               ),
       tabItem(tabName = 'verify',
               h2('Verify Data Simulation'),
-              h5('Specify simulation arguments from first two tabs prior to verifying data here.')
-              
+              h5('Specify simulation arguments from first two tabs prior to verifying data here.'),
+              fluidRow(
+                box(
+                  width = 3, title = 'Variables for Histograms',
+                  collapsible = TRUE, collapsed = FALSE,
+                  status = 'primary',
+                  uiOutput('vars')
+                ),
+                box(
+                  width = 9, title = 'Histograms',
+                  collapsible = TRUE, collapsed = FALSE,
+                  status = 'info',
+                  plotOutput('hists')
+                )
+              )
       ),
       tabItem(tabName = 'power',
               h2('Power Analysis'),

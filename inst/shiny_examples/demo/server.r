@@ -1,7 +1,9 @@
 library(shiny)
 library(shinydashboard)
 library(simglm)
+library(ggplot2)
 
+source('global.r')
 options(useFancyQuotes = FALSE)
 
 extract_needed_args <- function(func, remove_n = TRUE) {
@@ -562,6 +564,16 @@ server <- function(input, output, session) {
       
     }
     
+  })
+  
+  output$vars <- renderUI({
+    req(gen_code)
+    variables <- names(gen_code())
+    selectizeInput('hist_vars', 'Plot Variable', choices = variables)
+  })
+  
+  output$hists <- renderPlot({
+    histograms(gen_code(), input$hist_vars)
   })
   
   power_sim <- eventReactive(input$update_power, {

@@ -166,6 +166,18 @@ ui <- dashboardPage(skin = "green",
                     textInput('lvl1_err_dist', 'Level 1 Error Dist',
                               value = 'rnorm', width = '75px'),
                     uiOutput('lvl1_err_misc')
+                  ),
+                  conditionalPanel(
+                    condition = 'input.type_model == 2 || input.type_model == 3',
+                    textInput('lvl2_err_dist', 'Level 2 Error Dist',
+                              value = 'rnorm', width = '75px'),
+                    uiOutput('lvl2_err_misc')
+                  ),
+                  conditionalPanel(
+                    condition = 'input.type_model == 3',
+                    textInput('lvl3_err_dist', 'Level 3 Error Dist',
+                              value = 'rnorm', width = '75px'),
+                    uiOutput('lvl3_err_misc')
                   )
                 )
               ),

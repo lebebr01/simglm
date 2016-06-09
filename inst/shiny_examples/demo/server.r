@@ -40,6 +40,32 @@ server <- function(input, output, session) {
       )
     }
   })
+  output$lvl2_err_misc <- renderUI({
+    dist <- input$lvl2_err_dist
+    args <- extract_needed_args(dist)
+    if(length(args) == 0) {
+      NULL
+    } else {
+      lapply(1:length(args), function(i)
+        div(style = 'display:inline-block', 
+            textInput(args[i], label = as.character(args[i]), 
+                      value = '', width = '75px'))
+      )
+    }
+  })
+  output$lvl3_err_misc <- renderUI({
+    dist <- input$lvl3_err_dist
+    args <- extract_needed_args(dist)
+    if(length(args) == 0) {
+      NULL
+    } else {
+      lapply(1:length(args), function(i)
+        div(style = 'display:inline-block', 
+            textInput(args[i], label = as.character(args[i]), 
+                      value = '', width = '75px'))
+      )
+    }
+  })
   
   cov_names <- reactive({
     num_covs <- input$number_cov

@@ -27,8 +27,7 @@ server <- function(input, output, session) {
   })
   
   output$lvl1_err_misc <- renderUI({
-    dist <- input$lvl1_err_dist
-    args <- extract_needed_args(dist)
+    args <- extract_needed_args(input$lvl1_err_dist)
     if(length(args) == 0) {
       NULL
     } else {
@@ -40,8 +39,7 @@ server <- function(input, output, session) {
     }
   })
   output$lvl2_err_misc <- renderUI({
-    dist <- input$lvl2_err_dist
-    args <- extract_needed_args(dist)
+    args <- extract_needed_args(input$lvl2_err_dist)
     if(length(args) == 0) {
       NULL
     } else {
@@ -53,8 +51,7 @@ server <- function(input, output, session) {
     }
   })
   output$lvl3_err_misc <- renderUI({
-    dist <- input$lvl3_err_dist
-    args <- extract_needed_args(dist)
+    args <- extract_needed_args(input$lvl3_err_dist)
     if(length(args) == 0) {
       NULL
     } else {
@@ -151,30 +148,30 @@ server <- function(input, output, session) {
     }
   })
   
-  n <- eventReactive(input$update, {
+  n <- eventReactive(input$update | input$update_2, {
     if(input$type_model == 2 | input$type_model == 3) {
       input$samp_size_lvl2
     } else {
       input$samp_size_lvl1
     }
   })
-  p <- eventReactive(input$update, {
+  p <- eventReactive(input$update | input$update_2, {
     if(input$type_model == 2 | input$type_model == 3) {
       input$samp_size_lvl1
     } else {
       input$samp_size_lvl2
     }
   })
-  k <- eventReactive(input$update, {
+  k <- eventReactive(input$update | input$update_2, {
     input$samp_size_lvl3
   })
-  error_var <- eventReactive(input$update, {
+  error_var <- eventReactive(input$update | input$update_2, {
     input$lvl1_err
   })
-  with_err_gen <- eventReactive(input$update, {
+  with_err_gen <- eventReactive(input$update | input$update_2, {
     'rnorm'
   })
-  fixed <- eventReactive(input$update, {
+  fixed <- eventReactive(input$update | input$update_2, {
     if(input$type_model == 1) {
       if(input$incl_int) {
         as.formula(paste0('~ 1 + ', 
@@ -212,7 +209,7 @@ server <- function(input, output, session) {
     }
     
   })
-  fixed_param <- eventReactive(input$update, {
+  fixed_param <- eventReactive(input$update | input$update_2, {
     num_betas <- input$number_cov
     if(input$incl_int) {
       num_betas <- num_betas + 1
@@ -222,7 +219,7 @@ server <- function(input, output, session) {
     }
     sapply(1:num_betas, function(i) input[[paste0('beta', i)]])
   })
-  cov_param <- eventReactive(input$update, {
+  cov_param <- eventReactive(input$update | input$update_2, {
     num_cov <- input$number_cov
     mean_cov <- sapply(1:num_cov, function(i) input[[paste0('mean', i)]])
     sd_cov <- sapply(1:num_cov, function(i) input[[paste0('sd', i)]])
@@ -232,7 +229,7 @@ server <- function(input, output, session) {
          sd = sd_cov,
          var_type = type_cov)
   })
-  data_str <- eventReactive(input$update, {
+  data_str <- eventReactive(input$update | input$update_2, {
     if(input$type_model == 1) {
       'single'
     } else {
@@ -245,14 +242,14 @@ server <- function(input, output, session) {
       }
     }
   })
-  random <- eventReactive(input$update, {
+  random <- eventReactive(input$update | input$update_2, {
     if(input$type_nested == 1) {
       random <- ~ 1
     } else {
       random <- ~ 1 + time
     }
   })
-  random_param <- eventReactive(input$update, {
+  random_param <- eventReactive(input$update | input$update_2, {
     if(input$type_nested == 1) {
       ran_var <- input[['var_int']]
       random_param <- list(random_var = ran_var,
@@ -263,10 +260,10 @@ server <- function(input, output, session) {
                            rand_gen = 'rnorm')
     }
   })
-  random3 <- eventReactive(input$update, {
+  random3 <- eventReactive(input$update | input$update_2, {
     ~ 1
   })
-  random_param3 <- eventReactive(input$update, {
+  random_param3 <- eventReactive(input$update | input$update_2, {
     list(random_var = input$lvl3_err,
          rand_gen = 'rnorm')
   })
@@ -310,6 +307,31 @@ server <- function(input, output, session) {
       NULL
     } else {
       
+    }
+  })
+
+  err_misc_1 <- eventReactive(input$update | input$update_2, {
+    if(input$change_error_dist == FALSE) {
+      NULL
+    } else {
+      args <- extract_needed_args(input$lvl1_err_dist)
+      input[args]
+    }
+  })
+  err_misc_2 <- eventReactive(input$update | input$update_2, {
+    if(input$change_error_dist == FALSE) {
+      NULL
+    } else {
+      args <- extract_needed_args(input$lvl2_err_dist)
+      input[args]
+    }
+  })
+  err_misc_3 <- eventReactive(input$update | input$update_2, {
+    if(input$change_error_dist == FALSE) {
+      NULL
+    } else {
+      args <- extract_needed_args(input$lvl3_err_dist)
+      input[args]
     }
   })
   
@@ -362,11 +384,8 @@ server <- function(input, output, session) {
     
   })
   
-  output$gen_examp <- renderDataTable({
-    datatable(gen_code())
-  })
-  
-  output$gen_examp_2 <- renderDataTable({
+  output$gen_examp <- output$gen_examp_2 <- renderDataTable({
+    req(gen_code)
     datatable(gen_code())
   })
   

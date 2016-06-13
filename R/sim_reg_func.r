@@ -23,11 +23,14 @@
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
-#' @param ... Additional specification needed to pass to the random generating 
-#'             function defined by with_err_gen.
+#' @param lvl1_err_params Additional parameters passed as a list on to the level one error generating function
+#' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
+#'             See \code{\link{arima.sim}} for examples.
+#' @param ... Not currently used.
 #' @export 
 sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var, with_err_gen,
-                           arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL), ...) {
+                           arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL), 
+                           lvl1_err_params = NULL, arima_mod = list(NULL), ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   
@@ -39,7 +42,9 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var, with_err
   
   Xmat <- sim_fixef_single(fixed, fixed_vars, n, cov_param, cor_vars, fact_vars)
   
-  err <- sim_err_single(error_var, n, with_err_gen, arima = arima, ...)
+  err <- sim_err_single(error_var, n, with_err_gen, arima = arima, 
+                        lvl1_err_params = lvl1_err_params, 
+                        arima_mod = arima_mod)
   
   sim_data <- data_reg_single(Xmat, fixed_param, n, err)
   
@@ -91,13 +96,16 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var, with_err
 #'  can be TRUE, which uses additional argument, unbalCont.
 #' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum level one size,
 #'  will be drawn from a random uniform distribution with min and max specified.
-#' @param ... Additional specification needed to pass to the random generating 
-#'             function defined by with_err_gen.
+#' @param lvl1_err_params Additional parameters passed as a list on to the level one error generating function
+#' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
+#'             See \code{\link{arima.sim}} for examples.
+#' @param ... Not currently used.
 #' @export 
 sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(), cov_param, n, p, 
                            error_var, with_err_gen, arima = FALSE, 
                            data_str, cor_vars = NULL, fact_vars = list(NULL),
-                           unbal = FALSE, unbalCont = NULL, ...) {
+                           unbal = FALSE, unbalCont = NULL, 
+                           lvl1_err_params = NULL, arima_mod = list(NULL), ...) {
 
   #if(randCor > 1 | randCor < -1) stop("cor out of range")
 
@@ -131,7 +139,8 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(), co
   Zmat <- model.matrix(random, data.frame(Xmat))
 
   err <- sim_err_nested(error_var, n, p = lvl1ss, with_err_gen = with_err_gen,
-                        arima = arima, ...)
+                        arima = arima, lvl1_err_params = lvl1_err_params, 
+                        arima_mod = arima_mod...)
 
  sim_data <- data_reg_nested(Xmat, Zmat, fixed_param, rand_eff, n, p = lvl1ss, err = err)
   
@@ -199,14 +208,17 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(), co
 #'  will be drawn from a random uniform distribution with min and max specified.
 #' @param unbalCont3 When unbal3 = TRUE, this specifies the minimum and maximum level two size,
 #'  will be drawn from a random uniform distribution with min and max specified.
-#' @param ... Additional specification needed to pass to the random generating 
-#'             function defined by with_err_gen.
+#' @param lvl1_err_params Additional parameters passed as a list on to the level one error generating function
+#' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
+#'             See \code{\link{arima.sim}} for examples.
+#' @param ... Not currently used.
 #' @export 
 sim_reg_nested3 <- function(fixed, random, random3, fixed_param, 
                             random_param = list(), random_param3 = list(), cov_param, k, n, p, 
                             error_var, with_err_gen, arima = FALSE,
                             data_str, cor_vars = NULL, fact_vars = list(NULL),
                             unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
+                            lvl1_err_params = NULL, arima_mod = list(NULL),
                             ...) {
 
   #if(randCor > 1 | randCor < -1 | randCor3 > 1 | randCor3 < -1) stop("Random effect correlation out of range")
@@ -266,7 +278,8 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
   Zmat3 <- model.matrix(random3, data.frame(Xmat))
 
   err <- sim_err_nested(error_var, n = n, p = lvl1ss, with_err_gen = with_err_gen,
-                        arima = arima, ...)
+                        arima = arima, lvl1_err_params = lvl1_err_params, 
+                        arima_mod = arima_mod, ...)
 
  sim_data <- data_reg_nested3(Xmat, Zmat, Zmat3, fixed_param, rand_eff, rand_eff3,
                               k, n = lvl2ss, p = lvl1ss, err = err)

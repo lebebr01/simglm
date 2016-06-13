@@ -9,6 +9,10 @@
 #' @param arima TRUE/FALSE flag indicating whether residuals should 
 #'             be correlated. If TRUE, must specify a valid model to pass to 
 #'             arima.sim. See \code{\link{arima.sim}} for examples.
+#' @param lvl1_err_params Additional values that need to be passed to the function
+#'             called from with_err_gen.
+#' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
+#'             See \code{\link{arima.sim}} for examples.
 #' @param ther A vector of length two that specifies the theoretical mean and 
 #'              standard deviation of the with_err_gen. This would commonly be used
 #'              to standardize the generating variable to have a mean of 0 and
@@ -17,27 +21,29 @@
 #' @param ther_sim A TRUE/FALSE flag indicating whether the error simulation function
 #'              should be simulated, that is should the mean and standard deviation
 #'              used for standardization be simulated.
-#' @param ... Additional specification needed to pass to the random generating 
-#'             function defined by rand.gen.
+#' @param ... Not currently used.
 #' @export 
 sim_err_nested <- function(error_var, n, p, with_err_gen, arima = FALSE,
+                           lvl1_err_params = NULL, arima_mod = list(NULL),
                            ther = c(0, 1), ther_sim = FALSE, ...){
   
-  # Look to edit this with match.arg and switch
-  #n <- length(p)
-  
   if(ther_sim) {
-    ther_val <- sapply(X = 1000000, FUN = with_err_gen, ...)
+    ther_val <- do.call(with_err_gen, c(list(n = 10000000), lvl1_err_params))
     ther <- c(mean(ther_val), sd(ther_val))
   }
-
+  
   if(arima) {
-    err <- unlist(lapply(1:n, function(xx) lapply( 
-      arima.sim(n = p[xx], rand.gen = with_err_gen, ...), 
-      standardize, mean = ther[1], sd = ther[2]))) * sqrt(error_var)
+    args <- c(list(model = arima_mod, n = p, 
+                   rand.gen = eval(parse(text = with_err_gen))), 
+              lvl1_err_params)
+    err <- unlist(lapply(mapply(with_err_gen, n = p, 
+                                MoreArgs = lvl1_err_params, SIMPLIFY = FALSE), 
+                         standardize, mean = ther[1], sd = ther[2])) * sqrt(error_var)
   } else {
-    err <- unlist(lapply(1:n, function(xx) lapply(mapply(with_err_gen, n = p[xx], ..., SIMPLIFY = FALSE), 
-                         standardize, mean = ther[1], sd = ther[2]))) * sqrt(error_var)
+    args <- c(list(n = p), lvl1_err_params)
+    err <- unlist(lapply(mapply(with_err_gen, n = p, 
+         MoreArgs = lvl1_err_params, SIMPLIFY = FALSE), 
+         standardize, mean = ther[1], sd = ther[2])) * sqrt(error_var)
   }
   return(err)
 }
@@ -55,6 +61,10 @@ sim_err_nested <- function(error_var, n, p, with_err_gen, arima = FALSE,
 #' @param arima TRUE/FALSE flag indicating whether residuals should 
 #'             be correlated. If TRUE, must specify a valid model to pass to 
 #'             arima.sim, See \code{\link{arima.sim}} for examples.
+#' @param lvl1_err_params Additional values that need to be passed to the function
+#'             called from with_err_gen.
+#' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
+#'             See \code{\link{arima.sim}} for examples.
 #' @param ther A vector of length two that specifies the theoretical mean and 
 #'              standard deviation of the with_err_gen. This would commonly be used
 #'              to standardize the generating variable to have a mean of 0 and
@@ -63,22 +73,27 @@ sim_err_nested <- function(error_var, n, p, with_err_gen, arima = FALSE,
 #' @param ther_sim A TRUE/FALSE flag indicating whether the error simulation function
 #'              should be simulated, that is should the mean and standard deviation
 #'              used for standardization be simulated.
-#' @param ... Additional values that need to be passed to the function
-#'             called from with_err_gen.
+#' @param ... Not currently used.
 #' @export 
 sim_err_single <- function(error_var, n, with_err_gen, arima = FALSE, 
-                           ther = c(0, 1), ther_sim = FALSE, ...){
+                           lvl1_err_params = NULL, arima_mod = list(NULL),
+                           ther = c(0, 1), ther_sim = FALSE, 
+                           ...){
   
   if(ther_sim) {
-    ther_val <- sapply(X = 1000000, FUN = with_err_gen, ...)
+    ther_val <- do.call(with_err_gen, c(list(n = 10000000), lvl1_err_params))
     ther <- c(mean(ther_val), sd(ther_val))
   }
 
   if(arima) {
-    err <- standardize(arima.sim(n = n, rand.gen = with_err_gen, ...), 
+    args <- c(list(model = arima_mod, n = n, 
+                   rand.gen = eval(parse(text = with_err_gen))), 
+              lvl1_err_params)
+    err <- standardize(do.call(arima.sim, args), 
                        mean = ther[1], sd = ther[2]) * sqrt(error_var)
   } else {
-    err <- standardize(sapply(X = n, FUN = with_err_gen, ...), 
+    args <- c(list(n = n), lvl1_err_params)
+    err <- standardize(do.call(with_err_gen, args), 
                        mean = ther[1], sd = ther[2]) * sqrt(error_var)
   }
   return(err)

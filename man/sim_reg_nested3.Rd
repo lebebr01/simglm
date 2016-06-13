@@ -8,7 +8,7 @@ sim_reg_nested3(fixed, random, random3, fixed_param, random_param = list(),
   random_param3 = list(), cov_param, k, n, p, error_var, with_err_gen,
   arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL),
   unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
-  ...)
+  lvl1_err_params = NULL, arima_mod = list(NULL), ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -79,8 +79,12 @@ will be drawn from a random uniform distribution with min and max specified.}
 \item{unbalCont3}{When unbal3 = TRUE, this specifies the minimum and maximum level two size,
 will be drawn from a random uniform distribution with min and max specified.}
 
-\item{...}{Additional specification needed to pass to the random generating 
-function defined by with_err_gen.}
+\item{lvl1_err_params}{Additional parameters passed as a list on to the level one error generating function}
+
+\item{arima_mod}{A list indicating the ARIMA model to pass to arima.sim. 
+See \code{\link{arima.sim}} for examples.}
+
+\item{...}{Not currently used.}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

@@ -315,7 +315,7 @@ server <- function(input, output, session) {
       NULL
     } else {
       args <- extract_needed_args(input$lvl1_err_dist)
-      input[args]
+      input[[args]]
     }
   })
   err_misc_2 <- eventReactive(input$update | input$update_2, {
@@ -340,7 +340,7 @@ server <- function(input, output, session) {
       if(input$type_model == 1) {
         sim_reg(fixed = fixed(), fixed_param = fixed_param(), cov_param = cov_param(),
                 n = n(), error_var = error_var(), with_err_gen = with_err_gen(),
-                data_str = data_str(), arima = arima())
+                data_str = data_str(), arima = arima(), lvl1_err_params = err_misc_1())
       } else {
         if(input$type_model == 2) {
           sim_reg(fixed = fixed(), random = random(),

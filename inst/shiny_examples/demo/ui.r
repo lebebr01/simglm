@@ -218,6 +218,18 @@ ui <- dashboardPage(skin = "green",
                   status = 'info',
                   plotOutput('hists')
                 )
+              ),
+              fluidRow(
+                box(width = 12, title = 'Model Verification',
+                    collapsible = TRUE, collapsed = FALSE,
+                    status = 'info',
+                    checkboxInput('verify_model', 'Model Results?',
+                                  value = FALSE),
+                    conditionalPanel(
+                      condition = 'input.verify_model == true',
+                      verbatimTextOutput('model_results')
+                    )
+                    )
               )
       ),
       tabItem(tabName = 'power',

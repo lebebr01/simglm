@@ -148,30 +148,30 @@ server <- function(input, output, session) {
     }
   })
   
-  n <- eventReactive(input$update | input$update_2, {
+  n <- reactive({
     if(input$type_model == 2 | input$type_model == 3) {
       input$samp_size_lvl2
     } else {
       input$samp_size_lvl1
     }
   })
-  p <- eventReactive(input$update | input$update_2, {
+  p <- reactive({
     if(input$type_model == 2 | input$type_model == 3) {
       input$samp_size_lvl1
     } else {
       input$samp_size_lvl2
     }
   })
-  k <- eventReactive(input$update | input$update_2, {
+  k <- reactive({
     input$samp_size_lvl3
   })
-  error_var <- eventReactive(input$update | input$update_2, {
+  error_var <- reactive({
     input$lvl1_err
   })
-  with_err_gen <- eventReactive(input$update | input$update_2, {
+  with_err_gen <- reactive({
     'rnorm'
   })
-  fixed <- eventReactive(input$update | input$update_2, {
+  fixed <- reactive({
     if(input$type_model == 1) {
       if(input$incl_int) {
         as.formula(paste0('~ 1 + ', 
@@ -209,7 +209,7 @@ server <- function(input, output, session) {
     }
     
   })
-  fixed_param <- eventReactive(input$update | input$update_2, {
+  fixed_param <- reactive({
     num_betas <- input$number_cov
     if(input$incl_int) {
       num_betas <- num_betas + 1
@@ -219,7 +219,7 @@ server <- function(input, output, session) {
     }
     sapply(1:num_betas, function(i) input[[paste0('beta', i)]])
   })
-  cov_param <- eventReactive(input$update | input$update_2, {
+  cov_param <- reactive({
     num_cov <- input$number_cov
     mean_cov <- sapply(1:num_cov, function(i) input[[paste0('mean', i)]])
     sd_cov <- sapply(1:num_cov, function(i) input[[paste0('sd', i)]])
@@ -229,7 +229,7 @@ server <- function(input, output, session) {
          sd = sd_cov,
          var_type = type_cov)
   })
-  data_str <- eventReactive(input$update | input$update_2, {
+  data_str <- reactive({
     if(input$type_model == 1) {
       'single'
     } else {
@@ -242,14 +242,14 @@ server <- function(input, output, session) {
       }
     }
   })
-  random <- eventReactive(input$update | input$update_2, {
+  random <- reactive({
     if(input$type_nested == 1) {
       random <- ~ 1
     } else {
       random <- ~ 1 + time
     }
   })
-  random_param <- eventReactive(input$update | input$update_2, {
+  random_param <- reactive({
     if(input$type_nested == 1) {
       ran_var <- input[['var_int']]
       random_param <- list(random_var = ran_var,
@@ -260,49 +260,49 @@ server <- function(input, output, session) {
                            rand_gen = 'rnorm')
     }
   })
-  random3 <- eventReactive(input$update | input$update_2, {
+  random3 <- reactive({
     ~ 1
   })
-  random_param3 <- eventReactive(input$update | input$update_2, {
+  random_param3 <- reactive({
     list(random_var = input$lvl3_err,
          rand_gen = 'rnorm')
   })
-  unbal <- eventReactive(input$update | input$update_2, {
+  unbal <- reactive({
     if(input$unbal_lvl2) {
       TRUE
     } else {
       FALSE
     }
   })
-  unbalCont <- eventReactive(input$update | input$update_2, {
+  unbalCont <- reactive({
     if(input$unbal_lvl2) {
       c(input$min_cl2, input$max_cl2)
     } else {
       NULL
     }
   })
-  unbal3 <- eventReactive(input$update | input$update_2, {
+  unbal3 <- reactive({
     if(input$unbal_lvl3) {
       TRUE
     } else {
       FALSE
     }
   })
-  unbalCont3 <- eventReactive(input$update | input$update_2, {
+  unbalCont3 <- reactive({
     if(input$unbal_lvl3) {
       c(input$min_cl3, input$max_cl3)
     } else {
       NULL
     }
   })
-  arima <- eventReactive(input$update | input$update_2, {
+  arima <- reactive({
     if(input$sc) {
       TRUE
     } else {
       FALSE
     }
   })
-  arima_model <- eventReactive(input$update | input$update_2, {
+  arima_model <- reactive({
     if(input$sc == FALSE) {
       NULL
     } else {
@@ -310,7 +310,7 @@ server <- function(input, output, session) {
     }
   })
 
-  err_misc_1 <- eventReactive(input$update | input$update_2, {
+  err_misc_1 <- reactive({
     if(input$change_error_dist == FALSE) {
       NULL
     } else {
@@ -318,7 +318,7 @@ server <- function(input, output, session) {
       input[[args]]
     }
   })
-  err_misc_2 <- eventReactive(input$update | input$update_2, {
+  err_misc_2 <- reactive({
     if(input$change_error_dist == FALSE) {
       NULL
     } else {
@@ -326,7 +326,7 @@ server <- function(input, output, session) {
       input[args]
     }
   })
-  err_misc_3 <- eventReactive(input$update | input$update_2, {
+  err_misc_3 <- reactive({
     if(input$change_error_dist == FALSE) {
       NULL
     } else {
@@ -381,13 +381,25 @@ server <- function(input, output, session) {
         }
       }
     }
-    
   })
   
-  output$gen_examp <- output$gen_examp_2 <- renderDataTable({
-    req(gen_code)
-    datatable(gen_code())
-  })
+  output$gen_examp <- output$gen_examp_2 <- renderDataTable(
+    if(input$update == 0 & input$update_2 == 0) {
+      NULL
+    } else {
+      gen_code()
+    }
+  )
+  
+  # output$model_results <- ({
+  #   if(input$type_model == 1) {
+  #     mod_formula <- as.formula(paste('sim_data', fixed()))
+  #     mod <- lm(mod_formula, data = gen_code())
+  #     summary(mod)
+  #   } else {
+  # 
+  #   }
+  # })
   
   output$gen_examp_code <- renderUI({
     if(input$type_model == 1) {

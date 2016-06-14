@@ -604,7 +604,7 @@ server <- function(input, output, session) {
   })
   
   output$hists <- renderPlot({
-    histograms(gen_code(), input$hist_vars)
+    histograms(gen_code(), input$hist_vars, input$binwidth)
   })
   
   power_sim <- eventReactive(input$update_power, {

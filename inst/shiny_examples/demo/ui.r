@@ -210,7 +210,9 @@ ui <- dashboardPage(skin = "green",
                   width = 3, title = 'Variables for Histograms',
                   collapsible = TRUE, collapsed = FALSE,
                   status = 'primary',
-                  uiOutput('vars')
+                  uiOutput('vars'),
+                  numericInput('binwidth', 'Select Binwidth', 
+                               value = 2)
                 ),
                 box(
                   width = 9, title = 'Histograms',

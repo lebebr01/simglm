@@ -50,8 +50,11 @@ ui <- dashboardPage(skin = "green",
                     ),
                 box(title = 'Random Errors', width = 2, collapsed = FALSE,
                     collapsible = TRUE, status = 'primary',
+                    conditionalPanel(
+                      condition = 'input.type_outcome == 1',
                     numericInput('lvl1_err', 'Level 1 Error Variance',
-                              value = 5),
+                                 value = 5)
+                    ),
                     conditionalPanel(
                       condition = 'input.type_model == 2 || input.type_model == 3',
                       uiOutput('lvl2_err')

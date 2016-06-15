@@ -167,7 +167,11 @@ server <- function(input, output, session) {
     input$samp_size_lvl3
   })
   error_var <- reactive({
-    input$lvl1_err
+    if(input$type_outcome == 1) {
+      input$lvl1_err
+    } else {
+      NULL
+    }
   })
   with_err_gen <- reactive({
     'rnorm'
@@ -395,7 +399,11 @@ server <- function(input, output, session) {
   output$model_results <- renderPrint({
     if(input$type_model == 1) {
       mod_formula <- as.formula(paste('sim_data ~ ', fixed()[2]))
-      summary(lm(mod_formula, data = gen_code()))
+      if(input$type_outcome == 1) {
+        summary(glm(mod_formula, data = gen_code()), family = gaussian)
+      } else {
+        summary(glm(mod_formula, data = gen_code()), family = binomial)
+      }
     } else {
       if(input$type_model == 2) {
         mod_formula <- as.formula(paste('sim_data ~ ', fixed()[2],
@@ -409,7 +417,11 @@ server <- function(input, output, session) {
                                         random3()[2],
                                         '|clust3ID)'))
       }
-      summary(lmer(mod_formula, data = gen_code()))
+      if(input$type_outcome == 1) {
+        summary(lmer(mod_formula, data = gen_code()))
+      } else {
+        summary(glmer(mod_formula, data = gen_code(), family = binomial))
+      }
     }
   })
   

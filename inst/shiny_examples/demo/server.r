@@ -2,6 +2,7 @@ library(shiny)
 library(shinydashboard)
 library(simglm)
 library(ggplot2)
+library(lme4)
 
 source('global.r')
 options(useFancyQuotes = FALSE)
@@ -391,15 +392,26 @@ server <- function(input, output, session) {
     }
   )
   
-  # output$model_results <- ({
-  #   if(input$type_model == 1) {
-  #     mod_formula <- as.formula(paste('sim_data', fixed()))
-  #     mod <- lm(mod_formula, data = gen_code())
-  #     summary(mod)
-  #   } else {
-  # 
-  #   }
-  # })
+  output$model_results <- renderPrint({
+    if(input$type_model == 1) {
+      mod_formula <- as.formula(paste('sim_data ~ ', fixed()[2]))
+      summary(lm(mod_formula, data = gen_code()))
+    } else {
+      if(input$type_model == 2) {
+        mod_formula <- as.formula(paste('sim_data ~ ', fixed()[2],
+                                        ' + (', random()[2],
+                                        '|clustID)'))
+      }
+      if(input$type_model == 3) {
+        mod_formula <- as.formula(paste('sim_data ~ ', fixed()[2],
+                                        ' + (', random()[2],
+                                        '|clustID) + (',
+                                        random3()[2],
+                                        '|clust3ID)'))
+      }
+      summary(lmer(mod_formula, data = gen_code()))
+    }
+  })
   
   output$gen_examp_code <- renderUI({
     if(input$type_model == 1) {

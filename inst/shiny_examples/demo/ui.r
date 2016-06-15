@@ -203,8 +203,15 @@ ui <- dashboardPage(skin = "green",
                   collapsible = TRUE, collapsed = FALSE,
                   status = 'success',
                   dataTableOutput('gen_examp_2')
-              )
               ),
+              box(
+                width = 12, collapsible = TRUE, collapsed = FALSE,
+                status = 'warning',
+                downloadButton('downloadData', 'Download Generated Data'),
+                h5('Clicking the download button with download the current 
+                   data generated in the table above.')
+                )
+      ),
       tabItem(tabName = 'verify',
               h2('Verify Data Simulation'),
               h5('Specify simulation arguments from first two tabs prior to verifying data here.'),

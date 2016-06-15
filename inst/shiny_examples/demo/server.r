@@ -425,6 +425,15 @@ server <- function(input, output, session) {
     }
   })
   
+  output$downloadData <- downloadHandler(
+    filename = function() { 
+      paste('gen_data.csv', sep='') 
+    },
+    content = function(file) {
+      write.csv(gen_code(), file, row.names = FALSE)
+    }
+  )
+  
   output$gen_examp_code <- renderUI({
     if(input$type_model == 1) {
       str1 <- paste0('n <- ', input$samp_size_lvl1)

@@ -282,6 +282,18 @@ ui <- dashboardPage(skin = "green",
                     )
                   )
                 )
+              ),
+              fluidRow(
+                box(width = 12, title = 'Missing Data Verification',
+                    collapsible = TRUE, collapsed = FALSE,
+                    status = 'info', 
+                    checkboxInput('verify_missing', 'Verify Missing Data?',
+                                  value = FALSE),
+                    conditionalPanel(
+                      condition = 'input.verify_missing == TRUE',
+                      tableOutput()
+                    )
+                )
               )
       ),
       tabItem(tabName = 'power',

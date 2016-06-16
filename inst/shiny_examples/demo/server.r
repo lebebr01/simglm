@@ -96,7 +96,7 @@ server <- function(input, output, session) {
   })
   
   output$mean_cov  <- renderUI({
-    num_covs <- input$number_cov
+    num_covs <- input$number_cov - input$num_discrete
     cov_names <- paste0('Mean ', cov_names())
     lapply(1:num_covs, function(i) 
       div(style = 'display:inline-block', 
@@ -106,7 +106,7 @@ server <- function(input, output, session) {
   })
   
   output$sd_cov <- renderUI({
-    num_covs <- input$number_cov
+    num_covs <- input$number_cov - input$num_discrete
     cov_names <- paste0('SD ', cov_names())
     lapply(1:num_covs, function(i) 
       div(style = 'display:inline-block', 
@@ -116,7 +116,7 @@ server <- function(input, output, session) {
   })
   
   output$type_cov <- renderUI({
-    num_covs <- input$number_cov
+    num_covs <- input$number_cov - input$num_discrete
     cov_names <- paste0('Type ', cov_names())
     if(input$type_model == 1) {
       lapply(1:num_covs, function(i) 
@@ -149,7 +149,7 @@ server <- function(input, output, session) {
   })
   output$num_levels <- renderUI({
     num_covs <- input$num_discrete
-    cov_names <- paste0('Levels ', cov_names())
+    cov_names <- paste0('Levels ', cov_names()[grep('\\.f|\\.c|\\.o', cov_names())])
     lapply(1:num_covs, function(i)
       div(style = 'display:inline-block',
           numericInput(paste0('levels', i), label = cov_names[i],
@@ -158,17 +158,17 @@ server <- function(input, output, session) {
   })
   output$var_type <- renderUI({
     num_covs <- input$num_discrete
-    cov_names <- paste0('Type ', cov_names())
+    cov_names <- paste0('Type ', cov_names()[grep('\\.f|\\.c|\\.o', cov_names())])
     if(input$type_model == 1) {
       lapply(1:num_covs, function(i) 
         div(style = 'display:inline-block', 
-            textInput(paste0('type', i), label = cov_names[i], 
+            textInput(paste0('type_dis', i), label = cov_names[i], 
                       value = 'single', width = '75px'))
       )
     } else {
       lapply(1:num_covs, function(i) 
         div(style = 'display:inline-block', 
-            textInput(paste0('type', i), label = cov_names[i], 
+            textInput(paste0('type_dis', i), label = cov_names[i], 
                       value = 'lvl1', width = '75px'))
       )
     }
@@ -325,20 +325,20 @@ server <- function(input, output, session) {
       NULL
     }
   })
-  arima <- reactive({
-    if(input$sc) {
-      TRUE
-    } else {
-      FALSE
-    }
-  })
-  arima_model <- reactive({
-    if(input$sc == FALSE) {
-      NULL
-    } else {
-      
-    }
-  })
+  # arima <- reactive({
+  #   if(input$sc) {
+  #     TRUE
+  #   } else {
+  #     FALSE
+  #   }
+  # })
+  # arima_model <- reactive({
+  #   if(input$sc == FALSE) {
+  #     NULL
+  #   } else {
+  #     
+  #   }
+  # })
 
   err_misc_1 <- reactive({
     if(input$change_error_dist == FALSE) {
@@ -364,13 +364,24 @@ server <- function(input, output, session) {
       input[args]
     }
   })
+  fact_vars <- reactive({
+    if(input$dis_cov == FALSE) {
+      NULL
+    } else {
+      levels <- sapply(1:input$num_discrete, function(i) input[[paste0('levels', i)]])
+      var_type <- sapply(1:input$num_discrete, function(i) input[[paste0('type_dis', i)]])
+      list(numlevels = levels, var_type = var_type)
+    }
+  })
   
   gen_code <- eventReactive(input$update | input$update_2, {
     if(input$type_outcome == 1) {
       if(input$type_model == 1) {
         sim_reg(fixed = fixed(), fixed_param = fixed_param(), cov_param = cov_param(),
                 n = n(), error_var = error_var(), with_err_gen = with_err_gen(),
-                data_str = data_str(), arima = arima(), lvl1_err_params = err_misc_1())
+                data_str = data_str(), lvl1_err_params = err_misc_1(),
+                fact_vars = fact_vars()
+        )
       } else {
         if(input$type_model == 2) {
           sim_reg(fixed = fixed(), random = random(),
@@ -379,7 +390,7 @@ server <- function(input, output, session) {
                   k = NULL, n = n(), p = p(),
                   error_var = error_var(), with_err_gen = with_err_gen(),
                   data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
-                  arima = arima()
+                  fact_vars = fact_vars()
           )
         } else {
           sim_reg(fixed(), random(), random3(), fixed_param(), random_param(), 
@@ -387,26 +398,30 @@ server <- function(input, output, session) {
                   error_var(), with_err_gen(),
                   data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
                   unbal3 = unbal3(), unbalCont3 = unbalCont3(),
-                  arima = arima())
+                  fact_vars = fact_vars()
+          )
         }
       }
     } else {
       if(input$type_model == 1) {
         sim_glm(fixed = fixed(), fixed_param = fixed_param(), cov_param = cov_param(),
-                n = n(), data_str = data_str())
+                n = n(), data_str = data_str(), fact_vars = fact_vars()
+        )
       } else {
         if(input$type_model == 2) {
           sim_glm(fixed = fixed(), random = random(),
                   fixed_param = fixed_param(),
                   random_param = random_param(), cov_param = cov_param(),
                   k = NULL, n = n(), p = p(),
-                  data_str = data_str(), unbal = unbal(), unbalCont = unbalCont()
+                  data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
+                  fact_vars = fact_vars()
           )
         } else {
           sim_glm(fixed(), random(), random3(), fixed_param(), random_param(), 
                   random_param3(), cov_param(), k(), n(), p(),
                   data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
-                  unbal3 = unbal3(), unbalCont3 = unbalCont3()
+                  unbal3 = unbal3(), unbalCont3 = unbalCont3(),
+                  fact_vars = fact_vars()
                   )
         }
       }

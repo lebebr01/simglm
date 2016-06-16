@@ -73,7 +73,9 @@ ui <- dashboardPage(skin = "green",
                     uiOutput('beta'),
                     uiOutput('mean_cov'),
                     uiOutput('sd_cov'),
-                    uiOutput('type_cov')
+                    uiOutput('type_cov'),
+                    p('Note: If discrete variables, the number of covariates will
+                      not match the mean, sds, and type above.')
                     )
               ),
               fluidRow(

@@ -139,7 +139,14 @@ ui <- dashboardPage(skin = "green",
                                    choices = c('MCAR' = 1,
                                                'MAR' = 2,
                                                'Dropout' = 3),
-                                   selected = 1)
+                                   selected = 1),
+                      conditionalPanel(
+                        condition = 'input.type_missing == 2',
+                        uiOutput('select_missing_cov')
+                      ),
+                      numericInput('miss_prop', 'Missing proportion',
+                                   value = 0.2, min = 0, max = 1),
+                      p('Note: Missing proportion must be between 0 and 1.')
                     )
                 ),
                 box(width = 2, collapsible = TRUE, collapsed = FALSE,

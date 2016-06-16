@@ -54,7 +54,7 @@ prop.table(table(is.na(temp_long_miss$sim_data2)))
 ```
 
 ### MAR Missing Data Example
-The mar missing data is similar to that of dropout missing data, but instead of being conditional on time, a third variable can be added to base the missing data on. For example, in a study, perhaps those individuals with lower income are less likely to report the outcome of the study. As such, the mar missing data implementation in `simglm` allows you to simulate missing data in a similar framework as the example above. Below is an example from a single level regression (assumed that the covariates are grand mean centered).
+The mar missing data is similar to that of dropout missing data, but instead of being conditional on time, a third variable can be added to base the missing data on. For example, in a study, perhaps those individuals with lower income are less likely to report the outcome of the study. As such, the mar missing data implementation in `simglm` allows you to simulate missing data in a similar framework as the example above. Below is an example from a single level regression (assuming that the covariates are grand mean centered).
 
 ```{r marexamp}
 # simulate data

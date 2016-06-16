@@ -72,6 +72,11 @@ server <- function(input, output, session) {
     }
   })
   
+  output$select_missing_cov <- renderUI({
+    selectInput('miss_cov', 'Select Missing Covariate',
+                choices = cov_names())
+  })
+  
   output$beta <- renderUI({
     num_covs <- input$number_cov
     if(input$type_nested == 2) {

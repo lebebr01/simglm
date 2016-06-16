@@ -141,15 +141,32 @@ ui <- dashboardPage(skin = "green",
                     )
                 ),
                 box(width = 2, collapsible = TRUE, collapsed = FALSE,
-                    title = 'Serial Correlation', status = 'warning',
-                    checkboxInput('sc', 'Serial Correlation?',
+                    title = 'Discrete Covariates', status = 'warning',
+                    checkboxInput('dis_cov', 'Discrete Covariates?',
                                   value = FALSE),
                     conditionalPanel(
-                      condition = 'input.sc == true',
-                      radioButtons('type_sc', 'Type of Serial Correlation:',
-                                   choices = c(''))
+                      condition = 'input.dis_cov == true',
+                      numericInput('num_discrete', 'Number of Discrete Covariates',
+                                   value = 0)
+                    ),
+                    conditionalPanel(
+                      condition = 'input.num_discrete > 0',
+                      uiOutput('num_levels'),
+                      uiOutput('var_type'),
+                      p('Note: Need to add .f, .c, or .o in covariate names for discrete 
+                        covariate simulation.')
                     )
                 ),
+                # box(width = 2, collapsible = TRUE, collapsed = FALSE,
+                #     title = 'Serial Correlation', status = 'warning',
+                #     checkboxInput('sc', 'Serial Correlation?',
+                #                   value = FALSE),
+                #     conditionalPanel(
+                #       condition = 'input.sc == true',
+                #       radioButtons('type_sc', 'Type of Serial Correlation:',
+                #                    choices = c(''))
+                #     )
+                # ),
                 box(width = 2, collapsible = TRUE, collapsed = FALSE,
                     title = 'Covariate Misc', status = 'warning',
                     checkboxInput('change_name', 'Specify Covariate Name?',

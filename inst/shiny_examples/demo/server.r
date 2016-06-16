@@ -26,7 +26,6 @@ server <- function(input, output, session) {
                   value = 'cov', width = '75px'))
     )
   })
-  
   output$lvl1_err_misc <- renderUI({
     args <- extract_needed_args(input$lvl1_err_dist)
     if(length(args) == 0) {
@@ -146,6 +145,32 @@ server <- function(input, output, session) {
       if(input$type_model %in% c(2, 3) & input$type_nested == 1) {
         textInput('var_int', label = 'Var int', value = '1')
       }
+    }
+  })
+  output$num_levels <- renderUI({
+    num_covs <- input$num_discrete
+    cov_names <- paste0('Levels ', cov_names())
+    lapply(1:num_covs, function(i)
+      div(style = 'display:inline-block',
+          numericInput(paste0('levels', i), label = cov_names[i],
+                       value = 2, width = '75px'))
+    )
+  })
+  output$var_type <- renderUI({
+    num_covs <- input$num_discrete
+    cov_names <- paste0('Type ', cov_names())
+    if(input$type_model == 1) {
+      lapply(1:num_covs, function(i) 
+        div(style = 'display:inline-block', 
+            textInput(paste0('type', i), label = cov_names[i], 
+                      value = 'single', width = '75px'))
+      )
+    } else {
+      lapply(1:num_covs, function(i) 
+        div(style = 'display:inline-block', 
+            textInput(paste0('type', i), label = cov_names[i], 
+                      value = 'lvl1', width = '75px'))
+      )
     }
   })
   
@@ -495,7 +520,6 @@ server <- function(input, output, session) {
       params <- cbind(params, est)
       params$diff <- as.numeric(params$Parameter) - as.numeric(params$est)
       params
-      
     }
   })
   

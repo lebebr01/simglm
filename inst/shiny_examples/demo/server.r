@@ -433,11 +433,62 @@ server <- function(input, output, session) {
     }
   })
   
+  miss_clustvar <- reactive({
+    if(input$type_missing %in% c(1, 2)) {
+      NULL
+    } else {
+      
+    }
+  })
+  miss_withinid <- reactive({
+    if(input$type_missing %in% c(1, 2)) {
+      NULL
+    } else {
+      
+    }
+  })
+  missing_cov <- reactive({
+    if(input$type_missing %in% c(1, 3)) {
+      NULL
+    } else {
+      input$miss_cov
+    }
+  })
+  missing_type <- reactive({
+    if(input$type_missing == 1) {
+      'random'
+    } else {
+      if(input$type_missing == 2) {
+        'mar'
+      } else {
+        'dropout'
+      }
+    }
+  })
+  
+  miss_data <- eventReactive(input$update | input$update_2, {
+    missing_data(gen_code(), miss_prop = input$miss_prop, type = missing_type(),
+                 clust_var = miss_clustvar(), within_id = miss_withinid(), 
+                 miss_cov = missing_cov())
+  })
+  
+  output$miss_data <- renderTable({
+    if(input$verify_missing) {
+      data.frame(Type = c('Not Missing', 'Missing'), 
+                 Count = data.frame(table(miss_data()$missing))[, 2],
+                 Proportion = data.frame(prop.table(table(miss_data()$missing)))[, 2])
+    }
+  })
+  
   output$gen_examp <- output$gen_examp_2 <- renderDataTable(
     if(input$update == 0 & input$update_2 == 0) {
       NULL
     } else {
-      gen_code()
+      if(input$missing == FALSE) {
+        gen_code()
+      } else {
+        miss_data()
+      }
     }
   )
   
@@ -555,7 +606,12 @@ server <- function(input, output, session) {
       paste('gen_data.csv', sep='') 
     },
     content = function(file) {
-      write.csv(gen_code(), file, row.names = FALSE)
+      if(input$missing == FALSE) {
+        write.csv(gen_code(), file, row.names = FALSE)
+      } else {
+        write.csv(miss_data(), file, row.names = FALSE)
+      }
+      
     }
   )
   

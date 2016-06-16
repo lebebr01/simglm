@@ -396,13 +396,13 @@ server <- function(input, output, session) {
     }
   )
   
-  output$model_results <- renderPrint({
+  mod <- reactive({
     if(input$type_model == 1) {
       mod_formula <- as.formula(paste('sim_data ~ ', fixed()[2]))
       if(input$type_outcome == 1) {
-        summary(glm(mod_formula, data = gen_code()), family = gaussian)
+        lm(mod_formula, data = gen_code())
       } else {
-        summary(glm(mod_formula, data = gen_code()), family = binomial)
+        glm(mod_formula, data = gen_code(), family = binomial)
       }
     } else {
       if(input$type_model == 2) {
@@ -418,10 +418,84 @@ server <- function(input, output, session) {
                                         '|clust3ID)'))
       }
       if(input$type_outcome == 1) {
-        summary(lmer(mod_formula, data = gen_code()))
+        lmer(mod_formula, data = gen_code())
       } else {
-        summary(glmer(mod_formula, data = gen_code(), family = binomial))
+        glmer(mod_formula, data = gen_code(), family = binomial)
       }
+    }
+  })
+  
+  output$model_results <- renderPrint({
+    if(input$update == 0 & input$update_2 == 0) {
+      NULL
+    } else {
+      summary(mod())
+    }
+  })
+  
+  output$param_diff <- renderDataTable({
+    if(input$type_model == 1) {
+      est <- coef(mod())
+      if(input$type_outcome == 1) {
+        error <- summary(mod())$sigma^2
+        est <- c(est, error)
+      }
+      terms <- unlist(strsplit(as.character(fixed())[2], '\\s*\\+\\s*'))
+      
+      params <- data.frame(Terms = as.character(terms),
+                        Parameter = fixed_param(),
+                        stringsAsFactors = FALSE)
+      if(input$type_outcome == 1) {
+        params <- rbind(params, c('Error', error_var()))
+      }
+      params <- cbind(params, est)
+      params$diff <- as.numeric(params$Parameter) - as.numeric(params$est)
+      params
+    } else {
+      est <- fixef(mod())
+      if(input$type_model == 2) {
+        rand_var <- attr(VarCorr(mod())[[1]], 'stddev')^2
+      } else {
+        rand_var <- c(attr(VarCorr(mod())[[1]], 'stddev')^2, 
+                      attr(VarCorr(mod())[[2]], 'stddev')^2)
+      }
+      est <- c(est, rand_var)
+      if(input$type_outcome == 1) {
+        error <- attr(VarCorr(mod()), 'sc')^2
+        est <- c(est, error)
+      }
+      terms <- unlist(strsplit(as.character(fixed())[2], '\\s*\\+\\s*'))
+      
+      params <- data.frame(Terms = as.character(terms),
+                           Parameter = fixed_param(),
+                           stringsAsFactors = FALSE)
+      if(input$type_model == 3) {
+        rand_terms <- c(paste('rand_lvl2', 
+                              unlist(strsplit(as.character(random())[2], '\\s*\\+\\s*')),
+                              sep = '_'),
+                        paste('rand_lvl3', 
+                              unlist(strsplit(as.character(random3())[2], '\\s*\\+\\s*')),
+                              sep = '_'))
+        rand_params <- data.frame(Terms = rand_terms,
+                                  Parameter = c(random_param()[[1]], random_param3()[[1]]),
+                                  stringsAsFactors = FALSE)
+      } else {
+        rand_terms <- paste('rand_lvl2', 
+                            unlist(strsplit(as.character(random())[2], '\\s*\\+\\s*')),
+                            sep = '_')
+        rand_params <- data.frame(Terms = rand_terms,
+                                  Parameter = random_param()[[1]],
+                                  stringsAsFactors = FALSE)
+      }
+      params <- rbind(params, rand_params)
+      
+      if(input$type_outcome == 1) {
+        params <- rbind(params, c('Error', error_var()))
+      }
+      params <- cbind(params, est)
+      params$diff <- as.numeric(params$Parameter) - as.numeric(params$est)
+      params
+      
     }
   })
   

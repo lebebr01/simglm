@@ -232,7 +232,7 @@ ui <- dashboardPage(skin = "green",
                 )
               ),
               fluidRow(
-                box(width = 12, title = 'Model Verification',
+                box(width = 6, title = 'Model Verification',
                     collapsible = TRUE, collapsed = FALSE,
                     status = 'info',
                     checkboxInput('verify_model', 'Model Results?',
@@ -241,7 +241,21 @@ ui <- dashboardPage(skin = "green",
                       condition = 'input.verify_model == true',
                       verbatimTextOutput('model_results')
                     )
+                    ),
+                conditionalPanel(
+                  condition = 'input.verify_model == true',
+                  box(
+                    width = 6, title = 'Difference in Parameter and Estimates',
+                    collapsible = TRUE, collapsed = FALSE,
+                    status = 'info',
+                    checkboxInput('est_diff', 'Parameter - Estimate',
+                                  value = FALSE),
+                    conditionalPanel(
+                      condition = 'input.est_diff == true',
+                      dataTableOutput('param_diff')
                     )
+                  )
+                )
               )
       ),
       tabItem(tabName = 'power',

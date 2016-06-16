@@ -4,3 +4,14 @@ histograms <- function(data, variable, binwidth) {
     theme_bw(base_size = 16) + 
     geom_histogram(binwidth = binwidth) 
 }
+
+# param_table <- htmltools::withTags(
+#   table(
+#     class = 'display',
+#     thead(
+#       tr(
+#         
+#       )
+#     )
+#   )
+# )

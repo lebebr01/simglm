@@ -70,12 +70,13 @@ ui <- dashboardPage(skin = "green",
                     checkboxInput('incl_int', 'Include Intercept?', TRUE),
                     numericInput('number_cov', 'Number of Covariates',
                                  value = 3, width = '300px'),
+                    p('Note: Number of covariates includes both continuous and discrete.'),
                     uiOutput('beta'),
                     uiOutput('mean_cov'),
                     uiOutput('sd_cov'),
                     uiOutput('type_cov'),
                     p('Note: If discrete variables, the number of covariates will
-                      not match the mean, sds, and type above.')
+                      not match the mean, sds, and type above. See optional tab.')
                     )
               ),
               fluidRow(
@@ -140,6 +141,7 @@ ui <- dashboardPage(skin = "green",
                                                'MAR' = 2,
                                                'Dropout' = 3),
                                    selected = 1),
+                      p('Note: To use dropout missing data must have a longitudinal design.'),
                       conditionalPanel(
                         condition = 'input.type_missing == 2',
                         uiOutput('select_missing_cov')
@@ -291,7 +293,7 @@ ui <- dashboardPage(skin = "green",
                                   value = FALSE),
                     conditionalPanel(
                       condition = 'input.verify_missing == TRUE',
-                      tableOutput()
+                      tableOutput('miss_data')
                     )
                 )
               )

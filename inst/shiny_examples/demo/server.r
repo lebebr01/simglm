@@ -427,7 +427,7 @@ server <- function(input, output, session) {
                   data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
                   unbal3 = unbal3(), unbalCont3 = unbalCont3(),
                   fact_vars = fact_vars()
-                  )
+          )
         }
       }
     }
@@ -486,16 +486,17 @@ server <- function(input, output, session) {
         est <- c(est, error)
       }
       terms <- unlist(strsplit(as.character(fixed())[2], '\\s*\\+\\s*'))
+      terms <- gsub("^1", "Intercept", terms)
       
       params <- data.frame(Terms = as.character(terms),
+                           Type = 'Fixed',
                         Parameter = fixed_param(),
                         stringsAsFactors = FALSE)
       if(input$type_outcome == 1) {
-        params <- rbind(params, c('Error', error_var()))
+        params <- rbind(params, c('Residual Error', 'Random', error_var()))
       }
       params <- cbind(params, est)
       params$diff <- as.numeric(params$Parameter) - as.numeric(params$est)
-      params
     } else {
       est <- fixef(mod())
       if(input$type_model == 2) {
@@ -510,37 +511,43 @@ server <- function(input, output, session) {
         est <- c(est, error)
       }
       terms <- unlist(strsplit(as.character(fixed())[2], '\\s*\\+\\s*'))
+      terms <- gsub("^1", "Intercept", terms)
       
       params <- data.frame(Terms = as.character(terms),
+                           Type = 'Fixed',
                            Parameter = fixed_param(),
                            stringsAsFactors = FALSE)
       if(input$type_model == 3) {
-        rand_terms <- c(paste('rand_lvl2', 
-                              unlist(strsplit(as.character(random())[2], '\\s*\\+\\s*')),
-                              sep = '_'),
-                        paste('rand_lvl3', 
-                              unlist(strsplit(as.character(random3())[2], '\\s*\\+\\s*')),
-                              sep = '_'))
+        terms_2 <- unlist(strsplit(as.character(random())[2], '\\s*\\+\\s*'))
+        terms_2 <- gsub('^1', 'Intercept', terms_2)
+        terms_3 <- unlist(strsplit(as.character(random3())[2], '\\s*\\+\\s*'))
+        terms_3 <- gsub('^1', 'Intercept', terms_3)
+        rand_terms <- c(paste('rand_lvl2', terms_2, sep = '_'),
+                        paste('rand_lvl3', terms_3, sep = '_'))
         rand_params <- data.frame(Terms = rand_terms,
+                                  Type = 'Random',
                                   Parameter = c(random_param()[[1]], random_param3()[[1]]),
                                   stringsAsFactors = FALSE)
       } else {
+        terms_2 <- unlist(strsplit(as.character(random())[2], '\\s*\\+\\s*'))
+        terms_2 <- gsub('^1', 'Intercept', terms_2)
         rand_terms <- paste('rand_lvl2', 
-                            unlist(strsplit(as.character(random())[2], '\\s*\\+\\s*')),
+                            terms_2,
                             sep = '_')
         rand_params <- data.frame(Terms = rand_terms,
+                                  Type = 'Random',
                                   Parameter = random_param()[[1]],
                                   stringsAsFactors = FALSE)
       }
       params <- rbind(params, rand_params)
       
       if(input$type_outcome == 1) {
-        params <- rbind(params, c('Error', error_var()))
+        params <- rbind(params, c('Residual Error', 'Random', error_var()))
       }
       params <- cbind(params, est)
       params$diff <- as.numeric(params$Parameter) - as.numeric(params$est)
-      params
     }
+    datatable(params, rownames = FALSE)
   })
   
   output$downloadData <- downloadHandler(

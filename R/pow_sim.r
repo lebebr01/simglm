@@ -10,8 +10,18 @@
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
+#' @param random3 One sided formula for random effects at third level in the simulation. Must be a subset of fixed
+#'  (and likely of random).
 #' @param fixed_param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
 #' @param random_param A list of named elements that must contain: 
+#'             random_var = variance of random parameters,
+#'             rand_gen = Name of simulation function for random effects.
+#'          Optional elements are:
+#'             ther: Theorectial mean and variance from rand_gen,
+#'             ther_sim: Simulate mean/variance for standardization purposes,
+#'             cor_vars: Correlation between random effects,
+#'             ...: Additional parameters needed for rand_gen function.
+#' @param random_param3 A list of named elements that must contain: 
 #'             random_var = variance of random parameters,
 #'             rand_gen = Name of simulation function for random effects.
 #'          Optional elements are:
@@ -22,6 +32,7 @@
 #' @param cov_param List of mean, sd (standard deviations), and var_type for fixed effects. 
 #'  Does not include intercept, time, factors, or interactions. 
 #'  var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
+#' @param k Number of third level clusters.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
 #' @param error_var Scalar of error variance.
@@ -38,7 +49,12 @@
 #' @param unbal A vector of sample sizes for the number of observations for each level 2
 #'  cluster. Must have same length as level two sample size n. Alternative specification
 #'  can be TRUE, which uses additional argument, unbalCont.
+#' @param unbal3 A vector of sample sizes for the number of observations for each level 3
+#'  cluster. Must have same length as level two sample size k. Alternative specification
+#'  can be TRUE, which uses additional argument, unbalCont3.
 #' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum level one size,
+#'  will be drawn from a random uniform distribution with min and max specified.
+#' @param unbalCont3 When unbal3 = TRUE, this specifies the minimum and maximum level two size,
 #'  will be drawn from a random uniform distribution with min and max specified.
 #' @param lvl1_err_params Additional parameters passed as a list on to the level one error generating function
 #' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 

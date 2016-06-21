@@ -92,11 +92,20 @@ sim_pow <- function(fixed, random, random3, fixed_param,
       #               with_err_gen, pow_param, alpha, pow_dist, pow_tail))
     #})
   } else {
-    temp_pow <- do.call('rbind', lapply(1:replicates, function(xx) 
-      sim_pow_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 
-                     error_var, with_err_gen, arima, data_str, cor_vars, fact_vars, 
-                     unbal, unbalCont, lvl1_err_params, arima_mod, 
-                     missing, missing_args, pow_param, alpha, pow_dist, pow_tail, ...)))
+    if(is.null(k)) {
+      temp_pow <- do.call('rbind', lapply(1:replicates, function(xx) 
+        sim_pow_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 
+                       error_var, with_err_gen, arima, data_str, cor_vars, fact_vars, 
+                       unbal, unbalCont, lvl1_err_params, arima_mod, 
+                       missing, missing_args, pow_param, alpha, pow_dist, pow_tail, ...)))
+    } else {
+      temp_pow <- do.call('rbind', lapply(1:replicates, function(xx) 
+        sim_pow_nested3(fixed, random, random3, fixed_param, random_param, random_param3, 
+                        cov_param, k, n, p, 
+                       error_var, with_err_gen, arima, data_str, cor_vars, fact_vars, 
+                       unbal, unbal3, unbalCont, unbalCont3, lvl1_err_params, arima_mod, 
+                       missing, missing_args, pow_param, alpha, pow_dist, pow_tail, ...)))
+    }
   }
   
   power <- temp_pow %>%

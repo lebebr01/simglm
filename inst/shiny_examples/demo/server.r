@@ -437,14 +437,14 @@ server <- function(input, output, session) {
     if(input$type_missing %in% c(1, 2)) {
       NULL
     } else {
-      
+      'clustID'
     }
   })
   miss_withinid <- reactive({
     if(input$type_missing %in% c(1, 2)) {
       NULL
     } else {
-      
+      'withinID'
     }
   })
   missing_cov <- reactive({
@@ -831,11 +831,21 @@ server <- function(input, output, session) {
     pow_dist = input$type_dist
     pow_tail = as.numeric(as.character(input$tails))
     replicates = input$repl
+    missing = FALSE
+    missing_args = list(NULL)
+    
+    if(input$missing) {
+      missing = TRUE
+      missing_args = list(miss_prop = input$miss_prop, type = missing_type(),
+                          clust_var = miss_clustvar(), within_id = miss_withinid(), 
+                          miss_cov = missing_cov())
+    }
     
     if(input$type_model == 1) {
       sim_pow(fixed = fixed(), fixed_param = fixed_param(), cov_param = cov_param(),
               n = n(), error_var = error_var(), with_err_gen = with_err_gen(), 
-              data_str = data_str(), pow_param = pow_param, alpha = alpha,
+              data_str = data_str(), missing = missing, missing_args = missing_args, 
+              pow_param = pow_param, alpha = alpha,
               pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
     } else {
       if(input$type_model == 2) {
@@ -843,11 +853,22 @@ server <- function(input, output, session) {
                 random_param = random_param(), cov_param = cov_param(), k = NULL,
                 n = n(), p = p(), error_var = error_var(), with_err_gen = with_err_gen(),
                 data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
+                missing = missing, missing_args = missing_args, 
                 pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
                 pow_tail = pow_tail, replicates = replicates
                 )
       } else {
-        
+        sim_pow(fixed = fixed(), random = random(), random3 = random3(), 
+                fixed_param = fixed_param(),
+                random_param = random_param(), random_param3 = random_param3(), 
+                cov_param = cov_param(), k = k(),
+                n = n(), p = p(), error_var = error_var(), with_err_gen = with_err_gen(),
+                data_str = data_str(), unbal = unbal(), unbal3 = unbal3(),
+                unbalCont = unbalCont(), unbalCont3 = unbalCont3(),
+                missing = missing, missing_args = missing_args, 
+                pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
+                pow_tail = pow_tail, replicates = replicates
+        )
       }
     }
   })

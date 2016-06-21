@@ -106,10 +106,10 @@ power_out
 ### Three Level Designs
 ```{r three}
 fixed <- ~1 + time + diff + act + actClust + time:act
-random <- ~1 + time + diff
+random <- ~1 + time 
 random3 <- ~ 1 + time
 fixed_param <- c(4, 2, 6, 2.3, 7, 0)
-random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
+random_param <- list(random_var = c(7, 4), rand_gen = 'rnorm')
 random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
 cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
 var_type = c("lvl1", "lvl2", "lvl3"))
@@ -123,7 +123,7 @@ pow_param <- c('time', 'diff', 'act', 'actClust')
 alpha <- .01
 pow_dist = "t"
 pow_tail = 2
-replicates = 50
+replicates = 5
 power_out <- sim_pow(fixed = fixed, random = random, random3 = random3,
                      fixed_param = fixed_param, 
                      random_param = random_param, random_param3 = random_param3, 
@@ -133,6 +133,7 @@ power_out <- sim_pow(fixed = fixed, random = random, random3 = random3,
                      data_str = data_str, unbal = FALSE, unbal3 = FALSE, 
                      pow_param = pow_param, alpha = alpha,
                      pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
+power_out
 ```
 
 

@@ -93,7 +93,7 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
     if(length(rand_vars3) == 0) {
       ran2 <- '(1 | clust3ID)'
     } else {
-      ran2 <- paste('(', paste(rand_vars3, collapse = "+"), "| clust3ID", sep = "")
+      ran2 <- paste('(', paste(rand_vars3, collapse = "+"), "| clust3ID)", sep = "")
     }
     fm1 <- as.formula(paste(fix1, ran1, ran2, sep = "+ "))
     

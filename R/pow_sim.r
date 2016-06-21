@@ -40,17 +40,23 @@
 #'  can be TRUE, which uses additional argument, unbalCont.
 #' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum level one size,
 #'  will be drawn from a random uniform distribution with min and max specified.
+#' @param lvl1_err_params Additional parameters passed as a list on to the level one error generating function
+#' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
+#'             See \code{\link{arima.sim}} for examples.
+#' @param missing TRUE/FALSE flag indicating whether missing data should be simulated.
+#' @param missing_args Additional missing arguments to pass to the missing_data function. 
+#'           See \code{\link{missing_data}} for examples.
 #' @param pow_param Name of variable to calculate power for, must be a name from fixed.
 #' @param alpha What should the per test alpha rate be used for the hypothesis testing.
 #' @param pow_dist Which distribution should be used when testing hypothesis test, z or t?
 #' @param pow_tail One-tailed or two-tailed test?
-#' @param ... Additional specification needed to pass to the random generating 
-#'             function defined by with_err_gen.
+#' @param ... Not currently used.
 #' @export 
 sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(), cov_param, n, p, 
                            error_var, with_err_gen, arima = FALSE, 
                            data_str, cor_vars = NULL, fact_vars = list(NULL),
-                           unbal = FALSE, unbalCont = NULL,
+                           unbal = FALSE, unbalCont = NULL, lvl1_err_params = NULL,
+                           arima_mod = list(NULL), missing = FALSE, missing_args = list(NULL),
                            pow_param = NULL, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
@@ -63,7 +69,11 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(), co
 
   temp_nest <- sim_reg_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 
                               error_var, with_err_gen, arima,
-                              data_str, cor_vars, fact_vars, unbal, unbalCont, ...)
+                              data_str, cor_vars, fact_vars, unbal, unbalCont,
+                              lvl1_err_params, arima_mod, ...)
+  if(missing) {
+    temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), missing_args))
+  }
   
   if(arima) {
     # fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
@@ -73,6 +83,9 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(), co
     # test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
   } else {
     fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
+    if(missing) {
+      fix1 <- gsub('sim_data', 'sim_data2', fix1)
+    }
     ran1 <- paste("(", paste(rand_vars, collapse = "+"), "|clustID)", sep = "")
     fm1 <- as.formula(paste(fix1, ran1, sep = "+ "))
     
@@ -122,6 +135,12 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(), co
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
+#' @param lvl1_err_params Additional parameters passed as a list on to the level one error generating function
+#' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
+#'             See \code{\link{arima.sim}} for examples.
+#' @param missing TRUE/FALSE flag indicating whether missing data should be simulated.
+#' @param missing_args Additional missing arguments to pass to the missing_data function. 
+#'           See \code{\link{missing_data}} for examples.
 #' @param pow_param Name of variable to calculate power for, must be a name from fixed.
 #' @param alpha What should the per test alpha rate be used for the hypothesis testing.
 #' @param pow_dist Which distribution should be used when testing hypothesis test, z or t?
@@ -130,17 +149,23 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(), co
 #'             function defined by with_err_gen.
 #' @export 
 sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var, with_err_gen,
-                           arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL), 
+                           arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL),
+                           lvl1_err_params = NULL, arima_mod = list(NULL),
+                           missing = FALSE, missing_args = list(NULL),
                            pow_param = NULL, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")
   
   if(any(pow_param %ni% c(fixed_vars, '(Intercept)', 'Intercept'))) { stop('pow_param must be a subset of fixed')}
   
-  temp_single <- sim_reg_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen, 
-                                arima, data_str, 
-                                cor_vars, fact_vars, ...)
+  temp_single <- sim_reg_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen, arima, data_str, 
+                                cor_vars, fact_vars, lvl1_err_params, arima_mod, ...)
+
   fm1 <- as.formula(paste("sim_data ~", paste(fixed_vars, collapse = "+")))
+  if(missing) {
+    temp_single <- do.call(missing_data, c(list(sim_data = temp_single), missing_args))
+    fm1 <- as.formula(paste("sim_data2 ~", paste(fixed_vars, collapse = "+")))
+  }
   
   temp_lm <- lm(fm1, data = temp_single)
   

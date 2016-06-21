@@ -53,6 +53,12 @@
 #'  will be drawn from a random uniform distribution with min and max specified.
 #' @param unbalCont3 When unbal3 = TRUE, this specifies the minimum and maximum level two size,
 #'  will be drawn from a random uniform distribution with min and max specified.
+#' @param lvl1_err_params Additional parameters passed as a list on to the level one error generating function
+#' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
+#'             See \code{\link{arima.sim}} for examples.
+#' @param missing TRUE/FALSE flag indicating whether missing data should be simulated.
+#' @param missing_args Additional missing arguments to pass to the missing_data function. 
+#'           See \code{\link{missing_data}} for examples.
 #' @param pow_param Number of parameter to calculate power includes intercept where applicable.
 #' @param alpha What should the per test alpha rate be used for the hypothesis testing.
 #' @param pow_dist Which distribution should be used when testing hypothesis test, z or t?
@@ -68,14 +74,17 @@ sim_pow <- function(fixed, random, random3, fixed_param,
                     error_var, with_err_gen, arima = FALSE,
                     data_str, cor_vars = NULL, fact_vars = list(NULL), unbal = FALSE, unbal3 = FALSE, 
                     unbalCont = NULL, unbalCont3 = NULL,
+                    lvl1_err_params = NULL, arima_mod = list(NULL),
+                    missing = FALSE, missing_args = list(NULL),
                     pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                     replicates, ...) {
   
   if(data_str == "single"){
-    temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) sim_pow_single(fixed, fixed_param, cov_param, n, error_var, 
-                                                     with_err_gen, arima, data_str, cor_vars, 
-                                                     fact_vars, pow_param, alpha, 
-                                                     pow_dist, pow_tail, ...)))
+    temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) sim_pow_single(fixed, fixed_param, 
+                                                    cov_param, n, error_var, with_err_gen, arima, data_str, 
+                                                    cor_vars, fact_vars, lvl1_err_params, arima_mod, 
+                                                    missing, missing_args,
+                                                    pow_param, alpha, pow_dist, pow_tail, ...)))
     
     #nbatch <- 3
     #system.time(temp.pow <- foreach(i = 1:(9999/nbatch), .combine = "c", .packages = "simReg") %dopar% {
@@ -86,7 +95,8 @@ sim_pow <- function(fixed, random, random3, fixed_param,
     temp_pow <- do.call('rbind', lapply(1:replicates, function(xx) 
       sim_pow_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 
                      error_var, with_err_gen, arima, data_str, cor_vars, fact_vars, 
-                     unbal, unbalCont, pow_param, alpha, pow_dist, pow_tail, ...)))
+                     unbal, unbalCont, lvl1_err_params, arima_mod, 
+                     missing, missing_args, pow_param, alpha, pow_dist, pow_tail, ...)))
   }
   
   power <- temp_pow %>%

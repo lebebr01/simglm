@@ -7,8 +7,9 @@
 sim_pow_nested(fixed, random, fixed_param, random_param = list(), cov_param,
   n, p, error_var, with_err_gen, arima = FALSE, data_str, cor_vars = NULL,
   fact_vars = list(NULL), unbal = FALSE, unbalCont = NULL,
-  pow_param = NULL, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2),
-  ...)
+  lvl1_err_params = NULL, arima_mod = list(NULL), missing = FALSE,
+  missing_args = list(NULL), pow_param = NULL, alpha, pow_dist = c("z",
+  "t"), pow_tail = c(1, 2), ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -58,6 +59,16 @@ can be TRUE, which uses additional argument, unbalCont.}
 \item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum level one size,
 will be drawn from a random uniform distribution with min and max specified.}
 
+\item{lvl1_err_params}{Additional parameters passed as a list on to the level one error generating function}
+
+\item{arima_mod}{A list indicating the ARIMA model to pass to arima.sim. 
+See \code{\link{arima.sim}} for examples.}
+
+\item{missing}{TRUE/FALSE flag indicating whether missing data should be simulated.}
+
+\item{missing_args}{Additional missing arguments to pass to the missing_data function. 
+See \code{\link{missing_data}} for examples.}
+
 \item{pow_param}{Name of variable to calculate power for, must be a name from fixed.}
 
 \item{alpha}{What should the per test alpha rate be used for the hypothesis testing.}
@@ -66,8 +77,7 @@ will be drawn from a random uniform distribution with min and max specified.}
 
 \item{pow_tail}{One-tailed or two-tailed test?}
 
-\item{...}{Additional specification needed to pass to the random generating 
-function defined by with_err_gen.}
+\item{...}{Not currently used.}
 }
 \description{
 Takes simulation conditions as input, exports power.

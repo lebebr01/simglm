@@ -6,8 +6,9 @@
 \usage{
 sim_pow_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen,
   arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL),
-  pow_param = NULL, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2),
-  ...)
+  lvl1_err_params = NULL, arima_mod = list(NULL), missing = FALSE,
+  missing_args = list(NULL), pow_param = NULL, alpha, pow_dist = c("z",
+  "t"), pow_tail = c(1, 2), ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -35,6 +36,16 @@ arima.sim. See \code{\link{arima.sim}} for examples.}
 \item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification, 
 each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 optional specifications are: replace, prob, value.labels.}
+
+\item{lvl1_err_params}{Additional parameters passed as a list on to the level one error generating function}
+
+\item{arima_mod}{A list indicating the ARIMA model to pass to arima.sim. 
+See \code{\link{arima.sim}} for examples.}
+
+\item{missing}{TRUE/FALSE flag indicating whether missing data should be simulated.}
+
+\item{missing_args}{Additional missing arguments to pass to the missing_data function. 
+See \code{\link{missing_data}} for examples.}
 
 \item{pow_param}{Name of variable to calculate power for, must be a name from fixed.}
 

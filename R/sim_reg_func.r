@@ -140,7 +140,7 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(), co
 
   err <- sim_err_nested(error_var, n, p = lvl1ss, with_err_gen = with_err_gen,
                         arima = arima, lvl1_err_params = lvl1_err_params, 
-                        arima_mod = arima_mod...)
+                        arima_mod = arima_mod, ...)
 
  sim_data <- data_reg_nested(Xmat, Zmat, fixed_param, rand_eff, n, p = lvl1ss, err = err)
   

@@ -841,36 +841,69 @@ server <- function(input, output, session) {
                           miss_cov = missing_cov())
     }
     
-    if(input$type_model == 1) {
-      sim_pow(fixed = fixed(), fixed_param = fixed_param(), cov_param = cov_param(),
-              n = n(), error_var = error_var(), with_err_gen = with_err_gen(), 
-              data_str = data_str(), missing = missing, missing_args = missing_args, 
-              pow_param = pow_param, alpha = alpha,
-              pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
-    } else {
-      if(input$type_model == 2) {
-        sim_pow(fixed = fixed(), random = random(), fixed_param = fixed_param(),
-                random_param = random_param(), cov_param = cov_param(), k = NULL,
-                n = n(), p = p(), error_var = error_var(), with_err_gen = with_err_gen(),
-                data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
-                missing = missing, missing_args = missing_args, 
-                pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
-                pow_tail = pow_tail, replicates = replicates
-                )
+    if(input$type_outcome == 1) {
+      if(input$type_model == 1) {
+        sim_pow(fixed = fixed(), fixed_param = fixed_param(), cov_param = cov_param(),
+                n = n(), error_var = error_var(), with_err_gen = with_err_gen(), 
+                data_str = data_str(), missing = missing, missing_args = missing_args, 
+                pow_param = pow_param, alpha = alpha,
+                pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
       } else {
-        sim_pow(fixed = fixed(), random = random(), random3 = random3(), 
-                fixed_param = fixed_param(),
-                random_param = random_param(), random_param3 = random_param3(), 
-                cov_param = cov_param(), k = k(),
-                n = n(), p = p(), error_var = error_var(), with_err_gen = with_err_gen(),
-                data_str = data_str(), unbal = unbal(), unbal3 = unbal3(),
-                unbalCont = unbalCont(), unbalCont3 = unbalCont3(),
-                missing = missing, missing_args = missing_args, 
-                pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
-                pow_tail = pow_tail, replicates = replicates
-        )
+        if(input$type_model == 2) {
+          sim_pow(fixed = fixed(), random = random(), fixed_param = fixed_param(),
+                  random_param = random_param(), cov_param = cov_param(), k = NULL,
+                  n = n(), p = p(), error_var = error_var(), with_err_gen = with_err_gen(),
+                  data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
+                  missing = missing, missing_args = missing_args, 
+                  pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
+                  pow_tail = pow_tail, replicates = replicates
+          )
+        } else {
+          sim_pow(fixed = fixed(), random = random(), random3 = random3(), 
+                  fixed_param = fixed_param(),
+                  random_param = random_param(), random_param3 = random_param3(), 
+                  cov_param = cov_param(), k = k(),
+                  n = n(), p = p(), error_var = error_var(), with_err_gen = with_err_gen(),
+                  data_str = data_str(), unbal = unbal(), unbal3 = unbal3(),
+                  unbalCont = unbalCont(), unbalCont3 = unbalCont3(),
+                  missing = missing, missing_args = missing_args, 
+                  pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
+                  pow_tail = pow_tail, replicates = replicates
+          )
+        }
+      }
+    } else {
+      if(input$type_model == 1) {
+        sim_pow_glm(fixed = fixed(), fixed_param = fixed_param(), cov_param = cov_param(),
+                n = n(), data_str = data_str(), missing = missing, missing_args = missing_args, 
+                pow_param = pow_param, alpha = alpha,
+                pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
+      } else {
+        if(input$type_model == 2) {
+          sim_pow_glm(fixed = fixed(), random = random(), fixed_param = fixed_param(),
+                  random_param = random_param(), cov_param = cov_param(), k = NULL,
+                  n = n(), p = p(), 
+                  data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
+                  missing = missing, missing_args = missing_args, 
+                  pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
+                  pow_tail = pow_tail, replicates = replicates
+          )
+        } else {
+          sim_pow_glm(fixed = fixed(), random = random(), random3 = random3(), 
+                  fixed_param = fixed_param(),
+                  random_param = random_param(), random_param3 = random_param3(), 
+                  cov_param = cov_param(), k = k(),
+                  n = n(), p = p(), 
+                  data_str = data_str(), unbal = unbal(), unbal3 = unbal3(),
+                  unbalCont = unbalCont(), unbalCont3 = unbalCont3(),
+                  missing = missing, missing_args = missing_args, 
+                  pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
+                  pow_tail = pow_tail, replicates = replicates
+          )
+        }
       }
     }
+    
   })
   
   output$power_table <- renderDataTable({

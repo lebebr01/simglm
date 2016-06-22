@@ -17,3 +17,10 @@ standardize <- function(x, mean, sd) {
   new <- (x - mean) / sd
   return(new)
 }
+
+# Horrible hack to keep CRAN happy and suppress NOTES about
+# parts of the code that use non-standard evaluation.
+# See:
+# http://stackoverflow.com/questions/9439256/how-can-i-handle-r-cmd-check-no-visible-binding-for-global-variable-notes-when
+# https://github.com/smbache/magrittr/issues/29
+utils::globalVariables(c('test_stat', 'reject'))

@@ -84,28 +84,20 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
     temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), missing_args))
   }
   
-  if(arima) {
-    # fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
-    # ran1 <- paste("~", paste(rand_vars, collapse = "+"), "|clustID", sep = "")
-    # 
-    # temp_mod <- nlme::lme(fixed = as.formula(fix1), data = temp_nest, random = as.formula(ran1))
-    # test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
-  } else {
-    fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
-    if(missing) {
-      fix1 <- gsub('sim_data', 'sim_data2', fix1)
-    }
-    ran1 <- paste("(", paste(rand_vars, collapse = "+"), "| clustID)", sep = "")
-    if(length(rand_vars3) == 0) {
-      ran2 <- '(1 | clust3ID)'
-    } else {
-      ran2 <- paste('(', paste(rand_vars3, collapse = "+"), "| clust3ID)", sep = "")
-    }
-    fm1 <- as.formula(paste(fix1, ran1, ran2, sep = "+ "))
-    
-    temp_mod <- lme4::glmer(fm1, data = temp_nest, family = binomial)
-    test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
+  fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
+  if(missing) {
+    fix1 <- gsub('sim_data', 'sim_data2', fix1)
   }
+  ran1 <- paste("(", paste(rand_vars, collapse = "+"), "| clustID)", sep = "")
+  if(length(rand_vars3) == 0) {
+    ran2 <- '(1 | clust3ID)'
+  } else {
+    ran2 <- paste('(', paste(rand_vars3, collapse = "+"), "| clust3ID)", sep = "")
+  }
+  fm1 <- as.formula(paste(fix1, ran1, ran2, sep = "+ "))
+  
+  temp_mod <- lme4::glmer(fm1, data = temp_nest, family = binomial)
+  test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
   
   crit <- qnorm(alpha/pow_tail, lower.tail = FALSE)
   
@@ -188,23 +180,15 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param, random_param = list()
     temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), missing_args))
   }
   
-  if(arima) {
-    # fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
-    # ran1 <- paste("~", paste(rand_vars, collapse = "+"), "|clustID", sep = "")
-    # 
-    # temp_mod <- nlme::lme(fixed = as.formula(fix1), data = temp_nest, random = as.formula(ran1))
-    # test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
-  } else {
-    fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
-    if(missing) {
-      fix1 <- gsub('sim_data', 'sim_data2', fix1)
-    }
-    ran1 <- paste("(", paste(rand_vars, collapse = "+"), "|clustID)", sep = "")
-    fm1 <- as.formula(paste(fix1, ran1, sep = "+ "))
-    
-    temp_mod <- lme4::glmer(fm1, data = temp_nest, family = binomial)
-    test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
+  fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
+  if(missing) {
+    fix1 <- gsub('sim_data', 'sim_data2', fix1)
   }
+  ran1 <- paste("(", paste(rand_vars, collapse = "+"), "|clustID)", sep = "")
+  fm1 <- as.formula(paste(fix1, ran1, sep = "+ "))
+  
+  temp_mod <- lme4::glmer(fm1, data = temp_nest, family = binomial)
+  test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
   
   crit <- qnorm(alpha/pow_tail, lower.tail = FALSE)
   

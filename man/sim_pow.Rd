@@ -10,7 +10,7 @@ sim_pow(fixed, random, random3, fixed_param, random_param = list(),
   unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
   lvl1_err_params = NULL, arima_mod = list(NULL), missing = FALSE,
   missing_args = list(NULL), pow_param, alpha, pow_dist = c("z", "t"),
-  pow_tail = c(1, 2), replicates, ...)
+  pow_tail = c(1, 2), replicates, terms_vary = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -100,7 +100,11 @@ See \code{\link{missing_data}} for examples.}
 
 \item{replicates}{How many replications should be done (i.e. the denominator in power calculation).}
 
-\item{...}{Additional parameters passed on to the level one error generating function}
+\item{terms_vary}{A named list of terms that should vary as a function for the power simulation.
+The names must match arguments to the simulation function, see \code{\link{sim_reg}} for 
+examples. Values specified here should not be included as arguments in the function call.}
+
+\item{...}{Currently not used.}
 }
 \description{
 Input simulation conditions, returns power for term.

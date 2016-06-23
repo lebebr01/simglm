@@ -31,13 +31,14 @@ error_var <- 20
 with_err_gen <- 'rnorm'
 pow_param <- c('(Intercept)', 'act', 'diff', 'numCourse')
 alpha <- .01
-pow_dist = "t"
-pow_tail = 2
-replicates = 100
+pow_dist <- "t"
+pow_tail <- 2
+replicates <- 100
 power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
-                       n = n, error_var = error_var, with_err_gen = with_err_gen, 
-                       data_str = "single", pow_param = pow_param, alpha = alpha,
-                       pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
+                     n = n, error_var = error_var, with_err_gen = with_err_gen, 
+                     data_str = "single", pow_param = pow_param, alpha = alpha,
+                     pow_dist = pow_dist, pow_tail = pow_tail, 
+                     replicates = replicates)
 ```
 
 Much of the output here is the same from the `sim_reg` function. The additional arguments, `pow_param` represents the terms to conduct a power analysis for and must be a subset of the `fixed` argument, `alpha` represents the per term level of significance, `pow_dist` represents the sampling distribution to refer to, either 'z' or 't', `pow_tail` represents whether a one or two tailed hypothesis is being tested, and `replicates` represents the number of simulations to conduct. Note, to do a power analysis for the intercept, '(Intercept)' must be used. By default, if pow_param is not specified power is conducted for all terms. 
@@ -60,14 +61,35 @@ error_var <- 1
 with_err_gen <- 'rnorm'
 pow_param <- c('(Intercept)', 'act', 'diff', 'numCourse')
 alpha <- .01
-pow_dist = "t"
-pow_tail = 2
-replicates = 100
+pow_dist <- "t"
+pow_tail <- 2
+replicates <- 100
 power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
                        n = n, error_var = error_var, with_err_gen = with_err_gen, 
                        data_str = "single", pow_param = pow_param, alpha = alpha,
                        pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
 power_out
+```
+
+### Varying Arguments
+```{r singlelevel_vary}
+fixed <- ~ 1 + act + diff + numCourse + act:numCourse
+fixed_param <- c(0.5, 1.1, 0.6, 0.9, 1.1)
+cov_param <- list(mean = c(0, 0, 0), sd = c(2, 2, 1), var_type = c("single", "single", "single"))
+n <- NULL
+error_var <- NULL
+with_err_gen <- 'rnorm'
+pow_param <- c('(Intercept)', 'act', 'diff', 'numCourse')
+alpha <- .01
+pow_dist <- "t"
+pow_tail <- 2
+replicates <- 100
+terms_vary <- list(n = c(20, 40, 60, 80, 100), error_var = c(5, 10, 20))
+power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
+                     n = n, error_var = error_var, with_err_gen = with_err_gen, 
+                     data_str = "single", pow_param = pow_param, alpha = alpha,
+                     pow_dist = pow_dist, pow_tail = pow_tail, 
+                     replicates = replicates, terms_vary = terms_vary)
 ```
 
 ## Nested Data
@@ -84,9 +106,9 @@ error_var <- 1
 data_str <- "long"
 pow_param <- c('time', 'diff', 'act')
 alpha <- .01
-pow_dist = "z"
-pow_tail = 2
-replicates = 50
+pow_dist <- "z"
+pow_tail <- 2
+replicates <- 20
 power_out <- sim_pow(fixed = fixed, random = random, 
                      fixed_param = fixed_param, 
                      random_param = random_param, cov_param = cov_param, 
@@ -121,9 +143,9 @@ with_err_gen <- 'rnorm'
 data_str <- "long"
 pow_param <- c('time', 'diff', 'act', 'actClust')
 alpha <- .01
-pow_dist = "z"
-pow_tail = 2
-replicates = 5
+pow_dist <- "z"
+pow_tail <- 2
+replicates <- 5
 power_out <- sim_pow(fixed = fixed, random = random, random3 = random3,
                      fixed_param = fixed_param, 
                      random_param = random_param, random_param3 = random_param3, 
@@ -145,9 +167,9 @@ cov_param <- list(mean = c(0, 0), sd = c(2, 4),
 n <- 50
 pow_param <- c('(Intercept)', 'act', 'diff')
 alpha <- .01
-pow_dist = "z"
-pow_tail = 2
-replicates = 100
+pow_dist <- "z"
+pow_tail <- 2
+replicates <- 100
 
 power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, 
                        cov_param = cov_param, 

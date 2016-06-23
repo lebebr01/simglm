@@ -85,7 +85,7 @@ See \code{\link{missing_data}} for examples.}
 
 \item{replicates}{How many replications should be done (i.e. the denominator in power calculation).}
 
-\item{...}{Additional parameters passed on to the level one error generating function}
+\item{...}{Current not used.}
 }
 \description{
 Input simulation conditions, returns power for term.

@@ -179,4 +179,26 @@ power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param,
 power_out
 ```
 
+### Vary Arguments
+```{r singlelogistic_vary}
+fixed <- ~ 1 + act + diff
+fixed_param <- c(0.1, 0.5, 0.3)
+cov_param <- list(mean = c(0, 0), sd = c(2, 4), 
+                  var_type = c("single", "single", "single"))
+n <- NULL
+pow_param <- c('(Intercept)', 'act', 'diff')
+alpha <- .01
+pow_dist <- "z"
+pow_tail <- 2
+replicates <- 100
+vary_terms = list(n = c(25, 50, 100))
+
+power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, 
+                       cov_param = cov_param, 
+                       n = n, data_str = "single", 
+                       pow_param = pow_param, alpha = alpha,
+                     pow_dist = pow_dist, pow_tail = pow_tail, 
+                     replicates = replicates, terms_vary = terms_vary)
+power_out
+```
 

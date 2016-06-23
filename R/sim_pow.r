@@ -208,8 +208,6 @@ sim_pow <- function(fixed, random, random3, fixed_param,
                        num_reject = sum(reject),
                        num_repl = replicates)
   }
-  
-
   return(power)
 }
 
@@ -270,6 +268,9 @@ sim_pow <- function(fixed, random, random3, fixed_param,
 #' @param pow_dist Which distribution should be used when testing hypothesis test, z or t?
 #' @param pow_tail One-tailed or two-tailed test?
 #' @param replicates How many replications should be done (i.e. the denominator in power calculation).
+#' @param terms_vary A named list of terms that should vary as a function for the power simulation.
+#'          The names must match arguments to the simulation function, see \code{\link{sim_glm}} for 
+#'          examples. Values specified here should not be included as arguments in the function call.
 #' @param ... Current not used.
 #' @importFrom dplyr group_by
 #' @importFrom dplyr summarise
@@ -281,37 +282,125 @@ sim_pow_glm <- function(fixed, random, random3, fixed_param,
                     unbalCont = NULL, unbalCont3 = NULL,
                     missing = FALSE, missing_args = list(NULL),
                     pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
-                    replicates, ...) {
+                    replicates, terms_vary = NULL, ...) {
   
   if(data_str == "single"){
-    temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) 
-      sim_pow_glm_single(fixed, fixed_param, cov_param, n, data_str, 
-                         cor_vars, fact_vars, missing, missing_args,
-                         pow_param, alpha, pow_dist, pow_tail, ...)))
+    if(is.null(terms_vary)) {
+      args <- list(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
+                   n = n, data_str = data_str, cor_vars = cor_vars, 
+                   fact_vars = fact_vars, 
+                   missing = missing, missing_args = missing_args,
+                   pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
+                   pow_tail = pow_tail)
+      temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) 
+        do.call('sim_pow_glm_single', args)
+      ))
+    } else {
+      args <- list(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
+                   n = n, data_str = data_str, cor_vars = cor_vars, 
+                   fact_vars = fact_vars, 
+                   missing = missing, missing_args = missing_args,
+                   pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
+                   pow_tail = pow_tail)
+      args[names(terms_vary)] <- NULL
+      conds <- expand.grid(terms_vary)
+      args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, ]))
+      
+      temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
+        do.call("rbind", lapply(1:replicates, function(xx) 
+          cbind(do.call('sim_pow_glm_single', args[[tt]]), conds[tt, ], row.names = NULL)
+        ))))
+    }
   } else {
     if(is.null(k)) {
-      temp_pow <- do.call('rbind', lapply(1:replicates, function(xx) 
-        sim_pow_glm_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 
-                       data_str, cor_vars, fact_vars, 
-                       unbal, unbalCont, 
-                       missing, missing_args, pow_param, alpha, pow_dist, pow_tail, ...)))
+      if(is.null(terms_vary)) {
+        args <- list(fixed = fixed, random = random, 
+                     fixed_param = fixed_param, random_param = random_param,
+                     cov_param = cov_param, n = n, p = p, 
+                     data_str = data_str, cor_vars = cor_vars, 
+                     fact_vars = fact_vars, unbal = unbal, unbalCont = unbalCont,
+                     missing = missing, missing_args = missing_args,
+                     pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
+                     pow_tail = pow_tail)
+        
+        temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) 
+          do.call('sim_pow_glm_nested', args)
+        ))
+      } else {
+        args <- list(fixed = fixed, random = random, 
+                     fixed_param = fixed_param, random_param = random_param,
+                     cov_param = cov_param, n = n, p = p, 
+                     data_str = data_str, cor_vars = cor_vars, 
+                     fact_vars = fact_vars, unbal = unbal, unbalCont = unbalCont,
+                     missing = missing, missing_args = missing_args,
+                     pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
+                     pow_tail = pow_tail)
+        args[names(terms_vary)] <- NULL
+        conds <- expand.grid(terms_vary)
+        args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, ]))
+        
+        temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
+          do.call("rbind", lapply(1:replicates, function(xx) 
+            cbind(do.call('sim_pow_glm_nested', args[[tt]]), conds[tt, ], row.names = NULL)
+          ))))
+      }
     } else {
-      temp_pow <- do.call('rbind', lapply(1:replicates, function(xx) 
-        sim_pow_glm_nested3(fixed, random, random3, fixed_param, random_param, random_param3, 
-                        cov_param, k, n, p, 
-                        data_str, cor_vars, fact_vars, 
-                        unbal, unbal3, unbalCont, unbalCont3, 
-                        missing, missing_args, pow_param, alpha, pow_dist, pow_tail, ...)))
+      if(is.null(terms_vary)) {
+        args <- list(fixed = fixed, random = random, random3 = random3,
+                     fixed_param = fixed_param, random_param = random_param,
+                     random_param3 = random_param3,
+                     cov_param = cov_param, k = k, n = n, p = p, 
+                     data_str = data_str, cor_vars = cor_vars, 
+                     fact_vars = fact_vars, unbal = unbal, unbal3 = unbal3,
+                     unbalCont = unbalCont, unbalCont3 = unbalCont3,
+                     missing = missing, missing_args = missing_args,
+                     pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
+                     pow_tail = pow_tail)
+        
+        temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) 
+          do.call('sim_pow_glm_nested3', args)
+        ))
+      } else {
+        args <- list(fixed = fixed, random = random, random3 = random3,
+                     fixed_param = fixed_param, random_param = random_param,
+                     random_param3 = random_param3,
+                     cov_param = cov_param, k = k, n = n, p = p, 
+                     data_str = data_str, cor_vars = cor_vars, 
+                     fact_vars = fact_vars, unbal = unbal, unbal3 = unbal3,
+                     unbalCont = unbalCont, unbalCont3 = unbalCont3,
+                     missing = missing, missing_args = missing_args,
+                     pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
+                     pow_tail = pow_tail)
+        args[names(terms_vary)] <- NULL
+        conds <- expand.grid(terms_vary)
+        args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, ]))
+        
+        temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
+          do.call("rbind", lapply(1:replicates, function(xx) 
+            cbind(do.call('sim_pow_glm_nested3', args[[tt]]), conds[tt, ], row.names = NULL)
+          ))))
+      }
     }
   }
   
-  power <- temp_pow %>%
-    dplyr::group_by_('var') %>%
-    dplyr::summarise(avg_test_stat = mean(test_stat),
-                     sd_test_stat = sd(test_stat),
-                     power = mean(reject),
-                     num_reject = sum(reject),
-                     num_repl = replicates)
-
+  if(is.null(terms_vary)) {
+    power <- temp_pow %>%
+      dplyr::group_by_('var') %>%
+      dplyr::summarise(avg_test_stat = mean(test_stat),
+                       sd_test_stat = sd(test_stat),
+                       power = mean(reject),
+                       num_reject = sum(reject),
+                       num_repl = replicates)
+  } else {
+    grp_by <- lapply(c('var', names(terms_vary)), as.symbol)
+    
+    power <- temp_pow %>%
+      dplyr::group_by_(.dots = grp_by) %>%
+      dplyr::summarise(avg_test_stat = mean(test_stat),
+                       sd_test_stat = sd(test_stat),
+                       power = mean(reject),
+                       num_reject = sum(reject),
+                       num_repl = replicates)
+  }
   return(power)
 }

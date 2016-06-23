@@ -80,17 +80,12 @@ sim_pow <- function(fixed, random, random3, fixed_param,
                     replicates, ...) {
   
   if(data_str == "single"){
-    temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) sim_pow_single(fixed, fixed_param, 
-                                                    cov_param, n, error_var, with_err_gen, arima, data_str, 
-                                                    cor_vars, fact_vars, lvl1_err_params, arima_mod, 
-                                                    missing, missing_args,
-                                                    pow_param, alpha, pow_dist, pow_tail, ...)))
-    
-    #nbatch <- 3
-    #system.time(temp.pow <- foreach(i = 1:(9999/nbatch), .combine = "c", .packages = "simReg") %dopar% {
-     # replicate(nbatch, sim.pow.single(fixed, fixed_param, cov_param, n, error_var,
-      #               with_err_gen, pow_param, alpha, pow_dist, pow_tail))
-    #})
+    temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) 
+      sim_pow_single(fixed, fixed_param, 
+                     cov_param, n, error_var, with_err_gen, arima, data_str, 
+                     cor_vars, fact_vars, lvl1_err_params, arima_mod, 
+                     missing, missing_args,
+                     pow_param, alpha, pow_dist, pow_tail, ...)))
   } else {
     if(is.null(k)) {
       temp_pow <- do.call('rbind', lapply(1:replicates, function(xx) 
@@ -116,12 +111,6 @@ sim_pow <- function(fixed, random, random3, fixed_param,
               num_reject = sum(reject),
               num_repl = replicates)
 
-  # power <- dplyr::summarise(dplyr::group_by(temp_pow, var), avg_test_stat = mean(test_stat),
-  #                                       sd_test_stat = sd(test_stat),
-  #                                       power = mean(reject),
-  #                                       num_reject = sum(reject),
-  #                                       num_repl = replicates)
-  
   return(power)
 }
 
@@ -200,12 +189,6 @@ sim_pow_glm <- function(fixed, random, random3, fixed_param,
       sim_pow_glm_single(fixed, fixed_param, cov_param, n, data_str, 
                          cor_vars, fact_vars, missing, missing_args,
                          pow_param, alpha, pow_dist, pow_tail, ...)))
-    
-    #nbatch <- 3
-    #system.time(temp.pow <- foreach(i = 1:(9999/nbatch), .combine = "c", .packages = "simReg") %dopar% {
-    # replicate(nbatch, sim.pow.single(fixed, fixed_param, cov_param, n, error_var,
-    #               with_err_gen, pow_param, alpha, pow_dist, pow_tail))
-    #})
   } else {
     if(is.null(k)) {
       temp_pow <- do.call('rbind', lapply(1:replicates, function(xx) 
@@ -230,12 +213,6 @@ sim_pow_glm <- function(fixed, random, random3, fixed_param,
                      power = mean(reject),
                      num_reject = sum(reject),
                      num_repl = replicates)
-  
-  # power <- dplyr::summarise(dplyr::group_by(temp_pow, var), avg_test_stat = mean(test_stat),
-  #                                       sd_test_stat = sd(test_stat),
-  #                                       power = mean(reject),
-  #                                       num_reject = sum(reject),
-  #                                       num_repl = replicates)
-  
+
   return(power)
 }

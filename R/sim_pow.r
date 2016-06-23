@@ -103,11 +103,11 @@ sim_pow <- function(fixed, random, random3, fixed_param,
                    pow_tail = pow_tail)
       args[names(terms_vary)] <- NULL
       conds <- expand.grid(terms_vary)
-      args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, ]))
+      args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, , drop = FALSE]))
       
       temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
         do.call("rbind", lapply(1:replicates, function(xx) 
-          cbind(do.call('sim_pow_single', args[[tt]]), conds[tt, ], row.names = NULL)
+          cbind(do.call('sim_pow_single', args[[tt]]), conds[tt, , drop = FALSE], row.names = NULL)
         ))))
     }
   } else {
@@ -140,11 +140,11 @@ sim_pow <- function(fixed, random, random3, fixed_param,
                      pow_tail = pow_tail)
         args[names(terms_vary)] <- NULL
         conds <- expand.grid(terms_vary)
-        args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, ]))
+        args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, , drop = FALSE]))
         
         temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
           do.call("rbind", lapply(1:replicates, function(xx) 
-            cbind(do.call('sim_pow_nested', args[[tt]]), conds[tt, ], row.names = NULL)
+            cbind(do.call('sim_pow_nested', args[[tt]]), conds[tt, , drop = FALSE], row.names = NULL)
           ))))
       }
     } else {
@@ -180,11 +180,11 @@ sim_pow <- function(fixed, random, random3, fixed_param,
                      pow_tail = pow_tail)
         args[names(terms_vary)] <- NULL
         conds <- expand.grid(terms_vary)
-        args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, ]))
+        args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, , drop = FALSE]))
         
         temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
           do.call("rbind", lapply(1:replicates, function(xx) 
-            cbind(do.call('sim_pow_nested3', args[[tt]]), conds[tt, ], row.names = NULL)
+            cbind(do.call('sim_pow_nested3', args[[tt]]), conds[tt, , drop = FALSE], row.names = NULL)
           ))))
       }
     }
@@ -304,11 +304,11 @@ sim_pow_glm <- function(fixed, random, random3, fixed_param,
                    pow_tail = pow_tail)
       args[names(terms_vary)] <- NULL
       conds <- expand.grid(terms_vary)
-      args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, ]))
+      args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, , drop = FALSE]))
       
       temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
         do.call("rbind", lapply(1:replicates, function(xx) 
-          cbind(do.call('sim_pow_glm_single', args[[tt]]), conds[tt, ], row.names = NULL)
+          cbind(do.call('sim_pow_glm_single', args[[tt]]), conds[tt, , drop = FALSE], row.names = NULL)
         ))))
     }
   } else {
@@ -337,11 +337,11 @@ sim_pow_glm <- function(fixed, random, random3, fixed_param,
                      pow_tail = pow_tail)
         args[names(terms_vary)] <- NULL
         conds <- expand.grid(terms_vary)
-        args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, ]))
+        args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, , drop = FALSE]))
         
         temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
           do.call("rbind", lapply(1:replicates, function(xx) 
-            cbind(do.call('sim_pow_glm_nested', args[[tt]]), conds[tt, ], row.names = NULL)
+            cbind(do.call('sim_pow_glm_nested', args[[tt]]), conds[tt, , drop = FALSE], row.names = NULL)
           ))))
       }
     } else {
@@ -373,11 +373,11 @@ sim_pow_glm <- function(fixed, random, random3, fixed_param,
                      pow_tail = pow_tail)
         args[names(terms_vary)] <- NULL
         conds <- expand.grid(terms_vary)
-        args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, ]))
+        args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, , drop = FALSE]))
         
         temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
           do.call("rbind", lapply(1:replicates, function(xx) 
-            cbind(do.call('sim_pow_glm_nested3', args[[tt]]), conds[tt, ], row.names = NULL)
+            cbind(do.call('sim_pow_glm_nested3', args[[tt]]), conds[tt, , drop = FALSE], row.names = NULL)
           ))))
       }
     }

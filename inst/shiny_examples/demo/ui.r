@@ -338,6 +338,12 @@ ui <- dashboardPage(skin = "green",
                   collapsible = TRUE, collapsed = FALSE,
                   status = 'primary',
                   uiOutput('vary_arg')
+                ),
+                box(width = 2, title = 'Vary Arguments Options',
+                    collapsible = TRUE, collapsed = FALSE,
+                    status = 'primary',
+                    uiOutput('vary_arg_vals'),
+                    h5('Note: Separate specific values with commas.')
                 )
               ),
               fluidRow(

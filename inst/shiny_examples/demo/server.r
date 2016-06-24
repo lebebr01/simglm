@@ -350,7 +350,7 @@ server <- function(input, output, session) {
       NULL
     } else {
       args <- extract_needed_args(input$lvl1_err_dist)
-      input[[args]]
+      input[args]
     }
   })
   err_misc_2 <- reactive({
@@ -845,6 +845,16 @@ server <- function(input, output, session) {
                 choices = arg_choices, multiple = TRUE)
   })
   
+  output$vary_arg_vals <- renderUI({
+    vary_name <- input$vary_arg_sel
+    lapply(vary_name, function(i)
+      div(style = 'display:inline-block',
+          textInput(paste0('vary_', i), label = paste0('Vary Arg: ', i), 
+                    value = '')
+      )
+    )
+  })
+  
   power_sim <- eventReactive(input$update_power, {
     if(input$incl_int) {
       pow_param <- c('(Intercept)', attr(terms(fixed()),"term.labels"))
@@ -857,6 +867,16 @@ server <- function(input, output, session) {
     replicates = input$repl
     missing = FALSE
     missing_args = list(NULL)
+    
+    if(is.null(input$vary_arg_sel)) {
+      NULL 
+    } else {
+      vary_terms <- input$vary_arg_sel
+      vary_vals <- lapply(vary_terms, function(i) 
+        as.numeric(unlist(strsplit(input[[paste0('vary_', i)]], split = ','))))
+      
+      names(vary_vals) <- vary_terms
+    }
     
     if(input$missing) {
       missing = TRUE
@@ -871,7 +891,8 @@ server <- function(input, output, session) {
                 n = n(), error_var = error_var(), with_err_gen = with_err_gen(), 
                 data_str = data_str(), missing = missing, missing_args = missing_args, 
                 pow_param = pow_param, alpha = alpha,
-                pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
+                pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates,
+                terms_vary = vary_vals)
       } else {
         if(input$type_model == 2) {
           sim_pow(fixed = fixed(), random = random(), fixed_param = fixed_param(),
@@ -880,7 +901,8 @@ server <- function(input, output, session) {
                   data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
                   missing = missing, missing_args = missing_args, 
                   pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
-                  pow_tail = pow_tail, replicates = replicates
+                  pow_tail = pow_tail, replicates = replicates,
+                  terms_vary = vary_vals
           )
         } else {
           sim_pow(fixed = fixed(), random = random(), random3 = random3(), 
@@ -892,7 +914,8 @@ server <- function(input, output, session) {
                   unbalCont = unbalCont(), unbalCont3 = unbalCont3(),
                   missing = missing, missing_args = missing_args, 
                   pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
-                  pow_tail = pow_tail, replicates = replicates
+                  pow_tail = pow_tail, replicates = replicates,
+                  terms_vary = vary_vals
           )
         }
       }
@@ -901,7 +924,8 @@ server <- function(input, output, session) {
         sim_pow_glm(fixed = fixed(), fixed_param = fixed_param(), cov_param = cov_param(),
                 n = n(), data_str = data_str(), missing = missing, missing_args = missing_args, 
                 pow_param = pow_param, alpha = alpha,
-                pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
+                pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates,
+                terms_vary = vary_vals)
       } else {
         if(input$type_model == 2) {
           sim_pow_glm(fixed = fixed(), random = random(), fixed_param = fixed_param(),
@@ -910,7 +934,8 @@ server <- function(input, output, session) {
                   data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
                   missing = missing, missing_args = missing_args, 
                   pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
-                  pow_tail = pow_tail, replicates = replicates
+                  pow_tail = pow_tail, replicates = replicates,
+                  terms_vary = vary_vals
           )
         } else {
           sim_pow_glm(fixed = fixed(), random = random(), random3 = random3(), 
@@ -922,7 +947,8 @@ server <- function(input, output, session) {
                   unbalCont = unbalCont(), unbalCont3 = unbalCont3(),
                   missing = missing, missing_args = missing_args, 
                   pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
-                  pow_tail = pow_tail, replicates = replicates
+                  pow_tail = pow_tail, replicates = replicates,
+                  terms_vary = vary_vals
           )
         }
       }

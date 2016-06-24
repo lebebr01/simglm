@@ -754,7 +754,7 @@ server <- function(input, output, session) {
     if(input$unbal_lvl2) {
       paste0('unbalCont <- c(', input$min_cl2, ', ', input$max_cl2, ')')
     } else {
-      NULL
+      'unbalCont <- NULL'
     }
   })
   unbal3_code <- reactive({
@@ -768,7 +768,7 @@ server <- function(input, output, session) {
     if(input$unbal_lvl3) {
       paste0('unbalCont3 <- c(', input$min_cl3, ', ', input$max_cl3, ')')
     } else {
-      NULL
+      'unbalCont3 <- NULL'
     }
   })
   fact_vars_code <- reactive({
@@ -814,6 +814,9 @@ server <- function(input, output, session) {
         'missing_type <- dropout'
       }
     }
+  })
+  missing_prop_code <- reactive({
+    paste0('missing_prop <- ', input$miss_prop)
   })
   
   output$gen_examp_code <- output$gen_examp_code_2 <- renderUI({
@@ -882,8 +885,16 @@ server <- function(input, output, session) {
       }
     }
     if(input$missing) {
+      if(input$type_model == 1) {
+        miss_code <- 'temp_miss <- missing_data(temp_single, miss_prop = miss_prop, type = missing_type, 
+                               clust_var = miss_clustvar, within_id = miss_withinid)'
+      } else {
+        miss_code <- 'temp_miss <- missing_data(temp_nest, miss_prop = miss_prop, type = missing_type, 
+                               clust_var = miss_clustvar, within_id = miss_withinid)'
+      }
       code_out <- paste(code_out, miss_clustvar_code(), miss_withinid_code(),
-                        missing_cov_code(), missing_type_code(), sep = '<br/>')
+                        missing_cov_code(), missing_type_code(), missing_prop_code(),
+                        miss_code, sep = '<br/>')
     }
     
     code(HTML(code_out))

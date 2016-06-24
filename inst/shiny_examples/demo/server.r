@@ -821,6 +821,30 @@ server <- function(input, output, session) {
     histograms(gen_code(), input$hist_vars, input$binwidth)
   })
   
+  output$vary_arg <- renderUI({
+    if(input$type_model == 1) {
+      arg_choices <- c('n', 'error_var', 'with_err_gen')
+      if(input$type_outcome == 2) {
+        arg_choices <- 'n'
+      }
+    } else {
+      if(input$type_model == 2) {
+        arg_choices <- c('n', 'p', 'error_var', 'with_err_gen')
+        if(input$type_outcome == 2) {
+          arg_choices <- c('n', 'p')
+        }
+      } else {
+        arg_choices <- c('k', 'n', 'p', 'error_var', 'with_err_gen')
+        if(input$type_outcome == 2) {
+          arg_choices <- c('k', 'n', 'p')
+        }
+      }
+    }
+    
+    selectInput('vary_arg_sel', 'Select Arguments to Vary',
+                choices = arg_choices, multiple = TRUE)
+  })
+  
   power_sim <- eventReactive(input$update_power, {
     if(input$incl_int) {
       pow_param <- c('(Intercept)', attr(terms(fixed()),"term.labels"))

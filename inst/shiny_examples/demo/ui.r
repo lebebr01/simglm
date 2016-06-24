@@ -302,7 +302,7 @@ ui <- dashboardPage(skin = "green",
               h2('Power Analysis'),
               h5('Specify model simulation arguments in the preceding tabs prior to power simulation.'),
               fluidRow(
-                box(width = 3, title = 'Distribution', 
+                box(width = 2, title = 'Distribution', 
                     collapsible = TRUE, collapsed = FALSE,
                     status = 'primary',
                     radioButtons('type_dist', 'Type of Distribution:',
@@ -310,7 +310,7 @@ ui <- dashboardPage(skin = "green",
                                              'Normal' = 2),
                                  selected = 1)
                 ),
-                box(width = 3, title = 'One or Two Tailed',
+                box(width = 2, title = 'One or Two Tailed',
                     collapsible = TRUE, collapsed = FALSE,
                     status = 'primary',
                     radioButtons('tails', 'Number of Tails:',
@@ -318,7 +318,7 @@ ui <- dashboardPage(skin = "green",
                                              'Two' = 2),
                                  select = 2)
                 ),
-                box(width = 3, title = 'Alpha',
+                box(width = 2, title = 'Alpha',
                     collapsible = TRUE, collapsed = FALSE,
                     status = 'primary',
                     numericInput('alpha', 'Set Alpha Value:',
@@ -327,11 +327,17 @@ ui <- dashboardPage(skin = "green",
                   
                 ),
                 box(
-                  width = 3, title = 'Replications',
+                  width = 2, title = 'Replications',
                   collapsible = TRUE, collapsed = FALSE,
                   status = 'primary',
                   numericInput('repl', 'Number of Replications:',
                                value = 10)
+                ),
+                box(
+                  width = 2, title = 'Vary Arguments',
+                  collapsible = TRUE, collapsed = FALSE,
+                  status = 'primary',
+                  uiOutput('vary_arg')
                 )
               ),
               fluidRow(

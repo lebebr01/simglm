@@ -806,17 +806,17 @@ server <- function(input, output, session) {
   })
   missing_type_code <- reactive({
     if(input$type_missing == 1) {
-      'missing_type <- random'
+      'missing_type <- "random"'
     } else {
       if(input$type_missing == 2) {
-        'missing_type <- mar'
+        'missing_type <- "mar"'
       } else {
-        'missing_type <- dropout'
+        'missing_type <- "dropout"'
       }
     }
   })
   missing_prop_code <- reactive({
-    paste0('missing_prop <- ', input$miss_prop)
+    paste0('miss_prop <- ', input$miss_prop)
   })
   
   output$gen_examp_code <- output$gen_examp_code_2 <- renderUI({
@@ -887,10 +887,12 @@ server <- function(input, output, session) {
     if(input$missing) {
       if(input$type_model == 1) {
         miss_code <- 'temp_miss <- missing_data(temp_single, miss_prop = miss_prop, type = missing_type, 
-                               clust_var = miss_clustvar, within_id = miss_withinid)'
+                               clust_var = miss_clustvar, within_id = miss_withinid,
+        miss_cov = missing_cov)'
       } else {
         miss_code <- 'temp_miss <- missing_data(temp_nest, miss_prop = miss_prop, type = missing_type, 
-                               clust_var = miss_clustvar, within_id = miss_withinid)'
+                               clust_var = miss_clustvar, within_id = miss_withinid,
+        miss_cov = missing_cov)'
       }
       code_out <- paste(code_out, miss_clustvar_code(), miss_withinid_code(),
                         missing_cov_code(), missing_type_code(), missing_prop_code(),

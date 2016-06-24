@@ -771,36 +771,48 @@ server <- function(input, output, session) {
       NULL
     }
   })
+  fact_vars_code <- reactive({
+    if(input$dis_cov == FALSE) {
+      'fact_vars <- list(NULL)'
+    } else {
+      levels <- paste(sapply(1:input$num_discrete, function(i) input[[paste0('levels', i)]]),
+                      collapse = ', ')
+      var_type <- paste(sapply(1:input$num_discrete, function(i) input[[paste0('type_dis', i)]]),
+                        collapse = ', ')
+      paste0('fact_vars <- list(numlevels = ', levels, ', var_type = ', var_type, ')')
+    }
+  })
   
   output$gen_examp_code <- output$gen_examp_code_2 <- renderUI({
     if(input$type_outcome == 1) {
       if(input$type_model == 1) {
         str7 <- 'temp_single <- sim_reg(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param, <br/>
         n = n, error_var = error_var, with_err_gen = with_err_gen, <br/>
-        data_str = data_str)'
+        data_str = data_str, fact_vars = fact_vars)'
         code(HTML(paste(fixed_code(), fixed_param_code(), cov_param_code(), n_code(),
-                        error_var_code(), with_err_gen_code(), data_str_code(), str7, 
+                        error_var_code(), with_err_gen_code(), data_str_code(), 
+                        fact_vars_code(), str7, 
                         sep = '<br/>')))
       } else {
         if(input$type_model == 2) {
           str7 <- 'temp_nested <- sim_reg(fixed = fixed, random = random, fixed_param = fixed_param, <br/>
           random_param = random_param, cov_param = cov_param, k = NULL, n = n, p = p, <br/>
-          error_var = error_var, with_err_gen = with_err_gen, data_str = data_str, unbal = unbal, <br/>
-          unbalCont = unbalCont)'
+          error_var = error_var, with_err_gen = with_err_gen, data_str = data_str, fact_vars = fact_vars, <br/>
+          unbal = unbal, unbalCont = unbalCont)'
           code(HTML(paste(fixed_code(), random_code(), fixed_param_code(), random_param_code(),
                           cov_param_code(), n_code(), p_code(),
-                          error_var_code(), with_err_gen_code(), data_str_code(),
+                          error_var_code(), with_err_gen_code(), data_str_code(), fact_vars_code(),
                           unbal_code(), unbalCont_code(), str7, sep = '<br/>')))
         } 
         else {
           str7 <- 'temp_nested <- sim_reg(fixed, random, random3, fixed_param, random_param, <br/>
           random_param3, cov_param, k, n, p, error_var, with_err_gen, <br/>
-          data_str = data_str, unbal = unbal, unbal3 = unbal3, unbalCont = unbalCont, <br/>
-          unbalCont3 = unbalCont3)'
+          data_str = data_str, fact_vars = fact_vars, unbal = unbal, unbal3 = unbal3,  <br/> 
+          unbalCont = unbalCont, unbalCont3 = unbalCont3)'
           code(HTML(paste(fixed_code(), random_code(), random3_code(), 
                           fixed_param_code(), random_param_code(), random_param3_code(),
                           cov_param_code(), k_code(), n_code(), p_code(),
-                          error_var_code(), with_err_gen_code(), data_str_code(),
+                          error_var_code(), with_err_gen_code(), data_str_code(), fact_vars_code(),
                           unbal_code(), unbal3_code(), unbalCont_code(), 
                           unbalCont3_code(), str7, 
                           sep = '<br/>')))
@@ -809,32 +821,33 @@ server <- function(input, output, session) {
     } else {
       if(input$type_model == 1) {
         str7 <- 'temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param, <br/>
-        n = n, data_str = data_str)'
+        n = n, data_str = data_str, fact_vars = fact_vars)'
         code(HTML(paste(fixed_code(), fixed_param_code(), cov_param_code(), n_code(),
-                        data_str_code(), str7, 
+                        data_str_code(), fact_vars_code(), str7, 
                         sep = '<br/>')))
       } else {
         if(input$type_model == 2) {
           str7 <- 'temp_nested <- sim_glm(fixed = fixed, random = random, fixed_param = fixed_param, <br/>
           random_param = random_param, cov_param = cov_param, k = NULL, n = n, p = p, <br/>
-          data_str = data_str, unbal = unbal, unbalCont = unbalCont)'
+          data_str = data_str, fact_vars = fact_vars, unbal = unbal, unbalCont = unbalCont)'
           code(HTML(paste(fixed_code(), random_code(), fixed_param_code(), random_param_code(),
                           cov_param_code(), n_code(), p_code(),
-                          data_str_code(), unbal_code(), unbalCont_code(), str7, sep = '<br/>')))
+                          data_str_code(), fact_vars_code(), 
+                          unbal_code(), unbalCont_code(), str7, sep = '<br/>')))
         } 
         else {
           str7 <- 'temp_nested <- sim_glm(fixed, random, random3, fixed_param, random_param, <br/>
-          random_param3, cov_param, k, n, p, data_str = data_str, unbal = unbal, <br/> 
+          random_param3, cov_param, k, n, p, data_str = data_str, fact_vars = fact_vars, unbal = unbal, <br/> 
           unbal3 = unbal3, unbalCont = unbalCont, unbalCont3 = unbalCont3)'
           code(HTML(paste(fixed_code(), random_code(), random3_code(), 
                           fixed_param_code(), random_param_code(), random_param3_code(),
                           cov_param_code(), k_code(), n_code(), p_code(),
-                          data_str_code(), unbal_code(), unbal3_code(), unbalCont_code(), 
-                          unbalCont3_code(), str7, 
+                          data_str_code(), fact_vars_code(), unbal_code(), unbal3_code(), 
+                          unbalCont_code(), unbalCont3_code(), str7, 
                           sep = '<br/>')))
         }
+      }
     }
-    
   })
   
   output$vars <- renderUI({

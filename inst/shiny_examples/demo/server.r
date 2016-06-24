@@ -731,7 +731,8 @@ server <- function(input, output, session) {
       paste0('random_param <- list(random_var = ', ran_var,
                            ", rand_gen = 'rnorm')")
     } else {
-      ran_var <- sapply(c('int', 'time'), function(i) input[[paste0('var_', i)]])
+      ran_var <- paste(sapply(c('int', 'time'), function(i) input[[paste0('var_', i)]]), 
+                       collapse = ', ')
       paste0('random_param <- list(random_var = c(', ran_var, '), ',
                            "rand_gen = 'rnorm')")
     }
@@ -1049,6 +1050,132 @@ server <- function(input, output, session) {
   
   output$power_table <- renderDataTable({
     datatable(power_sim())
+  })
+  
+  output$power_code <- renderUI({
+    
+    if(input$incl_int) {
+      pow_param <- paste0("pow_param <- c('(Intercept)', ", 
+                            paste(sQuote(attr(terms(fixed()),"term.labels")), 
+                                  collapse = ', '), ')')
+    } else {
+      power_param <- paste0('pow_param <- ', 
+                            paste(sQuote(attr(terms(fixed()),"term.labels")), 
+                                  collapse = ', '))
+    }
+    alpha <- paste0('alpha <- ', input$alpha)
+    pow_dist <- paste0('pow_dist = ', sQuote(ifelse(input$type_dist == 1, 't', 'z')))
+    pow_tail <- paste0('pow_tail = ', as.numeric(as.character(input$tails)))
+    replicates <- paste0('replicates = ', input$repl)
+    missing <- 'missing <- FALSE'
+    missing_args <- 'missing_args = list(NULL)'
+    
+    if(is.null(input$vary_arg_sel)) {
+      vary_char <- 'vary_vals <- NULL'
+    } else {
+      vary_terms <- input$vary_arg_sel
+      vary_vals <- lapply(vary_terms, function(i) 
+        as.numeric(unlist(strsplit(input[[paste0('vary_', i)]], split = ','))))
+      
+      vary_vals <- paste0(vary_vals)
+      vary_vals <- paste(sapply(seq_along(vary_terms), function(i) 
+        paste0(vary_terms[i], ' = ', vary_vals[i])), collapse = ', ')
+      vary_char <- paste0('vary_vals <- list(', vary_vals, ')')
+    }
+    
+    if(input$missing) {
+      missing <- 'missing = TRUE'
+      missing_args <- paste0('missing_args <- list(miss_prop = ', input$miss_prop, ', ',
+                             'type = ', missing_type(), ', ',
+                          'clust_var = ', miss_clustvar(), ', ', 
+                          'within_id = ', miss_withinid(), ', ',
+                          'miss_cov = ', missing_cov(), ')')
+    }
+    
+    if(input$type_outcome == 1) {
+      if(input$type_model == 1) {
+        str7 <- 'power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param, <br/>
+                     n = n, error_var = error_var, with_err_gen = with_err_gen, <br/>
+                     data_str = data_str, fact_vars = fact_vars, missing = missing, missing_args = missing_args,  <br/>
+                     pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, pow_tail = pow_tail, <br/>
+                     replicates = replicates, terms_vary = vary_vals)'
+        power_code <- paste(fixed_code(), fixed_param_code(), cov_param_code(), n_code(), 
+                            error_var_code(), with_err_gen_code(), data_str_code(), fact_vars_code(),
+                            missing, missing_args,
+                            pow_param, alpha, pow_dist, pow_tail, replicates, vary_char, str7,
+                            sep = '<br/>')
+      } else {
+        if(input$type_model == 2) {
+          str7 <- 'power_out <- sim_pow(fixed = fixed, random = random, fixed_param = fixed_param, <br/>
+                     random_param = random_param, cov_param = cov_param, <br/>
+          k = NULL, n = n, p = p, error_var = error_var, with_err_gen = with_err_gen, <br/>
+          data_str = data_str, fact_vars = fact_vars, missing = missing, missing_args = missing_args, <br/> 
+          unbal = unbal, unbalCont = unbalCont, pow_param = pow_param, alpha = alpha, <br/>
+          pow_dist = pow_dist, pow_tail = pow_tail, <br/>
+          replicates = replicates, terms_vary = vary_vals)'
+          power_code <- paste(fixed_code(), random_code(), fixed_param_code(), random_param_code(), 
+                              cov_param_code(), n_code(), p_code(),
+                              error_var_code(), with_err_gen_code(), data_str_code(), unbal_code(), 
+                              unbalCont_code(), fact_vars_code(), missing, missing_args,
+                              pow_param, alpha, pow_dist, pow_tail, replicates, vary_char, str7,
+                              sep = '<br/>')
+        } else {
+          str7 <- 'power_out <- sim_pow(fixed = fixed, random = random, random3 = random3, fixed_param = fixed_param, <br/>
+                     random_param = random_param, random_param3 = random_param3, cov_param = cov_param, <br/>
+          k = k, n = n, p = p, error_var = error_var, with_err_gen = with_err_gen, <br/>
+          data_str = data_str, fact_vars = fact_vars, missing = missing, missing_args = missing_args, <br/> 
+          unbal = unbal, unbal3 = unbal3, unbalCont = unbalCont, unbalCont3 = unbalCont3,  <br/>
+          pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, pow_tail = pow_tail, <br/>
+          replicates = replicates, terms_vary = vary_vals)'
+          power_code <- paste(fixed_code(), random_code(), random3_code(), fixed_param_code(), random_param_code(), 
+                              random_param3_code(), cov_param_code(), k_code(), n_code(), p_code(),
+                              error_var_code(), with_err_gen_code(), data_str_code(), unbal_code(), unbal3_code(),
+                              unbalCont_code(), unbalCont3_code(), fact_vars_code(), missing, missing_args,
+                              pow_param, alpha, pow_dist, pow_tail, replicates, vary_char, str7,
+                              sep = '<br/>')
+        }
+      }
+    } else {
+      if(input$type_model == 1) {
+        str7 <- 'power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param, <br/>
+                     n = n, data_str = data_str, fact_vars = fact_vars, missing = missing, missing_args = missing_args, <br/>
+        pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, pow_tail = pow_tail, <br/>
+        replicates = replicates, terms_vary = vary_vals)'
+        power_code <- paste(fixed_code(), fixed_param_code(), cov_param_code(), n_code(), 
+                            data_str_code(), fact_vars_code(), missing, missing_args,
+                            pow_param, alpha, pow_dist, pow_tail, replicates, vary_char, str7,
+                            sep = '<br/>')
+      } else {
+        if(input$type_model == 2) {
+          str7 <- 'power_out <- sim_pow_glm(fixed = fixed, random = random, fixed_param = fixed_param, <br/>
+                     random_param = random_param, cov_param = cov_param, k = NULL, n = n, p = p, <br/>
+          data_str = data_str, fact_vars = fact_vars, missing = missing, missing_args = missing_args, <br/> 
+          unbal = unbal, unbalCont = unbalCont, pow_param = pow_param, alpha = alpha, <br/>
+          pow_dist = pow_dist, pow_tail = pow_tail, <br/>
+          replicates = replicates, terms_vary = vary_vals)'
+          power_code <- paste(fixed_code(), random_code(), fixed_param_code(), random_param_code(), 
+                              cov_param_code(), n_code(), p_code(), data_str_code(), unbal_code(), 
+                              unbalCont_code(), fact_vars_code(), missing, missing_args,
+                              pow_param, alpha, pow_dist, pow_tail, replicates, vary_char, str7,
+                              sep = '<br/>')
+        } else {
+          str7 <- 'power_out <- sim_pow_glm(fixed = fixed, random = random, random3 = random3, fixed_param = fixed_param, <br/>
+                     random_param = random_param, random_param3 = random_param3, cov_param = cov_param, <br/>
+          k = k, n = n, p = p, <br/>
+          data_str = data_str, fact_vars = fact_vars, missing = missing, missing_args = missing_args, <br/> 
+          unbal = unbal, unbal3 = unbal3, unbalCont = unbalCont, unbalCont3 = unbalCont3,  <br/>
+          pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, pow_tail = pow_tail, <br/>
+          replicates = replicates, terms_vary = vary_vals)'
+          power_code <- paste(fixed_code(), random_code(), random3_code(), fixed_param_code(), random_param_code(), 
+                              random_param3_code(), cov_param_code(), k_code(), n_code(), p_code(),
+                              data_str_code(), unbal_code(), unbal3_code(),
+                              unbalCont_code(), unbalCont3_code(), fact_vars_code(), missing, missing_args,
+                              pow_param, alpha, pow_dist, pow_tail, replicates, vary_char, str7,
+                              sep = '<br/>')
+        }
+      }
+    }
+    code(HTML(power_code))
   })
   
 }

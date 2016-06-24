@@ -823,18 +823,18 @@ server <- function(input, output, session) {
   
   output$vary_arg <- renderUI({
     if(input$type_model == 1) {
-      arg_choices <- c('n', 'error_var', 'with_err_gen')
+      arg_choices <- c('n', 'error_var')
       if(input$type_outcome == 2) {
         arg_choices <- 'n'
       }
     } else {
       if(input$type_model == 2) {
-        arg_choices <- c('n', 'p', 'error_var', 'with_err_gen')
+        arg_choices <- c('n', 'p', 'error_var')
         if(input$type_outcome == 2) {
           arg_choices <- c('n', 'p')
         }
       } else {
-        arg_choices <- c('k', 'n', 'p', 'error_var', 'with_err_gen')
+        arg_choices <- c('k', 'n', 'p', 'error_var')
         if(input$type_outcome == 2) {
           arg_choices <- c('k', 'n', 'p')
         }

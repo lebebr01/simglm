@@ -362,14 +362,18 @@ ui <- dashboardPage(skin = "green",
               #     width = 12, title = 'Power Graphics',
               #     collapsible = TRUE, collapsed = FALSE,
               #     status = 'warning',
-              #     checkboxInput('power_plots', 'Show Power Plots?',
-              #                   value = FALSE),
-              #     conditionalPanel(
-              #       condition = 'input.power_plots == true',
-              #     selectInput('which_pow_plots', 'Which Power Plot?',
-              #                 choices = list(), 
-              #                 selected = 1)
-              #     )
+              #     fluidRow(
+              #       box(width = 3,
+              #           uiOutput('power_x')
+              #       ),
+              #       box(width = 3,
+              #           uiOutput('power_group')
+              #       ),
+              #       box(width = 3,
+              #           uiOutput('power_facet')
+              #       )
+              #     ),
+              #     plotOutput('power_plot_out')
               #   )
               # ),
               fluidRow(

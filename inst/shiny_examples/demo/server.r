@@ -961,7 +961,7 @@ server <- function(input, output, session) {
     missing_args = list(NULL)
     
     if(is.null(input$vary_arg_sel)) {
-      NULL 
+      vary_vals <- NULL
     } else {
       vary_terms <- input$vary_arg_sel
       vary_vals <- lapply(vary_terms, function(i) 
@@ -1046,6 +1046,27 @@ server <- function(input, output, session) {
       }
     }
     
+  })
+  
+  output$power_x <- renderUI({
+    selectInput('power_x_axis', 'Variable for x-axis',
+                choices = c(Choose = '', names(power_sim())), width = '200px', 
+                selected = NULL)
+  })
+  
+  output$power_group <- renderUI({
+    selectInput('power_group', 'Power plots by group',
+                choices = c(Choose = '', names(power_sim())), width = '200px')
+  })
+  
+  output$power_facet <- renderUI({
+    selectInput('power_facet', 'Facet plots?',
+                choices = c(Choose = '', names(power_sim())), width = '200px')
+  })
+  
+  output$power_plot_out <- renderPlot({
+    data <- power_sim()
+    power_point(data, input$power_x_axis)
   })
   
   output$power_table <- renderDataTable({

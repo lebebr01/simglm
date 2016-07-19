@@ -25,18 +25,18 @@ Here is an example for simulating a single level logistic model:
 
 ```{r singlelogistic}
 fixed <- ~ 1 + act + diff
-fixed.param <- c(2, 0.5, 0.3)
-cov.param <- list(mean = c(0, 0), sd = c(4, 3), 
-                  var.type = c("single", "single", "single"))
+fixed_param <- c(2, 0.5, 0.3)
+cov_param <- list(mean = c(0, 0), sd = c(4, 3), 
+                  var_type = c("single", "single", "single"))
 n <- 150
 
-temp.single <- sim_glm(fixed = fixed, fixed.param = fixed.param, 
-                       cov.param = cov.param, 
+temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param, 
+                       cov_param = cov_param, 
                        n = n, data_str = "single")
-head(temp.single)
+head(temp_single)
 ```
 
-As you can see from the code above, the syntax is virtually identical to the syntax for the `sim_reg` function. The largest difference is the omission of the `error_var` and `rand_gen` commands. The returned data frame includes the response variable in the logistic function (Fbeta), the probability found by taking $\frac{exp(Fbeta)}{1 + exp(Fbeta)}$ (logistic), and the returned 0/1 variable by using the `rbinom` function using the probabilities defined above (sim.data).
+As you can see from the code above, the syntax is virtually identical to the syntax for the `sim_reg` function. The largest difference is the omission of the `error_var` and `rand_gen` commands. The returned data frame includes the response variable in the logistic function (Fbeta), the probability found by taking $\frac{exp(Fbeta)}{1 + exp(Fbeta)}$ (logistic), and the returned 0/1 variable by using the `rbinom` function using the probabilities defined above (sim_data).
 
 ## Multilevel logistic models
 Adding in additional levels is straightforward and again very similar to the `sim_reg` function. Here is a two level example with students nested in classrooms, the **act** variable is treated as a classroom variable:
@@ -45,18 +45,18 @@ Adding in additional levels is straightforward and again very similar to the `si
 # Longitudinal linear mixed model example
 fixed <- ~1 + diff + act
 random <- ~1 
-fixed.param <- c(2, 0.5, 0.3)
-random_param <- list(random.param = 7, rand_gen = "rnorm", ther_sim = TRUE)
-cov.param <- list(mean = c(0, 0), sd = c(2, 1.4), 
-                  var.type = c("lvl1", "lvl2"))
+fixed_param <- c(2, 0.5, 0.3)
+random_param <- list(random_var = 7, rand_gen = "rnorm", ther_sim = TRUE)
+cov_param <- list(mean = c(0, 0), sd = c(2, 1.4), 
+                  var_type = c("lvl1", "lvl2"))
 n <- 150
 p <- 30
 data_str <- "cross"
-temp.cross <- sim_glm(fixed, random, random3 = NULL, fixed.param,
+temp_cross <- sim_glm(fixed, random, random3 = NULL, fixed_param,
                      random_param, random_param3 = NULL,
-                     cov.param, k = NULL, n, p,
+                     cov_param, k = NULL, n, p,
                      data_str = data_str)
-head(temp.cross)
+head(temp_cross)
 ```
 
 ## Three level example
@@ -66,18 +66,18 @@ Below is sample code for a three level example. Primary differences are the addi
 fixed <- ~1 + diff + act + actClust
 random <- ~1
 random3 <- ~ 1
-fixed.param <- c(4, 0.8, 0.15, 1.1)
-random_param <- list(random.param = 7, rand_gen = "rnorm")
-random_param3 <- list(random.param = 4, rand_gen = "rnorm")
-cov.param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
-                  var.type = c("lvl1", "lvl2", "lvl3"))
+fixed_param <- c(4, 0.8, 0.15, 1.1)
+random_param <- list(random_var = 7, rand_gen = "rnorm")
+random_param3 <- list(random_var = 4, rand_gen = "rnorm")
+cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
+                  var_type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
 n <- 150
 p <- 30
 data_str <- "cross"
-temp.three <- sim_glm(fixed, random, random3, fixed.param, random_param,
-                      random_param3, cov.param, k, n, p, data_str = data_str)
-head(temp.three)
+temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param,
+                      random_param3, cov_param, k, n, p, data_str = data_str)
+head(temp_three)
 ```
 
 

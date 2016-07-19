@@ -4,3 +4,5 @@
 ^.*\.sublime-project$
 ^.*\.sublime-workspace$
 README.Rmd
+^packrat/
+^\.Rprofile$

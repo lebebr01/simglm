@@ -29,76 +29,77 @@ library(simglm)
 This should load the `devtools` package, install the `simglm` package, and finally load the `simglm` package. The package has currently not been tested on a Mac machine. I do not anticipate any problems installing on a Mac however.
 
 ## Simulate Data
-The master function that handles the simulation grunt work is the `sim.reg()` function. As always, you can do `?sim.reg` to pull up the help file for the function. 
+The master function that handles the simulation grunt work is the `sim_reg` function. As always, you can do `?sim_reg` to pull up the help file for the function. 
 
 ### Single Level
 Let's look at a simple single level regression example to get started:
 
 ```{r singlelevel}
 fixed <- ~ 1 + act + diff + numCourse + act:numCourse
-fixed.param <- c(2, 4, 1, 3.5, 2)
-cov.param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var.type = c("single", "single", "single"))
+fixed_param <- c(2, 4, 1, 3.5, 2)
+cov_param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var_type = c("single", "single", "single"))
 n <- 150
 error_var <- 3
 with_err_gen = 'rnorm'
-temp.single <- sim_reg(fixed = fixed, fixed.param = fixed.param, cov.param = cov.param,
-n = n, error_var = error_var, with_err_gen = with_err_gen, data_str = "single")
+temp_single <- sim_reg(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
+                       n = n, error_var = error_var, with_err_gen = with_err_gen, 
+                       data_str = "single")
 ```
 
-A few things to highlight about the above syntax, first the object `fixed` is a one sided formula that gives the names of the variables to be included in the simulated data. The intercept is directly shown in the formulation here, but can also be omitted (similar to linear models in R). I like to include the 1 as it reminds me that I do in fact want an intercept. The next object, `fixed.param` is the regression weights for the fixed effects, this must be the same length as fixed (or one larger if the 1 is not explicitly stated in the `fixed` object). Next, `cov.param` represents the mean, standard deviation, and type of variable from the `fixed` object (must by "single" for single level regression).  The `cov.param` object must contain all variables except the intercept and any interactions.
+A few things to highlight about the above syntax, first the object `fixed` is a one sided formula that gives the names of the variables to be included in the simulated data. The intercept is directly shown in the formulation here, but can also be omitted (similar to linear models in R). I like to include the 1 as it reminds me that I do in fact want an intercept. The next object, `fixed_param` is the regression weights for the fixed effects, this must be the same length as fixed (or one larger if the 1 is not explicitly stated in the `fixed` object). Next, `cov_param` represents the mean, standard deviation, and type of variable from the `fixed` object (must by "single" for single level regression).  The `cov_param` object must contain all variables except the intercept and any interactions.
 
 The rest of the arguments are pretty straightforward, `n` is the sample size, `error_var` is the error variance, `with_err_gen` is the distribution of the residuals, and finally in the function call itself, `data_str` must be "single" in this instance to reflect a single level regression.
 
 Finally, looking at the output from the above call:
 ```{r printsinglelevel}
-head(temp.single)
+head(temp_single)
 ```
 
-As can be seen from the data itself, the first 5 columns represent the raw data used in the simulation, the column labeled "Fbeta" is the matrix multiplication of the design matrix (first 5 columns in this case) by the `fixed.param` object above (the desired values for the fixed effects).  The "err" column is the simulated errors, the column labeled "sim.data" is the simulated data (taking "Fbeta" + "err"), and lastly an ID variable reflecting the individuals.
+As can be seen from the data itself, the first 5 columns represent the raw data used in the simulation, the column labeled "Fbeta" is the matrix multiplication of the design matrix (first 5 columns in this case) by the `fixed_param` object above (the desired values for the fixed effects).  The "err" column is the simulated errors, the column labeled "sim_data" is the simulated data (taking "Fbeta" + "err"), and lastly an ID variable reflecting the individuals.
 
 You could then use simple regression on these data to see how the simulation went:
 ```{r simpregmod}
-summary(lm(sim.data ~ 1 + act + diff + numCourse + act:numCourse, data = temp.single))
+summary(lm(sim_data ~ 1 + act + diff + numCourse + act:numCourse, data = temp_single))
 ```
 
 #### Adding Factor/Categorical/Ordinal Variables
 To add a factor, categorical, or ordinal variable, just append one of the following to the end of the variable name in the `fixed` object: ".f", ".c", ".o".  These indicate the variable is a discrete variable of some sort. See below for an example.
 ```{r singlelevelfact}
-fixed <- ~ 1 + act + diff + numCourse.o + act:numCourse.o
-fixed.param <- c(2, 4, 1, 3.5, 2)
-cov.param <- list(mean = c(0, 0), sd = c(4, 3), var.type = c("single", "single"))
-fact.vars <- list(numlevels = 5, var.type = "single")
+fixed <- ~ 1 + act.o + diff.o + numCourse.o + act.o:numCourse.o
+fixed_param <- c(0.8, 1, 0.2, 0.1, 0)
+cov_param <- NULL
+fact_vars <- list(numlevels = c(36, 8, 5), var_type = c('single', 'single', "single"))
 n <- 150
 error_var <- 3
 with_err_gen = 'rnorm'
-temp.single.o <- sim_reg(fixed = fixed, fixed.param = fixed.param, 
-                         cov.param = cov.param, n = n, error_var = error_var,
+temp_single_o <- sim_reg(fixed = fixed, fixed_param = fixed_param, 
+                         cov_param = cov_param, n = n, error_var = error_var,
                          with_err_gen = with_err_gen, data_str = "single", 
-                         fact.vars = fact.vars)
+                         fact_vars = fact_vars)
 ```
 
-The next thing to add is a new object called `fact.vars`.  This object must be a list that contains `numlevels` and `var.type`. Other optional features will be added in the future to increase functionality - such as including value labels, user specified probabilities, etc. Once these are passed into the `sim.reg()` function, the simulated data now looks like the following.
+The next thing to add is a new object called `fact_vars`.  This object must be a list that contains `numlevels` and `var_type`. Other optional features will be added in the future to increase functionality - such as including value labels, user specified probabilities, etc. Once these are passed into the `sim.reg()` function, the simulated data now looks like the following.
 ```{r printsinglelevelfact}
-head(temp.single.o)
+head(temp_single_o)
 ```
 
 #### Correlated predictor variables
-The ability to add correlated predictor variables is an easy addition. The additional argument `cor_vars` takes a vector of correlations between predictor variables (note this does not include the intercept, factor variables, or any interaction variables). These correlations are further turned into a covariance matrix with the standard deviations specified in the `cov.param` argument. Then through cholesky decomposition, the correlations between the variables are generated prior to simulating the response variable. Below is an example.
+The ability to add correlated predictor variables is an easy addition. The additional argument `cor_vars` takes a vector of correlations between predictor variables (note this does not include the intercept, factor variables, or any interaction variables). These correlations are further turned into a covariance matrix with the standard deviations specified in the `cov_param` argument. Then through cholesky decomposition, the correlations between the variables are generated prior to simulating the response variable. Below is an example. The default value is no correlation between the covariates.
 
 ```{r corvars}
 fixed <- ~ 1 + act + diff + numCourse.o + act:numCourse.o
-fixed.param <- c(2, 4, 1, 3.5, 2)
-cov.param <- list(mean = c(0, 0), sd = c(4, 3), var.type = c("single", "single"))
-fact.vars <- list(numlevels = 5, var.type = "single")
+fixed_param <- c(2, 4, 1, 3.5, 2)
+cov_param <- list(mean = c(0, 0), sd = c(4, 3), var_type = c("single", "single"))
+fact_vars <- list(numlevels = 5, var_type = "single")
 n <- 150
 error_var <- 3
 with_err_gen = 'rnorm'
 cor_vars <- 0.6
-temp.single.o <- sim_reg(fixed = fixed, fixed.param = fixed.param, 
-                         cov.param = cov.param, n = n, error_var = error_var,
+temp_single_o <- sim_reg(fixed = fixed, fixed_param = fixed_param, 
+                         cov_param = cov_param, n = n, error_var = error_var,
                          with_err_gen = with_err_gen, data_str = "single", 
-                         cor_vars = cor_vars, fact.vars = fact.vars)
-cor(temp.single.o[, 2:3])
+                         cor_vars = cor_vars, fact_vars = fact_vars)
+cor(temp_single_o[, 2:3])
 ```
 
 
@@ -107,28 +108,32 @@ This package currently supports the simulation of two-level nested or two-level 
 ```{r longsim}
 fixed <- ~1 + time + diff + act + time:act
 random <- ~1 + time + diff
-fixed.param <- c(4, 2, 6, 2.3, 7)
-random_param <- list(random.param = c(7, 4, 2), rand_gen = "rnorm")
-cov.param <- list(mean = c(0, 0), sd = c(1.5, 4), var.type = c("lvl1", "lvl2"))
+fixed_param <- c(4, 2, 6, 2.3, 7)
+random_param <- list(random_var = c(7, 4, 2), rand_gen = "rnorm")
+cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
 n <- 150
 p <- 30
 error_var <- 4
 data_str <- "long"
-temp.long <- sim_reg(fixed = fixed, random = random, 
-                     fixed.param = fixed.param, 
-                     random_param = random_param, cov.param = cov.param, 
+temp_long <- sim_reg(fixed = fixed, random = random, 
+                     fixed_param = fixed_param, 
+                     random_param = random_param, cov_param = cov_param, 
                      k = NULL, n = n, p = p,
                      error_var = error_var, with_err_gen = "rnorm",
                      data_str = data_str, unbal = FALSE)
 ```
 
-Highlighting the new agruments needed, the first is a one sided formula `random`. This specifies which terms should be specified above. Related to `random`, `random.param` specifies the variance for the random effects and must be the same length as `random`.  Although still found in the single level regression, the "var.type" portion of `cov.param` must not be either "lvl1" or "lvl2" to represent either level 1 or level 2 variables respectively. Note that the time variable is not included in the `cov.param` argument and is automatically specified as discrete starting from 0.  In the future, differing time scales will be expanded.
+Highlighting the new agruments needed, the first is a one sided formula `random`. This specifies which terms should be specified above. Related to `random`, `random_param` is a list of characteristics when simulation the random effects. This list must contain two named components: `random_var` and `rand_gen`. These two components represent the variance of the terms specified in the one sided `random` formula and `rand_gen` which represents a quoted distribution function (e.g. 'rnorm') to simulate the random effects. The `random_var` component must be the same length as the number of terms in `random`. 
 
-The other new terms needed are straightforward, `p` is the within cluster sample size (i.e. how many repeated measurements), `randCor` is the correlation between the random effects, `rand_dist` is the distribution of the random effects - see the help file for details on options here, and lastly `data_str` is now "long" for longitudinal data.
+The optional named arguments to the `random_param` argument include `ther`, `ther_sim`, and `cor_vars`. First, `cor_vars` is a vector of correlations between random effects, the default is no correlation between random effects. The argument `ther` represents a vector of the theoretical mean and standard deviation of the random effects. This can be used to center simulated values at 0 or scale them to have a standard deviation of 1. The following standardization formula is used: $z = \frac{X - \mu}{\sigma}$, where $\mu$ and $\sigma$ are the values specified within the `ther` argument. The default values are 0 and 1 for $\mu$ and $\sigma$ respectively so that no scaling is performed. The `ther_sim` argument does the same process as `ther`, but the $\mu$ and $\sigma$ values are empirically drawn by sampling one million values from the `rand_gen` specified. Lastly, depending on the `rand_gen` function specified, additional arguments may be needed for that distribution function and can be specified as well. For example, if `rand_gen = 'rchisq'`, including `df = 1` would simulate a chi-square distribution with one degree of freedom. 
+
+The specification of the covariates is still done with the `cov_param` argument, however, now the `var_type` portion of `cov_param` must be either "lvl1" or "lvl2" to represent either level 1 or level 2 variables respectively. Note that the time variable is not included in the `cov_param` argument and is automatically specified as discrete starting from 0.  In the future, differing time scales will be expanded.
+
+The other new terms needed are straightforward, `p` is the within cluster sample size (i.e. how many repeated measurements) and `data_str` is now "long" for longitudinal data.
 
 The simulated data now look like the following:
 ```{r longdata}
-head(temp.long)
+head(temp_long)
 ```
 
 This structure is very similar to before, except now there are columns for the specific random effects as denoted by the lower case b's, a column reflecting the contribution for the random effects combined and lastly now two ID variables, one reflecting the within cluster ID and another being the cluster ID.
@@ -136,15 +141,15 @@ This structure is very similar to before, except now there are columns for the s
 Checking how the simulation worked with the following:
 ```{r lme4}
 library(lme4)
-lmer(sim.data ~ 1 + time + diff + act + time:act + (1 + time + diff | clustID),
-     data = temp.long)
+lmer(sim_data ~ 1 + time + diff + act + time:act + (1 + time + diff | clustID),
+     data = temp_long)
 ```
 One note when looking at the output is that standard deviations are given, not variances as inputted into the simulation function.
 
 #### Cross-Sectional Data
 A similar framework can be used for cross-sectional data, such as when students are nested within schools.  The only thing that would need to be changed from the longitudinal portion above is the `data_str` argument from "long" to "cross" for cross-sectional data.
 
-One last note about cross-sectional data.  As a default for longitudinal data, time is always considered to be in the model in some fashion (as noted above when talking about the `cov.param` object). Therefore, when specifying the `cov.param` and `fact.vars` objects, ensure information about all variables is there.
+One last note about cross-sectional data.  As a default for longitudinal data, time is always considered to be in the model in some fashion (as noted above when talking about the `cov_param` object). Therefore, when specifying the `cov_param` and `fact_vars` objects, ensure information about all variables is there.
 
 #### Categorical Data for Nested Designs
 The same framework to specify categorical data for single level regression designs is used for nested designs. Just asign the ".f", ".c", or ".o" to the end of the name and the function will take care of the rest.

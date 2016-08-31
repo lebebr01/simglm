@@ -33,11 +33,11 @@ sim_err_nested <- function(error_var, n, p, with_err_gen, arima = FALSE,
   }
   
   if(arima) {
-    args <- c(list(model = arima_mod, n = p, 
+    args <- c(list(model = arima_mod, 
                    rand.gen = eval(parse(text = with_err_gen))), 
               lvl1_err_params)
-    err <- unlist(lapply(mapply(with_err_gen, n = p, 
-                                MoreArgs = lvl1_err_params, SIMPLIFY = FALSE), 
+    err <- unlist(lapply(mapply(arima.sim, n = p,
+                                MoreArgs = args, SIMPLIFY = FALSE), 
                          standardize, mean = ther[1], sd = ther[2])) * sqrt(error_var)
   } else {
     args <- c(list(n = p), lvl1_err_params)

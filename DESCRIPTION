@@ -20,7 +20,8 @@ Suggests:
     lme4,
     nlme,
     testthat,
-    shiny
+    shiny,
+    e1071
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
 Author: Brandon LeBeau [aut, cre]

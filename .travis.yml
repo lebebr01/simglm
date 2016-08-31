@@ -5,10 +5,30 @@ warnings_are_errors: true
 sudo: false
 cache: packages
 
+
+matrix:
+  include:
+    - os: linux
+      dist: precise
+      sudo: false
+    - os: linux
+      dist: trusty
+      env: R_CODECOV=true
+      r_check_args: '--use-valgrind'
+    - os: osx
+      osx_image: xcode8
+      brew_packages: poppler
+      latex: false
+    - os: osx
+      osx_image: beta-xcode6.2
+      disable_homebrew: true
+      latex: false
+
 cran: https://cran.rstudio.com/
 r_packages: 
    - rmarkdown
    - covr
+   - e1071
    
 after_success:
    - Rscript -e 'library(covr); codecov()'

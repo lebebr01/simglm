@@ -4,7 +4,7 @@ Authors@R: person("Brandon", "LeBeau", email = "lebebr01+simglm@gmail.com",
      role = c("aut", "cre"))
 Version: 0.3.0
 License: GPL-3
-Title: Simulate Models Based on the General(-ized) Linear Model
+Title: Simulate Models Based on the Generalized Linear Model
 Description: Easily simulates regression models,
     including both simple regression and general(-ized) linear mixed
     models with up to three level of nesting. Power simulations that are 
@@ -23,3 +23,5 @@ Suggests:
     shiny
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
+Author: Brandon LeBeau [aut, cre]
+Maintainer: Brandon LeBeau <lebebr01+simglm@gmail.com>

@@ -329,13 +329,18 @@ sim_continuous <- function(k = NULL, n, p, mean, sd, var_type = c('lvl1', 'lvl2'
   beg <- c(1, cumsum(n) + 1)
   beg <- beg[-length(beg)]
   
+  if(!is.null(k)) {
+    lvl3ss <- sapply(lapply(1:length(beg), function(xx) 		
+      p[beg[xx]:end[xx]]), sum)
+  }
+  
   var_type <- match.arg(var_type)
   
   contVar <- switch(var_type,
                    single = rnorm(n = n, mean = mean, sd = sd),
-                   lvl3 = rep(rnorm(n = k, mean = mean, sd = sd), times = (n*p)/k),
-                   lvl2 = rep(rnorm(n = n, mean = mean, sd = sd), times = p),
-                   lvl1 = rnorm(n = n*p, mean = mean, sd = sd)
+                   lvl3 = rep(rnorm(n = k, mean = mean, sd = sd), times = lvl3ss),
+                   lvl2 = rep(rnorm(n = length(p), mean = mean, sd = sd), times = p),
+                   lvl1 = rnorm(n = sum(p), mean = mean, sd = sd)
   )
   return(contVar)
 }

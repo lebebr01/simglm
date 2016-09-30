@@ -11,6 +11,21 @@ test_that('sim_factor are discrete', {
                                  var_type = 'lvl2')), 4)
 })
 
+test_that('sim_factor errors', {
+  expect_error(sim_factor(n = 100, p = 3, numlevels = 4, replace = FALSE,
+                          prob = c(.25, .25, .25, .25), 
+                          var_type = 'lvl2'))
+  expect_error(sim_factor(n = 100, numlevels = 4, replace = FALSE,
+                          prob = c(.25, .25, .25, .25),
+                          var_type = 'single'))
+  expect_error(sim_factor(n = 100, p = 3, numlevels = 4, replace = FALSE,
+                          prob = c(.25, .25, .25, .25),
+                          var_type = 'lvl1'))
+  expect_error(sim_factor(n = 100, p = 3, k = 30, numlevels = 4, replace = FALSE,
+                          prob = c(.25, .25, .25, .25), 
+                          var_type = 'lvl3'))
+})
+
 test_that('sim_continuous are continuous', {
   expect_length(table(sim_continuous(n = 100, mean = 0, sd = 1, 
                                      var_type = 'single')), 100)

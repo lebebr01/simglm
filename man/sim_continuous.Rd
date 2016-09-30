@@ -2,10 +2,10 @@
 % Please edit documentation in R/fixef_sim.r
 \name{sim_continuous}
 \alias{sim_continuous}
-\title{Simulate categorical, factor, or discrete variables}
+\title{Simulate continuous variables}
 \usage{
-sim_continuous(k, n, p, mean, sd, var_type = c("lvl1", "lvl2", "lvl3",
-  "single"))
+sim_continuous(k = NULL, n, p, mean, sd, var_type = c("lvl1", "lvl2",
+  "lvl3", "single"))
 }
 \arguments{
 \item{k}{Number of third level clusters.}
@@ -21,7 +21,7 @@ sim_continuous(k, n, p, mean, sd, var_type = c("lvl1", "lvl2", "lvl3",
 \item{var_type}{Variable type for the variable, must be either "lvl1", "lvl2", or "single"}
 }
 \description{
-Function that simulates discrete, factor, or categorical variables.  Is essentially
-a wrapper around the sample function from base R.
+Function that simulates continuous variables. Currently only supports
+rnorm variables, future distributions to come.
 }
 

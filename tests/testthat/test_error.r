@@ -19,6 +19,10 @@ test_that('var error_var', {
   expect_equal(var(sim_err_single(error_var = 3, n = 100000, 
                                   with_err_gen = 'rnorm')), 3,
                tolerance = .05)
+  expect_equal(var(sim_err_single(error_var = 3, n = 100000, 
+                                  with_err_gen = 'rnorm', 
+                                  ther_sim = TRUE)), 3,
+               tolerance = .05)
 })
 
 test_that('skew dist', {

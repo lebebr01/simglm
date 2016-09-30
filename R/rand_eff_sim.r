@@ -35,11 +35,14 @@ sim_rand_eff <- function(random_var, n, rand_gen, ther = c(0, 1),
     standardize(sapply(n, FUN = eval(parse(text = rand_gen)), ...),
                 mean = ther[1], sd = ther[2]))
   
-  if(is.null(cor_vars) == FALSE) {
+  if(is.null(cor_vars)) {
+    reff <- reff %*% chol(diag(length(random_var)) * random_var)
+  } else {
     c_mat <- matrix(nrow = length(random_var), ncol = length(random_var))
     diag(c_mat) <- 1
     c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
-    cov <- diag(sqrt(random_var)) %*% c_mat %*% diag(sqrt(random_var))
+    cov <- diag(length(random_var)) * sqrt(random_var) %*% 
+      c_mat %*% diag(length(random_var)) * sqrt(random_var)
     reff <- reff %*% chol(cov)
   }
 

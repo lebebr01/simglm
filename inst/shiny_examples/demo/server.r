@@ -3,6 +3,7 @@ library(shinydashboard)
 library(simglm)
 library(ggplot2)
 library(lme4)
+library(highcharter)
 
 source('global.r')
 options(useFancyQuotes = FALSE)
@@ -1072,6 +1073,10 @@ server <- function(input, output, session) {
       data[[input$power_group_var]] <- as.character(data[[input$power_group_var]])
       power_point_group(data, group = input$power_group_var)
     }
+  })
+  
+  output$hcontainter <- renderHighchart({
+      hchart(power_sim(), 'spline', x = n, y = power, group = var)
   })
   
   output$power_table <- renderDataTable({

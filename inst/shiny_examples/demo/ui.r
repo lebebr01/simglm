@@ -36,11 +36,11 @@ ui <- dashboardPage(skin = "green",
                 box(title = 'Sample Sizes', status = 'primary',
                     collapsible = TRUE, width = 2, collapsed = FALSE,
                     numericInput('samp_size_lvl1', 'Sample Size Level 1', 
-                                 value = 4),
+                                 value = 20),
                     conditionalPanel(
                       condition = 'input.type_model == 2 || input.type_model == 3',
                       numericInput('samp_size_lvl2', 'Sample Size Level 2',
-                                   value = 2)
+                                   value = 4)
                     ),
                     conditionalPanel(
                       condition = 'input.type_model == 3',
@@ -357,25 +357,25 @@ ui <- dashboardPage(skin = "green",
                   dataTableOutput('power_table')
                 )
               ),
-              # fluidRow(
-              #   box(
-              #     width = 12, title = 'Power Graphics',
-              #     collapsible = TRUE, collapsed = FALSE,
-              #     status = 'warning',
-              #     fluidRow(
-              #       box(width = 3,
-              #           uiOutput('power_x')
-              #       ),
-              #       box(width = 3,
-              #           uiOutput('power_group')
-              #       ),
-              #       box(width = 3,
-              #           uiOutput('power_facet')
-              #       )
-              #     ),
-              #     plotOutput('power_plot_out')
-              #   )
-              # ),
+              fluidRow(
+                box(
+                  width = 12, title = 'Power Graphics',
+                  collapsible = TRUE, collapsed = FALSE,
+                  status = 'warning',
+                  fluidRow(
+                    box(width = 3,
+                        uiOutput('power_x')
+                    ),
+                    box(width = 3,
+                        uiOutput('power_group')
+                    ),
+                    box(width = 3,
+                        uiOutput('power_facet')
+                    )
+                  ),
+                  plotOutput('power_plot_out')
+                )
+              ),
               fluidRow(
                 box(
                   width = 12, title = 'Power Code',

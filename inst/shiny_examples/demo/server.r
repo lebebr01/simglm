@@ -1055,7 +1055,7 @@ server <- function(input, output, session) {
   })
   
   output$power_group <- renderUI({
-    selectInput('power_group', 'Power plots by group',
+    selectInput('power_group_var', 'Power plots by group',
                 choices = c(Choose = '', names(power_sim())), width = '200px')
   })
   
@@ -1066,7 +1066,12 @@ server <- function(input, output, session) {
   
   output$power_plot_out <- renderPlot({
     data <- power_sim()
-    power_point(data, input$power_x_axis)
+    if(input$power_group_var == '') {
+      power_point(data)
+    } else {
+      data[[input$power_group_var]] <- as.character(data[[input$power_group_var]])
+      power_point_group(data, group = input$power_group_var)
+    }
   })
   
   output$power_table <- renderDataTable({

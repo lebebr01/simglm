@@ -287,11 +287,11 @@ server <- function(input, output, session) {
   random_param <- reactive({
     if(input$type_nested == 1) {
       ran_var <- input[['var_int']]
-      list(random_var = ran_var,
+      list(random_var = as.numeric(ran_var),
            rand_gen = 'rnorm')
     } else {
       ran_var <- sapply(c('int', 'time'), function(i) input[[paste0('var_', i)]])
-      list(random_var = ran_var,
+      list(random_var = as.numeric(ran_var),
            rand_gen = 'rnorm')
     }
   })
@@ -485,9 +485,9 @@ server <- function(input, output, session) {
       NULL
     } else {
       if(input$missing == FALSE) {
-        gen_code()
+        sapply(gen_code(), round, 3)
       } else {
-        miss_data()
+        sapply(miss_data(), round, 3)
       }
     }
   )

@@ -44,7 +44,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, lvl1ss, data_str,
     n.fact <- 0
   } 
 
-  if(is.null(cov_param) == FALSE) {
+  if(!is.null(cov_param)) {
     if(data_str == "long") {
       
       Xmat <- unlist(lapply(1:length(lvl1ss), function(xx) (1:lvl1ss[xx])-1))
@@ -61,7 +61,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, lvl1ss, data_str,
         do.call(sim_continuous, cov_param2[[xx]])))
     } 
     
-    if(is.null(cor_vars) == FALSE) {
+    if(!is.null(cor_vars)) {
       c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
       diag(c_mat) <- 1
       c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
@@ -135,7 +135,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     n.fact <- 0
   } 
   
-  if(is.null(cov_param) == FALSE) {
+  if(!is.null(cov_param)) {
     if(data_str == "long") {
       Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx]) - 1))
       #Xmat <- rep.int((1:p) - 1, times = n)
@@ -152,7 +152,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
         do.call(sim_continuous, cov_param2[[xx]])))
     }
     
-    if(is.null(cor_vars) == FALSE) {
+    if(!is.null(cor_vars)) {
       c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
       diag(c_mat) <- 1
       c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
@@ -220,7 +220,7 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
       stop("All variables must have var_type = 'single'")
     }
   }
-  if(is.null(cov_param) == FALSE) {
+  if(!is.null(cov_param)) {
     cov_param <- lapply(1:n.cont, function(xx) 
       list(k = 0, n = n, p = 0, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
            var_type = cov_param$var_type[xx]))
@@ -303,7 +303,7 @@ sim_factor <- function(k, n, p, numlevels, replace = TRUE, prob = NULL, var_type
          lvl1 = sample(x = numlevels, size = n*p, replace = replace, prob = prob)
          )
   
-  if(is.null(value.labels) == FALSE) {
+  if(!is.null(value.labels)) {
     if(length(value.labels) != numlevels) { stop("value.labels must be same length as numlevels") }
     catVar <- factor(catVar, labels = value.labels)
   }

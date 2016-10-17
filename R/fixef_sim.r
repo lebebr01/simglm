@@ -209,6 +209,7 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   n.fact <- length(fact.loc[fact.loc != int.loc])
   n.cont <- length(cov_param$mean)
   
+  cov_mu <- cov_param$mean
   cov_sd <- cov_param$sd
   
   if(length(fact.loc)> 0){
@@ -221,18 +222,27 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
     }
   }
   if(!is.null(cov_param)) {
-    cov_param <- lapply(1:n.cont, function(xx) 
-      list(k = 0, n = n, p = 0, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-           var_type = cov_param$var_type[xx]))
+    if(is.null(cor_vars)) {
+      cov_param <- lapply(1:n.cont, function(xx) 
+        list(k = 0, n = n, p = 0, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
+             var_type = cov_param$var_type[xx]))
+    } else {
+      cov_param <- lapply(1:n.cont, function(xx) 
+        list(k = 0, n = n, p = 0, mean = 0, sd = 1, 
+             var_type = cov_param$var_type[xx]))
+    }
     Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
       do.call(sim_continuous, cov_param[[xx]])))
     
-    if(is.null(cor_vars) == FALSE) {
+    if(!is.null(cor_vars)) {
       c_mat <- matrix(nrow = n.cont, ncol = n.cont)
       diag(c_mat) <- 1
       c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
-      cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
-      Xmat <- Xmat %*% chol(cov)
+      cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd)
+      es <- eigen(cov, symmetric = TRUE)
+      ev <- es$values
+      Xmat <- t(cov_mu + es$vectors %*% diag(sqrt(pmax(ev, 0)), length(cov_sd)) %*% 
+        t(Xmat))
     }
   } else {
     Xmat <- NULL

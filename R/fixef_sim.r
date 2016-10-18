@@ -12,14 +12,14 @@
 #'  Does not include intercept, time, factors, or interactions. 
 #'  var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
 #' @param n Number of clusters.
-#' @param lvl1ss Number of within cluster units.
+#' @param p Number of within cluster units.
 #' @param data_str Type of data. Must be "cross", or "long".
 #' @param cor_vars A vector of correlations between variables.
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
-sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, lvl1ss, data_str, 
+sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str, 
                              cor_vars = NULL, fact_vars = list(NULL)){
   
   n.vars <- length(fixed_vars)
@@ -29,6 +29,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, lvl1ss, data_str,
   w.var <- length(grep("lvl1", cov_param$var_type, ignore.case = TRUE))
   n.cont <- length(cov_param$mean)
   
+  cov_mu <- cov_param$mean
   cov_sd <- cov_param$sd
   
   if(length(fact.loc) > 0){
@@ -46,27 +47,43 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, lvl1ss, data_str,
 
   if(!is.null(cov_param)) {
     if(data_str == "long") {
+      Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx])-1))
       
-      Xmat <- unlist(lapply(1:length(lvl1ss), function(xx) (1:lvl1ss[xx])-1))
-      cov_param2 <- lapply(1:n.cont, function(xx) 
-        list(k = 0, n = n, p = lvl1ss, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-             var_type = cov_param$var_type[xx]))
+      if(is.null(cor_vars)) {
+        cov_param2 <- lapply(1:n.cont, function(xx) 
+          list(k = 0, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
+               var_type = cov_param$var_type[xx]))
+      } else {
+        cov_param2 <- lapply(1:n.cont, function(xx) 
+          list(k = 0, n = n, p = p, mean = 0, sd = 1, 
+               var_type = cov_param$var_type[xx]))
+      }
+      
       Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.cont, function(xx) 
         do.call(sim_continuous, cov_param2[[xx]]))))
     } else {
-      cov_param2 <- lapply(1:n.cont, function(xx) 
-        list(k = 0, n = n, p = lvl1ss, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-             var_type = cov_param$var_type[xx]))
+      if(is.null(cor_vars)) {
+        cov_param2 <- lapply(1:n.cont, function(xx) 
+          list(k = 0, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
+               var_type = cov_param$var_type[xx]))
+      } else {
+        cov_param2 <- lapply(1:n.cont, function(xx) 
+          list(k = 0, n = n, p = p, mean = 0, sd = 1, 
+               var_type = cov_param$var_type[xx]))
+      }
       Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
         do.call(sim_continuous, cov_param2[[xx]])))
     } 
     
     if(!is.null(cor_vars)) {
-      c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
+      c_mat <- matrix(nrow = n.cont, ncol = n.cont)
       diag(c_mat) <- 1
       c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
-      cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
-      Xmat <- Xmat %*% chol(cov)
+      cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd)
+      es <- eigen(cov, symmetric = TRUE)
+      ev <- es$values
+      Xmat <- t(cov_mu + es$vectors %*% diag(sqrt(pmax(ev, 0)), length(cov_sd)) %*% 
+                  t(Xmat))
     }
   } else {
     Xmat <- NULL
@@ -74,7 +91,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, lvl1ss, data_str,
 
   if(length(fact.loc > 0)){
     fact_vars <- lapply(1:n.fact, function(xx) 
-      list(k = NULL, n = n, p = lvl1ss, numlevels = fact_vars$numlevels[xx], 
+      list(k = NULL, n = n, p = p, numlevels = fact_vars$numlevels[xx], 
            var_type = fact_vars$var_type[xx]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
               function(xx) do.call(sim_factor, fact_vars[[xx]]))))
@@ -122,6 +139,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed_vars, ignore.case = TRUE) 
   n.cont <- length(cov_param$mean)
   
+  cov_mu <- cov_param$mean
   cov_sd <- cov_param$sd
   
   if(length(fact.loc) > 0){
@@ -138,26 +156,41 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   if(!is.null(cov_param)) {
     if(data_str == "long") {
       Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx]) - 1))
-      #Xmat <- rep.int((1:p) - 1, times = n)
-      cov_param2 <- lapply(1:n.cont, function(xx) 
-        list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-             var_type = cov_param$var_type[xx]))
+      
+      if(is.null(cor_vars)) {
+        cov_param2 <- lapply(1:n.cont, function(xx) 
+          list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
+               var_type = cov_param$var_type[xx]))
+      } else {
+        cov_param2 <- lapply(1:n.cont, function(xx) 
+          list(k = k, n = n, p = p, mean = 0, sd = 1, 
+               var_type = cov_param$var_type[xx]))
+      }
       Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.cont, function(xx) 
         do.call(sim_continuous, cov_param2[[xx]]))))
     } else {
-      cov_param2 <- lapply(1:n.cont, function(xx) 
-        list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-             var_type = cov_param$var_type[xx]))
+      if(is.null(cor_vars)) {
+        cov_param2 <- lapply(1:n.cont, function(xx) 
+          list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
+               var_type = cov_param$var_type[xx]))
+      } else {
+        cov_param2 <- lapply(1:n.cont, function(xx) 
+          list(k = k, n = n, p = p, mean = 0, sd = 1, 
+               var_type = cov_param$var_type[xx]))
+      }
       Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
         do.call(sim_continuous, cov_param2[[xx]])))
     }
     
     if(!is.null(cor_vars)) {
-      c_mat <- matrix(nrow = n.vars - 1, ncol = n.vars - 1)
+      c_mat <- matrix(nrow = n.cont, ncol = n.cont)
       diag(c_mat) <- 1
       c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
-      cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd) 
-      Xmat <- Xmat %*% chol(cov)
+      cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd)
+      es <- eigen(cov, symmetric = TRUE)
+      ev <- es$values
+      Xmat <- t(cov_mu + es$vectors %*% diag(sqrt(pmax(ev, 0)), length(cov_sd)) %*% 
+                  t(Xmat))
     }
   } else {
     Xmat <- NULL

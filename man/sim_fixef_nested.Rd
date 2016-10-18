@@ -4,7 +4,7 @@
 \alias{sim_fixef_nested}
 \title{Simulates design matrix.}
 \usage{
-sim_fixef_nested(fixed, fixed_vars, cov_param, n, lvl1ss, data_str,
+sim_fixef_nested(fixed, fixed_vars, cov_param, n, p, data_str,
   cor_vars = NULL, fact_vars = list(NULL))
 }
 \arguments{
@@ -18,7 +18,7 @@ var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 
 \item{n}{Number of clusters.}
 
-\item{lvl1ss}{Number of within cluster units.}
+\item{p}{Number of within cluster units.}
 
 \item{data_str}{Type of data. Must be "cross", or "long".}
 

@@ -41,9 +41,12 @@ sim_rand_eff <- function(random_var, n, rand_gen, ther = c(0, 1),
     c_mat <- matrix(nrow = length(random_var), ncol = length(random_var))
     diag(c_mat) <- 1
     c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
-    cov <- diag(length(random_var)) * sqrt(random_var) %*% 
-      c_mat %*% diag(length(random_var)) * sqrt(random_var)
-    reff <- reff %*% chol(cov)
+    cov <- diag(sqrt(random_var)) %*% 
+      c_mat %*% diag(sqrt(random_var))
+    es <- eigen(cov, symmetric = TRUE)
+    ev <- es$values
+    reff <- t(es$vectors %*% diag(sqrt(pmax(ev, 0)), length(random_var)) %*% 
+                t(reff))
   }
 
  return(reff)

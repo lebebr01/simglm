@@ -239,6 +239,8 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   n.int <- length(grep(":",fixed_vars))
   if(n.int > 0) {
     int.loc <- grep(":", fixed_vars)
+  } else {
+    int.loc <- 0
   }
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed_vars, ignore.case = TRUE)  
   if(n.int > 0) {

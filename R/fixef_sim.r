@@ -229,7 +229,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #'   interactions. Must be same order as fixed formula above.
 #' @param cor_vars A vector of correlations between variables.
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
-#'      each list must include numlevels and var_type (must be "lvl1" or "lvl2");
+#'      each list must include numlevels and var_type (must be "single");
 #'      optional specifications are: replace, prob, value.labels.
 #' @export 
 sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL, 
@@ -237,9 +237,15 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   
   n.vars <- length(fixed_vars)
   n.int <- length(grep(":",fixed_vars))
-  int.loc <- grep(":", fixed_vars)
+  if(n.int > 0) {
+    int.loc <- grep(":", fixed_vars)
+  }
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed_vars, ignore.case = TRUE)  
-  n.fact <- length(fact.loc[fact.loc != int.loc])
+  if(n.int > 0) {
+    n.fact <- length(fact.loc[fact.loc != int.loc])
+  } else {
+    n.fact <- length(fact.loc)
+  }
   n.cont <- length(cov_param$mean)
   
   cov_mu <- cov_param$mean
@@ -250,7 +256,7 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   }
   
   if(n.fact > 0){
-    if(any(grepl("single", fact_vars$var_type)) == FALSE){
+    if(!any(grepl("single", fact_vars$var_type))){
       stop("All variables must have var_type = 'single'")
     }
   }
@@ -283,11 +289,11 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
 
   if(length(fact.loc > 0)){
     #op <- names(fact_vars)
-    fact_vars <- lapply(1:n.fact, function(xx) 
+    fact_vars2 <- lapply(1:n.fact, function(xx) 
       list(k = 0, n = n, p = 0, numlevels = fact_vars$numlevels[xx], 
            var_type = fact_vars$var_type[xx]))
     Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
-            function(xx) do.call(sim_factor, fact_vars[[xx]]))))
+            function(xx) do.call(sim_factor, fact_vars2[[xx]]))))
   }
   
   if(n.int == 0){

@@ -20,7 +20,7 @@ interactions. Must be same order as fixed formula above.}
 \item{cor_vars}{A vector of correlations between variables.}
 
 \item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification, 
-each list must include numlevels and var_type (must be "lvl1" or "lvl2");
+each list must include numlevels and var_type (must be "single");
 optional specifications are: replace, prob, value.labels.}
 }
 \description{

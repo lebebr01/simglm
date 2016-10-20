@@ -40,7 +40,9 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var, with_err
     if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
   }
   
-  Xmat <- sim_fixef_single(fixed, fixed_vars, n, cov_param, cor_vars, fact_vars)
+  Xmat <- sim_fixef_single(fixed = fixed, fixed_vars = fixed_vars, n = n, 
+                           cov_param = cov_param, cor_vars = cor_vars, 
+                           fact_vars = fact_vars)
   
   err <- sim_err_single(error_var, n, with_err_gen, arima = arima, 
                         lvl1_err_params = lvl1_err_params, 
@@ -129,7 +131,8 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(), co
 
   rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
 
-  Xmat <- sim_fixef_nested(fixed, fixed_vars, cov_param, n, lvl1ss, 
+  Xmat <- sim_fixef_nested(fixed = fixed, fixed_vars = fixed_vars, 
+                           cov_param = cov_param, n = n, p = lvl1ss, 
                             data_str = data_str, cor_vars = cor_vars, fact_vars = fact_vars)
   
   reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx) 

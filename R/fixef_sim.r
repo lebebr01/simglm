@@ -24,7 +24,11 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   
   n.vars <- length(fixed_vars)
   n.int <- length(grep(":",fixed_vars))
-  int.loc <- grep(":", fixed_vars)
+  if(n.int > 0) {
+    int.loc <- grep(":", fixed_vars)
+  } else {
+    int.loc <- 0
+  }
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed_vars, ignore.case = TRUE) 
   w.var <- length(grep("lvl1", cov_param$var_type, ignore.case = TRUE))
   n.cont <- length(cov_param$mean)
@@ -45,6 +49,11 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
     n.fact <- 0
   } 
 
+  if(n.fact > 0){
+    if(any(grepl("single", fact_vars$var_type))){
+      stop("All variables must have var_type != 'single'")
+    }
+  }
   if(!is.null(cov_param)) {
     if(data_str == "long") {
       Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx])-1))
@@ -86,7 +95,11 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
                   t(Xmat))
     }
   } else {
-    Xmat <- NULL
+    if(data_str == 'long') {
+      Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx])-1))
+    } else {
+      Xmat <- NULL
+    }
   }
 
   if(length(fact.loc > 0)){
@@ -135,7 +148,11 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   
   n.vars <- length(fixed_vars)
   n.int <- length(grep(":",fixed_vars))
-  int.loc <- grep(":", fixed_vars)
+  if(n.int > 0) {
+    int.loc <- grep(":", fixed_vars)
+  } else {
+    int.loc <- 0
+  }
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed_vars, ignore.case = TRUE) 
   n.cont <- length(cov_param$mean)
   
@@ -153,6 +170,11 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     n.fact <- 0
   } 
   
+  if(n.fact > 0){
+    if(any(grepl("single", fact_vars$var_type))){
+      stop("All variables must have var_type != 'single'")
+    }
+  }
   if(!is.null(cov_param)) {
     if(data_str == "long") {
       Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx]) - 1))
@@ -193,7 +215,11 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
                   t(Xmat))
     }
   } else {
-    Xmat <- NULL
+    if(data_str == 'long') {
+      Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx])-1))
+    } else {
+      Xmat <- NULL
+    }
   }
   
   if(length(fact.loc > 0)){
@@ -243,11 +269,7 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
     int.loc <- 0
   }
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed_vars, ignore.case = TRUE)  
-  if(n.int > 0) {
-    n.fact <- length(fact.loc[fact.loc != int.loc])
-  } else {
-    n.fact <- length(fact.loc)
-  }
+  n.fact <- length(fact.loc[fact.loc != int.loc])
   n.cont <- length(cov_param$mean)
   
   cov_mu <- cov_param$mean
@@ -344,6 +366,10 @@ sim_factor <- function(k, n, p, numlevels, replace = TRUE, prob = NULL, var_type
       stop("If replace = FALSE, numlevels must be greater than k for lvl3")
     }
   }
+  
+  # if(var_type == 'lvl1') {
+  #   p <- sum(p)
+  # }
   
   var_type <- match.arg(var_type)
   

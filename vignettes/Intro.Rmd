@@ -65,8 +65,8 @@ summary(lm(sim_data ~ 1 + act + diff + numCourse + act:numCourse, data = temp_si
 #### Adding Factor/Categorical/Ordinal Variables
 To add a factor, categorical, or ordinal variable, just append one of the following to the end of the variable name in the `fixed` object: ".f", ".c", ".o".  These indicate the variable is a discrete variable of some sort. See below for an example.
 ```{r singlelevelfact}
-fixed <- ~ 1 + act.o + diff.o + numCourse.o + act.o:numCourse.o
-fixed_param <- c(0.8, 1, 0.2, 0.1, 0)
+fixed <- ~ 1 + act.o + diff.o + numCourse.f + act.o:numCourse.f
+fixed_param <- c(0.8, 1, 0.2, 0.1, 0, 0.15, 0.2, 0.5, 0.02, -0.6, -0.1)
 cov_param <- NULL
 fact_vars <- list(numlevels = c(36, 8, 5), var_type = c('single', 'single', "single"))
 n <- 150

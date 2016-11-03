@@ -16,7 +16,10 @@
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
-#'             
+#' @param contrasts An optional list that specifies the contrasts to be used for factor
+#'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
+#'      more detail.
+#'      
 #' @examples 
 #' \donttest{
 #' # generating parameters for single level logistic regression
@@ -33,17 +36,12 @@
 #' }
 #' @export
 sim_glm_single <- function(fixed, fixed_param, cov_param, n, 
-                           data_str, cor_vars = NULL, fact_vars = list(NULL)) {
+                           data_str, cor_vars = NULL, fact_vars = list(NULL),
+                           contrasts = NULL) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   
-  if(any(grepl('0|-1', fixed))) {
-    if({length(fixed_vars)} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  } else {
-    if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  }
-  
-  Xmat <- sim_fixef_single(fixed, fixed_vars, n, cov_param, cor_vars, fact_vars)
+  Xmat <- sim_fixef_single(fixed, fixed_vars, n, cov_param, cor_vars, fact_vars, contrasts)
   
   sim_data <- data_glm_single(Xmat, fixed_param, n)
   
@@ -87,7 +85,10 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
 #'  can be TRUE, which uses additional argument, unbalCont.
 #' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum level one size,
 #'  will be drawn from a random uniform distribution with min and max specified.
-#'
+#' @param contrasts An optional list that specifies the contrasts to be used for factor
+#'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
+#'      more detail.
+#'      
 #' @examples
 #' \donttest{
 #' fixed <- ~1 + time + diff + act + time:act
@@ -104,7 +105,7 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
 #' @export
 sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), cov_param, n, p, 
                            data_str, cor_vars = NULL, fact_vars = list(NULL),
-                           unbal = FALSE, unbalCont = NULL) {
+                           unbal = FALSE, unbalCont = NULL, contrasts = NULL) {
   
   #if(randCor > 1 | randCor < -1) stop("cor out of range")
   
@@ -112,12 +113,7 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), co
   rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
   
   if(length(rand.vars)+1 != length(random_param$random_var)) stop("Random lengths not equal")
-  if(any(grepl('0|-1', fixed))) {
-    if({length(fixed_vars)} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  } else {
-    if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  }
-  
+
   if(unbal == FALSE) {
     lvl1ss <- rep(p, n)
     if(is.null(lvl1ss)) stop("lvl1ss is NULL")
@@ -129,7 +125,8 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), co
   rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
   
   Xmat <- sim_fixef_nested(fixed, fixed_vars, cov_param, n, lvl1ss, 
-                           data_str = data_str, cor_vars = cor_vars, fact_vars = fact_vars)
+                           data_str = data_str, cor_vars = cor_vars, 
+                           fact_vars = fact_vars, contrasts = contrasts)
   
   reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx) 
     rep(rand_eff[,xx], times = lvl1ss)))
@@ -198,6 +195,9 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), co
 #'  will be drawn from a random uniform distribution with min and max specified.
 #' @param unbalCont3 When unbal3 = TRUE, this specifies the minimum and maximum level two size,
 #'  will be drawn from a random uniform distribution with min and max specified.
+#' @param contrasts An optional list that specifies the contrasts to be used for factor
+#'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
+#'      more detail.
 #' 
 #' @examples 
 #' \donttest{
@@ -222,7 +222,8 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), co
 sim_glm_nested3 <- function(fixed, random, random3, fixed_param, random_param = list(), 
                             random_param3 = list(), cov_param, k, n, p,
                             data_str, cor_vars = NULL, fact_vars = list(NULL),
-                            unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL) {
+                            unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
+                            contrasts = NULL) {
   
   # if(randCor > 1 | randCor < -1 | randCor3 > 1 | randCor3 < -1) 
   #   stop("Random effect correlation out of range")
@@ -233,11 +234,6 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param, random_param = 
   
   if(length(rand.vars)+1 != length(random_param$random_var)) stop("Random lengths not equal")
   if(length(rand.vars3)+1 != length(random_param3$random_var)) stop("Third level random lengths not equal")
-  if(any(grepl('0|-1', fixed))) {
-    if({length(fixed_vars)} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  } else {
-    if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  }
   
   if(unbal3 == FALSE) {
     lvl2ss <- rep(n/k, k)
@@ -268,7 +264,7 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param, random_param = 
   
   Xmat <- sim_fixef_nested3(fixed, fixed_vars, cov_param, k, n = lvl2ss, 
                             p = lvl1ss, data_str = data_str, cor_vars = cor_vars, 
-                            fact_vars = fact_vars)
+                            fact_vars = fact_vars, contrasts = contrasts)
   
   reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx) 
     rep(rand_eff[,xx], times = lvl1ss)))

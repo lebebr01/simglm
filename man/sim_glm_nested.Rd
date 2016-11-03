@@ -6,7 +6,7 @@
 \usage{
 sim_glm_nested(fixed, random, fixed_param, random_param = list(), cov_param,
   n, p, data_str, cor_vars = NULL, fact_vars = list(NULL), unbal = FALSE,
-  unbalCont = NULL)
+  unbalCont = NULL, contrasts = NULL)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -46,6 +46,10 @@ can be TRUE, which uses additional argument, unbalCont.}
 
 \item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum level one size,
 will be drawn from a random uniform distribution with min and max specified.}
+
+\item{contrasts}{An optional list that specifies the contrasts to be used for factor
+variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
+more detail.}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

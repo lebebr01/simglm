@@ -18,9 +18,13 @@
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 #'      optional specifications are: replace, prob, value.labels.
+#' @param contrasts An optional list that specifies the contrasts to be used for factor
+#'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
+#'      more detail.
 #' @export 
 sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str, 
-                             cor_vars = NULL, fact_vars = list(NULL)){
+                             cor_vars = NULL, fact_vars = list(NULL), 
+                             contrasts = NULL){
   
   n.vars <- length(fixed_vars)
   n.int <- length(grep(":",fixed_vars))
@@ -119,7 +123,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
  if(any(grepl("\\.f|\\.c", fixed_vars, ignore.case = TRUE))) {
    fixed <- search_factors(fixed_vars)
  }
- Xmat <- model.matrix(fixed, data.frame(Xmat))
+ Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
  Xmat
 }
 
@@ -145,9 +149,13 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var_type (must be "lvl1", "lvl2", or "lvl3");
 #'      optional specifications are: replace, prob, value.labels.
+#' @param contrasts An optional list that specifies the contrasts to be used for factor
+#'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
+#'      more detail.
 #' @export 
 sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str, 
-                             cor_vars = NULL, fact_vars = list(NULL)){
+                             cor_vars = NULL, fact_vars = list(NULL),
+                             contrasts = NULL){
   
   n.vars <- length(fixed_vars)
   n.int <- length(grep(":",fixed_vars))
@@ -242,7 +250,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   if(any(grepl("\\.f|\\.c", fixed_vars, ignore.case = TRUE))) {
     fixed <- search_factors(fixed_vars)
   }
-  Xmat <- model.matrix(fixed, data.frame(Xmat))
+  Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
   Xmat
 }
 
@@ -263,9 +271,12 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var_type (must be "single");
 #'      optional specifications are: replace, prob, value.labels.
+#' @param contrasts An optional list that specifies the contrasts to be used for factor
+#'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
+#'      more detail.
 #' @export 
 sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL, 
-                             fact_vars = list(NULL)){
+                             fact_vars = list(NULL), contrasts = NULL){
   
   n.vars <- length(fixed_vars)
   n.int <- length(grep(":",fixed_vars))
@@ -335,7 +346,7 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   if(any(grepl("\\.f|\\.c", fixed_vars, ignore.case = TRUE))) {
     fixed <- search_factors(fixed_vars)
   }
-  Xmat <- model.matrix(fixed, data.frame(Xmat))
+  Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
   Xmat
 }
 

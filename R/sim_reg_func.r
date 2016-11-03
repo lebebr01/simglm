@@ -42,6 +42,11 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var, with_err
                            cov_param = cov_param, cor_vars = cor_vars, 
                            fact_vars = fact_vars, contrasts = contrasts)
   
+  if(ncol(Xmat) != length(fixed_param)) {
+    stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
+               'variables in design matrix'))
+  }
+  
   err <- sim_err_single(error_var, n, with_err_gen, arima = arima, 
                         lvl1_err_params = lvl1_err_params, 
                         arima_mod = arima_mod)
@@ -130,6 +135,11 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(), co
                            cov_param = cov_param, n = n, p = lvl1ss, 
                             data_str = data_str, cor_vars = cor_vars, 
                            fact_vars = fact_vars, contrasts = contrasts)
+  
+  if(ncol(Xmat) != length(fixed_param)) {
+    stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
+               'variables in design matrix'))
+  }
   
   reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx) 
     rep(rand_eff[,xx], times = lvl1ss)))
@@ -262,6 +272,11 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
   Xmat <- sim_fixef_nested3(fixed, fixed_vars, cov_param, k, n = lvl2ss, 
                             p = lvl1ss, data_str = data_str, cor_vars = cor_vars, 
                             fact_vars = fact_vars, contrasts = contrasts)
+  
+  if(ncol(Xmat) != length(fixed_param)) {
+    stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
+               'variables in design matrix'))
+  }
   
   reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx) 
     rep(rand_eff[,xx], times = lvl1ss)))

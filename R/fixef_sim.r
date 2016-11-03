@@ -116,6 +116,9 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
      int.loc <- grep(":", fixed_vars)
      colnames(Xmat) <- fixed_vars[-int.loc]
    } 
+ if(any(grepl("\\.f|\\.o|\\.c", fixed_vars, ignore.case = TRUE))) {
+   fixed <- search_factors(fixed_vars)
+ }
  Xmat <- model.matrix(fixed, data.frame(Xmat))
  Xmat
 }

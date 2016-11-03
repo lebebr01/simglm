@@ -18,6 +18,21 @@ standardize <- function(x, mean, sd) {
   return(new)
 }
 
+search_factors <- function(x) {
+  x <- strsplit(x, ':')
+  loc <- lapply(seq_along(x), function(xx) 
+    grep("\\.f|\\.o|\\.c", x[[xx]], ignore.case = TRUE))
+  len <- lapply(x, length)
+  for(i in seq_along(x)) {
+    x[[i]][loc[[i]]] <- paste0('factor(', x[[i]][loc[[i]]], ')')
+    if(len[[i]] > 1) {
+      x[[i]] <- paste(x[[i]], collapse = ':')
+    }
+  }
+  x <- as.formula(paste('~', paste(x, collapse = '+')))
+  x
+}
+
 # Horrible hack to keep CRAN happy and suppress NOTES about
 # parts of the code that use non-standard evaluation.
 # See:

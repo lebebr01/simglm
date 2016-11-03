@@ -34,11 +34,11 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var, with_err
   
   fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   
-  if(any(grepl('0|-1', fixed))) {
-    if({length(fixed_vars)} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  } else {
-    if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  }
+  # if(any(grepl('0|-1', fixed))) {
+  #   if({length(fixed_vars)} != {length(fixed_param)}) stop("Fixed lengths not equal")
+  # } else {
+  #   if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
+  # }
   
   Xmat <- sim_fixef_single(fixed = fixed, fixed_vars = fixed_vars, n = n, 
                            cov_param = cov_param, cor_vars = cor_vars, 
@@ -114,12 +114,12 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(), co
   fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
 
-  if(length(rand.vars)+1 != length(random_param$random_var)) stop("Random lengths not equal")
-  if(any(grepl('0|-1', fixed))) {
-    if({length(fixed_vars)} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  } else {
-    if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  }
+  # if(length(rand.vars)+1 != length(random_param$random_var)) stop("Random lengths not equal")
+  # if(any(grepl('0|-1', fixed))) {
+  #   if({length(fixed_vars)} != {length(fixed_param)}) stop("Fixed lengths not equal")
+  # } else {
+  #   if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
+  # }
 
   if(unbal == FALSE) {
     lvl1ss <- rep(p, n)
@@ -232,11 +232,11 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
 
   if(length(rand.vars)+1 != length(random_param$random_var)) stop("Random lengths not equal")
   if(length(rand.vars3)+1 != length(random_param3$random_var)) stop("Third level random lengths not equal")
-  if(any(grepl('0|-1', fixed))) {
-    if({length(fixed_vars)} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  } else {
-    if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  }
+  # if(any(grepl('0|-1', fixed))) {
+  #   if({length(fixed_vars)} != {length(fixed_param)}) stop("Fixed lengths not equal")
+  # } else {
+  #   if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
+  # }
   
   if(unbal3 == FALSE) {
     lvl2ss <- rep(n/k, k)

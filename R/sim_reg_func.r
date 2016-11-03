@@ -26,23 +26,21 @@
 #' @param lvl1_err_params Additional parameters passed as a list on to the level one error generating function
 #' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
 #'             See \code{\link{arima.sim}} for examples.
+#' @param contrasts An optional list that specifies the contrasts to be used for factor
+#'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
+#'      more detail.
 #' @param ... Not currently used.
 #' @export 
 sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var, with_err_gen,
                            arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL), 
-                           lvl1_err_params = NULL, arima_mod = list(NULL), ...) {
+                           lvl1_err_params = NULL, arima_mod = list(NULL), 
+                           contrasts = NULL, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
-  
-  # if(any(grepl('0|-1', fixed))) {
-  #   if({length(fixed_vars)} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  # } else {
-  #   if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  # }
-  
+
   Xmat <- sim_fixef_single(fixed = fixed, fixed_vars = fixed_vars, n = n, 
                            cov_param = cov_param, cor_vars = cor_vars, 
-                           fact_vars = fact_vars)
+                           fact_vars = fact_vars, contrasts = contrasts)
   
   err <- sim_err_single(error_var, n, with_err_gen, arima = arima, 
                         lvl1_err_params = lvl1_err_params, 
@@ -101,25 +99,22 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var, with_err
 #' @param lvl1_err_params Additional parameters passed as a list on to the level one error generating function
 #' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
 #'             See \code{\link{arima.sim}} for examples.
+#' @param contrasts An optional list that specifies the contrasts to be used for factor
+#'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
+#'      more detail.
 #' @param ... Not currently used.
 #' @export 
 sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(), cov_param, n, p, 
                            error_var, with_err_gen, arima = FALSE, 
                            data_str, cor_vars = NULL, fact_vars = list(NULL),
                            unbal = FALSE, unbalCont = NULL, 
-                           lvl1_err_params = NULL, arima_mod = list(NULL), ...) {
+                           lvl1_err_params = NULL, arima_mod = list(NULL), 
+                           contrasts = NULL, ...) {
 
   #if(randCor > 1 | randCor < -1) stop("cor out of range")
 
   fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
-
-  # if(length(rand.vars)+1 != length(random_param$random_var)) stop("Random lengths not equal")
-  # if(any(grepl('0|-1', fixed))) {
-  #   if({length(fixed_vars)} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  # } else {
-  #   if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  # }
 
   if(unbal == FALSE) {
     lvl1ss <- rep(p, n)
@@ -133,7 +128,8 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(), co
 
   Xmat <- sim_fixef_nested(fixed = fixed, fixed_vars = fixed_vars, 
                            cov_param = cov_param, n = n, p = lvl1ss, 
-                            data_str = data_str, cor_vars = cor_vars, fact_vars = fact_vars)
+                            data_str = data_str, cor_vars = cor_vars, 
+                           fact_vars = fact_vars, contrasts = contrasts)
   
   reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx) 
     rep(rand_eff[,xx], times = lvl1ss)))
@@ -214,6 +210,9 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(), co
 #' @param lvl1_err_params Additional parameters passed as a list on to the level one error generating function
 #' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
 #'             See \code{\link{arima.sim}} for examples.
+#' @param contrasts An optional list that specifies the contrasts to be used for factor
+#'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
+#'      more detail.
 #' @param ... Not currently used.
 #' @export 
 sim_reg_nested3 <- function(fixed, random, random3, fixed_param, 
@@ -222,7 +221,7 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
                             data_str, cor_vars = NULL, fact_vars = list(NULL),
                             unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
                             lvl1_err_params = NULL, arima_mod = list(NULL),
-                            ...) {
+                            contrasts = NULL, ...) {
 
   #if(randCor > 1 | randCor < -1 | randCor3 > 1 | randCor3 < -1) stop("Random effect correlation out of range")
 
@@ -232,12 +231,7 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
 
   if(length(rand.vars)+1 != length(random_param$random_var)) stop("Random lengths not equal")
   if(length(rand.vars3)+1 != length(random_param3$random_var)) stop("Third level random lengths not equal")
-  # if(any(grepl('0|-1', fixed))) {
-  #   if({length(fixed_vars)} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  # } else {
-  #   if({length(fixed_vars)+1} != {length(fixed_param)}) stop("Fixed lengths not equal")
-  # }
-  
+
   if(unbal3 == FALSE) {
     lvl2ss <- rep(n/k, k)
     n <- sum(lvl2ss)
@@ -267,7 +261,7 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
    
   Xmat <- sim_fixef_nested3(fixed, fixed_vars, cov_param, k, n = lvl2ss, 
                             p = lvl1ss, data_str = data_str, cor_vars = cor_vars, 
-                            fact_vars = fact_vars)
+                            fact_vars = fact_vars, contrasts = contrasts)
   
   reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx) 
     rep(rand_eff[,xx], times = lvl1ss)))

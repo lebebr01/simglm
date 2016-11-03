@@ -5,7 +5,7 @@
 \title{Simulates design matrix for single level model.}
 \usage{
 sim_fixef_single(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
-  fact_vars = list(NULL))
+  fact_vars = list(NULL), contrasts = NULL)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.}
@@ -22,6 +22,10 @@ interactions. Must be same order as fixed formula above.}
 \item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification, 
 each list must include numlevels and var_type (must be "single");
 optional specifications are: replace, prob, value.labels.}
+
+\item{contrasts}{An optional list that specifies the contrasts to be used for factor
+variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
+more detail.}
 }
 \description{
 Input fixed variables, sample size, and number of within variables, returns design matrix.

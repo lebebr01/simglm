@@ -5,7 +5,7 @@
 \title{Simulates design matrix.}
 \usage{
 sim_fixef_nested(fixed, fixed_vars, cov_param, n, p, data_str,
-  cor_vars = NULL, fact_vars = list(NULL))
+  cor_vars = NULL, fact_vars = list(NULL), contrasts = NULL)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.}
@@ -27,6 +27,10 @@ var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 \item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification, 
 each list must include numlevels and var_type (must be "lvl1" or "lvl2");
 optional specifications are: replace, prob, value.labels.}
+
+\item{contrasts}{An optional list that specifies the contrasts to be used for factor
+variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
+more detail.}
 }
 \description{
 Input fixed variables, sample size, and number of within variables, returns design matrix.

@@ -176,3 +176,39 @@ test_that('fixef correlation three level', {
   expect_equal(sapply(1:ncol(fixef), function(xx) mean(fixef[, xx])), cov_param$mean,
                check.attributes = FALSE, tolerance = .1)
 })
+
+test_that('.f and .c are expanded but not .o', {
+  fixed <- ~ 1 + act.o + diff.o + numCourse.f + act.o:numCourse.f
+  fixed_param <- c(0.8, 1, 0.2, 0.1, 0, 0.15, 0.2, 0.5, 0.02, -0.6, -0.1)
+  cov_param <- NULL
+  fact_vars <- list(numlevels = c(36, 8, 5), var_type = c('single', 'single', "single"))
+  n <- 150
+  error_var <- 3
+  with_err_gen = 'rnorm'
+  fixef_single <- sim_fixef_single(fixed = fixed, fixed_vars = attr(terms(fixed),"term.labels"), 
+                           cov_param = cov_param, n = n, fact_vars = fact_vars)
+  fact_vars <- list(numlevels = c(36, 8, 5), var_type = c('lvl2', 'lvl1', "lvl1"))
+  fixef_nested <- sim_fixef_nested(fixed = fixed, fixed_vars = attr(terms(fixed),"term.labels"), 
+                                   p = 4, cov_param = cov_param, n = n, fact_vars = fact_vars,
+                                   data_str = 'cross')
+  fixef_nested3 <- sim_fixef_nested3(fixed = fixed, fixed_vars = attr(terms(fixed),"term.labels"), 
+                                       p = 4, k = 10, cov_param = cov_param, n = n, fact_vars = fact_vars,
+                                       data_str = 'cross')
+  
+  fixed <- ~ 1 + time + act.o + diff.o + numCourse.f + act.o:numCourse.f
+  fixed_param <- c(0.8, 1, 0.2, 0.1, 0, 0.15, 0.2, 0.5, 0.02, -0.6, -0.1, 0.2)
+  fixef_nested_l <- sim_fixef_nested(fixed = fixed, fixed_vars = attr(terms(fixed),"term.labels"), 
+                                   p = 4, cov_param = cov_param, n = n, fact_vars = fact_vars,
+                                   data_str = 'long')
+  
+  fixef_nested3_l <- sim_fixef_nested3(fixed = fixed, fixed_vars = attr(terms(fixed),"term.labels"), 
+                                     p = 4, k = 10, cov_param = cov_param, n = n, fact_vars = fact_vars,
+                                     data_str = 'long')
+  
+  expect_equal(ncol(fixef_single), 11)
+  expect_equal(ncol(fixef_nested), 11)
+  expect_equal(ncol(fixef_nested3), 11)
+  expect_equal(ncol(fixef_nested_l), 12)
+  expect_equal(ncol(fixef_nested3_l), 12)
+  
+})

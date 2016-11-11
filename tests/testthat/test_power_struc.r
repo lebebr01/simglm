@@ -63,3 +63,46 @@ test_that('correct structure', {
   
   expect_equal(nrow(power_out), 1*5*3)
 })
+
+test_that('sim_glm power', {
+  fixed <- ~ 1 + act + diff
+  fixed_param <- c(0.1, 0.5, 0.3)
+  cov_param <- list(mean = c(0, 0), sd = c(2, 4), 
+                    var_type = c("single", "single", "single"))
+  n <- 50
+  pow_param <- c('(Intercept)', 'act', 'diff')
+  alpha <- .01
+  pow_dist <- "z"
+  pow_tail <- 2
+  replicates <- 10
+  
+  power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, 
+                           cov_param = cov_param, 
+                           n = n, data_str = "single", 
+                           pow_param = pow_param, alpha = alpha,
+                           pow_dist = pow_dist, pow_tail = pow_tail, 
+                           replicates = replicates)
+  expect_equal(nrow(power_out), 3)
+  expect_equal(ncol(power_out), 6)
+  
+  fixed <- ~ 1 + act + diff
+  fixed_param <- c(0.1, 0.5, 0.3)
+  cov_param <- list(mean = c(0, 0), sd = c(2, 4), 
+                    var_type = c("single", "single", "single"))
+  n <- NULL
+  pow_param <- c('(Intercept)', 'act', 'diff')
+  alpha <- .01
+  pow_dist <- "z"
+  pow_tail <- 2
+  replicates <- 10
+  terms_vary = list(n = c(25, 50, 100))
+  
+  power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, 
+                           cov_param = cov_param, 
+                           n = n, data_str = "single", 
+                           pow_param = pow_param, alpha = alpha,
+                           pow_dist = pow_dist, pow_tail = pow_tail, 
+                           replicates = replicates, terms_vary = terms_vary)
+  expect_equal(nrow(power_out), 3*3)
+  expect_equal(ncol(power_out), 7)
+})

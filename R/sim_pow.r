@@ -122,7 +122,9 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
         temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
           do.call("rbind", lapply(1:replicates, function(xx) 
             cbind(rep = xx, do.call('sim_pow_single', args[[tt]]), 
-                  simp_conds[tt, , drop = FALSE], row.names = NULL)
+                  simp_conds[tt, , drop = FALSE], 
+                  lapply(list_conds, paste0, collapse = ',')[tt], 
+                  row.names = NULL)
           ))))
       } else {
         temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)

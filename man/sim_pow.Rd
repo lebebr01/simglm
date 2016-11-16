@@ -4,10 +4,11 @@
 \alias{sim_pow}
 \title{Master power simulation function.}
 \usage{
-sim_pow(fixed, random, random3, fixed_param, random_param = list(),
-  random_param3 = list(), cov_param, k, n, p, error_var, with_err_gen,
-  arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL),
-  unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
+sim_pow(fixed, random = NULL, random3 = NULL, fixed_param,
+  random_param = list(NULL), random_param3 = list(NULL), cov_param,
+  k = NULL, n, p = NULL, error_var, with_err_gen, arima = FALSE, data_str,
+  cor_vars = NULL, fact_vars = list(NULL), unbal = FALSE,
+  unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
   lvl1_err_params = NULL, arima_mod = list(NULL), missing = FALSE,
   missing_args = list(NULL), pow_param, alpha, pow_dist = c("z", "t"),
   pow_tail = c(1, 2), replicates, terms_vary = NULL, ...)

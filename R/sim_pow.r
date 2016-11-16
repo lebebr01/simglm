@@ -72,8 +72,9 @@
 #' @importFrom dplyr summarise
 #' @importFrom dplyr '%>%'
 #' @export 
-sim_pow <- function(fixed, random, random3, fixed_param, 
-                    random_param = list(), random_param3 = list(), cov_param, k, n, p, 
+sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param, 
+                    random_param = list(NULL), random_param3 = list(NULL), 
+                    cov_param, k = NULL, n, p = NULL, 
                     error_var, with_err_gen, arima = FALSE,
                     data_str, cor_vars = NULL, fact_vars = list(NULL), unbal = FALSE, unbal3 = FALSE, 
                     unbalCont = NULL, unbalCont3 = NULL,
@@ -81,111 +82,96 @@ sim_pow <- function(fixed, random, random3, fixed_param,
                     missing = FALSE, missing_args = list(NULL),
                     pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                     replicates, terms_vary = NULL, ...) {
+  
+  args <- list(fixed = fixed, random = random, random3 = random3,
+               fixed_param = fixed_param, random_param = random_param,
+               random_param3 = random_param3,
+               cov_param = cov_param, k = k, n = n, p = p, 
+               error_var = error_var, with_err_gen = with_err_gen, 
+               arima = arima, data_str = data_str, cor_vars = cor_vars, 
+               fact_vars = fact_vars, unbal = unbal, unbal3 = unbal3,
+               unbalCont = unbalCont, unbalCont3 = unbalCont3,
+               lvl1_err_params = lvl1_err_params,
+               arima_mod = arima_mod, missing = missing, missing_args = missing_args,
+               pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
+               pow_tail = pow_tail)
+  if(!is.null(terms_vary)) {
+    args[names(terms_vary)] <- NULL
+    conds <- expand.grid(terms_vary, KEEP.OUT.ATTRS = FALSE)
+    if(any(sapply(conds, is.list))) {
+      loc <- sapply(conds, is.list)
+      simp_conds <- conds[loc != TRUE]
+      list_conds <- conds[loc == TRUE]
+      list_conds <- unlist(list_conds, recursive = FALSE)
+      names(list_conds) <- gsub("[0-9]*", "", names(list_conds))
+      args <- lapply(1:nrow(conds), function(xx) c(args, 
+                            simp_conds[xx, , drop = FALSE], list_conds[xx]))
+    } else {
+      args <- lapply(1:nrow(conds), function(xx) c(args, 
+                                        conds[xx, , drop = FALSE]))
+    }
+  }
+  
   if(data_str == "single"){
     if(is.null(terms_vary)) {
-      args <- list(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
-                   n = n, error_var = error_var, with_err_gen = with_err_gen, 
-                   arima = arima, data_str = data_str, cor_vars = cor_vars, 
-                   fact_vars = fact_vars, lvl1_err_params = lvl1_err_params,
-                   arima_mod = arima_mod, missing = missing, missing_args = missing_args,
-                   pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
-                   pow_tail = pow_tail)
       temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) 
           do.call('sim_pow_single', args)
         ))
     } else {
-      args <- list(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
-                   n = n, error_var = error_var, with_err_gen = with_err_gen, 
-                   arima = arima, data_str = data_str, cor_vars = cor_vars, 
-                   fact_vars = fact_vars, lvl1_err_params = lvl1_err_params,
-                   arima_mod = arima_mod, missing = missing, missing_args = missing_args,
-                   pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
-                   pow_tail = pow_tail)
-      args[names(terms_vary)] <- NULL
-      conds <- expand.grid(terms_vary)
-      args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, , drop = FALSE]))
-      
-      temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
-        do.call("rbind", lapply(1:replicates, function(xx) 
-          cbind(do.call('sim_pow_single', args[[tt]]), conds[tt, , drop = FALSE], row.names = NULL)
-        ))))
+      if(any(sapply(conds, is.list))) {
+        temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
+          do.call("rbind", lapply(1:replicates, function(xx) 
+            cbind(rep = xx, do.call('sim_pow_single', args[[tt]]), 
+                  simp_conds[tt, , drop = FALSE], row.names = NULL)
+          ))))
+      } else {
+        temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
+          do.call("rbind", lapply(1:replicates, function(xx) 
+            cbind(do.call('sim_pow_single', args[[tt]]), 
+                  conds[tt, , drop = FALSE], row.names = NULL)
+          ))))
+      }
     }
   } else {
     if(is.null(k)) {
       if(is.null(terms_vary)) {
-        args <- list(fixed = fixed, random = random, 
-                     fixed_param = fixed_param, random_param = random_param,
-                     cov_param = cov_param, n = n, p = p, 
-                     error_var = error_var, with_err_gen = with_err_gen, 
-                     arima = arima, data_str = data_str, cor_vars = cor_vars, 
-                     fact_vars = fact_vars, unbal = unbal, unbalCont = unbalCont,
-                     lvl1_err_params = lvl1_err_params,
-                     arima_mod = arima_mod, missing = missing, missing_args = missing_args,
-                     pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
-                     pow_tail = pow_tail)
-        
         temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) 
             do.call('sim_pow_nested', args)
           ))
       } else {
-        args <- list(fixed = fixed, random = random, 
-                     fixed_param = fixed_param, random_param = random_param,
-                     cov_param = cov_param, n = n, p = p, 
-                     error_var = error_var, with_err_gen = with_err_gen, 
-                     arima = arima, data_str = data_str, cor_vars = cor_vars, 
-                     fact_vars = fact_vars, unbal = unbal, unbalCont = unbalCont,
-                     lvl1_err_params = lvl1_err_params,
-                     arima_mod = arima_mod, missing = missing, missing_args = missing_args,
-                     pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
-                     pow_tail = pow_tail)
-        args[names(terms_vary)] <- NULL
-        conds <- expand.grid(terms_vary)
-        args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, , drop = FALSE]))
-        
-        temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
-          do.call("rbind", lapply(1:replicates, function(xx) 
-            cbind(do.call('sim_pow_nested', args[[tt]]), conds[tt, , drop = FALSE], row.names = NULL)
-          ))))
+        if(any(sapply(conds, is.list))) {
+          temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
+            do.call("rbind", lapply(1:replicates, function(xx) 
+              cbind(rep = xx, do.call('sim_pow_nested', args[[tt]]), 
+                    simp_conds[tt, , drop = FALSE], row.names = NULL)
+            ))))
+        } else {
+          temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
+            do.call("rbind", lapply(1:replicates, function(xx) 
+              cbind(do.call('sim_pow_nested', args[[tt]]), 
+                    conds[tt, , drop = FALSE], row.names = NULL)
+            ))))
+        }
       }
     } else {
       if(is.null(terms_vary)) {
-        args <- list(fixed = fixed, random = random, random3 = random3,
-                     fixed_param = fixed_param, random_param = random_param,
-                     random_param3 = random_param3,
-                     cov_param = cov_param, k = k, n = n, p = p, 
-                     error_var = error_var, with_err_gen = with_err_gen, 
-                     arima = arima, data_str = data_str, cor_vars = cor_vars, 
-                     fact_vars = fact_vars, unbal = unbal, unbal3 = unbal3,
-                     unbalCont = unbalCont, unbalCont3 = unbalCont3,
-                     lvl1_err_params = lvl1_err_params,
-                     arima_mod = arima_mod, missing = missing, missing_args = missing_args,
-                     pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
-                     pow_tail = pow_tail)
-        
         temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) 
             do.call('sim_pow_nested3', args)
           ))
       } else {
-        args <- list(fixed = fixed, random = random, random3 = random3,
-                     fixed_param = fixed_param, random_param = random_param,
-                     random_param3 = random_param3,
-                     cov_param = cov_param, k = k, n = n, p = p, 
-                     error_var = error_var, with_err_gen = with_err_gen, 
-                     arima = arima, data_str = data_str, cor_vars = cor_vars, 
-                     fact_vars = fact_vars, unbal = unbal, unbal3 = unbal3,
-                     unbalCont = unbalCont, unbalCont3 = unbalCont3,
-                     lvl1_err_params = lvl1_err_params,
-                     arima_mod = arima_mod, missing = missing, missing_args = missing_args,
-                     pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
-                     pow_tail = pow_tail)
-        args[names(terms_vary)] <- NULL
-        conds <- expand.grid(terms_vary)
-        args <- lapply(1:nrow(conds), function(xx) c(args, conds[xx, , drop = FALSE]))
-        
-        temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
-          do.call("rbind", lapply(1:replicates, function(xx) 
-            cbind(do.call('sim_pow_nested3', args[[tt]]), conds[tt, , drop = FALSE], row.names = NULL)
-          ))))
+        if(any(sapply(conds, is.list))) {
+          temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
+            do.call("rbind", lapply(1:replicates, function(xx) 
+              cbind(rep = xx, do.call('sim_pow_nested3', args[[tt]]), 
+                    simp_conds[tt, , drop = FALSE], row.names = NULL)
+            ))))
+        } else {
+          temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
+            do.call("rbind", lapply(1:replicates, function(xx) 
+              cbind(do.call('sim_pow_nested3', args[[tt]]), 
+                    conds[tt, , drop = FALSE], row.names = NULL)
+            ))))
+        }
       }
     }
   }

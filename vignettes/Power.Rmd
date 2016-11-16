@@ -111,7 +111,7 @@ pow_param <- c('time', 'diff', 'act')
 alpha <- .01
 pow_dist <- "z"
 pow_tail <- 2
-replicates <- 20
+replicates <- 10
 power_out <- sim_pow(fixed = fixed, random = random, 
                      fixed_param = fixed_param, 
                      random_param = random_param, cov_param = cov_param, 
@@ -172,7 +172,7 @@ pow_param <- c('(Intercept)', 'act', 'diff')
 alpha <- .01
 pow_dist <- "z"
 pow_tail <- 2
-replicates <- 100
+replicates <- 10
 
 power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, 
                          cov_param = cov_param, 
@@ -194,7 +194,7 @@ pow_param <- c('(Intercept)', 'act', 'diff')
 alpha <- .01
 pow_dist <- "z"
 pow_tail <- 2
-replicates <- 100
+replicates <- 10
 terms_vary = list(n = c(25, 50, 100))
 
 power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, 

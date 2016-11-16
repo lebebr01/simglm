@@ -177,6 +177,7 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
       }
     }
   }
+  
   if(is.null(terms_vary)) {
     power <- temp_pow %>%
       dplyr::group_by_('var') %>%

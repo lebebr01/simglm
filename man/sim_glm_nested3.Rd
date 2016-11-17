@@ -7,7 +7,7 @@
 sim_glm_nested3(fixed, random, random3, fixed_param, random_param = list(),
   random_param3 = list(), cov_param, k, n, p, data_str, cor_vars = NULL,
   fact_vars = list(NULL), unbal = FALSE, unbal3 = FALSE,
-  unbalCont = NULL, unbalCont3 = NULL, contrasts = NULL)
+  unbalCont = NULL, unbalCont3 = NULL, contrasts = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -72,6 +72,8 @@ will be drawn from a random uniform distribution with min and max specified.}
 \item{contrasts}{An optional list that specifies the contrasts to be used for factor
 variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
 more detail.}
+
+\item{...}{Not currently used.}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

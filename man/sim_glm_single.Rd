@@ -5,7 +5,7 @@
 \title{Simulation single level logistic regression model}
 \usage{
 sim_glm_single(fixed, fixed_param, cov_param, n, data_str, cor_vars = NULL,
-  fact_vars = list(NULL), contrasts = NULL)
+  fact_vars = list(NULL), contrasts = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
@@ -28,6 +28,8 @@ optional specifications are: replace, prob, value.labels.}
 \item{contrasts}{An optional list that specifies the contrasts to be used for factor
 variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
 more detail.}
+
+\item{...}{Not currently used.}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

@@ -19,6 +19,7 @@
 #' @param contrasts An optional list that specifies the contrasts to be used for factor
 #'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
 #'      more detail.
+#' @param ... Not currently used.
 #'      
 #' @examples 
 #' \donttest{
@@ -37,7 +38,7 @@
 #' @export
 sim_glm_single <- function(fixed, fixed_param, cov_param, n, 
                            data_str, cor_vars = NULL, fact_vars = list(NULL),
-                           contrasts = NULL) {
+                           contrasts = NULL, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   
@@ -93,6 +94,7 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
 #' @param contrasts An optional list that specifies the contrasts to be used for factor
 #'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
 #'      more detail.
+#' @param ... Not currently used.
 #'      
 #' @examples
 #' \donttest{
@@ -110,7 +112,8 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
 #' @export
 sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), cov_param, n, p, 
                            data_str, cor_vars = NULL, fact_vars = list(NULL),
-                           unbal = FALSE, unbalCont = NULL, contrasts = NULL) {
+                           unbal = FALSE, unbalCont = NULL, contrasts = NULL, 
+                           ...) {
   
   #if(randCor > 1 | randCor < -1) stop("cor out of range")
   
@@ -208,6 +211,7 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), co
 #' @param contrasts An optional list that specifies the contrasts to be used for factor
 #'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
 #'      more detail.
+#' @param ... Not currently used.
 #' 
 #' @examples 
 #' \donttest{
@@ -233,7 +237,7 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param, random_param = 
                             random_param3 = list(), cov_param, k, n, p,
                             data_str, cor_vars = NULL, fact_vars = list(NULL),
                             unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
-                            contrasts = NULL) {
+                            contrasts = NULL, ...) {
   
   # if(randCor > 1 | randCor < -1 | randCor3 > 1 | randCor3 < -1) 
   #   stop("Random effect correlation out of range")

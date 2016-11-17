@@ -4,8 +4,9 @@
 \alias{sim_pow_glm}
 \title{Master power simulation function for glm models.}
 \usage{
-sim_pow_glm(fixed, random, random3, fixed_param, random_param = list(),
-  random_param3 = list(), cov_param, k, n, p, data_str, cor_vars = NULL,
+sim_pow_glm(fixed, random = NULL, random3 = NULL, fixed_param,
+  random_param = list(NULL), random_param3 = list(NULL), cov_param,
+  k = NULL, n, p = NULL, data_str, cor_vars = NULL,
   fact_vars = list(NULL), unbal = FALSE, unbal3 = FALSE,
   unbalCont = NULL, unbalCont3 = NULL, missing = FALSE,
   missing_args = list(NULL), pow_param, alpha, pow_dist = c("z", "t"),

@@ -86,7 +86,13 @@ pow_tail <- 2
 replicates <- 10
 terms_vary <- list(n = c(20, 40, 60, 80, 100), error_var = c(5, 10, 20),
                    fixed_param = list(c(0.5, 1.1, 0.6, 0.9, 1.1), 
-                                      c(0.6, 1.1, 0.6, 0.9, 1.1)))
+                                      c(0.6, 1.1, 0.6, 0.9, 1.1)),
+                   cov_param = list(list(mean = c(0, 0, 0), sd = c(2, 2, 1), 
+                                    var_type = c("single", "single", "single")),
+                                    list(mean = c(0.5, 0, 0), sd = c(2, 2, 1), 
+                                    var_type = c("single", "single", "single"))
+                                    )
+                   )
 power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, 
                      cov_param = cov_param,
                      n = n, error_var = error_var, with_err_gen = with_err_gen, 

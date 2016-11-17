@@ -103,10 +103,16 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
       loc <- sapply(conds, is.list)
       simp_conds <- conds[loc != TRUE]
       list_conds <- conds[loc == TRUE]
-      list_conds <- unlist(list_conds, recursive = FALSE)
-      names(list_conds) <- gsub("[0-9]*", "", names(list_conds))
+      list_conds <- lapply(seq_along(list_conds), function(xx) 
+        unlist(list_conds[xx], recursive = FALSE))
+      for(tt in seq_along(list_conds)) {
+        names(list_conds[[tt]]) <- gsub("[0-9]*", "", names(list_conds[[tt]]))
+      }
       args <- lapply(1:nrow(conds), function(xx) c(args, 
-                            simp_conds[xx, , drop = FALSE], list_conds[xx]))
+                            simp_conds[xx, , drop = FALSE], 
+                  do.call('c', lapply(seq_along(list_conds), function(tt) 
+                    list_conds[[tt]][xx]))
+                            ))
     } else {
       args <- lapply(1:nrow(conds), function(xx) c(args, 
                                         conds[xx, , drop = FALSE]))
@@ -124,7 +130,8 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
           do.call("rbind", lapply(1:replicates, function(xx) 
             cbind(rep = xx, do.call('sim_pow_single', args[[tt]]), 
                   simp_conds[tt, , drop = FALSE], 
-                  lapply(list_conds, paste0, collapse = ',')[tt], 
+                  lapply(seq_along(list_conds), function(xx) 
+                    lapply(list_conds[[xx]], paste0, collapse = ',')[tt]), 
                   row.names = NULL)
           ))))
       } else {

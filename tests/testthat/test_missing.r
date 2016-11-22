@@ -57,6 +57,18 @@ test_that("MAR missing", {
 })
 
 test_that("mcar missing", {
+  # simulate data
+  fixed <- ~1 + age + income
+  fixed_param <- c(2, 0.3, 1.3)
+  cov_param <- list(mean = c(0, 0), sd = c(4, 3), 
+                    var_type = c("single", "single"))
+  n <- 4500
+  error_var <- 3
+  with_err_gen <- 'rnorm'
+  temp_single <- sim_reg(fixed = fixed, fixed_param = fixed_param,
+                         cov_param = cov_param,
+                         n = n, error_var = error_var, with_err_gen = with_err_gen,
+                         data_str = "single")
   tmp_single_miss <- missing_data(temp_single, miss_prop = .25, 
                                   type = 'random', clust_var = NULL)
   expect_equal(prop.table(table(is.na(tmp_single_miss$sim_data2)))[2], 

@@ -238,10 +238,10 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
   fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
   rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
   rand.vars3 <- attr(terms(random3),"term.labels")   ##Extracting random effect term labels
-
+  
   if(length(rand.vars)+1 != length(random_param$random_var)) stop("Random lengths not equal")
   if(length(rand.vars3)+1 != length(random_param3$random_var)) stop("Third level random lengths not equal")
-
+  
   if(unbal3 == FALSE) {
     lvl2ss <- rep(n/k, k)
     n <- sum(lvl2ss)
@@ -250,7 +250,7 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
     lvl2ss <- round(runif(n = k, min = min(unbalCont3), max = max(unbalCont3)), 0)
     n <- sum(lvl2ss)
   }
-
+  
   if(unbal == FALSE) {
     lvl1ss <- rep(p, n)
     if(is.null(lvl1ss)) stop("lvl1ss is NULL")
@@ -268,7 +268,7 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
   
   rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
   rand_eff3 <- do.call(sim_rand_eff, c(random_param3, n = k))
-   
+  
   Xmat <- sim_fixef_nested3(fixed, fixed_vars, cov_param, k, n = lvl2ss, 
                             p = lvl1ss, data_str = data_str, cor_vars = cor_vars, 
                             fact_vars = fact_vars, contrasts = contrasts)
@@ -288,19 +288,19 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
   
   Zmat <- model.matrix(random, data.frame(Xmat))
   Zmat3 <- model.matrix(random3, data.frame(Xmat))
-
+  
   err <- sim_err_nested(error_var, n = n, p = lvl1ss, with_err_gen = with_err_gen,
                         arima = arima, lvl1_err_params = lvl1_err_params, 
                         arima_mod = arima_mod, ...)
-
- sim_data <- data_reg_nested3(Xmat, Zmat, Zmat3, fixed_param, rand_eff, rand_eff3,
-                              k, n = lvl2ss, p = lvl1ss, err = err)
   
- Xmat <- data.frame(Xmat,reff,sim_data)
- Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
- Xmat$clustID <- rep(1:n, times = lvl1ss)
- Xmat$clust3ID <- rep(1:k, times = lvl3ss)
- return(Xmat)
+  sim_data <- data_reg_nested3(Xmat, Zmat, Zmat3, fixed_param, rand_eff, rand_eff3,
+                               k, n = lvl2ss, p = lvl1ss, err = err)
+  
+  Xmat <- data.frame(Xmat,reff,sim_data)
+  Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
+  Xmat$clustID <- rep(1:n, times = lvl1ss)
+  Xmat$clust3ID <- rep(1:k, times = lvl3ss)
+  return(Xmat)
 }
 
 

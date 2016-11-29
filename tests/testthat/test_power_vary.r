@@ -1,6 +1,7 @@
 context("vary terms list")
 
 test_that('list terms vary', {
+  set.seed(200)
   fixed <- ~ 1 + act + diff + numCourse + act:numCourse
   fixed_param <- c(0.5, 1.1, 0.6, 0.9, 1.1)
   cov_param <- list(mean = c(0, 0, 0), sd = c(2, 2, 1), var_type = c("single", "single", "single"))
@@ -54,6 +55,7 @@ test_that('list terms vary', {
 })
 
 test_that('two level power continuous', {
+  set.seed(200)
   fixed <- ~1 + time + diff + act + time:act
   random <- ~1 + time
   fixed_param <- c(0, 0.2, 0.1, 0.3, 0.05)
@@ -124,11 +126,12 @@ test_that('two level power continuous', {
 # })
 
 test_that('two level power dich', {
+  set.seed(200)
   fixed <- ~1 + time + diff + act + time:act
   random <- ~1 + time
   fixed_param <- c(0, 0.2, 0.1, 0.3, 0.05)
-  random_param <- list(random_var = c(7, 4), rand_gen = "rnorm")
-  cov_param <- list(mean = c(0, 0), sd = c(3, 5), var_type = c("lvl1", "lvl2"))
+  random_param <- list(random_var = c(4, 2), rand_gen = "rnorm")
+  cov_param <- list(mean = c(0, 0), sd = c(1, 1), var_type = c("lvl1", "lvl2"))
   n <- 75
   p <- 10
   data_str <- "long"
@@ -137,8 +140,8 @@ test_that('two level power dich', {
   pow_dist <- "z"
   pow_tail <- 2
   replicates <- 2
-  terms_vary <- list(fixed_param = list(c(0, 0.2, 0.1, 0.3, 0.05), 
-                                        c(0.3, 0.2, 0.1, 0.3, 0.05)))
+  terms_vary <- list(fixed_param = list(c(0, 0.1, 0.1, 0.1, 0.05), 
+                                        c(0.15, 0.1, 0.1, 0.1, 0.05)))
   power_out <- sim_pow_glm(fixed = fixed, random = random, 
                            fixed_param = fixed_param, 
                            random_param = random_param, cov_param = cov_param, 

@@ -6,26 +6,31 @@ test_that("dropout missing occurring", {
   random <- ~1 + time + diff
   fixed_param <- c(4, 2, 6, 2.3, 7)
   random_param <- list(random_var = c(7, 4, 2), rand_gen = "rnorm")
-  cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
+  cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), 
+                    var_type = c("lvl1", "lvl2"))
   n <- 150
   p <- 30
   error_var <- 4
   with_err_gen <- 'rnorm'
   data_str <- "long"
-  temp_long <- sim_reg(fixed, random, random3 = NULL, fixed_param, random_param, random_param3 = NULL,
-                       cov_param, k = NULL, n, p, error_var, with_err_gen, data_str = data_str)
+  temp_long <- sim_reg(fixed, random, random3 = NULL, fixed_param, random_param, 
+                       random_param3 = NULL,
+                       cov_param, k = NULL, n, p, error_var, with_err_gen, 
+                       data_str = data_str)
   
   # simulate missing data
   temp_long_miss <- missing_data(temp_long, miss_prop = .25, type = 'dropout', 
                                  clust_var = 'clustID', within_id = 'withinID')
   
-  expect_equal(prop.table(table(temp_long_miss$missing))[2], .25, 
+  expect_equal(as.numeric(prop.table(table(temp_long_miss$missing))[2]),
+               .25, 
                tolerance = .05)
   
   temp_long_miss <- missing_data(temp_long, miss_prop = .05, type = 'dropout', 
                                  clust_var = 'clustID', within_id = 'withinID')
   
-  expect_equal(prop.table(table(temp_long_miss$missing))[2], .05, 
+  expect_equal(as.numeric(prop.table(table(temp_long_miss$missing))[2]),
+               .05, 
                tolerance = .05)
 })
 
@@ -71,7 +76,7 @@ test_that("mcar missing", {
                          data_str = "single")
   tmp_single_miss <- missing_data(temp_single, miss_prop = .25, 
                                   type = 'random', clust_var = NULL)
-  expect_equal(prop.table(table(is.na(tmp_single_miss$sim_data2)))[2], 
+  expect_equal(as.numeric(prop.table(table(is.na(tmp_single_miss$sim_data2)))[2]), 
                .25, tolerance = .05)
 })
 

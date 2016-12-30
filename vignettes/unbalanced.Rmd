@@ -159,8 +159,8 @@ unbal3 <- TRUE
 error_var <- 4
 with_err_gen <- 'rnorm'
 data_str <- "long"
-unbalCont <- c(min = 3, max = 15)
-unbalCont3 = c(min = 3, max = 10)
+unbalCont <- c(min = 3, max = 8)
+unbalCont3 = c(min = 3, max = 6)
 temp_three <- sim_reg(fixed = fixed, random = random, random3 = random3,
       fixed_param = fixed_param, random_param = random_param, 
       random_param3 = random_param3, cov_param = cov_param, k = k,

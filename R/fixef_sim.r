@@ -106,7 +106,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
     }
   }
 
-  if(length(fact.loc > 0)){
+  if(length(fact.loc) > 0){
     fact_vars <- lapply(1:n.fact, function(xx) 
       list(k = NULL, n = n, p = p, numlevels = fact_vars$numlevels[xx], 
            var_type = fact_vars$var_type[xx]))
@@ -233,7 +233,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     }
   }
   
-  if(length(fact.loc > 0)){
+  if(length(fact.loc) > 0){
     fact_vars <- lapply(1:n.fact, function(xx) 
       list(k = k, n = n, p = p, numlevels = fact_vars$numlevels[xx], 
            var_type = fact_vars$var_type[xx]))
@@ -404,7 +404,7 @@ sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
                          prob = prob),
          lvl3 = rep(sample(x = numlevels, size = k, replace = replace, 
                            prob = prob), times = lvl3ss),
-         lvl2 = rep(sample(x = numlevels, size = n, replace = replace, 
+         lvl2 = rep(sample(x = numlevels, size = length(p), replace = replace, 
                            prob = prob), times = p),
          lvl1 = sample(x = numlevels, size = n*p, replace = replace, 
                        prob = prob)

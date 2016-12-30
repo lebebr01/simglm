@@ -365,7 +365,8 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
 #' @param value.labels Optional argument with value labels for variable, 
 #'        converts variable to factor.
 #' @export 
-sim_factor <- function(k, n, p, numlevels, replace = TRUE, prob = NULL, var_type = c('lvl1', 'lvl2', 'lvl3', 'single'), 
+sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL, 
+                       var_type = c('lvl1', 'lvl2', 'lvl3', 'single'), 
                        value.labels = NULL) {
   
   #if(is.null(prob) == FALSE & (length(prob) == numlevels | length(prob) == length(numlevels)) == FALSE) {
@@ -387,21 +388,32 @@ sim_factor <- function(k, n, p, numlevels, replace = TRUE, prob = NULL, var_type
     }
   }
   
-  # if(var_type == 'lvl1') {
-  #   p <- sum(p)
-  # }
+  end <- cumsum(n)
+  beg <- c(1, cumsum(n) + 1)
+  beg <- beg[-length(beg)]
+  
+  if(!is.null(k)) {
+    lvl3ss <- sapply(lapply(1:length(beg), function(xx) 		
+      p[beg[xx]:end[xx]]), sum)
+  }
   
   var_type <- match.arg(var_type)
   
   catVar <- switch(var_type,
-         single = sample(x = numlevels, size = n, replace = replace, prob = prob),
-         lvl3 = rep(sample(x = numlevels, size = k, replace = replace, prob = prob), each = (n*p)/k),
-         lvl2 = rep(sample(x = numlevels, size = n, replace = replace, prob = prob), each = p),
-         lvl1 = sample(x = numlevels, size = n*p, replace = replace, prob = prob)
+         single = sample(x = numlevels, size = n, replace = replace, 
+                         prob = prob),
+         lvl3 = rep(sample(x = numlevels, size = k, replace = replace, 
+                           prob = prob), times = lvl3ss),
+         lvl2 = rep(sample(x = numlevels, size = n, replace = replace, 
+                           prob = prob), times = p),
+         lvl1 = sample(x = numlevels, size = n*p, replace = replace, 
+                       prob = prob)
          )
   
   if(!is.null(value.labels)) {
-    if(length(value.labels) != numlevels) { stop("value.labels must be same length as numlevels") }
+    if(length(value.labels) != numlevels) { 
+      stop("value.labels must be same length as numlevels") 
+      }
     catVar <- factor(catVar, labels = value.labels)
   }
   
@@ -418,9 +430,11 @@ sim_factor <- function(k, n, p, numlevels, replace = TRUE, prob = NULL, var_type
 #' @param p Number of within cluster observations for multilevel
 #' @param mean Mean for variable simulated from normal distribution
 #' @param sd Standard deviation for variable simulated from normal distribution
-#' @param var_type Variable type for the variable, must be either "lvl1", "lvl2", or "single"
+#' @param var_type Variable type for the variable, must be either "lvl1", 
+#'      "lvl2", or "single"
 #' @export 
-sim_continuous <- function(k = NULL, n, p, mean, sd, var_type = c('lvl1', 'lvl2', 'lvl3', 'single')) {
+sim_continuous <- function(k = NULL, n, p, mean, sd, 
+                           var_type = c('lvl1', 'lvl2', 'lvl3', 'single')) {
   
   end <- cumsum(n)
   beg <- c(1, cumsum(n) + 1)
@@ -435,8 +449,10 @@ sim_continuous <- function(k = NULL, n, p, mean, sd, var_type = c('lvl1', 'lvl2'
   
   contVar <- switch(var_type,
                    single = rnorm(n = n, mean = mean, sd = sd),
-                   lvl3 = rep(rnorm(n = k, mean = mean, sd = sd), times = lvl3ss),
-                   lvl2 = rep(rnorm(n = length(p), mean = mean, sd = sd), times = p),
+                   lvl3 = rep(rnorm(n = k, mean = mean, sd = sd), 
+                              times = lvl3ss),
+                   lvl2 = rep(rnorm(n = length(p), mean = mean, sd = sd), 
+                              times = p),
                    lvl1 = rnorm(n = sum(p), mean = mean, sd = sd)
   )
   return(contVar)

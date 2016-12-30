@@ -4,7 +4,7 @@
 \alias{sim_factor}
 \title{Simulate categorical, factor, or discrete variables}
 \usage{
-sim_factor(k, n, p, numlevels, replace = TRUE, prob = NULL,
+sim_factor(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
   var_type = c("lvl1", "lvl2", "lvl3", "single"), value.labels = NULL)
 }
 \arguments{

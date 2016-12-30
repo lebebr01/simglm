@@ -18,7 +18,8 @@ sim_continuous(k = NULL, n, p, mean, sd, var_type = c("lvl1", "lvl2",
 
 \item{sd}{Standard deviation for variable simulated from normal distribution}
 
-\item{var_type}{Variable type for the variable, must be either "lvl1", "lvl2", or "single"}
+\item{var_type}{Variable type for the variable, must be either "lvl1", 
+"lvl2", or "single"}
 }
 \description{
 Function that simulates continuous variables. Currently only supports

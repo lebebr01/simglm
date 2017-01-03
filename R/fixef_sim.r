@@ -378,8 +378,8 @@ sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
     }
   }
   if(var_type == "lvl1") {
-    if(replace == FALSE & numlevels < n*p){
-      stop("If replace = FALSE, numlevels must be greater than n*p for lvl1")
+    if(replace == FALSE & numlevels < sum(p)){
+      stop("If replace = FALSE, numlevels must be greater than sum(p) for lvl1")
     }
   }
   if(var_type == "lvl3") {
@@ -406,7 +406,7 @@ sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
                            prob = prob), times = lvl3ss),
          lvl2 = rep(sample(x = numlevels, size = length(p), replace = replace, 
                            prob = prob), times = p),
-         lvl1 = sample(x = numlevels, size = n*p, replace = replace, 
+         lvl1 = sample(x = numlevels, size = sum(p), replace = replace, 
                        prob = prob)
          )
   

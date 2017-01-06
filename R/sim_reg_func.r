@@ -194,8 +194,8 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(), co
 #'  Does not include intercept, time, factors, or interactions. 
 #'  var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
 #' @param k Number of third level clusters.
-#' @param n Cluster sample size.
-#' @param p Within cluster sample size.
+#' @param n Level two cluster sample size within each level three cluster.
+#' @param p Within cluster sample size within each level two cluster.
 #' @param error_var Scalar of error variance.
 #' @param with_err_gen Simulated within cluster error distribution. Must be a quoted 'r' distribution
 #'               function.
@@ -243,7 +243,7 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
   if(length(rand.vars3)+1 != length(random_param3$random_var)) stop("Third level random lengths not equal")
   
   if(unbal3 == FALSE) {
-    lvl2ss <- rep(n/k, k)
+    lvl2ss <- rep(n, k)
     n <- sum(lvl2ss)
   } else {
     if(length(unbalCont3) < 2) stop("Must specify unbalCont3 when unbal3 = TRUE")

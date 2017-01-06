@@ -44,9 +44,9 @@ var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 
 \item{k}{Number of third level clusters.}
 
-\item{n}{Cluster sample size.}
+\item{n}{Level two cluster sample size within each level three cluster.}
 
-\item{p}{Within cluster sample size.}
+\item{p}{Within cluster sample size within each level two cluster.}
 
 \item{error_var}{Scalar of error variance.}
 

@@ -112,8 +112,8 @@ random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
 cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
 var_type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
-n <- 150
-p <- 30
+n <- 15
+p <- 10
 data_str <- "long"
 temp.three <- sim_glm(fixed, random, random3, fixed_param, random_param, 
 random_param3, cov_param, k,n, p, data_str = data_str)

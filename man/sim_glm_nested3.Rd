@@ -43,9 +43,9 @@ var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 
 \item{k}{Number of third level clusters.}
 
-\item{n}{Cluster sample size.}
+\item{n}{Level two sample size within each level three cluster.}
 
-\item{p}{Within cluster sample size.}
+\item{p}{Within cluster sample size within each level two cluster.}
 
 \item{data_str}{Type of data. Must be "cross", "long", or "single".}
 
@@ -95,8 +95,8 @@ random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
 cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
 var_type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
-n <- 150
-p <- 30
+n <- 15
+p <- 10
 data_str <- "long"
 temp.three <- sim_glm_nested3(fixed, random, random3, fixed_param, random_param,
 random_param3, cov_param, k, n, p, data_str = data_str)

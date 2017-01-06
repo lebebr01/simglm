@@ -164,7 +164,8 @@ power_out <- sim_pow(fixed = fixed, random = random, random3 = random3,
                      error_var = error_var, with_err_gen = "rnorm",
                      data_str = data_str, unbal = FALSE, unbal3 = FALSE,
                      pow_param = pow_param, alpha = alpha,
-                     pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
+                     pow_dist = pow_dist, pow_tail = pow_tail, 
+                     replicates = replicates)
 power_out
 ```
 

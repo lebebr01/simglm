@@ -61,9 +61,9 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   }
   if(!is.null(cov_param)) {
 
-    cov_param <- c(list(k = lapply(seq_len(n.fact), function(xx) 0), 
-                        n = lapply(seq_len(n.fact), function(xx) n), 
-                        p = lapply(seq_len(n.fact), function(xx) p)), 
+    cov_param <- c(list(k = lapply(seq_len(n.cont), function(xx) 0), 
+                        n = lapply(seq_len(n.cont), function(xx) n), 
+                        p = lapply(seq_len(n.cont), function(xx) p)), 
                    cov_param)
     Xmat <- do.call(cbind, purrr::pmap(cov_param, sim_continuous))
     
@@ -172,9 +172,9 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     }
   }
   if(!is.null(cov_param)) {
-    cov_param <- c(list(k = lapply(seq_len(n.fact), function(xx) k), 
-                        n = lapply(seq_len(n.fact), function(xx) n), 
-                        p = lapply(seq_len(n.fact), function(xx) p)), 
+    cov_param <- c(list(k = lapply(seq_len(n.cont), function(xx) k), 
+                        n = lapply(seq_len(n.cont), function(xx) n), 
+                        p = lapply(seq_len(n.cont), function(xx) p)), 
                    cov_param)
     Xmat <- do.call(cbind, purrr::pmap(cov_param, sim_continuous))
     

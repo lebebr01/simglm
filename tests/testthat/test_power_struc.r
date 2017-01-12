@@ -3,7 +3,9 @@ context("simulate power")
 test_that('correct structure', {
   fixed <- ~ 1 + act + diff + numCourse + act:numCourse
   fixed_param <- c(0.5, 1.1, 0.6, 0.9, 1.1)
-  cov_param <- list(mean = c(0, 0, 0), sd = c(2, 2, 1), var_type = c("single", "single", "single"))
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                    mean = c(0, 0, 0), sd = c(2, 2, 1), 
+                    var_type = c("single", "single", "single"))
   n <- 150
   error_var <- 20
   with_err_gen <- 'rnorm'
@@ -23,7 +25,9 @@ test_that('correct structure', {
   
   fixed <- ~ 1 + act + diff + numCourse + act:numCourse
   fixed_param <- c(0.5, 1.1, 0.6, 0.9, 1.1)
-  cov_param <- list(mean = c(0, 0, 0), sd = c(2, 2, 1), var_type = c("single", "single", "single"))
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                    mean = c(0, 0, 0), sd = c(2, 2, 1), 
+                    var_type = c("single", "single", "single"))
   n <- NULL
   error_var <- NULL
   with_err_gen <- 'rnorm'
@@ -45,7 +49,9 @@ test_that('correct structure', {
   
   fixed <- ~ 1 + act + diff + numCourse + act:numCourse
   fixed_param <- c(0.5, 1.1, 0.6, 0.9, 1.1)
-  cov_param <- list(mean = c(0, 0, 0), sd = c(2, 2, 1), var_type = c("single", "single", "single"))
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                    mean = c(0, 0, 0), sd = c(2, 2, 1), 
+                    var_type = c("single", "single", "single"))
   n <- NULL
   error_var <- NULL
   with_err_gen <- 'rnorm'
@@ -67,8 +73,9 @@ test_that('correct structure', {
 test_that('sim_glm power', {
   fixed <- ~ 1 + act + diff
   fixed_param <- c(0.1, 0.5, 0.3)
-  cov_param <- list(mean = c(0, 0), sd = c(2, 4), 
-                    var_type = c("single", "single", "single"))
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                    mean = c(0, 0), sd = c(2, 4), 
+                    var_type = c("single", "single"))
   n <- 50
   pow_param <- c('(Intercept)', 'act', 'diff')
   alpha <- .01
@@ -87,8 +94,9 @@ test_that('sim_glm power', {
   
   fixed <- ~ 1 + act + diff
   fixed_param <- c(0.1, 0.5, 0.3)
-  cov_param <- list(mean = c(0, 0), sd = c(2, 4), 
-                    var_type = c("single", "single", "single"))
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                    mean = c(0, 0), sd = c(2, 4), 
+                    var_type = c("single", "single"))
   n <- NULL
   pow_param <- c('(Intercept)', 'act', 'diff')
   alpha <- .01
@@ -112,7 +120,9 @@ test_that('two level power continuous', {
   random <- ~1 + time
   fixed_param <- c(0, 0.2, 0.1, 0.3, 0.05)
   random_param <- list(random_var = c(7, 4), rand_gen = "rnorm")
-  cov_param <- list(mean = c(0, 0), sd = c(1, 1), var_type = c("lvl1", "lvl2"))
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                    mean = c(0, 0), sd = c(1, 1), 
+                    var_type = c("lvl1", "lvl2"))
   n <- 150
   p <- 30
   error_var <- 1
@@ -142,7 +152,8 @@ test_that("three level power continuous", {
   fixed_param <- c(4, 2, 6, 2.3, 7, 0)
   random_param <- list(random_var = c(7, 4), rand_gen = 'rnorm')
   random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-  cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                    mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
                     var_type = c("lvl1", "lvl2", "lvl3"))
   k <- 10
   n <- 15
@@ -176,7 +187,9 @@ test_that('two level power dich', {
   random <- ~1 + time
   fixed_param <- c(0, 0.2, 0.1, 0.3, 0.05)
   random_param <- list(random_var = c(7, 4), rand_gen = "rnorm")
-  cov_param <- list(mean = c(0, 0), sd = c(1, 1), var_type = c("lvl1", "lvl2"))
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                    mean = c(0, 0), sd = c(1, 1), 
+                    var_type = c("lvl1", "lvl2"))
   n <- 150
   p <- 30
   data_str <- "long"
@@ -205,7 +218,8 @@ test_that("three level power dich", {
   fixed_param <- c(0.2, 0.1, 0.3, 0.05)
   random_param <- list(random_var = 7, rand_gen = 'rnorm')
   random_param3 <- list(random_var = 4, rand_gen = 'rnorm')
-  cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                    mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
                     var_type = c("lvl1", "lvl2", "lvl3"))
   k <- 10
   n <- 15

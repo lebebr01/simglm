@@ -3,7 +3,9 @@ context('test dimensions of data')
 test_that('correct length sim_reg', {
   fixed <- ~1 + act + diff + numCourse + act:numCourse
   fixed_param <- c(2, 4, 1, 3.5, 2)
-  cov_param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var_type = c("single", "single", "single"))
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                    mean = c(0, 0, 0), sd = c(4, 3, 3), 
+                    var_type = c("single", "single", "single"))
   n <- 150
   error_var <- 3
   with_err_gen <- 'rnorm'
@@ -17,14 +19,18 @@ test_that('correct length sim_reg', {
   random <- ~1 + time + diff
   fixed_param <- c(4, 2, 6, 2.3, 7)
   random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
-  cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                    mean = c(0, 0), sd = c(1.5, 4), 
+                    var_type = c("lvl1", "lvl2"))
   n <- 150
   p <- 30
   error_var <- 4
   with_err_gen <- 'rnorm'
   data_str <- "long"
-  temp_long <- sim_reg(fixed, random, random3 = NULL, fixed_param, random_param, random_param3 = NULL,
-                       cov_param, k = NULL, n, p, error_var, with_err_gen, data_str = data_str)
+  temp_long <- sim_reg(fixed, random, random3 = NULL, fixed_param, random_param, 
+                       random_param3 = NULL,
+                       cov_param, k = NULL, n, p, error_var, with_err_gen, 
+                       data_str = data_str)
   expect_equal(nrow(temp_long), 150*30)
   expect_equal(length(table(temp_long$withinID)), 30)
   expect_equal(length(table(temp_long$clustID)), 150)
@@ -35,7 +41,8 @@ test_that('correct length sim_reg', {
   fixed_param <- c(4, 2, 6, 2.3, 7, 0)
   random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
   random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-  cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                    mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
                     var_type = c("lvl1", "lvl2", "lvl3"))
   k <- 10
   n <- 15
@@ -54,7 +61,9 @@ test_that('correct length sim_reg', {
 test_that('correct length sim_glm', {
   fixed <- ~1 + act + diff + numCourse + act:numCourse
   fixed_param <- c(2, 4, 1, 3.5, 2)
-  cov_param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var_type = c("single", "single", "single"))
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                    mean = c(0, 0, 0), sd = c(4, 3, 3), 
+                    var_type = c("single", "single", "single"))
   n <- 150
   temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param, 
                          n = n, data_str = "single")
@@ -67,7 +76,9 @@ test_that('correct length sim_glm', {
   random <- ~1 + time + diff
   fixed_param <- c(.1, .5, .4, .01, .8)
   random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
-  cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                    mean = c(0, 0), sd = c(1.5, 4), 
+                    var_type = c("lvl1", "lvl2"))
   n <- 150
   p <- 30
   data_str <- "long"
@@ -85,7 +96,8 @@ test_that('correct length sim_glm', {
   fixed_param <- c(.1, .5, .4, .01, .8, .3)
   random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
   random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-  cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                    mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
                     var_type = c("lvl1", "lvl2", "lvl3"))
   k <- 10
   n <- 15

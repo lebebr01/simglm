@@ -62,31 +62,30 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
     if(data_str == "long") {
       Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx])-1))
       
-      if(is.null(cor_vars)) {
-        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-          list(k = 0, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-               var_type = cov_param$var_type[xx]))
-      } else {
-        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-          list(k = 0, n = n, p = p, mean = 0, sd = 1, 
-               var_type = cov_param$var_type[xx]))
-      }
-      
-      Xmat <- cbind(Xmat, do.call("cbind", lapply(seq_len(n.cont), function(xx) 
-        do.call(sim_continuous, cov_param2[[xx]]))))
-    } else {
-      if(is.null(cor_vars)) {
-        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-          list(k = 0, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-               var_type = cov_param$var_type[xx]))
-      } else {
-        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-          list(k = 0, n = n, p = p, mean = 0, sd = 1, 
-               var_type = cov_param$var_type[xx]))
-      }
-      Xmat <- do.call("cbind", lapply(seq_len(n.cont), function(xx) 
-        do.call(sim_continuous, cov_param2[[xx]])))
+      # if(is.null(cor_vars)) {
+      #   cov_param2 <- lapply(seq_len(n.cont), function(xx) 
+      #     list(k = 0, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
+      #          var_type = cov_param$var_type[xx]))
+      # } else {
+      #   cov_param2 <- lapply(seq_len(n.cont), function(xx) 
+      #     list(k = 0, n = n, p = p, mean = 0, sd = 1, 
+      #          var_type = cov_param$var_type[xx]))
+      # }
+      # 
+      # Xmat <- cbind(Xmat, do.call("cbind", lapply(seq_len(n.cont), function(xx) 
+      #   do.call(sim_continuous, cov_param2[[xx]]))))
     } 
+    if(is.null(cor_vars)) {
+      cov_param2 <- lapply(seq_len(n.cont), function(xx) 
+        list(k = 0, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
+             var_type = cov_param$var_type[xx]))
+    } else {
+      cov_param2 <- lapply(seq_len(n.cont), function(xx) 
+        list(k = 0, n = n, p = p, mean = 0, sd = 1, 
+             var_type = cov_param$var_type[xx]))
+    }
+    Xmat <- do.call("cbind", lapply(seq_len(n.cont), function(xx) 
+      do.call(sim_continuous, cov_param2[[xx]])))
     
     if(!is.null(cor_vars)) {
       c_mat <- matrix(nrow = n.cont, ncol = n.cont)
@@ -190,30 +189,29 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     if(data_str == "long") {
       Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1))
       
-      if(is.null(cor_vars)) {
-        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-          list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-               var_type = cov_param$var_type[xx]))
-      } else {
-        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-          list(k = k, n = n, p = p, mean = 0, sd = 1, 
-               var_type = cov_param$var_type[xx]))
-      }
-      Xmat <- cbind(Xmat, do.call("cbind", lapply(seq_len(n.cont), function(xx) 
-        do.call(sim_continuous, cov_param2[[xx]]))))
-    } else {
-      if(is.null(cor_vars)) {
-        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-          list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-               var_type = cov_param$var_type[xx]))
-      } else {
-        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-          list(k = k, n = n, p = p, mean = 0, sd = 1, 
-               var_type = cov_param$var_type[xx]))
-      }
-      Xmat <- do.call("cbind", lapply(seq_len(n.cont), function(xx) 
-        do.call(sim_continuous, cov_param2[[xx]])))
+      # if(is.null(cor_vars)) {
+      #   cov_param2 <- lapply(seq_len(n.cont), function(xx) 
+      #     list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
+      #          var_type = cov_param$var_type[xx]))
+      # } else {
+      #   cov_param2 <- lapply(seq_len(n.cont), function(xx) 
+      #     list(k = k, n = n, p = p, mean = 0, sd = 1, 
+      #          var_type = cov_param$var_type[xx]))
+      # }
+      # Xmat <- cbind(Xmat, do.call("cbind", lapply(seq_len(n.cont), function(xx) 
+      #   do.call(sim_continuous, cov_param2[[xx]]))))
     }
+    if(is.null(cor_vars)) {
+      cov_param2 <- lapply(seq_len(n.cont), function(xx) 
+        list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
+             var_type = cov_param$var_type[xx]))
+    } else {
+      cov_param2 <- lapply(seq_len(n.cont), function(xx) 
+        list(k = k, n = n, p = p, mean = 0, sd = 1, 
+             var_type = cov_param$var_type[xx]))
+    }
+    Xmat <- do.call("cbind", lapply(seq_len(n.cont), function(xx) 
+      do.call(sim_continuous, cov_param2[[xx]])))
     
     if(!is.null(cor_vars)) {
       c_mat <- matrix(nrow = n.cont, ncol = n.cont)

@@ -21,25 +21,40 @@ sim_reg(fixed, random, random3, fixed_param, random_param = list(),
 \item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
 \item{random_param}{A list of named elements that must contain: 
-   random_var = variance of random parameters,
-   rand_gen = Name of simulation function for random effects.
-Optional elements are:
-   ther: Theorectial mean and variance from rand_gen,
-   ther_sim: Simulate mean/variance for standardization purposes,
-   cor_vars: Correlation between random effects,
-   ...: Additional parameters needed for rand_gen function.}
+\itemize{
+   \item  random_var = variance of random parameters,
+   \item  rand_gen = Name of simulation function for random effects.
+}
+       Optional elements are:
+\itemize{
+   \item ther: Theorectial mean and variance from rand_gen,
+   \item ther_sim: Simulate mean/variance for standardization purposes,
+   \item cor_vars: Correlation between random effects,
+   \item ...: Additional parameters needed for rand_gen function.
+ }}
 
 \item{random_param3}{A list of named elements that must contain: 
-   random_var = variance of random parameters,
-   rand_gen = Name of simulation function for random effects.
-Optional elements are:
-   ther: Theorectial mean and variance from rand_gen,
-   ther_sim: Simulate mean/variance for standardization purposes,
-   cor_vars: Correlation between random effects,
-   ...: Additional parameters needed for rand_gen function.}
+\itemize{
+    \item random_var = variance of random parameters,
+    \item rand_gen = Name of simulation function for random effects.
+}
+      Optional elements are:
+\itemize{
+    \item ther: Theorectial mean and variance from rand_gen,
+    \item ther_sim: Simulate mean/variance for standardization purposes,
+    \item cor_vars: Correlation between random effects,
+    \item ...: Additional parameters needed for rand_gen function.
+}}
 
-\item{cov_param}{List of mean and variance for fixed effects. Does not include intercept, time, or 
-interactions. Must be same order as fixed formula above.}
+\item{cov_param}{List of parameters to pass on to continuous covariate 
+ simulation. Does not include intercept, time, or 
+ interactions. Must be same order as fixed formula above. 
+ This list must contain:
+ \itemize{
+   \item dist_fun = distribution for covariate simulation   
+   \item Any additional arguments needed to evaluate R distribution
+      function. 
+}}
 
 \item{k}{Number of third level clusters.}
 
@@ -116,7 +131,8 @@ fixed <- ~1 + time + diff + act + time:act
 random <- ~1 + time + diff
 fixed_param <- c(4, 2, 6, 2.3, 7)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
-cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
+cov_param <- list(dist_fun = c('rnorm', 'rnorm'), mean = c(0, 0), 
+  sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
 n <- 150
 p <- 30
 error_var <- 4

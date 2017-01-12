@@ -15,7 +15,8 @@ sim_err_nested(error_var, n, p, with_err_gen, arima = FALSE,
 
 \item{p}{Within cluster sample size.}
 
-\item{with_err_gen}{The generating function used.}
+\item{with_err_gen}{The generating function used as a character, 
+(e.g. 'rnorm').}
 
 \item{arima}{TRUE/FALSE flag indicating whether residuals should 
 be correlated. If TRUE, must specify a valid model to pass to 

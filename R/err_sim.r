@@ -5,7 +5,8 @@
 #' @param error_var Scalar of error variance
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
-#' @param with_err_gen The generating function used.
+#' @param with_err_gen The generating function used as a character, 
+#'             (e.g. 'rnorm').
 #' @param arima TRUE/FALSE flag indicating whether residuals should 
 #'             be correlated. If TRUE, must specify a valid model to pass to 
 #'             arima.sim. See \code{\link{arima.sim}} for examples.

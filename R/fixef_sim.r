@@ -35,7 +35,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   }
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed_vars, ignore.case = TRUE) 
   w.var <- length(grep("lvl1", cov_param$var_type, ignore.case = TRUE))
-  n.cont <- length(cov_param$mean)
+  n.cont <- length(cov_param[[1]])
   
   cov_mu <- cov_param$mean
   cov_sd <- cov_param$sd
@@ -60,31 +60,31 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   }
   if(!is.null(cov_param)) {
     if(data_str == "long") {
-      Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx])-1))
+      Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx])-1))
       
       if(is.null(cor_vars)) {
-        cov_param2 <- lapply(1:n.cont, function(xx) 
+        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
           list(k = 0, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
                var_type = cov_param$var_type[xx]))
       } else {
-        cov_param2 <- lapply(1:n.cont, function(xx) 
+        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
           list(k = 0, n = n, p = p, mean = 0, sd = 1, 
                var_type = cov_param$var_type[xx]))
       }
       
-      Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.cont, function(xx) 
+      Xmat <- cbind(Xmat, do.call("cbind", lapply(seq_len(n.cont), function(xx) 
         do.call(sim_continuous, cov_param2[[xx]]))))
     } else {
       if(is.null(cor_vars)) {
-        cov_param2 <- lapply(1:n.cont, function(xx) 
+        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
           list(k = 0, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
                var_type = cov_param$var_type[xx]))
       } else {
-        cov_param2 <- lapply(1:n.cont, function(xx) 
+        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
           list(k = 0, n = n, p = p, mean = 0, sd = 1, 
                var_type = cov_param$var_type[xx]))
       }
-      Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
+      Xmat <- do.call("cbind", lapply(seq_len(n.cont), function(xx) 
         do.call(sim_continuous, cov_param2[[xx]])))
     } 
     
@@ -100,17 +100,17 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
     }
   } else {
     if(data_str == 'long') {
-      Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx])-1))
+      Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx])-1))
     } else {
       Xmat <- NULL
     }
   }
 
   if(length(fact.loc) > 0){
-    fact_vars <- lapply(1:n.fact, function(xx) 
+    fact_vars <- lapply(seq_len(n.fact), function(xx) 
       list(k = NULL, n = n, p = p, numlevels = fact_vars$numlevels[xx], 
            var_type = fact_vars$var_type[xx]))
-    Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
+    Xmat <- cbind(Xmat, do.call("cbind", lapply(seq_len(n.fact), 
               function(xx) do.call(sim_factor, fact_vars[[xx]]))))
   }
   
@@ -165,7 +165,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     int.loc <- 0
   }
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed_vars, ignore.case = TRUE) 
-  n.cont <- length(cov_param$mean)
+  n.cont <- length(cov_param[[1]])
   
   cov_mu <- cov_param$mean
   cov_sd <- cov_param$sd
@@ -188,30 +188,30 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   }
   if(!is.null(cov_param)) {
     if(data_str == "long") {
-      Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx]) - 1))
+      Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1))
       
       if(is.null(cor_vars)) {
-        cov_param2 <- lapply(1:n.cont, function(xx) 
+        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
           list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
                var_type = cov_param$var_type[xx]))
       } else {
-        cov_param2 <- lapply(1:n.cont, function(xx) 
+        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
           list(k = k, n = n, p = p, mean = 0, sd = 1, 
                var_type = cov_param$var_type[xx]))
       }
-      Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.cont, function(xx) 
+      Xmat <- cbind(Xmat, do.call("cbind", lapply(seq_len(n.cont), function(xx) 
         do.call(sim_continuous, cov_param2[[xx]]))))
     } else {
       if(is.null(cor_vars)) {
-        cov_param2 <- lapply(1:n.cont, function(xx) 
+        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
           list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
                var_type = cov_param$var_type[xx]))
       } else {
-        cov_param2 <- lapply(1:n.cont, function(xx) 
+        cov_param2 <- lapply(seq_len(n.cont), function(xx) 
           list(k = k, n = n, p = p, mean = 0, sd = 1, 
                var_type = cov_param$var_type[xx]))
       }
-      Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
+      Xmat <- do.call("cbind", lapply(seq_len(n.cont), function(xx) 
         do.call(sim_continuous, cov_param2[[xx]])))
     }
     
@@ -227,17 +227,17 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     }
   } else {
     if(data_str == 'long') {
-      Xmat <- unlist(lapply(1:length(p), function(xx) (1:p[xx])-1))
+      Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx])-1))
     } else {
       Xmat <- NULL
     }
   }
   
   if(length(fact.loc) > 0){
-    fact_vars <- lapply(1:n.fact, function(xx) 
+    fact_vars <- lapply(seq_len(n.fact), function(xx) 
       list(k = k, n = n, p = p, numlevels = fact_vars$numlevels[xx], 
            var_type = fact_vars$var_type[xx]))
-    Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
+    Xmat <- cbind(Xmat, do.call("cbind", lapply(seq_len(n.fact), 
                 function(xx) do.call(sim_factor, fact_vars[[xx]]))))
   }
   
@@ -287,7 +287,7 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   }
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed_vars, ignore.case = TRUE)  
   n.fact <- length(fact.loc[fact.loc != int.loc])
-  n.cont <- length(cov_param$mean)
+  n.cont <- length(cov_param[[1]])
   
   cov_mu <- cov_param$mean
   cov_sd <- cov_param$sd
@@ -303,15 +303,15 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   }
   if(!is.null(cov_param)) {
     if(is.null(cor_vars)) {
-      cov_param <- lapply(1:n.cont, function(xx) 
+      cov_param <- lapply(seq_len(n.cont), function(xx) 
         list(k = 0, n = n, p = 0, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
              var_type = cov_param$var_type[xx]))
     } else {
-      cov_param <- lapply(1:n.cont, function(xx) 
+      cov_param <- lapply(seq_len(n.cont), function(xx) 
         list(k = 0, n = n, p = 0, mean = 0, sd = 1, 
              var_type = cov_param$var_type[xx]))
     }
-    Xmat <- do.call("cbind", lapply(1:n.cont, function(xx) 
+    Xmat <- do.call("cbind", lapply(seq_len(n.cont), function(xx) 
       do.call(sim_continuous, cov_param[[xx]])))
     
     if(!is.null(cor_vars)) {
@@ -330,10 +330,10 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
 
   if(length(fact.loc > 0)){
     #op <- names(fact_vars)
-    fact_vars2 <- lapply(1:n.fact, function(xx) 
+    fact_vars2 <- lapply(seq_len(n.fact), function(xx) 
       list(k = 0, n = n, p = 0, numlevels = fact_vars$numlevels[xx], 
            var_type = fact_vars$var_type[xx]))
-    Xmat <- cbind(Xmat, do.call("cbind", lapply(1:n.fact, 
+    Xmat <- cbind(Xmat, do.call("cbind", lapply(seq_len(n.fact), 
             function(xx) do.call(sim_factor, fact_vars2[[xx]]))))
   }
   
@@ -393,7 +393,7 @@ sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
   beg <- beg[-length(beg)]
   
   if(!is.null(k)) {
-    lvl3ss <- sapply(lapply(1:length(beg), function(xx) 		
+    lvl3ss <- sapply(lapply(seq_along(beg), function(xx) 		
       p[beg[xx]:end[xx]]), sum)
   }
   
@@ -422,38 +422,40 @@ sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
 
 #' Simulate continuous variables
 #' 
-#' Function that simulates continuous variables. Currently only supports
-#' rnorm variables, future distributions to come.
+#' Function that simulates continuous variables. Any distribution function in 
+#' R is supported.
 #' 
 #' @param k Number of third level clusters.
 #' @param n Number of clusters or number of observations for single level
 #' @param p Number of within cluster observations for multilevel
-#' @param mean Mean for variable simulated from normal distribution
-#' @param sd Standard deviation for variable simulated from normal distribution
+#' @param dist_fun A distribution function. This argument takes a quoted
+#'      R distribution function (e.g. 'rnorm').
 #' @param var_type Variable type for the variable, must be either "lvl1", 
 #'      "lvl2", or "single"
+#' @param ... Additional parameters to pass to the dist_fun argument.
 #' @export 
-sim_continuous <- function(k = NULL, n, p, mean, sd, 
-                           var_type = c('lvl1', 'lvl2', 'lvl3', 'single')) {
+sim_continuous <- function(k = NULL, n, p, dist_fun,
+                           var_type = c('lvl1', 'lvl2', 'lvl3', 'single'),
+                           ...) {
   
   end <- cumsum(n)
   beg <- c(1, cumsum(n) + 1)
   beg <- beg[-length(beg)]
   
   if(!is.null(k)) {
-    lvl3ss <- sapply(lapply(1:length(beg), function(xx) 		
+    lvl3ss <- sapply(lapply(seq_along(beg), function(xx) 		
       p[beg[xx]:end[xx]]), sum)
   }
   
   var_type <- match.arg(var_type)
   
   contVar <- switch(var_type,
-                   single = rnorm(n = n, mean = mean, sd = sd),
-                   lvl3 = rep(rnorm(n = k, mean = mean, sd = sd), 
+                   single = unlist(lapply(n, FUN = dist_fun, ...)),
+                   lvl3 = rep(unlist(lapply(k, FUN = dist_fun, ...)), 
                               times = lvl3ss),
-                   lvl2 = rep(rnorm(n = length(p), mean = mean, sd = sd), 
+                   lvl2 = rep(unlist(lapply(length(p), FUN = dist_fun, ...)), 
                               times = p),
-                   lvl1 = rnorm(n = sum(p), mean = mean, sd = sd)
+                   lvl1 = unlist(lapply(sum(p), FUN = dist_fun, ...))
   )
-  return(contVar)
+  contVar
 }

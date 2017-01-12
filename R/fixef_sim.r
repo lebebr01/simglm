@@ -21,6 +21,7 @@
 #' @param contrasts An optional list that specifies the contrasts to be used for factor
 #'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
 #'      more detail.
+#' @importFrom purrr pmap
 #' @export 
 sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str, 
                              cor_vars = NULL, fact_vars = list(NULL), 
@@ -55,37 +56,21 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 
   if(n.fact > 0){
     if(any(grepl("single", fact_vars$var_type))){
-      stop("All variables must have var_type != 'single'")
+      stop("All variables must have var_type != 'single' for multilevel models")
     }
   }
   if(!is.null(cov_param)) {
+
+    cov_param <- c(list(k = lapply(seq_len(n.fact), function(xx) 0), 
+                        n = lapply(seq_len(n.fact), function(xx) n), 
+                        p = lapply(seq_len(n.fact), function(xx) p)), 
+                   cov_param)
+    Xmat <- do.call(cbind, purrr::pmap(cov_param, sim_continuous))
+    
     if(data_str == "long") {
-      Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx])-1))
-      
-      # if(is.null(cor_vars)) {
-      #   cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-      #     list(k = 0, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-      #          var_type = cov_param$var_type[xx]))
-      # } else {
-      #   cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-      #     list(k = 0, n = n, p = p, mean = 0, sd = 1, 
-      #          var_type = cov_param$var_type[xx]))
-      # }
-      # 
-      # Xmat <- cbind(Xmat, do.call("cbind", lapply(seq_len(n.cont), function(xx) 
-      #   do.call(sim_continuous, cov_param2[[xx]]))))
-    } 
-    if(is.null(cor_vars)) {
-      cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-        list(k = 0, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-             var_type = cov_param$var_type[xx]))
-    } else {
-      cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-        list(k = 0, n = n, p = p, mean = 0, sd = 1, 
-             var_type = cov_param$var_type[xx]))
+      Xmat <- cbind(unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1)), 
+                    Xmat)
     }
-    Xmat <- do.call("cbind", lapply(seq_len(n.cont), function(xx) 
-      do.call(sim_continuous, cov_param2[[xx]])))
     
     if(!is.null(cor_vars)) {
       c_mat <- matrix(nrow = n.cont, ncol = n.cont)
@@ -105,12 +90,12 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
     }
   }
 
-  if(length(fact.loc) > 0){
-    fact_vars <- lapply(seq_len(n.fact), function(xx) 
-      list(k = NULL, n = n, p = p, numlevels = fact_vars$numlevels[xx], 
-           var_type = fact_vars$var_type[xx]))
-    Xmat <- cbind(Xmat, do.call("cbind", lapply(seq_len(n.fact), 
-              function(xx) do.call(sim_factor, fact_vars[[xx]]))))
+  if(length(fact.loc) > 0) {
+    fact_vars <- c(list(k = lapply(seq_len(n.fact), function(xx) 0), 
+                         n = lapply(seq_len(n.fact), function(xx) n), 
+                         p = lapply(seq_len(n.fact), function(xx) p)), 
+                    fact_vars)
+    Xmat <- cbind(Xmat,  do.call(cbind, purrr::pmap(fact_vars, sim_factor)))
   }
   
    if(n.int == 0){
@@ -151,6 +136,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 #' @param contrasts An optional list that specifies the contrasts to be used for factor
 #'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
 #'      more detail.
+#' @importFrom purrr pmap
 #' @export 
 sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str, 
                              cor_vars = NULL, fact_vars = list(NULL),
@@ -166,8 +152,8 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed_vars, ignore.case = TRUE) 
   n.cont <- length(cov_param[[1]])
   
-  cov_mu <- cov_param$mean
-  cov_sd <- cov_param$sd
+  # cov_mu <- cov_param$mean
+  # cov_sd <- cov_param$sd
   
   if(length(fact.loc) > 0){
     fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], fixed_vars[int.loc])
@@ -182,36 +168,20 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   
   if(n.fact > 0){
     if(any(grepl("single", fact_vars$var_type))){
-      stop("All variables must have var_type != 'single'")
+      stop("All variables must have var_type != 'single' for multilevel models")
     }
   }
   if(!is.null(cov_param)) {
+    cov_param <- c(list(k = lapply(seq_len(n.fact), function(xx) k), 
+                        n = lapply(seq_len(n.fact), function(xx) n), 
+                        p = lapply(seq_len(n.fact), function(xx) p)), 
+                   cov_param)
+    Xmat <- do.call(cbind, purrr::pmap(cov_param, sim_continuous))
+    
     if(data_str == "long") {
-      Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1))
-      
-      # if(is.null(cor_vars)) {
-      #   cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-      #     list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-      #          var_type = cov_param$var_type[xx]))
-      # } else {
-      #   cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-      #     list(k = k, n = n, p = p, mean = 0, sd = 1, 
-      #          var_type = cov_param$var_type[xx]))
-      # }
-      # Xmat <- cbind(Xmat, do.call("cbind", lapply(seq_len(n.cont), function(xx) 
-      #   do.call(sim_continuous, cov_param2[[xx]]))))
+      Xmat <- cbind(unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1)), 
+                    Xmat)
     }
-    if(is.null(cor_vars)) {
-      cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-        list(k = k, n = n, p = p, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-             var_type = cov_param$var_type[xx]))
-    } else {
-      cov_param2 <- lapply(seq_len(n.cont), function(xx) 
-        list(k = k, n = n, p = p, mean = 0, sd = 1, 
-             var_type = cov_param$var_type[xx]))
-    }
-    Xmat <- do.call("cbind", lapply(seq_len(n.cont), function(xx) 
-      do.call(sim_continuous, cov_param2[[xx]])))
     
     if(!is.null(cor_vars)) {
       c_mat <- matrix(nrow = n.cont, ncol = n.cont)
@@ -231,12 +201,12 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     }
   }
   
-  if(length(fact.loc) > 0){
-    fact_vars <- lapply(seq_len(n.fact), function(xx) 
-      list(k = k, n = n, p = p, numlevels = fact_vars$numlevels[xx], 
-           var_type = fact_vars$var_type[xx]))
-    Xmat <- cbind(Xmat, do.call("cbind", lapply(seq_len(n.fact), 
-                function(xx) do.call(sim_factor, fact_vars[[xx]]))))
+  if(length(fact.loc) > 0) {
+    fact_vars <- c(list(k = lapply(seq_len(n.fact), function(xx) k), 
+                        n = lapply(seq_len(n.fact), function(xx) n), 
+                        p = lapply(seq_len(n.fact), function(xx) p)), 
+                   fact_vars)
+    Xmat <- cbind(Xmat,  do.call(cbind, purrr::pmap(fact_vars2, sim_factor)))
   }
   
   if(n.int == 0){
@@ -272,6 +242,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #' @param contrasts An optional list that specifies the contrasts to be used for factor
 #'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
 #'      more detail.
+#' @importFrom purrr pmap
 #' @export 
 sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL, 
                              fact_vars = list(NULL), contrasts = NULL){
@@ -287,8 +258,8 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   n.fact <- length(fact.loc[fact.loc != int.loc])
   n.cont <- length(cov_param[[1]])
   
-  cov_mu <- cov_param$mean
-  cov_sd <- cov_param$sd
+  # cov_mu <- cov_param$mean
+  # cov_sd <- cov_param$sd
   
   if(length(fact.loc)> 0){
     fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], fixed_vars[int.loc])
@@ -301,16 +272,13 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   }
   if(!is.null(cov_param)) {
     if(is.null(cor_vars)) {
-      cov_param <- lapply(seq_len(n.cont), function(xx) 
-        list(k = 0, n = n, p = 0, mean = cov_param$mean[xx], sd = cov_param$sd[xx], 
-             var_type = cov_param$var_type[xx]))
+      cov_param <- c(list(k = rep(0, n.cont), n = rep(n, n.cont), 
+                          p = rep(0, n.cont)), cov_param)
     } else {
-      cov_param <- lapply(seq_len(n.cont), function(xx) 
-        list(k = 0, n = n, p = 0, mean = 0, sd = 1, 
-             var_type = cov_param$var_type[xx]))
+      cov_param <- c(list(k = rep(0, n.cont), n = rep(n, n.cont), 
+                          p = rep(0, n.cont)), cov_param)
     }
-    Xmat <- do.call("cbind", lapply(seq_len(n.cont), function(xx) 
-      do.call(sim_continuous, cov_param[[xx]])))
+    Xmat <- do.call(cbind, purrr::pmap(cov_param, sim_continuous))
     
     if(!is.null(cor_vars)) {
       c_mat <- matrix(nrow = n.cont, ncol = n.cont)
@@ -326,13 +294,10 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
     Xmat <- NULL
   }
 
-  if(length(fact.loc > 0)){
-    #op <- names(fact_vars)
-    fact_vars2 <- lapply(seq_len(n.fact), function(xx) 
-      list(k = 0, n = n, p = 0, numlevels = fact_vars$numlevels[xx], 
-           var_type = fact_vars$var_type[xx]))
-    Xmat <- cbind(Xmat, do.call("cbind", lapply(seq_len(n.fact), 
-            function(xx) do.call(sim_factor, fact_vars2[[xx]]))))
+  if(length(fact.loc > 0)) {
+    fact_vars <- c(list(k = rep(0, n.fact), n = rep(n, n.fact), 
+                         p = rep(0, n.fact)), fact_vars)
+    Xmat <- cbind(Xmat,  do.call(cbind, purrr::pmap(fact_vars, sim_factor)))
   }
   
   if(n.int == 0){

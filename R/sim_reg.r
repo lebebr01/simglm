@@ -84,7 +84,9 @@
 #' # generating parameters for single level regression
 #' fixed <- ~1 + act + diff + numCourse + act:numCourse
 #' fixed_param <- c(2, 4, 1, 3.5, 2)
-#' cov_param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var_type = c("single", "single", "single"))
+#' cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
+#'    mean = c(0, 0, 0), sd = c(4, 3, 3), 
+#'    var_type = c("single", "single", "single"))
 #' n <- 150
 #' error_var <- 3
 #' with_err_gen <- 'rnorm'
@@ -120,8 +122,9 @@
 #' fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 #' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 #' random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-#' cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
-#' var_type = c("lvl1", "lvl2", "lvl3"))
+#' cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
+#'      mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
+#'      var_type = c("lvl1", "lvl2", "lvl3"))
 #' k <- 10
 #' n <- 15
 #' p <- 10
@@ -221,7 +224,9 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' # generating parameters for single level regression
 #' fixed <- ~1 + act + diff + numCourse + act:numCourse
 #' fixed_param <- c(2, 4, 1, 3.5, 2)
-#' cov_param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var_type = c("single", "single", "single"))
+#' cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+#'    mean = c(0, 0, 0), sd = c(4, 3, 3), 
+#'    var_type = c("single", "single", "single"))
 #' n <- 150
 #' temp.single <- sim_glm(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param, 
 #' n = n, data_str = "single")
@@ -231,7 +236,8 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' random <- ~1 + time + diff
 #' fixed_param <- c(4, 2, 6, 2.3, 7)
 #' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
-#' cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
+#' cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+#'    mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
 #' n <- 150
 #' p <- 30
 #' data_str <- "long"
@@ -246,8 +252,9 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 #' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 #' random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-#' cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
-#' var_type = c("lvl1", "lvl2", "lvl3"))
+#' cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
+#'    mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
+#'    var_type = c("lvl1", "lvl2", "lvl3"))
 #' k <- 10
 #' n <- 15
 #' p <- 10

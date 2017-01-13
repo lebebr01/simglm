@@ -38,9 +38,6 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   w.var <- length(grep("lvl1", cov_param$var_type, ignore.case = TRUE))
   n.cont <- length(cov_param[[1]])
   
-  cov_mu <- cov_param$mean
-  cov_sd <- cov_param$sd
-  
   if(length(fact.loc) > 0){
     fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], fixed_vars[int.loc])
   }
@@ -73,6 +70,26 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
     }
     
     if(!is.null(cor_vars)) {
+      if(any(names(cov_param) == 'mean')) {
+        cov_mu <- cov_param$mean
+      } else {
+        cov_param[c('k', 'n', 'p', 'var_type')] <- NULL
+        cov_param <- c(cov_param, list(n = rep(1000000, n.cont)))
+        dist <- cov_param$dist_fun
+        cov_param[c('dist_fun')] <- NULL
+        cov_mu <- purrr::invoke_map(dist, cov_param)
+      }
+      
+      if(any(names(cov_param) == 'sd')) {
+        cov_sd <- cov_param$sd
+      } else {
+        cov_param[c('k', 'n', 'p', 'var_type')] <- NULL
+        cov_sd <- NULL
+      }
+      
+      Xmat <- do.call('cbind', lapply(seq_len(ncol(Xmat)), function(xx) 
+        standardize(Xmat[, xx], mean = cov_mu[xx], sd = cov_sd[xx])))
+      
       c_mat <- matrix(nrow = n.cont, ncol = n.cont)
       diag(c_mat) <- 1
       c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
@@ -152,9 +169,6 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   fact.loc <- grep("\\.f|\\.o|\\.c", fixed_vars, ignore.case = TRUE) 
   n.cont <- length(cov_param[[1]])
   
-  # cov_mu <- cov_param$mean
-  # cov_sd <- cov_param$sd
-  
   if(length(fact.loc) > 0){
     fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], fixed_vars[int.loc])
   }
@@ -184,6 +198,26 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     }
     
     if(!is.null(cor_vars)) {
+      if(any(names(cov_param) == 'mean')) {
+        cov_mu <- cov_param$mean
+      } else {
+        cov_param[c('k', 'n', 'p', 'var_type')] <- NULL
+        cov_param <- c(cov_param, list(n = rep(1000000, n.cont)))
+        dist <- cov_param$dist_fun
+        cov_param[c('dist_fun')] <- NULL
+        cov_mu <- purrr::invoke_map(dist, cov_param)
+      }
+      
+      if(any(names(cov_param) == 'sd')) {
+        cov_sd <- cov_param$sd
+      } else {
+        cov_param[c('k', 'n', 'p', 'var_type')] <- NULL
+        cov_sd <- NULL
+      }
+      
+      Xmat <- do.call('cbind', lapply(seq_len(ncol(Xmat)), function(xx) 
+        standardize(Xmat[, xx], mean = cov_mu[xx], sd = cov_sd[xx])))
+      
       c_mat <- matrix(nrow = n.cont, ncol = n.cont)
       diag(c_mat) <- 1
       c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
@@ -206,7 +240,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
                         n = lapply(seq_len(n.fact), function(xx) n), 
                         p = lapply(seq_len(n.fact), function(xx) p)), 
                    fact_vars)
-    Xmat <- cbind(Xmat,  do.call(cbind, purrr::pmap(fact_vars2, sim_factor)))
+    Xmat <- cbind(Xmat,  do.call(cbind, purrr::pmap(fact_vars, sim_factor)))
   }
   
   if(n.int == 0){
@@ -258,9 +292,6 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   n.fact <- length(fact.loc[fact.loc != int.loc])
   n.cont <- length(cov_param[[1]])
   
-  # cov_mu <- cov_param$mean
-  # cov_sd <- cov_param$sd
-  
   if(length(fact.loc)> 0){
     fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], fixed_vars[int.loc])
   }
@@ -271,16 +302,31 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
     }
   }
   if(!is.null(cov_param)) {
-    if(is.null(cor_vars)) {
-      cov_param <- c(list(k = rep(0, n.cont), n = rep(n, n.cont), 
+    cov_param <- c(list(k = rep(0, n.cont), n = rep(n, n.cont), 
                           p = rep(0, n.cont)), cov_param)
-    } else {
-      cov_param <- c(list(k = rep(0, n.cont), n = rep(n, n.cont), 
-                          p = rep(0, n.cont)), cov_param)
-    }
     Xmat <- do.call(cbind, purrr::pmap(cov_param, sim_continuous))
     
     if(!is.null(cor_vars)) {
+      if(any(names(cov_param) == 'mean')) {
+        cov_mu <- cov_param$mean
+      } else {
+        cov_param[c('k', 'n', 'p', 'var_type')] <- NULL
+        cov_param <- c(cov_param, list(n = rep(1000000, n.cont)))
+        dist <- cov_param$dist_fun
+        cov_param[c('dist_fun')] <- NULL
+        cov_mu <- purrr::invoke_map(dist, cov_param)
+      }
+      
+      if(any(names(cov_param) == 'sd')) {
+        cov_sd <- cov_param$sd
+      } else {
+        cov_param[c('k', 'n', 'p', 'var_type')] <- NULL
+        cov_sd <- NULL
+      }
+      
+      Xmat <- do.call('cbind', lapply(seq_len(ncol(Xmat)), function(xx) 
+        standardize(Xmat[, xx], mean = cov_mu[xx], sd = cov_sd[xx])))
+      
       c_mat <- matrix(nrow = n.cont, ncol = n.cont)
       diag(c_mat) <- 1
       c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars

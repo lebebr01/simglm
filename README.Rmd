@@ -46,9 +46,6 @@ Currently supports the following features:
 * Power by simulation
     + Vary parameters for a factorial simulation design.
 * Simulation of missing data
-
-
-Features coming soon:
 * Include other distributions for covariate simulation.
 
 Enjoy!

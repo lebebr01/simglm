@@ -18,9 +18,11 @@ test_that('list terms vary', {
   terms_vary <- list(n = c(20, 40), error_var = c(5, 10),
                      fixed_param = list(c(0.5, 1.1, 0.6, 0.9, 1.1), 
                                         c(0.6, 1.1, 0.6, 0.9, 1.1)),
-                     cov_param = list(list(mean = c(0, 0, 0), sd = c(2, 2, 1), 
+                     cov_param = list(list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                                           mean = c(0, 0, 0), sd = c(2, 2, 1), 
                                            var_type = c("single", "single", "single")),
-                                      list(mean = c(0.5, 0, 0), sd = c(2, 2, 1), 
+                                      list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                                           mean = c(0.5, 0, 0), sd = c(2, 2, 1), 
                                            var_type = c("single", "single", "single"))
                      )
   )

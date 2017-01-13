@@ -36,6 +36,7 @@ test_that("dropout missing occurring", {
 })
 
 test_that("MAR missing", {
+  set.seed(1985)
   # simulate data
   fixed <- ~1 + age + income
   fixed_param <- c(2, 0.3, 1.3)
@@ -60,7 +61,7 @@ test_that("MAR missing", {
                    is.na(tmp_single_miss$sim_data2)), 1)[,2] 
   - unique(sort(miss_prop))))
   
-  expect_equal(diff, .1, tolerance = .1)
+  expect_equal(diff, .1, tolerance = .05)
 })
 
 test_that("mcar missing", {

@@ -26,7 +26,9 @@ fixed <- ~1 + diff + act + diff:act
 random <- ~1 +  diff
 fixed_param <- c(4, 6, 2.3, 7)
 random_param <- list(random_var = c(7, 2), rand_gen = 'rnorm')
-cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
+cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                  mean = c(0, 0), sd = c(1.5, 4), 
+                  var_type = c("lvl1", "lvl2"))
 n <- 150
 unbal <- TRUE
 error_var <- 4
@@ -58,8 +60,9 @@ random3 <- ~ 1 + time
 fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = "rnorm")
 random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
-var_type = c("lvl1", "lvl2", "lvl3"))
+cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                  mean = c(0, 0, 0), sd = c(1.5, 4, 2),
+                  var_type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
 n <- 150
 unbal <- TRUE
@@ -93,8 +96,9 @@ random3 <- ~ 1 + time
 fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
-var_type = c("lvl1", "lvl2", "lvl3"))
+cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                  mean = c(0, 0, 0), sd = c(1.5, 4, 2),
+                  var_type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
 unbal <- TRUE
 unbal3 <- TRUE
@@ -125,7 +129,8 @@ fixed <- ~1 + diff + act.o + diff:act.o
 random <- ~1 +  diff
 fixed_param <- c(4, 6, 2.3, 7)
 random_param <- list(random_var = c(7, 2), rand_gen = 'rnorm')
-cov_param <- list(mean = c(0), sd = c(1.5), var_type = c("lvl1"))
+cov_param <- list(dist_fun = 'rnorm', 
+                  mean = c(0), sd = c(1.5), var_type = c("lvl1"))
 fact_vars <- list(numlevels = c(36), var_type = c('lvl2'))
 n <- 150
 unbal <- TRUE
@@ -151,7 +156,8 @@ random3 <- ~ 1 + time
 fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-cov_param <- list(mean = c(0), sd = c(1.5), var_type = c("lvl1"))
+cov_param <- list(dist_fun = 'rnorm', mean = c(0), sd = c(1.5), 
+                  var_type = c("lvl1"))
 fact_vars <- list(numlevels = c(36, 12), var_type = c('lvl2', 'lvl3'))
 k <- 10
 unbal <- TRUE

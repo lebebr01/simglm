@@ -12,7 +12,7 @@ sim_rand_eff(random_var, n, rand_gen, ther = c(0, 1), ther_sim = FALSE,
 
 \item{n}{Cluster sample size.}
 
-\item{rand_gen}{The generating function used.}
+\item{rand_gen}{The generating function used (e.g. rnorm).}
 
 \item{ther}{A vector of length two that specifies the theoretical mean and
 standard deviation of the rand_gen. This would commonly be used

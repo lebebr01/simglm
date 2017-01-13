@@ -25,7 +25,8 @@ Let's look at a simple single level regression example to get started:
 ```{r singlelevel}
 fixed <- ~ 1 + act + diff + numCourse + act:numCourse
 fixed_param <- c(0.5, 1.1, 0.6, 0.9, 1.1)
-cov_param <- list(mean = c(0, 0, 0), sd = c(2, 2, 1), 
+cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                  mean = c(0, 0, 0), sd = c(2, 2, 1), 
                   var_type = c("single", "single", "single"))
 n <- 150
 error_var <- 20
@@ -35,9 +36,10 @@ alpha <- .01
 pow_dist <- "t"
 pow_tail <- 2
 replicates <- 100
-power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
-                     n = n, error_var = error_var, with_err_gen = with_err_gen, 
-                     data_str = "single", pow_param = pow_param, alpha = alpha,
+power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, 
+                     cov_param = cov_param, n = n, error_var = error_var,
+                     with_err_gen = with_err_gen, data_str = "single",
+                     pow_param = pow_param, alpha = alpha,
                      pow_dist = pow_dist, pow_tail = pow_tail, 
                      replicates = replicates)
 ```
@@ -56,7 +58,9 @@ By default, the `simglm` package uses unstandardized regression coefficients whe
 ```{r standardized}
 fixed <- ~ 1 + act + diff + numCourse + act:numCourse
 fixed_param <- c(0.2, 0.4, 0.25, 0.7, 0.1)
-cov_param <- list(mean = c(0, 0, 0), sd = c(1, 1, 1), var_type = c("single", "single", "single"))
+cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
+                  mean = c(0, 0, 0), sd = c(1, 1, 1), 
+                  var_type = c("single", "single", "single"))
 n <- 150
 error_var <- 1
 with_err_gen <- 'rnorm'
@@ -65,10 +69,12 @@ alpha <- .01
 pow_dist <- "t"
 pow_tail <- 2
 replicates <- 100
-power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
-                       n = n, error_var = error_var, with_err_gen = with_err_gen, 
-                       data_str = "single", pow_param = pow_param, alpha = alpha,
-                       pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
+power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, 
+                     cov_param = cov_param,n = n, error_var = error_var,
+                     with_err_gen = with_err_gen, data_str = "single",
+                     pow_param = pow_param, alpha = alpha,
+                     pow_dist = pow_dist, pow_tail = pow_tail, 
+                     replicates = replicates)
 power_out
 ```
 
@@ -76,7 +82,9 @@ power_out
 ```{r singlelevel_vary}
 fixed <- ~ 1 + act + diff + numCourse + act:numCourse
 fixed_param <- c(0.5, 1.1, 0.6, 0.9, 1.1)
-cov_param <- list(mean = c(0, 0, 0), sd = c(2, 2, 1), var_type = c("single", "single", "single"))
+cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                  mean = c(0, 0, 0), sd = c(2, 2, 1), 
+                  var_type = c("single", "single", "single"))
 n <- NULL
 error_var <- NULL
 with_err_gen <- 'rnorm'
@@ -88,11 +96,13 @@ replicates <- 10
 terms_vary <- list(n = c(20, 40, 60, 80, 100), error_var = c(5, 10, 20),
                    fixed_param = list(c(0.5, 1.1, 0.6, 0.9, 1.1), 
                                       c(0.6, 1.1, 0.6, 0.9, 1.1)),
-                   cov_param = list(list(mean = c(0, 0, 0), sd = c(2, 2, 1), 
-                                    var_type = c("single", "single", "single")),
-                                    list(mean = c(0.5, 0, 0), sd = c(2, 2, 1), 
-                                    var_type = c("single", "single", "single"))
-                                    )
+                cov_param = list(list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                                       mean = c(0, 0, 0), sd = c(2, 2, 1), 
+                                  var_type = c("single", "single", "single")),
+                                  list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                                       mean = c(0.5, 0, 0), sd = c(2, 2, 1), 
+                                  var_type = c("single", "single", "single"))
+                                  )
                    )
 power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, 
                      cov_param = cov_param,
@@ -109,7 +119,9 @@ fixed <- ~1 + time + diff + act + time:act
 random <- ~1 + time
 fixed_param <- c(0, 0.2, 0.1, 0.3, 0.05)
 random_param <- list(random_var = c(7, 4), rand_gen = "rnorm")
-cov_param <- list(mean = c(0, 0), sd = c(1, 1), var_type = c("lvl1", "lvl2"))
+cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                  mean = c(0, 0), sd = c(1, 1), 
+                  var_type = c("lvl1", "lvl2"))
 n <- 150
 p <- 30
 error_var <- 1
@@ -124,8 +136,9 @@ power_out <- sim_pow(fixed = fixed, random = random,
                      random_param = random_param, cov_param = cov_param, 
                      k = NULL, n = n, p = p,
                      error_var = error_var, with_err_gen = "rnorm",
-                     data_str = data_str, unbal = FALSE, pow_param = pow_param, alpha = alpha,
-                     pow_dist = pow_dist, pow_tail = pow_tail, replicates = replicates)
+                     data_str = data_str, unbal = FALSE, pow_param = pow_param, 
+                     alpha = alpha, pow_dist = pow_dist, pow_tail = pow_tail,
+                     replicates = replicates)
 ```
 
 A few notes about the `sim_pow` function in relation to nested data. First, the `lmer` function from the `lme4` package is used to fit the models. When `arima = TRUE`, then the nlme package is used, but this is currently not supported. One note, the power simulation takes more computational time compared to the single level example.
@@ -143,8 +156,9 @@ random3 <- ~ 1 + time
 fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 random_param <- list(random_var = c(7, 4), rand_gen = 'rnorm')
 random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
-var_type = c("lvl1", "lvl2", "lvl3"))
+cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                  mean = c(0, 0, 0), sd = c(1.5, 4, 2),
+                  var_type = c("lvl1", "lvl2", "lvl3"))
 k <- 10
 n <- 45
 p <- 8
@@ -173,8 +187,9 @@ power_out
 ```{r singlelogistic}
 fixed <- ~ 1 + act + diff
 fixed_param <- c(0.1, 0.5, 0.3)
-cov_param <- list(mean = c(0, 0), sd = c(2, 4), 
-                  var_type = c("single", "single", "single"))
+cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                  mean = c(0, 0), sd = c(2, 4), 
+                  var_type = c("single", "single"))
 n <- 50
 pow_param <- c('(Intercept)', 'act', 'diff')
 alpha <- .01
@@ -195,8 +210,9 @@ power_out
 ```{r singlelogistic_vary}
 fixed <- ~ 1 + act + diff
 fixed_param <- c(0.1, 0.5, 0.3)
-cov_param <- list(mean = c(0, 0), sd = c(5, 8), 
-                  var_type = c("single", "single", "single"))
+cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                  mean = c(0, 0), sd = c(5, 8), 
+                  var_type = c("single", "single"))
 n <- NULL
 pow_param <- c('(Intercept)', 'act', 'diff')
 alpha <- .01

@@ -9,7 +9,7 @@
 #'
 #' @param random_var Variance of random effects. Must be same length as random.
 #' @param n Cluster sample size.
-#' @param rand_gen The generating function used.
+#' @param rand_gen The generating function used (e.g. rnorm).
 #' @param ther A vector of length two that specifies the theoretical mean and
 #'              standard deviation of the rand_gen. This would commonly be used
 #'              to standardize the generating variable to have a mean of 0 and
@@ -31,9 +31,9 @@ sim_rand_eff <- function(random_var, n, rand_gen, ther = c(0, 1),
     ther <- c(mean(ther_val), sd(ther_val))
   }
   
-  reff <- sapply(1:length(random_var), function(xx)  
-    standardize(sapply(n, FUN = eval(parse(text = rand_gen)), ...),
-                mean = ther[1], sd = ther[2]))
+  reff <- do.call('cbind', lapply(seq_along(random_var), function(xx)  
+    standardize(sapply(n, FUN = rand_gen, ...),
+                mean = ther[1], sd = ther[2])))
   
   if(is.null(cor_vars)) {
     reff <- reff %*% chol(diag(length(random_var)) * random_var)

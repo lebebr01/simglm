@@ -35,13 +35,17 @@ test_that('sim_factor errors', {
 })
 
 test_that('sim_continuous are continuous', {
-  expect_length(table(sim_continuous(n = 100, mean = 0, sd = 1, 
+  expect_length(table(sim_continuous(n = 100, dist_fun = 'rnorm', 
+                                     mean = 0, sd = 1, 
                                      var_type = 'single')), 100)
-  expect_length(table(sim_continuous(n = 100, p = rep(3, 100), mean = 0, sd = 1, 
+  expect_length(table(sim_continuous(n = 100, p = rep(3, 100), 
+                                     dist_fun = 'rnorm', mean = 0, sd = 1, 
                                      var_type = 'lvl1')), 300)
-  expect_length(table(sim_continuous(n = 100, p = rep(3, 100), mean = 0, sd = 1, 
+  expect_length(table(sim_continuous(n = 100, p = rep(3, 100), 
+                                     dist_fun = 'rnorm', mean = 0, sd = 1, 
                                      var_type = 'lvl2')), 100)
   expect_length(table(sim_continuous(n = 100, p = rep(3, 100), k = 30, 
+                                     dist_fun = 'rnorm',
                                      mean = 0, sd = 1, 
                                      var_type = 'lvl3')), 30)
 })
@@ -50,7 +54,8 @@ test_that('correlated fixef variables single level', {
   fixed <- ~ 1 + act + gpa
   fixed_vars <- attr(terms(fixed),"term.labels")
   n <- 10000
-  cov_param <- list(mean = c(0, 0), sd = c(4, 3), 
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                    mean = c(0, 0), sd = c(4, 3), 
                     var_type = c("single", "single"))
   cor_vars <- .6
   
@@ -72,7 +77,8 @@ test_that('correlated fixef variables single level', {
   fixed <- ~ 1 + act + gpa + v4
   fixed_vars <- attr(terms(fixed),"term.labels")
   n <- 10000
-  cov_param <- list(mean = c(0, 0, 0), sd = c(4, 3, 2),
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                    mean = c(0, 0, 0), sd = c(4, 3, 2),
                     var_type = c("single", "single", 'single'))
   cor_vars <- c(.6, .4, .1)
   
@@ -98,7 +104,8 @@ test_that('fixef correlated 2 level', {
   n <- 5000
   p <- rep(10, 5000)
   data_str <- 'cross'
-  cov_param <- list(mean = c(0, 0), sd = c(4, 3), 
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                    mean = c(0, 0), sd = c(4, 3), 
                     var_type = c("lvl1", "lvl2"))
   cor_vars <- .6
   
@@ -123,7 +130,8 @@ test_that('fixef correlated 2 level', {
   n <- 5000
   p <- rep(10, 5000)
   data_str <- 'cross'
-  cov_param <- list(mean = c(0, 0, 0), sd = c(4, 3, 1), 
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                    mean = c(0, 0, 0), sd = c(4, 3, 1), 
                     var_type = c("lvl1", "lvl2", 'lvl2'))
   cor_vars <- c(.6, .7, .2)
   
@@ -151,7 +159,8 @@ test_that('fixef correlation three level', {
   n <- 3000
   p <- rep(10, 3000)
   data_str <- 'cross'
-  cov_param <- list(mean = c(0, 0), sd = c(4, 3), 
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                    mean = c(0, 0), sd = c(4, 3), 
                     var_type = c("lvl1", "lvl2"))
   cor_vars <- .3
   
@@ -177,7 +186,8 @@ test_that('fixef correlation three level', {
   n <- 2000
   p <- rep(10, 2000)
   data_str <- 'cross'
-  cov_param <- list(mean = c(0, 0, 0), sd = c(4, 3, 2), 
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+                    mean = c(0, 0, 0), sd = c(4, 3, 2), 
                     var_type = c("lvl1", "lvl2", 'lvl3'))
   cor_vars <- c(.6, .7, .2)
   
@@ -202,7 +212,8 @@ test_that('.f and .c are expanded but not .o', {
   fixed <- ~ 1 + act.o + diff.o + numCourse.f + act.o:numCourse.f
   fixed_param <- c(0.8, 1, 0.2, 0.1, 0, 0.15, 0.2, 0.5, 0.02, -0.6, -0.1)
   cov_param <- NULL
-  fact_vars <- list(numlevels = c(36, 8, 5), var_type = c('single', 'single', "single"))
+  fact_vars <- list(numlevels = c(36, 8, 5), 
+                    var_type = c('single', 'single', "single"))
   n <- 150
   error_var <- 3
   with_err_gen = 'rnorm'

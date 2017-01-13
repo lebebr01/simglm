@@ -16,23 +16,39 @@
 #'  (and likely of random).
 #' @param fixed_param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
 #' @param random_param A list of named elements that must contain: 
-#'             random_var = variance of random parameters,
-#'             rand_gen = Name of simulation function for random effects.
+#'   \itemize{
+#'      \item  random_var = variance of random parameters,
+#'      \item  rand_gen = Name of simulation function for random effects.
+#'   }
 #'          Optional elements are:
-#'             ther: Theorectial mean and variance from rand_gen,
-#'             ther_sim: Simulate mean/variance for standardization purposes,
-#'             cor_vars: Correlation between random effects,
-#'             ...: Additional parameters needed for rand_gen function.
+#'   \itemize{
+#'      \item ther: Theorectial mean and variance from rand_gen,
+#'      \item ther_sim: Simulate mean/variance for standardization purposes,
+#'      \item cor_vars: Correlation between random effects,
+#'      \item ...: Additional parameters needed for rand_gen function.
+#'    }
 #' @param random_param3 A list of named elements that must contain: 
-#'             random_var = variance of random parameters,
-#'             rand_gen = Name of simulation function for random effects.
+#'    \itemize{
+#'        \item random_var = variance of random parameters,
+#'        \item rand_gen = Name of simulation function for random effects.
+#'    }
 #'          Optional elements are:
-#'             ther: Theorectial mean and variance from rand_gen,
-#'             ther_sim: Simulate mean/variance for standardization purposes,
-#'             cor_vars: Correlation between random effects,
-#'             ...: Additional parameters needed for rand_gen function.
-#' @param cov_param List of mean and variance for fixed effects. Does not include intercept, time, or 
-#' interactions. Must be same order as fixed formula above.
+#'    \itemize{
+#'        \item ther: Theorectial mean and variance from rand_gen,
+#'        \item ther_sim: Simulate mean/variance for standardization purposes,
+#'        \item cor_vars: Correlation between random effects,
+#'        \item ...: Additional parameters needed for rand_gen function.
+#'    }
+#' @param cov_param List of parameters to pass on to continuous covariate 
+#'     simulation. Does not include intercept, time, or 
+#'     interactions. Must be same order as fixed formula above. 
+#'     This list must contain:
+#'     \itemize{
+#'       \item dist_fun = distribution for covariate simulation   
+#'       \item Any additional arguments needed to evaluate R distribution
+#'          function. 
+#'    }
+#'    
 #' @param k Number of third level clusters.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
@@ -68,7 +84,9 @@
 #' # generating parameters for single level regression
 #' fixed <- ~1 + act + diff + numCourse + act:numCourse
 #' fixed_param <- c(2, 4, 1, 3.5, 2)
-#' cov_param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var_type = c("single", "single", "single"))
+#' cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
+#'    mean = c(0, 0, 0), sd = c(4, 3, 3), 
+#'    var_type = c("single", "single", "single"))
 #' n <- 150
 #' error_var <- 3
 #' with_err_gen <- 'rnorm'
@@ -82,7 +100,8 @@
 #' random <- ~1 + time + diff
 #' fixed_param <- c(4, 2, 6, 2.3, 7)
 #' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
-#' cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
+#' cov_param <- list(dist_fun = c('rnorm', 'rnorm'), mean = c(0, 0), 
+#'   sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
 #' n <- 150
 #' p <- 30
 #' error_var <- 4
@@ -103,8 +122,9 @@
 #' fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 #' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 #' random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-#' cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
-#' var_type = c("lvl1", "lvl2", "lvl3"))
+#' cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
+#'      mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
+#'      var_type = c("lvl1", "lvl2", "lvl3"))
 #' k <- 10
 #' n <- 15
 #' p <- 10
@@ -204,7 +224,9 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' # generating parameters for single level regression
 #' fixed <- ~1 + act + diff + numCourse + act:numCourse
 #' fixed_param <- c(2, 4, 1, 3.5, 2)
-#' cov_param <- list(mean = c(0, 0, 0), sd = c(4, 3, 3), var_type = c("single", "single", "single"))
+#' cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+#'    mean = c(0, 0, 0), sd = c(4, 3, 3), 
+#'    var_type = c("single", "single", "single"))
 #' n <- 150
 #' temp.single <- sim_glm(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param, 
 #' n = n, data_str = "single")
@@ -214,7 +236,8 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' random <- ~1 + time + diff
 #' fixed_param <- c(4, 2, 6, 2.3, 7)
 #' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
-#' cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
+#' cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+#'    mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
 #' n <- 150
 #' p <- 30
 #' data_str <- "long"
@@ -229,8 +252,9 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 #' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 #' random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-#' cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
-#' var_type = c("lvl1", "lvl2", "lvl3"))
+#' cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
+#'    mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
+#'    var_type = c("lvl1", "lvl2", "lvl3"))
 #' k <- 10
 #' n <- 15
 #' p <- 10

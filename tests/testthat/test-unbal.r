@@ -5,7 +5,10 @@ test_that("return error",{
   random <- ~1 +  diff
   fixed_param <- c(4, 6, 2.3, 7)
   random_param <- list(random_var = c(7, 2), rand_gen = 'rnorm')
-  cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
+  cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
+                    var_type = c("lvl1", "lvl2"),
+                    opts = list(list(mean = 0, sd = 1.5), 
+                                list(mean = 0, sd = 4)))
   n <- 150
   p <- 30
   unbal <- TRUE

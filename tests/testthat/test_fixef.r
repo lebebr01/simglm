@@ -55,8 +55,9 @@ test_that('correlated fixef variables single level', {
   fixed_vars <- attr(terms(fixed),"term.labels")
   n <- 10000
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                    mean = c(0, 0), sd = c(4, 3), 
-                    var_type = c("single", "single"))
+                    var_type = c("single", "single"),
+                    opts = list(list(mean = 0, sd = 4),
+                                list(mean = 0, sd = 3)))
   cor_vars <- .6
   
   c_mat <- matrix(nrow = 2, ncol = 2)
@@ -68,18 +69,19 @@ test_that('correlated fixef variables single level', {
   expect_equal(cor(fixef), c_mat, 
                check.attributes = FALSE, tolerance = .03)
   expect_equal(sapply(1:ncol(fixef), function(xx) sd(fixef[, xx])), 
-               cov_param$sd, 
+               c(4, 3), 
                check.attributes = FALSE, tolerance = .02)
   expect_equal(sapply(1:ncol(fixef), function(xx) mean(fixef[, xx])), 
-               cov_param$mean,
+               c(0, 0),
                check.attributes = FALSE, tolerance = .1)
   
   fixed <- ~ 1 + act + gpa + v4
   fixed_vars <- attr(terms(fixed),"term.labels")
   n <- 10000
   cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
-                    mean = c(0, 0, 0), sd = c(4, 3, 2),
-                    var_type = c("single", "single", 'single'))
+                    var_type = c("single", "single", 'single'),
+                    opts = list(list(mean = 0, sd = 4), list(mean = 0, sd = 3),
+                                list(mean = 0, sd = 2)))
   cor_vars <- c(.6, .4, .1)
   
   c_mat <- matrix(nrow = 3, ncol = 3)
@@ -91,10 +93,10 @@ test_that('correlated fixef variables single level', {
   expect_equal(cor(fixef), c_mat, 
                check.attributes = FALSE, tolerance = .03)
   expect_equal(sapply(1:ncol(fixef), function(xx) sd(fixef[, xx])), 
-               cov_param$sd, 
+               c(4, 3, 2), 
                check.attributes = FALSE, tolerance = .02)
   expect_equal(sapply(1:ncol(fixef), function(xx) mean(fixef[, xx])), 
-               cov_param$mean,
+               c(0, 0, 0),
                check.attributes = FALSE, tolerance = .1)
 })
 
@@ -105,8 +107,9 @@ test_that('fixef correlated 2 level', {
   p <- rep(10, 5000)
   data_str <- 'cross'
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                    mean = c(0, 0), sd = c(4, 3), 
-                    var_type = c("lvl1", "lvl2"))
+                    var_type = c("lvl1", "lvl2"),
+                    opts = list(list(mean = 0, sd = 4), 
+                                list(mean = 0, sd = 3)))
   cor_vars <- .6
   
   c_mat <- matrix(nrow = 2, ncol = 2)
@@ -119,10 +122,10 @@ test_that('fixef correlated 2 level', {
   expect_equal(cor(fixef), c_mat, 
                check.attributes = FALSE, tolerance = .03)
   expect_equal(sapply(1:ncol(fixef), function(xx) sd(fixef[, xx])), 
-               cov_param$sd, 
+               c(4, 3), 
                check.attributes = FALSE, tolerance = .02)
   expect_equal(sapply(1:ncol(fixef), function(xx) mean(fixef[, xx])), 
-               cov_param$mean,
+               c(0, 0),
                check.attributes = FALSE, tolerance = .1)
   
   fixed <- ~ 1 + act + gpa + v4
@@ -131,8 +134,10 @@ test_that('fixef correlated 2 level', {
   p <- rep(10, 5000)
   data_str <- 'cross'
   cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
-                    mean = c(0, 0, 0), sd = c(4, 3, 1), 
-                    var_type = c("lvl1", "lvl2", 'lvl2'))
+                    var_type = c("lvl1", "lvl2", 'lvl2'),
+                    opts = list(list(mean = 0, sd = 4),
+                                list(mean = 0, sd = 3),
+                                list(mean = 0, sd = 1)))
   cor_vars <- c(.6, .7, .2)
   
   c_mat <- matrix(nrow = 3, ncol = 3)
@@ -145,10 +150,10 @@ test_that('fixef correlated 2 level', {
   expect_equal(cor(fixef), c_mat, 
                check.attributes = FALSE, tolerance = .05)
   expect_equal(sapply(1:ncol(fixef), function(xx) sd(fixef[, xx])), 
-               cov_param$sd, 
+               c(4, 3, 1), 
                check.attributes = FALSE, tolerance = .02)
   expect_equal(sapply(1:ncol(fixef), function(xx) mean(fixef[, xx])), 
-               cov_param$mean,
+               c(0, 0, 0),
                check.attributes = FALSE, tolerance = .1)
 })
 
@@ -160,8 +165,9 @@ test_that('fixef correlation three level', {
   p <- rep(10, 3000)
   data_str <- 'cross'
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                    mean = c(0, 0), sd = c(4, 3), 
-                    var_type = c("lvl1", "lvl2"))
+                    var_type = c("lvl1", "lvl2"),
+                    opts = list(list(mean = 0, sd = 4),
+                                list(mean = 0, sd = 3)))
   cor_vars <- .3
   
   c_mat <- matrix(nrow = 2, ncol = 2)
@@ -174,10 +180,10 @@ test_that('fixef correlation three level', {
   expect_equal(cor(fixef), c_mat, 
                check.attributes = FALSE, tolerance = .05)
   expect_equal(sapply(1:ncol(fixef), function(xx) sd(fixef[, xx])), 
-               cov_param$sd, 
+               c(4, 3), 
                check.attributes = FALSE, tolerance = .02)
   expect_equal(sapply(1:ncol(fixef), function(xx) mean(fixef[, xx])), 
-               cov_param$mean,
+               c(0, 0),
                check.attributes = FALSE, tolerance = .1)
   
   fixed <- ~ 1 + act + gpa + v4
@@ -187,8 +193,10 @@ test_that('fixef correlation three level', {
   p <- rep(10, 2000)
   data_str <- 'cross'
   cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
-                    mean = c(0, 0, 0), sd = c(4, 3, 2), 
-                    var_type = c("lvl1", "lvl2", 'lvl3'))
+                    var_type = c("lvl1", "lvl2", 'lvl3'),
+                    opts = list(list(mean = 0, sd = 4),
+                                list(mean = 0, sd = 3),
+                                list(mean = 0, sd = 2)))
   cor_vars <- c(.6, .7, .2)
   
   c_mat <- matrix(nrow = 3, ncol = 3)
@@ -201,10 +209,10 @@ test_that('fixef correlation three level', {
   expect_equal(cor(fixef), c_mat, 
                check.attributes = FALSE, tolerance = .05)
   expect_equal(sapply(1:ncol(fixef), function(xx) sd(fixef[, xx])), 
-               cov_param$sd, 
+               c(4, 3, 2), 
                check.attributes = FALSE, tolerance = .02)
   expect_equal(sapply(1:ncol(fixef), function(xx) mean(fixef[, xx])), 
-               cov_param$mean,
+               c(0, 0, 0),
                check.attributes = FALSE, tolerance = .1)
 })
 

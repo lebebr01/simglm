@@ -7,8 +7,9 @@ test_that("dropout missing occurring", {
   fixed_param <- c(4, 2, 6, 2.3, 7)
   random_param <- list(random_var = c(7, 4, 2), rand_gen = "rnorm")
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                    mean = c(0, 0), sd = c(1.5, 4), 
-                    var_type = c("lvl1", "lvl2"))
+                    var_type = c("lvl1", "lvl2"), 
+                    opts = list(list(mean = 0, sd = 1.5),
+                                list(mean = 0, sd = 4)))
   n <- 150
   p <- 30
   error_var <- 4
@@ -41,8 +42,9 @@ test_that("MAR missing", {
   fixed <- ~1 + age + income
   fixed_param <- c(2, 0.3, 1.3)
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                    mean = c(0, 0), sd = c(4, 3), 
-                    var_type = c("single", "single"))
+                    var_type = c("single", "single"), 
+                    opts = list(list(mean = 0, sd = 4),
+                                list(mean = 0, sd = 2)))
   n <- 4500
   error_var <- 3
   with_err_gen <- 'rnorm'
@@ -69,8 +71,9 @@ test_that("mcar missing", {
   fixed <- ~1 + age + income
   fixed_param <- c(2, 0.3, 1.3)
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                    mean = c(0, 0), sd = c(4, 3), 
-                    var_type = c("single", "single"))
+                    var_type = c("single", "single"),
+                    opts = list(list(mean = 0, sd = 4), 
+                                list(mean = 0, sd = 3)))
   n <- 4500
   error_var <- 3
   with_err_gen <- 'rnorm'

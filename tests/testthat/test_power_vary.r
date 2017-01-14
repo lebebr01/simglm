@@ -5,8 +5,10 @@ test_that('list terms vary', {
   fixed <- ~ 1 + act + diff + numCourse + act:numCourse
   fixed_param <- c(0.5, 1.1, 0.6, 0.9, 1.1)
   cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
-                    mean = c(0, 0, 0), sd = c(2, 2, 1), 
-                    var_type = c("single", "single", "single"))
+                    var_type = c("single", "single", "single"),
+                    opts = list(list(mean = 0, sd = 2),
+                                list(mean = 0, sd = 2),
+                                list(mean = 0, sd = 1)))
   n <- NULL
   error_var <- NULL
   with_err_gen <- 'rnorm'
@@ -38,8 +40,9 @@ test_that('list terms vary', {
   fixed <- ~ 1 + act + diff
   fixed_param <- c(0.1, 0.5, 0.3)
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                    mean = c(0, 0), sd = c(2, 3), 
-                    var_type = c("single", "single"))
+                    var_type = c("single", "single"),
+                    opts = list(list(mean = 0, sd = 2),
+                                list(mean = 0, sd = 3)))
   n <- NULL
   pow_param <- c('(Intercept)', 'act', 'diff')
   alpha <- .01
@@ -66,8 +69,9 @@ test_that('two level power continuous', {
   fixed_param <- c(0, 0.2, 0.1, 0.3, 0.05)
   random_param <- list(random_var = c(7, 4), rand_gen = "rnorm")
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                    mean = c(0, 0), sd = c(1, 1), 
-                    var_type = c("lvl1", "lvl2"))
+                    var_type = c("lvl1", "lvl2"), 
+                    opts = list(list(mean = 0, sd = 1),
+                                list(mean = 0, sd = 1)))
   n <- 75
   p <- 10
   error_var <- 1
@@ -101,8 +105,10 @@ test_that("three level power continuous", {
   random_param <- list(random_var = c(7, 4), rand_gen = 'rnorm')
   random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
   cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
-                    mean = c(0, 0, 0), sd = c(1.5, 4, 2),
-                    var_type = c("lvl1", "lvl2", "lvl3"))
+                    var_type = c("lvl1", "lvl2", "lvl3"),
+                    opts = list(list(mean = 0, sd = 1.5),
+                                list(mean = 0, sd = 4),
+                                list(mean = 0, sd = 2)))
   k <- 10
   n <- 15
   p <- 10
@@ -140,8 +146,9 @@ test_that('two level power dich', {
   fixed_param <- c(0, 0.2, 0.1, 0.3, 0.05)
   random_param <- list(random_var = c(4, 2), rand_gen = "rnorm")
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                    mean = c(0, 0), sd = c(1, 1), 
-                    var_type = c("lvl1", "lvl2"))
+                    var_type = c("lvl1", "lvl2"),
+                    opts = list(list(mean = 0, sd = 1),
+                                list(mean = 0, sd = 1)))
   n <- 75
   p <- 10
   data_str <- "long"
@@ -174,8 +181,10 @@ test_that("three level power dich", {
   random_param <- list(random_var = 7, rand_gen = 'rnorm')
   random_param3 <- list(random_var = 4, rand_gen = 'rnorm')
   cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
-                    mean = c(0, 0, 0), sd = c(1.5, 4, 2),
-                    var_type = c("lvl1", "lvl2", "lvl3"))
+                    var_type = c("lvl1", "lvl2", "lvl3"),
+                    opts = list(list(mean = 0, sd = 1.5),
+                                list(mean = 0, sd = 4),
+                                list(mean = 0, sd = 2)))
   k <- 10
   n <- 15
   p <- 5

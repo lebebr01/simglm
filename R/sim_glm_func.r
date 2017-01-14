@@ -8,8 +8,15 @@
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
 #' @param fixed_param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
-#' @param cov_param List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or 
-#'   interactions. Must be same order as fixed formula above.
+#' @param cov_param List of arguments. Required arguments are:
+#'   \itemize{
+#'     \item dist_fun: This is a quoted R distribution function.
+#'     \item var_type: This is the level of variable to generate. Must be 
+#'       'single'. Must be same order as fixed formula above.
+#'   }
+#'   Optional arguments to the distribution functions are in a nested list,
+#'    see the examples for example code for this.
+#'  Does not include intercept, factors, or interactions.
 #' @param n Cluster sample size.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
 #' @param cor_vars A vector of correlations between variables.
@@ -76,9 +83,15 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
 #'             ther_sim: Simulate mean/variance for standardization purposes,
 #'             cor_vars: Correlation between random effects,
 #'             ...: Additional parameters needed for rand_gen function.
-#' @param cov_param List of mean, sd (standard deviations), and var_type for fixed effects. 
-#'  Does not include intercept, time, factors, or interactions. 
-#'  var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
+#' @param cov_param List of arguments. Required arguments are:
+#'   \itemize{
+#'     \item dist_fun: This is a quoted R distribution function.
+#'     \item var_type: This is the level of variable to generate. Must be 
+#'       either 'lvl1' or 'lvl2'. Must be same order as fixed formula above.
+#'   }
+#'   Optional arguments to the distribution functions are in a nested list,
+#'    see the examples for example code for this.
+#'  Does not include intercept, time, factors, or interactions.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
@@ -187,9 +200,16 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), co
 #'             ther_sim: Simulate mean/variance for standardization purposes,
 #'             cor_vars: Correlation between random effects,
 #'             ...: Additional parameters needed for rand_gen function.
-#' @param cov_param List of mean, sd (standard deviations), and var_type for fixed effects. 
-#'  Does not include intercept, time, factors, or interactions. 
-#'  var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
+#' @param cov_param List of arguments. Required arguments are:
+#'   \itemize{
+#'     \item dist_fun: This is a quoted R distribution function.
+#'     \item var_type: This is the level of variable to generate. Must be 
+#'       either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
+#'       above.
+#'   }
+#'   Optional arguments to the distribution functions are in a nested list,
+#'    see the examples for example code for this.
+#'  Does not include intercept, time, factors, or interactions.
 #' @param k Number of third level clusters.
 #' @param n Level two sample size within each level three cluster.
 #' @param p Within cluster sample size within each level two cluster.

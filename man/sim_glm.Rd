@@ -37,8 +37,17 @@ Optional elements are:
    cor_vars: Correlation between random effects,
    ...: Additional parameters needed for rand_gen function.}
 
-\item{cov_param}{List of mean and variance for fixed effects. Does not include intercept, time, or 
-interactions. Must be same order as fixed formula above.}
+\item{cov_param}{List of arguments to pass to the continuous generating 
+ function. Required arguments include:
+ \itemize{
+   \item dist_fun: This is a quoted R distribution function.
+   \item var_type: This is the level of variable to generate. Must be 
+     either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
+     above.
+ }
+ Optional arguments to the distribution functions are in a nested list,
+  see the examples for example code for this.
+Does not include intercept, time, factors, or interactions.}
 
 \item{k}{Number of third level clusters.}
 
@@ -85,8 +94,10 @@ linear mixed models (aka. hierarchical linear models or multilevel models).
 fixed <- ~1 + act + diff + numCourse + act:numCourse
 fixed_param <- c(2, 4, 1, 3.5, 2)
 cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
-   mean = c(0, 0, 0), sd = c(4, 3, 3), 
-   var_type = c("single", "single", "single"))
+   var_type = c("single", "single", "single"),
+   opts = list(list(mean = 0, sd = 4),
+   list(mean = 0, sd = 3),
+   list(mean = 0, sd = 3)))
 n <- 150
 temp.single <- sim_glm(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param, 
 n = n, data_str = "single")
@@ -97,7 +108,9 @@ random <- ~1 + time + diff
 fixed_param <- c(4, 2, 6, 2.3, 7)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-   mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
+   var_type = c("lvl1", "lvl2"),
+   opts = list(list(mean = 0, sd = 1.5),
+   list(mean = 0, sd = 4)))
 n <- 150
 p <- 30
 data_str <- "long"
@@ -113,8 +126,10 @@ fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
 cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
-   mean = c(0, 0, 0), sd = c(1.5, 4, 2), 
-   var_type = c("lvl1", "lvl2", "lvl3"))
+   var_type = c("lvl1", "lvl2", "lvl3"),
+   opts = list(list(mean = 0, sd = 1.5),
+   list(mean = 0, sd = 4),
+   list(mean = 0, sd = 2)))
 k <- 10
 n <- 15
 p <- 10

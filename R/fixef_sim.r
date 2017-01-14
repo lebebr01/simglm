@@ -8,9 +8,15 @@
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.
 #' @param fixed_vars Character vector of covariates for design matrix.
-#' @param cov_param List of mean, sd (standard deviations), and var_type for fixed effects. 
-#'  Does not include intercept, time, factors, or interactions. 
-#'  var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.
+#' @param cov_param List of arguments. Required arguments are:
+#'   \itemize{
+#'     \item dist_fun: This is a quoted R distribution function.
+#'     \item var_type: This is the level of variable to generate. Must be 
+#'       either 'lvl1' or 'lvl2'. Must be same order as fixed formula above.
+#'   }
+#'   Optional arguments to the distribution functions are in a nested list,
+#'    see the examples for example code for this.
+#'  Does not include intercept, time, factors, or interactions.
 #' @param n Number of clusters.
 #' @param p Number of within cluster units.
 #' @param data_str Type of data. Must be "cross", or "long".
@@ -131,10 +137,16 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.
 #' @param fixed_vars Character vector of covariates for design matrix.
-#' @param cov_param List of mean, sd (standard deviations), and var_type for fixed effects. 
-#'  Does not include intercept, time, factors, or interactions. 
-#'  var_type must be either "lvl1", "lvl2", or "lvl3"". 
-#'  Must be same order as fixed formula above.
+#' @param cov_param List of arguments. Required arguments are:
+#'   \itemize{
+#'     \item dist_fun: This is a quoted R distribution function.
+#'     \item var_type: This is the level of variable to generate. Must be 
+#'       either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
+#'       above.
+#'   }
+#'   Optional arguments to the distribution functions are in a nested list,
+#'    see the examples for example code for this.
+#'  Does not include intercept, time, factors, or interactions.
 #' @param k Number of third level clusters.
 #' @param n Number of clusters.
 #' @param p Number of within cluster units.
@@ -253,8 +265,15 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #' @param fixed One sided formula for fixed effects in the simulation.
 #' @param fixed_vars Character vector of covariates for design matrix.
 #' @param n Number of clusters.
-#' @param cov_param List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or 
-#'   interactions. Must be same order as fixed formula above.
+#' @param cov_param List of arguments. Required arguments are:
+#'   \itemize{
+#'     \item dist_fun: This is a quoted R distribution function.
+#'     \item var_type: This is the level of variable to generate. Must be 
+#'       'single'. Must be same order as fixed formula above.
+#'   }
+#'   Optional arguments to the distribution functions are in a nested list,
+#'    see the examples for example code for this.
+#'  Does not include intercept, factors, or interactions.
 #' @param cor_vars A vector of correlations between variables.
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
 #'      each list must include numlevels and var_type (must be "single");

@@ -14,8 +14,15 @@ sim_fixef_single(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
 
 \item{n}{Number of clusters.}
 
-\item{cov_param}{List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or 
-interactions. Must be same order as fixed formula above.}
+\item{cov_param}{List of arguments. Required arguments are:
+ \itemize{
+   \item dist_fun: This is a quoted R distribution function.
+   \item var_type: This is the level of variable to generate. Must be 
+     'single'. Must be same order as fixed formula above.
+ }
+ Optional arguments to the distribution functions are in a nested list,
+  see the examples for example code for this.
+Does not include intercept, factors, or interactions.}
 
 \item{cor_vars}{A vector of correlations between variables.}
 

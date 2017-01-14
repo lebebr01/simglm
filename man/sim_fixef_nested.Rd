@@ -12,9 +12,15 @@ sim_fixef_nested(fixed, fixed_vars, cov_param, n, p, data_str,
 
 \item{fixed_vars}{Character vector of covariates for design matrix.}
 
-\item{cov_param}{List of mean, sd (standard deviations), and var_type for fixed effects. 
-Does not include intercept, time, factors, or interactions. 
-var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.}
+\item{cov_param}{List of arguments. Required arguments are:
+ \itemize{
+   \item dist_fun: This is a quoted R distribution function.
+   \item var_type: This is the level of variable to generate. Must be 
+     either 'lvl1' or 'lvl2'. Must be same order as fixed formula above.
+ }
+ Optional arguments to the distribution functions are in a nested list,
+  see the examples for example code for this.
+Does not include intercept, time, factors, or interactions.}
 
 \item{n}{Number of clusters.}
 

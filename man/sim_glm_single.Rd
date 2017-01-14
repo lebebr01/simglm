@@ -12,8 +12,15 @@ sim_glm_single(fixed, fixed_param, cov_param, n, data_str, cor_vars = NULL,
 
 \item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
 
-\item{cov_param}{List of mean and sd (standard deviation) for fixed effects. Does not include intercept, time, or 
-interactions. Must be same order as fixed formula above.}
+\item{cov_param}{List of arguments. Required arguments are:
+ \itemize{
+   \item dist_fun: This is a quoted R distribution function.
+   \item var_type: This is the level of variable to generate. Must be 
+     'single'. Must be same order as fixed formula above.
+ }
+ Optional arguments to the distribution functions are in a nested list,
+  see the examples for example code for this.
+Does not include intercept, factors, or interactions.}
 
 \item{n}{Cluster sample size.}
 

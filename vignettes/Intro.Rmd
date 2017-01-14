@@ -38,8 +38,10 @@ Let's look at a simple single level regression example to get started:
 fixed <- ~ 1 + act + diff + numCourse + act:numCourse
 fixed_param <- c(2, 4, 1, 3.5, 2)
 cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
-                  mean = c(0, 0, 0), sd = c(4, 3, 3), 
-                  var_type = c("single", "single", "single"))
+                  var_type = c("single", "single", "single"),
+                  cov_param = list(list(mean = 0, sd = 4),
+                                   list(mean = 0, sd = 3),
+                                   list(mean = 0, sd = 3)))
 n <- 150
 error_var <- 3
 with_err_gen = 'rnorm'
@@ -95,8 +97,9 @@ The ability to add correlated predictor variables is an easy addition. The addit
 fixed <- ~ 1 + act + diff + numCourse.o + act:numCourse.o
 fixed_param <- c(2, 4, 1, 3.5, 2)
 cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                  mean = c(0, 0), sd = c(4, 3), 
-                  var_type = c("single", "single"))
+                  var_type = c("single", "single"),
+                  opts = list(list(mean = 0, sd = 4),
+                              list(mean = 0, sd = 3)))
 fact_vars <- list(numlevels = 5, var_type = "single")
 n <- 150
 error_var <- 3
@@ -110,6 +113,32 @@ temp_single_o <- sim_reg(fixed = fixed, fixed_param = fixed_param,
 cor(temp_single_o[, 2:3])
 ```
 
+#### Editing distributions for covariates.
+The distribution of covariates can also be changed to any R distribution function (e.g. `rnorm` or `rt`). These are called via the `cov_param` argument using `dist_fun`. Any additional parameters besides sample size are called via the optional `opts` argument within `cov_param`. The distributions need not be the same for each covariate. Below is an example generating two covariates using two different distributions and correlating them.
+
+```{r other_dists}
+fixed <- ~ 1 + act + diff + numCourse.o + act:numCourse.o
+fixed_param <- c(2, 4, 1, 3.5, 2)
+cov_param <- list(dist_fun = c('rt', 'rgamma'),
+                  var_type = c("single", "single"),
+                  opts = list(list(df = 5),
+                              list(shape = 2)))
+fact_vars <- list(numlevels = 5, var_type = "single")
+n <- 150
+error_var <- 3
+with_err_gen = 'rnorm'
+cor_vars <- 0.6
+temp_single_o <- sim_reg(fixed = fixed, fixed_param = fixed_param, 
+                         cov_param = cov_param, n = n, 
+                         error_var = error_var,
+                         with_err_gen = with_err_gen, data_str = "single", 
+                         cor_vars = cor_vars, fact_vars = fact_vars)
+cor(temp_single_o[, 2:3])
+```
+
+The skewness and kurtosis can be ways to ensure that these distributions are actually generated as desired. For example, the skewness and kurtosis for the `rt` distribution are: `r e1071::skewness(temp_single_o$act)` and `r e1071::kurtosis(temp_single_o$act)`. Similarly done for the `rgamma` distribution: `r e1071::skewness(temp_single_o$diff)` and `r e1071::kurtosis(temp_single_o$diff)`.
+
+
 
 ### Nested Data
 This package currently supports the simulation of two-level nested or two-level longitudinal models. A few additional arguments are needed to do these models but much is the same.
@@ -119,8 +148,9 @@ random <- ~1 + time + diff
 fixed_param <- c(4, 2, 6, 2.3, 7)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = "rnorm")
 cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                  mean = c(0, 0), sd = c(1.5, 4), 
-                  var_type = c("lvl1", "lvl2"))
+                  var_type = c("lvl1", "lvl2"), 
+                  opts = list(list(mean = 0, sd = 1.5),
+                              list(mean = 0, sd = 4)))
 n <- 150
 p <- 30
 error_var <- 4

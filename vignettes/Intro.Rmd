@@ -69,9 +69,9 @@ summary(lm(sim_data ~ 1 + act + diff + numCourse + act:numCourse, data = temp_si
 ```
 
 #### Adding Factor/Categorical/Ordinal Variables
-To add a factor, categorical, or ordinal variable, just append one of the following to the end of the variable name in the `fixed` object: ".f", ".c", ".o".  These indicate the variable is a discrete variable of some sort. By default, all variables with a ".f" or ".c" will be treated as factors and expanded using dummy coding. If ".o" is used in the variable names, the variable will be discrete but treated as continuous in the simulation (i.e. only a single fixed effect variable). See below for an example.
+To add a factor, categorical, or ordinal variable, just append one of the following to the end of the variable name in the `fixed` object: ".f", ".c", ".o", "_f", "_c", or "_o".  These indicate the variable is a discrete variable of some sort. By default, all variables with a ".f" or ".c" will be treated as factors and expanded using dummy coding. If ".o" is used in the variable names, the variable will be discrete but treated as continuous in the simulation (i.e. only a single fixed effect variable). See below for an example.
 ```{r singlelevelfact}
-fixed <- ~ 1 + act.o + diff.o + numCourse.f + act.o:numCourse.f
+fixed <- ~ 1 + act_o + diff.o + numCourse_f + act.o:numCourse_f
 fixed_param <- c(0.8, 1, 0.2, 0.1, 0, 0.15, 0.2, 0.5, 0.02, -0.6, -0.1)
 cov_param <- NULL
 fact_vars <- list(numlevels = c(36, 8, 5), 
@@ -94,7 +94,7 @@ head(temp_single_o)
 The ability to add correlated predictor variables is an easy addition. The additional argument `cor_vars` takes a vector of correlations between predictor variables (note this does not include the intercept, factor variables, or any interaction variables). These correlations are further turned into a covariance matrix with the standard deviations specified in the `cov_param` argument. Then through cholesky decomposition, the correlations between the variables are generated prior to simulating the response variable. Below is an example. The default value is no correlation between the covariates.
 
 ```{r corvars}
-fixed <- ~ 1 + act + diff + numCourse.o + act:numCourse.o
+fixed <- ~ 1 + act + diff + numCourse_o + act:numCourse_o
 fixed_param <- c(2, 4, 1, 3.5, 2)
 cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
                   var_type = c("single", "single"),
@@ -117,7 +117,7 @@ cor(temp_single_o[, 2:3])
 The distribution of covariates can also be changed to any R distribution function (e.g. `rnorm` or `rt`). These are called via the `cov_param` argument using `dist_fun`. Any additional parameters besides sample size are called via the optional `opts` argument within `cov_param`. The distributions need not be the same for each covariate. Below is an example generating two covariates using two different distributions and correlating them.
 
 ```{r other_dists}
-fixed <- ~ 1 + act + diff + numCourse.o + act:numCourse.o
+fixed <- ~ 1 + act + diff + numCourse_o + act:numCourse_o
 fixed_param <- c(2, 4, 1, 3.5, 2)
 cov_param <- list(dist_fun = c('rt', 'rgamma'),
                   var_type = c("single", "single"),

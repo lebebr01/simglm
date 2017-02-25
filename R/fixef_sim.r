@@ -54,7 +54,8 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   } else {
     int.loc <- 0
   }
-  fact.loc <- grep("\\.f|\\.o|\\.c", fixed_vars, ignore.case = TRUE) 
+  fact.loc <- grep("\\.f$|\\.o$|\\.c$|_f$|_c$|_f$", 
+                   fixed_vars, ignore.case = TRUE) 
   w.var <- length(grep("lvl1", cov_param$var_type, ignore.case = TRUE))
   n.cont <- length(cov_param[[1]])
   
@@ -135,7 +136,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
      int.loc <- grep(":", fixed_vars)
      colnames(Xmat) <- fixed_vars[-int.loc]
    } 
- if(any(grepl("\\.f|\\.c", fixed_vars, ignore.case = TRUE))) {
+ if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
    fixed <- search_factors(fixed_vars)
  }
  Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
@@ -199,7 +200,8 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   } else {
     int.loc <- 0
   }
-  fact.loc <- grep("\\.f|\\.o|\\.c", fixed_vars, ignore.case = TRUE) 
+  fact.loc <- grep("\\.f$|\\.o$|\\.c$|_f$|_c$|_f$", 
+                   fixed_vars, ignore.case = TRUE) 
   n.cont <- length(cov_param[[1]])
   
   if(length(fact.loc) > 0){
@@ -276,7 +278,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     int.loc <- grep(":", fixed_vars)
     colnames(Xmat) <- fixed_vars[-int.loc]
   } 
-  if(any(grepl("\\.f|\\.c", fixed_vars, ignore.case = TRUE))) {
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
     fixed <- search_factors(fixed_vars)
   }
   Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
@@ -336,7 +338,8 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   } else {
     int.loc <- 0
   }
-  fact.loc <- grep("\\.f|\\.o|\\.c", fixed_vars, ignore.case = TRUE)  
+  fact.loc <- grep("\\.f$|\\.o$|\\.c$|_f$|_c$|_f$", 
+                   fixed_vars, ignore.case = TRUE)  
   n.fact <- length(fact.loc[fact.loc != int.loc])
   n.cont <- length(cov_param[[1]])
   
@@ -398,7 +401,7 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
     int.loc <- grep(":", fixed_vars)
     colnames(Xmat) <- fixed_vars[-int.loc]
   } 
-  if(any(grepl("\\.f|\\.c", fixed_vars, ignore.case = TRUE))) {
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
     fixed <- search_factors(fixed_vars)
   }
   Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)

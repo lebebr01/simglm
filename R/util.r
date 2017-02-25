@@ -21,7 +21,7 @@ standardize <- function(x, mean, sd) {
 search_factors <- function(x) {
   x <- strsplit(x, ':')
   loc <- lapply(seq_along(x), function(xx) 
-    grep("\\.f|\\.c", x[[xx]], ignore.case = TRUE))
+    grep("\\.f$|\\.c$|_f$|_c$", x[[xx]], ignore.case = TRUE))
   len <- lapply(x, length)
   for(i in seq_along(x)) {
     x[[i]][loc[[i]]] <- paste0('factor(', x[[i]][loc[[i]]], ')')

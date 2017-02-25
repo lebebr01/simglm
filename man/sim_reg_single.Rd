@@ -9,47 +9,63 @@ sim_reg_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen,
   lvl1_err_params = NULL, arima_mod = list(NULL), contrasts = NULL, ...)
 }
 \arguments{
-\item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
+\item{fixed}{One sided formula for fixed effects in the simulation.
+To suppress intercept add -1 to formula.}
 
-\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
+\item{fixed_param}{Fixed effect parameter values (i.e. beta weights). 
+Must be same length as fixed.}
 
-\item{cov_param}{List of arguments. Required arguments are:
+\item{cov_param}{List of arguments to pass to the continuous generating 
+ function. Required arguments include:
  \itemize{
    \item dist_fun: This is a quoted R distribution function.
    \item var_type: This is the level of variable to generate. Must be 
-     'single'. Must be same order as fixed formula above.
+     either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
+     above.
  }
  Optional arguments to the distribution functions are in a nested list,
   see the examples for example code for this.
-Does not include intercept, factors, or interactions.}
+Does not include intercept, time, factors, or interactions.}
 
 \item{n}{Cluster sample size.}
 
 \item{error_var}{Scalar of error variance.}
 
-\item{with_err_gen}{Simulated within cluster error distribution. Must be a quoted 'r' distribution
-function.}
+\item{with_err_gen}{Simulated within cluster error distribution. 
+Must be a quoted 'r' distribution function.}
 
 \item{arima}{TRUE/FALSE flag indicating whether residuals should 
 be correlated. If TRUE, must specify a valid model to pass to 
-arima.sim. See \code{\link{arima.sim}} for examples.}
+arima.sim via the arima_mod argument. 
+See \code{\link{arima.sim}} for examples.}
 
 \item{data_str}{Type of data. Must be "cross", "long", or "single".}
 
 \item{cor_vars}{A vector of correlations between variables.}
 
-\item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification, 
-each list must include numlevels and var_type (must be "lvl1" or "lvl2");
-optional specifications are: replace, prob, value.labels.}
+\item{fact_vars}{A nested list of factor, categorical, or ordinal variable 
+   specification, each list must include:
+\itemize{
+     \item numlevels = Number of levels for ordinal or factor variables.
+     \item var_type = Must be 'single'.
+ }
+ Optional arguments include:
+ \itemize{
+     \item replace
+     \item prob
+     \item value.labels
+ }
+  See also \code{\link{sample}} for use of these optional arguments.}
 
-\item{lvl1_err_params}{Additional parameters passed as a list on to the level one error generating function}
+\item{lvl1_err_params}{Additional parameters passed as a list on to the 
+level one error generating function}
 
 \item{arima_mod}{A list indicating the ARIMA model to pass to arima.sim. 
 See \code{\link{arima.sim}} for examples.}
 
-\item{contrasts}{An optional list that specifies the contrasts to be used for factor
-variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
-more detail.}
+\item{contrasts}{An optional list that specifies the contrasts to be used 
+for factor variables (i.e. those variables with .f or .c). 
+See \code{\link{contrasts}} for more detail.}
 
 \item{...}{Not currently used.}
 }
@@ -57,10 +73,30 @@ more detail.}
 Takes simulation parameters as inputs and returns simulated data.
 }
 \details{
-Simulates data for the simple regression models.  Returns a data frame with ID variables, 
-fixed effects, and many other variables useful to help when running simulation studies.
+Simulates data for the simple regression models.  Returns a data frame with 
+ID variables, fixed effects, and many other variables useful to help when 
+running simulation studies.
+}
+\examples{
+#' # generating parameters for single level regression
+fixed <- ~1 + act + diff + numCourse + act:numCourse
+fixed_param <- c(2, 4, 1, 3.5, 2)
+cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
+   var_type = c("single", "single", "single"),
+   opts = list(list(mean = 0, sd = 4), 
+   list(mean = 0, sd = 3),
+   list(mean = 0, sd = 3)))
+n <- 150
+error_var <- 3
+with_err_gen <- 'rnorm'
+temp_single <- sim_reg(fixed = fixed, fixed_param = fixed_param, 
+   cov_param = cov_param, 
+   n = n, error_var = error_var, with_err_gen = with_err_gen, 
+   data_str = "single")
+   
 }
 \seealso{
-\code{\link{sim_reg}} for a convenient wrapper for all data conditions.
+\code{\link{sim_reg}} for a convenient wrapper for all data 
+conditions.
 }
 

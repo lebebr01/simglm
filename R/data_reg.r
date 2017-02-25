@@ -17,8 +17,8 @@ data_reg_single <- function(Xmat, beta, n, err) {
   sim_data <- Fbeta + err  #Adding everything together
   sim_data <- cbind(Fbeta, err, sim_data)  
   colnames(sim_data) <- c("Fbeta", "err", "sim_data")
-  return(sim_data)
   
+  sim_data
 }
 
 #' Simulates two level nested data
@@ -50,7 +50,8 @@ data_reg_nested <- function(Xmat, Zmat, beta, rand_eff, n, p, err) {
     sim_data <- Fbeta + re + err
     sim_data <- cbind(Fbeta, re, err, sim_data)
     colnames(sim_data) <- c("Fbeta", "randEff", "err", "sim_data")
-    return(sim_data)
+    
+    sim_data
 }
 
 #' Simulates three level nested data with a single third level random effect
@@ -101,5 +102,6 @@ data_reg_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3,
   sim_data <- Fbeta + re + re3 + err
   sim_data <- cbind(Fbeta, re, re3, err, sim_data)
   colnames(sim_data) <- c("Fbeta", "randEff", "randEff3", "err", "sim_data")
-  return(sim_data)
+  
+  sim_data
 }

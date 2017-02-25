@@ -12,24 +12,39 @@ sim_pow_nested(fixed, random, fixed_param, random_param = list(), cov_param,
   "t"), pow_tail = c(1, 2), ...)
 }
 \arguments{
-\item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
+\item{fixed}{One sided formula for fixed effects in the simulation. 
+To suppress intercept add -1 to formula.}
 
-\item{random}{One sided formula for random effects in the simulation. Must be a subset of fixed.}
+\item{random}{One sided formula for random effects in the simulation. 
+Must be a subset of fixed.}
 
-\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
+\item{fixed_param}{Fixed effect parameter values (i.e. beta weights). 
+Must be same length as fixed.}
 
 \item{random_param}{A list of named elements that must contain: 
-   random_var = variance of random parameters,
-   rand_gen = Name of simulation function for random effects.
-Optional elements are:
-   ther: Theorectial mean and variance from rand_gen,
-   ther_sim: Simulate mean/variance for standardization purposes,
-   cor_vars: Correlation between random effects,
-   ...: Additional parameters needed for rand_gen function.}
+\itemize{
+   \item  random_var = variance of random parameters,
+   \item  rand_gen = Name of simulation function for random effects.
+}
+       Optional elements are:
+\itemize{
+   \item ther: Theorectial mean and variance from rand_gen,
+   \item ther_sim: Simulate mean/variance for standardization purposes,
+   \item cor_vars: Correlation between random effects,
+   \item ...: Additional parameters needed for rand_gen function.
+ }}
 
-\item{cov_param}{List of mean, sd (standard deviations), and var_type for fixed effects. 
-Does not include intercept, time, factors, or interactions. 
-var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula above.}
+\item{cov_param}{List of arguments to pass to the continuous generating 
+ function. Required arguments include:
+ \itemize{
+   \item dist_fun: This is a quoted R distribution function.
+   \item var_type: This is the level of variable to generate. Must be 
+     either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
+     above.
+ }
+ Optional arguments to the distribution functions are in a nested list,
+  see the examples for example code for this.
+Does not include intercept, time, factors, or interactions.}
 
 \item{n}{Cluster sample size.}
 
@@ -37,43 +52,61 @@ var_type must be either "lvl1" or "lvl2". Must be same order as fixed formula ab
 
 \item{error_var}{Scalar of error variance.}
 
-\item{with_err_gen}{Simulated within cluster error distribution. Must be a quoted 'r' distribution
-function.}
+\item{with_err_gen}{Simulated within cluster error distribution. 
+Must be a quoted 'r' distribution function.}
 
 \item{arima}{TRUE/FALSE flag indicating whether residuals should 
 be correlated. If TRUE, must specify a valid model to pass to 
-arima.sim. See \code{\link{arima.sim}} for examples.}
+arima.sim via the arima_mod argument. 
+See \code{\link{arima.sim}} for examples.}
 
 \item{data_str}{Type of data. Must be "cross", "long", or "single".}
 
 \item{cor_vars}{A vector of correlations between variables.}
 
-\item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification, 
-each list must include numlevels and var_type (must be "lvl1" or "lvl2");
-optional specifications are: replace, prob, value.labels.}
+\item{fact_vars}{A nested list of factor, categorical, or ordinal variable 
+   specification, each list must include:
+\itemize{
+     \item numlevels = Number of levels for ordinal or factor variables.
+     \item var_type = Must be 'single', 'lvl1', 'lvl2', or 'lvl3'.
+ }
+ Optional arguments include:
+ \itemize{
+     \item replace
+     \item prob
+     \item value.labels
+ }
+  See also \code{\link{sample}} for use of these optional arguments.}
 
-\item{unbal}{A vector of sample sizes for the number of observations for each level 2
-cluster. Must have same length as level two sample size n. Alternative specification
-can be TRUE, which uses additional argument, unbalCont.}
+\item{unbal}{A vector of sample sizes for the number of observations for 
+each level 2 cluster. Must have same length as level two sample size n. 
+Alternative specification can be TRUE, which uses additional argument, 
+unbalCont.}
 
-\item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum level one size,
-will be drawn from a random uniform distribution with min and max specified.}
+\item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum 
+level one size, will be drawn from a random uniform distribution with min 
+and max specified.}
 
-\item{lvl1_err_params}{Additional parameters passed as a list on to the level one error generating function}
+\item{lvl1_err_params}{Additional parameters passed as a list on to the level
+one error generating function}
 
 \item{arima_mod}{A list indicating the ARIMA model to pass to arima.sim. 
 See \code{\link{arima.sim}} for examples.}
 
-\item{missing}{TRUE/FALSE flag indicating whether missing data should be simulated.}
+\item{missing}{TRUE/FALSE flag indicating whether missing data should be 
+simulated.}
 
-\item{missing_args}{Additional missing arguments to pass to the missing_data function. 
-See \code{\link{missing_data}} for examples.}
+\item{missing_args}{Additional missing arguments to pass to the missing_data 
+function. See \code{\link{missing_data}} for examples.}
 
-\item{pow_param}{Name of variable to calculate power for, must be a name from fixed.}
+\item{pow_param}{Name of variable to calculate power for, must be a name 
+from fixed.}
 
-\item{alpha}{What should the per test alpha rate be used for the hypothesis testing.}
+\item{alpha}{What should the per test alpha rate be used for the hypothesis 
+testing.}
 
-\item{pow_dist}{Which distribution should be used when testing hypothesis test, z or t?}
+\item{pow_dist}{Which distribution should be used when testing hypothesis 
+test, z or t?}
 
 \item{pow_tail}{One-tailed or two-tailed test?}
 
@@ -83,9 +116,9 @@ See \code{\link{missing_data}} for examples.}
 Takes simulation conditions as input, exports power.
 }
 \details{
-Power function to compute power for a regression term for the linear mixed model.  This
-function would need to be replicated to make any statement about power.  Use \code{\link{sim_pow}}
-as a convenient wrapper for this.
+Power function to compute power for a regression term for the linear 
+mixed model. This function would need to be replicated to make any statement 
+about power.  Use \code{\link{sim_pow}} as a convenient wrapper for this.
 }
 \seealso{
 \code{\link{sim_pow}} for a wrapper to replicate.

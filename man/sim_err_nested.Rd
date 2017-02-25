@@ -20,22 +20,23 @@ sim_err_nested(error_var, n, p, with_err_gen, arima = FALSE,
 
 \item{arima}{TRUE/FALSE flag indicating whether residuals should 
 be correlated. If TRUE, must specify a valid model to pass to 
-arima.sim. See \code{\link{arima.sim}} for examples.}
+arima.sim via the arima_mod argument. 
+See \code{\link{arima.sim}} for examples.}
 
-\item{lvl1_err_params}{Additional values that need to be passed to the function
-called from with_err_gen.}
+\item{lvl1_err_params}{Additional values that need to be passed to the 
+function called from with_err_gen.}
 
 \item{arima_mod}{A list indicating the ARIMA model to pass to arima.sim. 
 See \code{\link{arima.sim}} for examples.}
 
 \item{ther}{A vector of length two that specifies the theoretical mean and 
-standard deviation of the with_err_gen. This would commonly be used
-to standardize the generating variable to have a mean of 0 and
+standard deviation of the with_err_gen. This would commonly be 
+used to standardize the generating variable to have a mean of 0 and
 standard deviation of 1 to meet model assumptions. The variable
 is then rescaled to have the variance specified by error_var.}
 
-\item{ther_sim}{A TRUE/FALSE flag indicating whether the error simulation function
-should be simulated, that is should the mean and standard deviation
+\item{ther_sim}{A TRUE/FALSE flag indicating whether the error simulation 
+function should be simulated, that is should the mean and standard deviation
 used for standardization be simulated.}
 
 \item{...}{Not currently used.}

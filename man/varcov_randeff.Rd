@@ -9,7 +9,8 @@ varcov_randeff(random_var, cor_re)
 \arguments{
 \item{random_var}{Variance of random effects.}
 
-\item{cor_re}{Correlation between random effects, currently only a constant supported.}
+\item{cor_re}{Correlation between random effects, currently only a 
+constant supported.}
 }
 \description{
 Input variances of random effects and correlation between random effects,

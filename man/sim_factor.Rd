@@ -14,19 +14,22 @@ sim_factor(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
 
 \item{p}{Number of within cluster observations for multilevel}
 
-\item{numlevels}{Scalar indicating the number of levels for categorical, factor, or discrete variable}
+\item{numlevels}{Scalar indicating the number of levels for categorical, 
+factor, or discrete variable}
 
 \item{replace}{Whether to replace levels of categorical variable, TRUE/FALSE}
 
-\item{prob}{Probability of levels for variable, must be same length as numlevels}
+\item{prob}{Probability of levels for variable, must be same length as 
+numlevels}
 
-\item{var_type}{Variable type for the variable, must be either "lvl1", "lvl2", or "single"}
+\item{var_type}{Variable type for the variable, must be either 
+"lvl1", "lvl2", "lvl3", or "single"}
 
 \item{value.labels}{Optional argument with value labels for variable, 
 converts variable to factor.}
 }
 \description{
-Function that simulates discrete, factor, or categorical variables.  Is essentially
-a wrapper around the sample function from base R.
+Function that simulates discrete, factor, or categorical variables.  
+Is essentially a wrapper around the sample function from base R.
 }
 

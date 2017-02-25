@@ -3,9 +3,9 @@
 #' Input simulation parameters and returns random effects.
 #'
 #' Simulates random effects for the master function \code{\link{sim_reg}} when
-#' simulating a linear mixed model, both cross sectional and longitudinal.  Allows
-#' the ability to simulate random effects from a Laplace, chi-square (1), mixture
-#' normal, or normal distribution.
+#' simulating a linear mixed model, both cross sectional and longitudinal. 
+#' Allows the ability to simulate random effects from a Laplace, 
+#' chi-square (1), mixture normal, or normal distribution.
 #'
 #' @param random_var Variance of random effects. Must be same length as random.
 #' @param n Cluster sample size.
@@ -15,9 +15,9 @@
 #'              to standardize the generating variable to have a mean of 0 and
 #'              standard deviation of 1 to meet model assumptions. The variable
 #'              is then rescaled to have the variance specified by random_var.
-#' @param ther_sim A TRUE/FALSE flag indicating whether the error simulation function
-#'              should be simulated, that is should the mean and standard deviation
-#'              used for standardization be simulated.
+#' @param ther_sim A TRUE/FALSE flag indicating whether the error simulation 
+#'  function should be simulated, that is should the mean and standard deviation
+#'  used for standardization be simulated.
 #' @param cor_vars A vector of correlations between random effects. 
 #' @param ... Additional values that need to be passed to the function
 #'             called from rand_gen.
@@ -49,5 +49,6 @@ sim_rand_eff <- function(random_var, n, rand_gen, ther = c(0, 1),
                 t(reff))
   }
 
- return(reff)
+ reff
 }
+

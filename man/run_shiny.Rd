@@ -11,7 +11,7 @@ Function runs Shiny Application Demo
 }
 \details{
 This function does not take any arguments and will run the Shiny Application.
-If running from RStudio, will open the application in the viewer, otherwise will
-use the default internet browser.
+If running from RStudio, will open the application in the viewer, 
+otherwise will use the default internet browser.
 }
 

@@ -20,8 +20,8 @@ to standardize the generating variable to have a mean of 0 and
 standard deviation of 1 to meet model assumptions. The variable
 is then rescaled to have the variance specified by random_var.}
 
-\item{ther_sim}{A TRUE/FALSE flag indicating whether the error simulation function
-should be simulated, that is should the mean and standard deviation
+\item{ther_sim}{A TRUE/FALSE flag indicating whether the error simulation 
+function should be simulated, that is should the mean and standard deviation
 used for standardization be simulated.}
 
 \item{cor_vars}{A vector of correlations between random effects.}
@@ -34,8 +34,8 @@ Input simulation parameters and returns random effects.
 }
 \details{
 Simulates random effects for the master function \code{\link{sim_reg}} when
-simulating a linear mixed model, both cross sectional and longitudinal.  Allows
-the ability to simulate random effects from a Laplace, chi-square (1), mixture
-normal, or normal distribution.
+simulating a linear mixed model, both cross sectional and longitudinal. 
+Allows the ability to simulate random effects from a Laplace, 
+chi-square (1), mixture normal, or normal distribution.
 }
 

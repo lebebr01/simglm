@@ -7,8 +7,8 @@
 rbimod(n, mean, var, num_dist)
 }
 \arguments{
-\item{n}{Number of random draws.  Optionally can be a vector with number in each 
-simulated normal distribution.}
+\item{n}{Number of random draws.  Optionally can be a vector with number 
+in each simulated normal distribution.}
 
 \item{mean}{Vector of mean values for each normal distribution.
 Must be the same length as num_dist.}
@@ -16,7 +16,8 @@ Must be the same length as num_dist.}
 \item{var}{Vector of variance values for each normal distribution.
 Must be the same length as num_dist.}
 
-\item{num_dist}{Number of normal distributions to use when simulating mixture normal distribution.}
+\item{num_dist}{Number of normal distributions to use when simulating mixture
+normal distribution.}
 }
 \description{
 Input simulation metrics returns mixture normal random variable.
@@ -35,7 +36,8 @@ simData <- rbimod(100, mean = c(-2, 3), var = c(1.5, 1.5), num_dist = 2)
 plot(density(simData))
 
 ## mixt normal with four distributions (multimodal)
-simData <- rbimod(400, mean = c(-14, -4, 6, 20), var = c(rep(1.2, 4)), num_dist = 4)
+simData <- rbimod(400, mean = c(-14, -4, 6, 20), var = c(rep(1.2, 4)), 
+  num_dist = 4)
 plot(density(simData))
 }
 }

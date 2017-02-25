@@ -11,14 +11,17 @@ sim_reg(fixed, random, random3, fixed_param, random_param = list(),
   lvl1_err_params = NULL, arima_mod = list(NULL), ...)
 }
 \arguments{
-\item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
+\item{fixed}{One sided formula for fixed effects in the simulation.
+To suppress intercept add -1 to formula.}
 
-\item{random}{One sided formula for random effects in the simulation. Must be a subset of fixed.}
+\item{random}{One sided formula for random effects in the simulation. 
+Must be a subset of fixed.}
 
-\item{random3}{One sided formula for random effects at third level in the simulation. Must be a subset of fixed
-(and likely of random).}
+\item{random3}{One sided formula for random effects at third level in the 
+simulation. Must be a subset of fixed (and likely of random).}
 
-\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
+\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).
+Must be same length as fixed.}
 
 \item{random_param}{A list of named elements that must contain: 
 \itemize{
@@ -71,31 +74,47 @@ simulation of errors.}
 
 \item{arima}{TRUE/FALSE flag indicating whether residuals should 
 be correlated. If TRUE, must specify a valid model to pass to 
-arima.sim. See \code{\link{arima.sim}} for examples.}
+arima.sim via the arima_mod argument. 
+See \code{\link{arima.sim}} for examples.}
 
 \item{data_str}{Type of data. Must be "cross", "long", or "single".}
 
 \item{cor_vars}{A vector of correlations between variables.}
 
-\item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification, 
-each list must include numlevels and var_type (must be "lvl1" or "lvl2");
-optional specifications are: replace, prob, value.labels.}
+\item{fact_vars}{A nested list of factor, categorical, or ordinal variable 
+   specification, each list must include:
+\itemize{
+     \item numlevels = Number of levels for ordinal or factor variables.
+     \item var_type = Must be 'single', 'lvl1', 'lvl2', or 'lvl3'.
+ }
+ Optional arguments include:
+ \itemize{
+     \item replace
+     \item prob
+     \item value.labels
+ }
+  See also \code{\link{sample}} for use of these optional arguments.}
 
-\item{unbal}{A vector of sample sizes for the number of observations for each level 2
-cluster. Must have same length as level two sample size n. Alternative specification
-can be TRUE, which uses additional argument, unbalCont.}
+\item{unbal}{A vector of sample sizes for the number of observations for 
+each level 2 cluster. Must have same length as level two sample size n. 
+Alternative specification can be TRUE, which uses additional argument, 
+unbalCont.}
 
-\item{unbal3}{A vector of sample sizes for the number of observations for each level 3
-cluster. Must have same length as level two sample size k. Alternative specification
-can be TRUE, which uses additional argument, unbalCont3.}
+\item{unbal3}{A vector of sample sizes for the number of observations for 
+each level 3 cluster. Must have same length as level two sample size k. 
+Alternative specification can be TRUE, which uses additional argument, 
+unbalCont3.}
 
-\item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum level one size,
-will be drawn from a random uniform distribution with min and max specified.}
+\item{unbalCont}{When unbal = TRUE, this specifies the minimum and 
+maximum level one size, will be drawn from a random uniform distribution 
+with min and max specified.}
 
-\item{unbalCont3}{When unbal3 = TRUE, this specifies the minimum and maximum level two size,
-will be drawn from a random uniform distribution with min and max specified.}
+\item{unbalCont3}{When unbal3 = TRUE, this specifies the minimum and 
+maximum level two size, will be drawn from a random uniform distribution 
+with min and max specified.}
 
-\item{lvl1_err_params}{Additional parameters passed as a list on to the level one error generating function}
+\item{lvl1_err_params}{Additional parameters passed as a list on to the 
+level one error generating function}
 
 \item{arima_mod}{A list indicating the ARIMA model to pass to arima.sim. 
 See \code{\link{arima.sim}} for examples.}
@@ -115,7 +134,7 @@ models, including single level models and cross sectional or longitudinal
 linear mixed models (aka. hierarchical linear models or multilevel models).
 }
 \examples{
-\donttest{
+
 # generating parameters for single level regression
 fixed <- ~1 + act + diff + numCourse + act:numCourse
 fixed_param <- c(2, 4, 1, 3.5, 2)
@@ -127,10 +146,13 @@ cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
 n <- 150
 error_var <- 3
 with_err_gen <- 'rnorm'
-temp.single <- sim_reg(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param, 
-n = n, error_var = error_var, with_err_gen = with_err_gen, data_str = "single")
+temp_single <- sim_reg(fixed = fixed, fixed_param = fixed_param, 
+   cov_param = cov_param, 
+   n = n, error_var = error_var, with_err_gen = with_err_gen, 
+   data_str = "single")
 # Fitting regression to obtain parameter estimates
-summary(lm(sim_data ~ 1 + act + diff + numCourse + act:numCourse, data = temp.single))
+summary(lm(sim_data ~ 1 + act + diff + numCourse + act:numCourse, 
+   data = temp.single))
 
 # Longitudinal linear mixed model example
 fixed <- ~1 + time + diff + act + time:act
@@ -146,13 +168,15 @@ p <- 30
 error_var <- 4
 with_err_gen <- 'rnorm'
 data_str <- "long"
-temp.long <- sim_reg(fixed, random, random3 = NULL, fixed_param, random_param, random_param3 = NULL,
- cov_param, k = NULL, n, p, error_var, with_err_gen, data_str = data_str)
+temp_long <- sim_reg(fixed, random, random3 = NULL, fixed_param, 
+   random_param, random_param3 = NULL,
+   cov_param, k = NULL, n, p, error_var, with_err_gen, data_str = data_str)
 
 ## fitting lmer model
 library(lme4)
-lmer(sim_data ~ 1 + time + diff + act + time:act + (1 + time + diff | clustID), 
-data = temp.long)
+lmer(sim_data ~ 1 + time + diff + act + time:act + 
+  (1 + time + diff | clustID), 
+  data = temp.long)
 
 # Three level example
 fixed <- ~1 + time + diff + act + actClust + time:act
@@ -172,13 +196,14 @@ p <- 10
 error_var <- 4
 with_err_gen <- 'rnorm'
 data_str <- "long"
-temp.three <- sim_reg(fixed, random, random3, fixed_param, random_param, 
-random_param3, cov_param, k,n, p, error_var, with_err_gen, data_str = data_str)
+temp_three <- sim_reg(fixed, random, random3, fixed_param, random_param, 
+random_param3, cov_param, k,n, p, error_var, with_err_gen, 
+   data_str = data_str)
 
 library(lme4)
-lmer(sim_data ~ 1 + time + diff + act + actClust + time:act + (1 + time + diff | clustID) +  
-(1 | clust3ID), data = temp.three)
+lmer(sim_data ~ 1 + time + diff + act + actClust + time:act + 
+   (1 + time + diff | clustID) +  
+   (1 | clust3ID), data = temp.three)
 
-}
 }
 

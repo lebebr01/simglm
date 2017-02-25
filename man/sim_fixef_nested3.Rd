@@ -33,20 +33,32 @@ Does not include intercept, time, factors, or interactions.}
 
 \item{cor_vars}{A vector of correlations between variables.}
 
-\item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification, 
-each list must include numlevels and var_type (must be "lvl1", "lvl2", or "lvl3");
-optional specifications are: replace, prob, value.labels.}
+\item{fact_vars}{A nested list of factor, categorical, or ordinal variable 
+   specification, each list must include:
+\itemize{
+     \item numlevels = Number of levels for ordinal or factor variables.
+     \item var_type = Must be 'lvl1', 'lvl2', or 'lvl3'.
+ }
+ Optional arguments include:
+ \itemize{
+     \item replace
+     \item prob
+     \item value.labels
+ }
+  See also \code{\link{sample}} for use of these optional arguments.}
 
 \item{contrasts}{An optional list that specifies the contrasts to be used for factor
 variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
 more detail.}
 }
 \description{
-Input fixed variables, sample size, and number of within variables, returns design matrix.
+Input fixed variables, sample size, and number of within variables, returns 
+design matrix.
 }
 \details{
-Simulates the fixed effects for the \code{\link{sim_reg}} function when a linear mixed
-model is specified.  This function assumes a time variable when longitudinal data 
-is specified and does include any interactions that are specified.
+Simulates the fixed effects for the \code{\link{sim_reg}} function when a 
+linear mixed model is specified.  This function assumes a time variable when 
+longitudinal data is specified and does include any interactions that are 
+specified.
 }
 

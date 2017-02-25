@@ -20,8 +20,10 @@ missing_data <- function(sim_data, resp_var = 'sim_data',
                          type = c('dropout', 'random', 'mar'),
                          miss_cov) {
   switch(type,
-         dropout = dropout_missing(sim_data, resp_var, clust_var, within_id, miss_prop),
-         random = random_missing(sim_data, resp_var, miss_prop, clust_var, within_id),
+         dropout = dropout_missing(sim_data, resp_var, clust_var, 
+                                   within_id, miss_prop),
+         random = random_missing(sim_data, resp_var, miss_prop, 
+                                 clust_var, within_id),
          mar = mar_missing(sim_data, resp_var, miss_cov, miss_prop)
          )
 }
@@ -48,7 +50,8 @@ missing_data <- function(sim_data, resp_var = 'sim_data',
 #'           percentage of missing data for each cluster
 #' @export 
 dropout_missing <- function(sim_data, resp_var = 'sim_data', 
-                        clust_var = 'clustID', within_id = "withinID", miss_prop) {
+                        clust_var = 'clustID', within_id = "withinID", 
+                        miss_prop) {
   
   if(resp_var %ni% names(sim_data)) {
     stop(paste(resp_var, 'not found in variables of data supplied'))
@@ -75,7 +78,8 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
     
     num_missing <- 0
     while(sum(num_missing) %ni% missing_range) {
-      num_missing <- round(len_groups * round(runif(n_groups, lim[1], lim[2]), 2))
+      num_missing <- round(len_groups * round(runif(n_groups, lim[1], 
+                                                    lim[2]), 2))
     }
     
   } else {
@@ -90,9 +94,10 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
   sim_data$missing <- do.call("c", lapply(1:length(missing_obs), function(xx)
     ifelse(data_split[[xx]][, within_id] %in% missing_obs[[xx]], 1, 0)))
   
-  sim_data$sim_data2 <- with(sim_data, ifelse(missing == 1, NA, eval(parse(text = resp_var))))
+  sim_data$sim_data2 <- with(sim_data, ifelse(missing == 1, NA, 
+                                              eval(parse(text = resp_var))))
   
-  return(sim_data)
+  sim_data
 }
 
 
@@ -172,7 +177,7 @@ random_missing <- function(sim_data, resp_var = 'sim_data', miss_prop,
                                                 eval(parse(text = resp_var))))
   }
 
-  return(sim_data)
+  sim_data
 }
 
 #' Missing at Random
@@ -201,7 +206,8 @@ mar_missing <- function(sim_data, resp_var, miss_cov, miss_prop) {
   
   num_obs <- nrow(sim_data)
 
-  uniq_vals <- dplyr::arrange(data.frame(cov = with(sim_data, unique(eval(parse(text = miss_cov))))), cov)
+  uniq_vals <- dplyr::arrange(data.frame(cov = with(sim_data, 
+                                unique(eval(parse(text = miss_cov))))), cov)
   
   miss_per <- cbind(miss_cov = uniq_vals, miss_prop = miss_prop,
                     miss_prob = runif(length(miss_prop)))
@@ -210,6 +216,8 @@ mar_missing <- function(sim_data, resp_var, miss_cov, miss_prop) {
   sim_data2 <- merge(sim_data, miss_per, by.x = miss_cov, by.y = 'cov')
   
   sim_data2 <- cbind(sim_data2, sim_data2 = 
-                       with(sim_data2, ifelse(miss_prob < miss_prop, NA, eval(parse(text = resp_var)))))
-  return(sim_data2)
+                       with(sim_data2, ifelse(miss_prob < miss_prop, NA, 
+                                              eval(parse(text = resp_var)))))
+  
+  sim_data2
 }

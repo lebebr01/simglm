@@ -13,35 +13,55 @@ sim_pow_glm(fixed, random = NULL, random3 = NULL, fixed_param,
   pow_tail = c(1, 2), replicates, terms_vary = NULL, ...)
 }
 \arguments{
-\item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
+\item{fixed}{One sided formula for fixed effects in the simulation. 
+To suppress intercept add -1 to formula.}
 
-\item{random}{One sided formula for random effects in the simulation. Must be a subset of fixed.}
+\item{random}{One sided formula for random effects in the simulation. 
+Must be a subset of fixed.}
 
-\item{random3}{One sided formula for random effects at third level in the simulation. Must be a subset of fixed
-(and likely of random).}
+\item{random3}{One sided formula for random effects at third level in the 
+simulation. Must be a subset of fixed(and likely of random).}
 
-\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
+\item{fixed_param}{Fixed effect parameter values (i.e. beta weights). 
+Must be same length as fixed.}
 
 \item{random_param}{A list of named elements that must contain: 
-   random_var = variance of random parameters,
-   rand_gen = Name of simulation function for random effects.
-Optional elements are:
-   ther: Theorectial mean and variance from rand_gen,
-   ther_sim: Simulate mean/variance for standardization purposes,
-   cor_vars: Correlation between random effects,
-   ...: Additional parameters needed for rand_gen function.}
+\itemize{
+   \item  random_var = variance of random parameters,
+   \item  rand_gen = Name of simulation function for random effects.
+}
+       Optional elements are:
+\itemize{
+   \item ther: Theorectial mean and variance from rand_gen,
+   \item ther_sim: Simulate mean/variance for standardization purposes,
+   \item cor_vars: Correlation between random effects,
+   \item ...: Additional parameters needed for rand_gen function.
+ }}
 
 \item{random_param3}{A list of named elements that must contain: 
-   random_var = variance of random parameters,
-   rand_gen = Name of simulation function for random effects.
-Optional elements are:
-   ther: Theorectial mean and variance from rand_gen,
-   ther_sim: Simulate mean/variance for standardization purposes,
-   cor_vars: Correlation between random effects,
-   ...: Additional parameters needed for rand_gen function.}
+\itemize{
+    \item random_var = variance of random parameters,
+    \item rand_gen = Name of simulation function for random effects.
+}
+      Optional elements are:
+\itemize{
+    \item ther: Theorectial mean and variance from rand_gen,
+    \item ther_sim: Simulate mean/variance for standardization purposes,
+    \item cor_vars: Correlation between random effects,
+    \item ...: Additional parameters needed for rand_gen function.
+}}
 
-\item{cov_param}{List of mean and variance for fixed effects. Does not include intercept, time, or 
-interactions. Must be same order as fixed formula above.}
+\item{cov_param}{List of arguments to pass to the continuous generating 
+ function. Required arguments include:
+ \itemize{
+   \item dist_fun: This is a quoted R distribution function.
+   \item var_type: This is the level of variable to generate. Must be 
+     either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
+     above.
+ }
+ Optional arguments to the distribution functions are in a nested list,
+  see the examples for example code for this.
+Does not include intercept, time, factors, or interactions.}
 
 \item{k}{Number of third level clusters.}
 
@@ -53,42 +73,62 @@ interactions. Must be same order as fixed formula above.}
 
 \item{cor_vars}{A vector of correlations between variables.}
 
-\item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification, 
-each list must include numlevels and var_type (must be "lvl1" or "lvl2");
-optional specifications are: replace, prob, value.labels.}
+\item{fact_vars}{A nested list of factor, categorical, or ordinal variable 
+   specification, each list must include:
+\itemize{
+     \item numlevels = Number of levels for ordinal or factor variables.
+     \item var_type = Must be 'single', 'lvl1', 'lvl2', or 'lvl3'.
+ }
+ Optional arguments include:
+ \itemize{
+     \item replace
+     \item prob
+     \item value.labels
+ }
+  See also \code{\link{sample}} for use of these optional arguments.}
 
-\item{unbal}{A vector of sample sizes for the number of observations for each level 2
-cluster. Must have same length as level two sample size n. Alternative specification
-can be TRUE, which uses additional argument, unbalCont.}
+\item{unbal}{A vector of sample sizes for the number of observations for each
+level 2 cluster. Must have same length as level two sample size n. 
+Alternative specification can be TRUE, which uses additional argument, 
+unbalCont.}
 
-\item{unbal3}{A vector of sample sizes for the number of observations for each level 3
-cluster. Must have same length as level two sample size k. Alternative specification
-can be TRUE, which uses additional argument, unbalCont3.}
+\item{unbal3}{A vector of sample sizes for the number of observations for 
+each level 3 cluster. Must have same length as level two sample size k. 
+Alternative specification can be TRUE, which uses additional argument, 
+unbalCont3.}
 
-\item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum level one size,
-will be drawn from a random uniform distribution with min and max specified.}
+\item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum 
+level one size, will be drawn from a random uniform distribution with min 
+and max specified.}
 
-\item{unbalCont3}{When unbal3 = TRUE, this specifies the minimum and maximum level two size,
-will be drawn from a random uniform distribution with min and max specified.}
+\item{unbalCont3}{When unbal3 = TRUE, this specifies the minimum and maximum 
+level two size, will be drawn from a random uniform distribution with min 
+and max specified.}
 
-\item{missing}{TRUE/FALSE flag indicating whether missing data should be simulated.}
+\item{missing}{TRUE/FALSE flag indicating whether missing data should be 
+simulated.}
 
-\item{missing_args}{Additional missing arguments to pass to the missing_data function. 
-See \code{\link{missing_data}} for examples.}
+\item{missing_args}{Additional missing arguments to pass to the missing_data 
+function. See \code{\link{missing_data}} for examples.}
 
-\item{pow_param}{Number of parameter to calculate power includes intercept where applicable.}
+\item{pow_param}{Number of parameter to calculate power includes intercept 
+where applicable.}
 
-\item{alpha}{What should the per test alpha rate be used for the hypothesis testing.}
+\item{alpha}{What should the per test alpha rate be used for the hypothesis 
+testing.}
 
-\item{pow_dist}{Which distribution should be used when testing hypothesis test, z or t?}
+\item{pow_dist}{Which distribution should be used when testing hypothesis 
+test, z or t?}
 
 \item{pow_tail}{One-tailed or two-tailed test?}
 
-\item{replicates}{How many replications should be done (i.e. the denominator in power calculation).}
+\item{replicates}{How many replications should be done (i.e. the denominator 
+in power calculation).}
 
-\item{terms_vary}{A named list of terms that should vary as a function for the power simulation.
-The names must match arguments to the simulation function, see \code{\link{sim_glm}} for 
-examples. Values specified here should not be included as arguments in the function call.}
+\item{terms_vary}{A named list of terms that should vary as a function for 
+the power simulation. The names must match arguments to the simulation 
+function, see \code{\link{sim_glm}} for examples. Values specified here 
+should not be included as arguments in the function call.}
 
 \item{...}{Current not used.}
 }
@@ -96,8 +136,9 @@ examples. Values specified here should not be included as arguments in the funct
 Input simulation conditions, returns power for term.
 }
 \details{
-This function is a wrapper that replicates the simulation functions for simple generalized regression
-and the generalized linear mixed model power functions.  This function replicates the power call a 
-specified number of times and prints outs a matrix with the results.
+This function is a wrapper that replicates the simulation functions for 
+simple generalized regression and the generalized linear mixed model power 
+functions. This function replicates the power call a specified number of 
+times and prints outs a matrix with the results.
 }
 

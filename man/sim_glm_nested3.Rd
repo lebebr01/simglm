@@ -10,34 +10,46 @@ sim_glm_nested3(fixed, random, random3, fixed_param, random_param = list(),
   unbalCont = NULL, unbalCont3 = NULL, contrasts = NULL, ...)
 }
 \arguments{
-\item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
+\item{fixed}{One sided formula for fixed effects in the simulation. 
+To suppress intercept add -1 to formula.}
 
-\item{random}{One sided formula for random effects in the simulation. Must be a subset of fixed.}
+\item{random}{One sided formula for random effects in the simulation. 
+Must be a subset of fixed.}
 
-\item{random3}{One sided formula for random effects at third level in the simulation. Must be a subset of fixed
-(and likely of random).}
+\item{random3}{One sided formula for random effects at third level in the 
+simulation. Must be a subset of fixed (and likely of random).}
 
-\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
+\item{fixed_param}{Fixed effect parameter values (i.e. beta weights). 
+Must be same length as fixed.}
 
 \item{random_param}{A list of named elements that must contain: 
-   random_var = variance of random parameters,
-   rand_gen = Name of simulation function for random effects.
-Optional elements are:
-   ther: Theorectial mean and variance from rand_gen,
-   ther_sim: Simulate mean/variance for standardization purposes,
-   cor_vars: Correlation between random effects,
-   ...: Additional parameters needed for rand_gen function.}
+\itemize{
+   \item  random_var = variance of random parameters,
+   \item  rand_gen = Name of simulation function for random effects.
+}
+       Optional elements are:
+\itemize{
+   \item ther: Theorectial mean and variance from rand_gen,
+   \item ther_sim: Simulate mean/variance for standardization purposes,
+   \item cor_vars: Correlation between random effects,
+   \item ...: Additional parameters needed for rand_gen function.
+ }}
 
 \item{random_param3}{A list of named elements that must contain: 
-   random_var = variance of random parameters,
-   rand_gen = Name of simulation function for random effects.
-Optional elements are:
-   ther: Theorectial mean and variance from rand_gen,
-   ther_sim: Simulate mean/variance for standardization purposes,
-   cor_vars: Correlation between random effects,
-   ...: Additional parameters needed for rand_gen function.}
+\itemize{
+    \item random_var = variance of random parameters,
+    \item rand_gen = Name of simulation function for random effects.
+}
+      Optional elements are:
+\itemize{
+    \item ther: Theorectial mean and variance from rand_gen,
+    \item ther_sim: Simulate mean/variance for standardization purposes,
+    \item cor_vars: Correlation between random effects,
+    \item ...: Additional parameters needed for rand_gen function.
+}}
 
-\item{cov_param}{List of arguments. Required arguments are:
+\item{cov_param}{List of arguments to pass to the continuous generating 
+ function. Required arguments include:
  \itemize{
    \item dist_fun: This is a quoted R distribution function.
    \item var_type: This is the level of variable to generate. Must be 
@@ -58,27 +70,41 @@ Does not include intercept, time, factors, or interactions.}
 
 \item{cor_vars}{A vector of correlations between variables.}
 
-\item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification, 
-each list must include numlevels and var_type (must be "lvl1" or "lvl2");
-optional specifications are: replace, prob, value.labels.}
+\item{fact_vars}{A nested list of factor, categorical, or ordinal variable 
+   specification, each list must include:
+\itemize{
+     \item numlevels = Number of levels for ordinal or factor variables.
+     \item var_type = Must be 'single', 'lvl1', 'lvl2', or 'lvl3'.
+ }
+ Optional arguments include:
+ \itemize{
+     \item replace
+     \item prob
+     \item value.labels
+ }
+  See also \code{\link{sample}} for use of these optional arguments.}
 
-\item{unbal}{A vector of sample sizes for the number of observations for each level 2
-cluster. Must have same length as level two sample size n. Alternative specification
-can be TRUE, which uses additional argument, unbalCont.}
+\item{unbal}{A vector of sample sizes for the number of observations for 
+each level 2 cluster. Must have same length as level two sample size n. 
+Alternative specification can be TRUE, which uses additional argument, 
+unbalCont.}
 
-\item{unbal3}{A vector of sample sizes for the number of observations for each level 3
-cluster. Must have same length as level two sample size k. Alternative specification
-can be TRUE, which uses additional argument, unbalCont3.}
+\item{unbal3}{A vector of sample sizes for the number of observations for 
+each level 3 cluster. Must have same length as level two sample size k. 
+Alternative specification can be TRUE, which uses additional argument, 
+unbalCont3.}
 
-\item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum level one size,
-will be drawn from a random uniform distribution with min and max specified.}
+\item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum 
+level one size, will be drawn from a random uniform distribution with min 
+and max specified.}
 
-\item{unbalCont3}{When unbal3 = TRUE, this specifies the minimum and maximum level two size,
-will be drawn from a random uniform distribution with min and max specified.}
+\item{unbalCont3}{When unbal3 = TRUE, this specifies the minimum and 
+maximum level two size, will be drawn from a random uniform distribution 
+with min and max specified.}
 
-\item{contrasts}{An optional list that specifies the contrasts to be used for factor
-variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
-more detail.}
+\item{contrasts}{An optional list that specifies the contrasts to be used 
+for factor variables (i.e. those variables with .f or .c). 
+See \code{\link{contrasts}} for more detail.}
 
 \item{...}{Not currently used.}
 }
@@ -86,12 +112,11 @@ more detail.}
 Takes simulation parameters as inputs and returns simulated data.
 }
 \details{
-Simulates data for the linear mixed model, both cross sectional and longitudinal data.  Returns
-a data frame with ID variables, fixed effects, and many other variables useful to help when 
-running simulation studies.
+Simulates data for the linear mixed model, both cross sectional and 
+longitudinal data. Returns a data frame with ID variables, fixed effects, 
+and many other variables useful to help when running simulation studies.
 }
 \examples{
-\donttest{
 # Three level example
 fixed <- ~1 + time + diff + act + actClust + time:act
 random <- ~1 + time + diff
@@ -99,18 +124,21 @@ random3 <- ~ 1 + time
 fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
-var_type = c("lvl1", "lvl2", "lvl3"))
+cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
+   var_type = c("lvl1", "lvl2", "lvl3"),
+   opts = list(list(mean = 0, sd = 1.5),
+   list(mean = 0, sd = 4),
+   list(mean = 0, sd = 2)))
 k <- 10
 n <- 15
 p <- 10
 data_str <- "long"
-temp.three <- sim_glm_nested3(fixed, random, random3, fixed_param, random_param,
-random_param3, cov_param, k, n, p, data_str = data_str)
-head(temp.three)
-}
+temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param, 
+  random_param3, cov_param, k,n, p, data_str = data_str)
+  
 }
 \seealso{
-\code{\link{sim_reg}} for a convenient wrapper for all data conditions.
+\code{\link{sim_reg}} for a convenient wrapper for all data 
+  conditions.
 }
 

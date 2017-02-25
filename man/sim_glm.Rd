@@ -10,32 +10,43 @@ sim_glm(fixed, random, random3, fixed_param, random_param = list(),
   unbalCont = NULL, unbalCont3 = NULL)
 }
 \arguments{
-\item{fixed}{One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.}
+\item{fixed}{One sided formula for fixed effects in the simulation.
+To suppress intercept add -1 to formula.}
 
-\item{random}{One sided formula for random effects in the simulation. Must be a subset of fixed.}
+\item{random}{One sided formula for random effects in the simulation. 
+Must be a subset of fixed.}
 
-\item{random3}{One sided formula for random effects at third level in the simulation. Must be a subset of fixed
-(and likely of random).}
+\item{random3}{One sided formula for random effects at third level in the 
+simulation. Must be a subset of fixed (and likely of random).}
 
-\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.}
+\item{fixed_param}{Fixed effect parameter values (i.e. beta weights).
+Must be same length as fixed.}
 
 \item{random_param}{A list of named elements that must contain: 
-   random_var = variance of random parameters,
-   rand_gen = Name of simulation function for random effects.
-Optional elements are:
-   ther: Theorectial mean and variance from rand_gen,
-   ther_sim: Simulate mean/variance for standardization purposes,
-   cor_vars: Correlation between random effects,
-   ...: Additional parameters needed for rand_gen function.}
+\itemize{
+   \item  random_var = variance of random parameters,
+   \item  rand_gen = Name of simulation function for random effects.
+}
+       Optional elements are:
+\itemize{
+   \item ther: Theorectial mean and variance from rand_gen,
+   \item ther_sim: Simulate mean/variance for standardization purposes,
+   \item cor_vars: Correlation between random effects,
+   \item ...: Additional parameters needed for rand_gen function.
+ }}
 
 \item{random_param3}{A list of named elements that must contain: 
-   random_var = variance of random parameters,
-   rand_gen = Name of simulation function for random effects.
-Optional elements are:
-   ther: Theorectial mean and variance from rand_gen,
-   ther_sim: Simulate mean/variance for standardization purposes,
-   cor_vars: Correlation between random effects,
-   ...: Additional parameters needed for rand_gen function.}
+\itemize{
+    \item random_var = variance of random parameters,
+    \item rand_gen = Name of simulation function for random effects.
+}
+      Optional elements are:
+\itemize{
+    \item ther: Theorectial mean and variance from rand_gen,
+    \item ther_sim: Simulate mean/variance for standardization purposes,
+    \item cor_vars: Correlation between random effects,
+    \item ...: Additional parameters needed for rand_gen function.
+}}
 
 \item{cov_param}{List of arguments to pass to the continuous generating 
  function. Required arguments include:
@@ -59,23 +70,37 @@ Does not include intercept, time, factors, or interactions.}
 
 \item{cor_vars}{A vector of correlations between variables.}
 
-\item{fact_vars}{A nested list of factor, categorical, or ordinal variable specification, 
-each list must include numlevels and var_type (must be "lvl1" or "lvl2");
-optional specifications are: replace, prob, value.labels.}
+\item{fact_vars}{A nested list of factor, categorical, or ordinal variable 
+   specification, each list must include:
+\itemize{
+     \item numlevels = Number of levels for ordinal or factor variables.
+     \item var_type = Must be 'single', 'lvl1', 'lvl2', or 'lvl3'.
+ }
+ Optional arguments include:
+ \itemize{
+     \item replace
+     \item prob
+     \item value.labels
+ }
+  See also \code{\link{sample}} for use of these optional arguments.}
 
-\item{unbal}{A vector of sample sizes for the number of observations for each level 2
-cluster. Must have same length as level two sample size n. Alternative specification
-can be TRUE, which uses additional argument, unbalCont.}
+\item{unbal}{A vector of sample sizes for the number of observations for 
+each level 2 cluster. Must have same length as level two sample size n. 
+Alternative specification can be TRUE, which uses additional argument, 
+unbalCont.}
 
-\item{unbal3}{A vector of sample sizes for the number of observations for each level 3
-cluster. Must have same length as level two sample size k. Alternative specification
-can be TRUE, which uses additional argument, unbalCont3.}
+\item{unbal3}{A vector of sample sizes for the number of observations for 
+each level 3 cluster. Must have same length as level two sample size k. 
+Alternative specification can be TRUE, which uses additional argument, 
+unbalCont3.}
 
-\item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum level one size,
-will be drawn from a random uniform distribution with min and max specified.}
+\item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum 
+level one size, will be drawn from a random uniform distribution with min 
+and max specified.}
 
-\item{unbalCont3}{When unbal3 = TRUE, this specifies the minimum and maximum level two size,
-will be drawn from a random uniform distribution with min and max specified.}
+\item{unbalCont3}{When unbal3 = TRUE, this specifies the minimum and 
+maximum level two size, will be drawn from a random uniform distribution 
+with min and max specified.}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.
@@ -91,6 +116,7 @@ linear mixed models (aka. hierarchical linear models or multilevel models).
 }
 \examples{
 # generating parameters for single level regression
+set.seed(2)
 fixed <- ~1 + act + diff + numCourse + act:numCourse
 fixed_param <- c(2, 4, 1, 3.5, 2)
 cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
@@ -99,8 +125,8 @@ cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
    list(mean = 0, sd = 3),
    list(mean = 0, sd = 3)))
 n <- 150
-temp.single <- sim_glm(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param, 
-n = n, data_str = "single")
+temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param, 
+  cov_param = cov_param, n = n, data_str = "single")
 
 # Longitudinal linear mixed model example
 fixed <- ~1 + time + diff + act + time:act
@@ -114,7 +140,8 @@ cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
 n <- 150
 p <- 30
 data_str <- "long"
-temp.long <- sim_glm(fixed, random, random3 = NULL, fixed_param, random_param, random_param3 = NULL,
+temp_long <- sim_glm(fixed, random, random3 = NULL, fixed_param, 
+random_param, random_param3 = NULL,
  cov_param, k = NULL, n, p, data_str = data_str)
 
 
@@ -134,8 +161,8 @@ k <- 10
 n <- 15
 p <- 10
 data_str <- "long"
-temp.three <- sim_glm(fixed, random, random3, fixed_param, random_param, 
-random_param3, cov_param, k,n, p, data_str = data_str)
+temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param, 
+  random_param3, cov_param, k,n, p, data_str = data_str)
 
 
 }

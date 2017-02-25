@@ -16,7 +16,7 @@ data_glm_single <- function(Xmat, beta, n) {
   sim_data <- rbinom(n, 1, logistic)
   sim_data <- data.frame(Fbeta = Fbeta, logistic = logistic,
                          sim_data = sim_data)
-  return(sim_data)
+  sim_data
 }
 
 
@@ -52,7 +52,8 @@ data_glm_nested <- function(Xmat, Zmat, beta, rand_eff, n, p) {
   sim_data <- rbinom(length(prob), 1, prob)
   sim_data <- cbind(Fbeta, re, logistic, prob, sim_data)
   colnames(sim_data) <- c("Fbeta", "randEff", 'logistic', 'prob', "sim_data")
-  return(sim_data)
+  
+  sim_data
 }
 
 #' Simulates three level nested data with a single third level random effect
@@ -73,7 +74,8 @@ data_glm_nested <- function(Xmat, Zmat, beta, rand_eff, n, p) {
 #' @param p Number of units within each cluster.
 #' @importFrom Matrix bdiag
 #' @export 
-data_glm_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3, k, n, p) {
+data_glm_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3, 
+                             k, n, p) {
   
   
   end <- cumsum(n)
@@ -87,13 +89,15 @@ data_glm_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3, k, n,
   
   ID <- NULL
   Zmat <- data.frame(Zmat, ID = rep(1:length(p), times = p))
-  ZmatList <- lapply(1:length(p), function(xx) as.matrix(subset(Zmat, ID == xx, select = 1:(ncol(Zmat) - 1))))
+  ZmatList <- lapply(1:length(p), function(xx) as.matrix(subset(Zmat, ID == xx, 
+                                                select = 1:(ncol(Zmat) - 1))))
   ZmatBlock <- bdiag(ZmatList)
   reVec <- matrix(c(t(rand_eff)))
   re <- as.matrix(ZmatBlock %*% reVec)
   
   Zmat3 <- data.frame(Zmat3, ID = rep(1:k, times = lvl3ss))
-  Zmat3List <- lapply(1:k, function(xx) as.matrix(subset(Zmat3, ID == xx, select = 1:(ncol(Zmat3) - 1))))
+  Zmat3List <- lapply(1:k, function(xx) as.matrix(subset(Zmat3, ID == xx, 
+                                                select = 1:(ncol(Zmat3) - 1))))
   Zmat3Block <- bdiag(Zmat3List)
   re3Vec <- as.matrix(c(t(rand_eff3)))
   re3 <- as.matrix(Zmat3Block %*% re3Vec)
@@ -104,5 +108,6 @@ data_glm_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3, k, n,
   sim_data <- cbind(Fbeta, re, re3, logistic, prob, sim_data)
   colnames(sim_data) <- c("Fbeta", "randEff", 'randEff3', 'logistic', 
                           'prob', "sim_data")
-  return(sim_data)
+  
+  sim_data
 }

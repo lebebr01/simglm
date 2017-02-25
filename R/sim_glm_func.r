@@ -6,50 +6,66 @@
 #' a data frame with ID variables, fixed effects, and many other variables
 #' to help when running simulation studies.
 #' 
-#' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
-#' @param fixed_param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
-#' @param cov_param List of arguments. Required arguments are:
+#' @param fixed One sided formula for fixed effects in the simulation.  
+#'   To suppress intercept add -1 to formula.
+#' @param fixed_param Fixed effect parameter values (i.e. beta weights).  
+#'   Must be same length as fixed.
+#' @param cov_param List of arguments to pass to the continuous generating 
+#'   function. Required arguments include:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       'single'. Must be same order as fixed formula above.
+#'       either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
+#'       above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
 #'    see the examples for example code for this.
-#'  Does not include intercept, factors, or interactions.
+#'  Does not include intercept, time, factors, or interactions.
+#'  
 #' @param n Cluster sample size.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
 #' @param cor_vars A vector of correlations between variables.
-#' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
-#'      each list must include numlevels and var_type (must be "lvl1" or "lvl2");
-#'      optional specifications are: replace, prob, value.labels.
-#' @param contrasts An optional list that specifies the contrasts to be used for factor
-#'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
-#'      more detail.
+#' @param fact_vars A nested list of factor, categorical, or ordinal variable 
+#'      specification, each list must include:
+#'   \itemize{
+#'        \item numlevels = Number of levels for ordinal or factor variables.
+#'        \item var_type = Must be 'single', 'lvl1', 'lvl2', or 'lvl3'.
+#'    }
+#'    Optional arguments include:
+#'    \itemize{
+#'        \item replace
+#'        \item prob
+#'        \item value.labels
+#'    }
+#'     See also \code{\link{sample}} for use of these optional arguments.
+#' @param contrasts An optional list that specifies the contrasts to be used 
+#'      for factor variables (i.e. those variables with .f or .c). 
+#'      See \code{\link{contrasts}} for more detail.
 #' @param ... Not currently used.
 #'      
 #' @examples 
-#' \donttest{
-#' # generating parameters for single level logistic regression
+#' # generating parameters for single level regression
+#' set.seed(2)
 #' fixed <- ~1 + act + diff + numCourse + act:numCourse
-#' fixed_param <- c(0.2, 1.5, 0.8, 1.2, 1.1)
-#' cov_param <- list(mean = c(0, 0, 0), sd = c(1, 1, 1), var_type = c("single", "single", "single"))
+#' fixed_param <- c(2, 4, 1, 3.5, 2)
+#' cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+#'    var_type = c("single", "single", "single"),
+#'    opts = list(list(mean = 0, sd = 4),
+#'    list(mean = 0, sd = 3),
+#'    list(mean = 0, sd = 3)))
 #' n <- 150
-#' temp.single <- sim_glm_single(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param, 
-#' n = n)
-#' # Fitting regression to obtain parameter estimates
-#' summary(glm(sim_data ~ 1 + act + diff + numCourse + act:numCourse, data = temp.single,
-#' family = "binomial"))
-#' 
-#' }
+#' temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param, 
+#'   cov_param = cov_param, n = n, data_str = "single")
+#'   
 #' @export
 sim_glm_single <- function(fixed, fixed_param, cov_param, n, 
                            data_str, cor_vars = NULL, fact_vars = list(NULL),
                            contrasts = NULL, ...) {
   
-  fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
+  fixed_vars <- attr(terms(fixed),"term.labels")    
   
-  Xmat <- sim_fixef_single(fixed, fixed_vars, n, cov_param, cor_vars, fact_vars, contrasts)
+  Xmat <- sim_fixef_single(fixed, fixed_vars, n, cov_param, cor_vars, 
+                           fact_vars, contrasts)
   
   if(ncol(Xmat) != length(fixed_param)) {
     stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
@@ -60,8 +76,8 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
   
   Xmat <- data.frame(Xmat,sim_data)
   Xmat$ID <- 1:n
-  return(Xmat)
   
+  Xmat
 }
 
 #' Simulate two level logistic regression model
@@ -72,22 +88,31 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
 #' data frame with ID variables, fixed effects, random effects, and many
 #' other variables to help when running simulation studies.
 #' 
-#' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
-#' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
-#' @param fixed_param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
+#' @param fixed One sided formula for fixed effects in the simulation.  
+#'    To suppress intercept add -1 to formula.
+#' @param random One sided formula for random effects in the simulation. 
+#'    Must be a subset of fixed.
+#' @param fixed_param Fixed effect parameter values (i.e. beta weights). 
+#'    Must be same length as fixed.
 #' @param random_param A list of named elements that must contain: 
-#'             random_var = variance of random parameters,
-#'             rand_gen = Name of simulation function for random effects.
+#'   \itemize{
+#'      \item  random_var = variance of random parameters,
+#'      \item  rand_gen = Name of simulation function for random effects.
+#'   }
 #'          Optional elements are:
-#'             ther: Theorectial mean and variance from rand_gen,
-#'             ther_sim: Simulate mean/variance for standardization purposes,
-#'             cor_vars: Correlation between random effects,
-#'             ...: Additional parameters needed for rand_gen function.
-#' @param cov_param List of arguments. Required arguments are:
+#'   \itemize{
+#'      \item ther: Theorectial mean and variance from rand_gen,
+#'      \item ther_sim: Simulate mean/variance for standardization purposes,
+#'      \item cor_vars: Correlation between random effects,
+#'      \item ...: Additional parameters needed for rand_gen function.
+#'    }
+#' @param cov_param List of arguments to pass to the continuous generating 
+#'   function. Required arguments include:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       either 'lvl1' or 'lvl2'. Must be same order as fixed formula above.
+#'       either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
+#'       above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
 #'    see the examples for example code for this.
@@ -96,44 +121,58 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
 #' @param p Within cluster sample size.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
 #' @param cor_vars A vector of correlations between variables.
-#' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
-#'      each list must include numlevels and var_type (must be "lvl1" or "lvl2");
-#'      optional specifications are: replace, prob, value.labels.
-#' @param unbal A vector of sample sizes for the number of observations for each level 2
-#'  cluster. Must have same length as level two sample size n. Alternative specification
-#'  can be TRUE, which uses additional argument, unbalCont.
-#' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum level one size,
-#'  will be drawn from a random uniform distribution with min and max specified.
-#' @param contrasts An optional list that specifies the contrasts to be used for factor
-#'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
-#'      more detail.
+#' @param fact_vars A nested list of factor, categorical, or ordinal variable 
+#'      specification, each list must include:
+#'   \itemize{
+#'        \item numlevels = Number of levels for ordinal or factor variables.
+#'        \item var_type = Must be 'single', 'lvl1', 'lvl2', or 'lvl3'.
+#'    }
+#'    Optional arguments include:
+#'    \itemize{
+#'        \item replace
+#'        \item prob
+#'        \item value.labels
+#'    }
+#'     See also \code{\link{sample}} for use of these optional arguments.
+#' @param unbal A vector of sample sizes for the number of observations for 
+#'  each level 2 cluster. Must have same length as level two sample size n. 
+#'  Alternative specification can be TRUE, which uses additional argument, 
+#'  unbalCont.
+#' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum 
+#'  level one size, will be drawn from a random uniform distribution with min 
+#'  and max specified.
+#' @param contrasts An optional list that specifies the contrasts to be used 
+#'   for factor variables (i.e. those variables with .f or .c). 
+#'   See \code{\link{contrasts}} for more detail.
 #' @param ... Not currently used.
 #'      
 #' @examples
-#' \donttest{
+#' # Longitudinal linear mixed model example
 #' fixed <- ~1 + time + diff + act + time:act
-#' random <- ~1
-#' fixed_param <- c(0.2, 1.5, 0.8, 1.2, 1.1)
-#' random_param <- list(random_var = 3, rand_gen = 'rnorm')
-#' cov_param <- list(mean = c(0, 0), sd = c(1.5, 4), var_type = c("lvl1", "lvl2"))
-#' n <- 100
-#' p <- 10
+#' random <- ~1 + time + diff
+#' fixed_param <- c(4, 2, 6, 2.3, 7)
+#' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
+#' cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+#'    var_type = c("lvl1", "lvl2"),
+#'    opts = list(list(mean = 0, sd = 1.5),
+#'    list(mean = 0, sd = 4)))
+#' n <- 150
+#' p <- 30
 #' data_str <- "long"
-#' temp.long <- sim_glm_nested(fixed, random, fixed_param, random_param,
-#'  cov_param, n, p, rand_dist, data_str = data_str)
-#' }
+#' temp_long <- sim_glm(fixed, random, random3 = NULL, fixed_param, 
+#' random_param, random_param3 = NULL,
+#'  cov_param, k = NULL, n, p, data_str = data_str)
 #' @export
-sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), cov_param, n, p, 
-                           data_str, cor_vars = NULL, fact_vars = list(NULL),
-                           unbal = FALSE, unbalCont = NULL, contrasts = NULL, 
-                           ...) {
+sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), 
+                           cov_param, n, p, data_str, cor_vars = NULL, 
+                           fact_vars = list(NULL), unbal = FALSE, 
+                           unbalCont = NULL, contrasts = NULL, ...) {
   
-  #if(randCor > 1 | randCor < -1) stop("cor out of range")
+  fixed_vars <- attr(terms(fixed),"term.labels")    
+  rand.vars <- attr(terms(random),"term.labels")   
   
-  fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
-  rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
-  
-  if(length(rand.vars)+1 != length(random_param$random_var)) stop("Random lengths not equal")
+  if(length(rand.vars)+1 != length(random_param$random_var)) 
+    stop("Random lengths not equal")
 
   if(unbal == FALSE) {
     lvl1ss <- rep(p, n)
@@ -156,7 +195,8 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), co
   
   reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx) 
     rep(rand_eff[,xx], times = lvl1ss)))
-  colnames(reff) <- c(unlist(lapply(1:ncol(rand_eff), function(xx) paste("b", xx-1, sep = ""))))
+  colnames(reff) <- c(unlist(lapply(1:ncol(rand_eff), function(xx) 
+    paste("b", xx-1, sep = ""))))
   
   Zmat <- model.matrix(random, data.frame(Xmat))
 
@@ -165,42 +205,55 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), co
   Xmat <- data.frame(Xmat,reff,sim_data)
   Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
   Xmat$clustID <- rep(1:n, times = lvl1ss)
-  return(Xmat)
   
+  Xmat
 }
 
 #' Function to simulate three level nested data
 #' 
 #' Takes simulation parameters as inputs and returns simulated data.
 #' 
-#' Simulates data for the linear mixed model, both cross sectional and longitudinal data.  Returns
-#' a data frame with ID variables, fixed effects, and many other variables useful to help when 
-#' running simulation studies.
+#' Simulates data for the linear mixed model, both cross sectional and 
+#' longitudinal data. Returns a data frame with ID variables, fixed effects, 
+#' and many other variables useful to help when running simulation studies.
 #' 
-#' @seealso \code{\link{sim_reg}} for a convenient wrapper for all data conditions.
+#' @seealso \code{\link{sim_reg}} for a convenient wrapper for all data 
+#'   conditions.
 #' 
-#' @param fixed One sided formula for fixed effects in the simulation.  To suppress intercept add -1 to formula.
-#' @param random One sided formula for random effects in the simulation. Must be a subset of fixed.
-#' @param random3 One sided formula for random effects at third level in the simulation. Must be a subset of fixed
-#'  (and likely of random).
-#' @param fixed_param Fixed effect parameter values (i.e. beta weights).  Must be same length as fixed.
+#' @param fixed One sided formula for fixed effects in the simulation. 
+#'   To suppress intercept add -1 to formula.
+#' @param random One sided formula for random effects in the simulation. 
+#'   Must be a subset of fixed.
+#' @param random3 One sided formula for random effects at third level in the 
+#'  simulation. Must be a subset of fixed (and likely of random).
+#' @param fixed_param Fixed effect parameter values (i.e. beta weights). 
+#'  Must be same length as fixed.
 #' @param random_param A list of named elements that must contain: 
-#'             random_var = variance of random parameters,
-#'             rand_gen = Name of simulation function for random effects.
+#'   \itemize{
+#'      \item  random_var = variance of random parameters,
+#'      \item  rand_gen = Name of simulation function for random effects.
+#'   }
 #'          Optional elements are:
-#'             ther: Theorectial mean and variance from rand_gen,
-#'             ther_sim: Simulate mean/variance for standardization purposes,
-#'             cor_vars: Correlation between random effects,
-#'             ...: Additional parameters needed for rand_gen function.
+#'   \itemize{
+#'      \item ther: Theorectial mean and variance from rand_gen,
+#'      \item ther_sim: Simulate mean/variance for standardization purposes,
+#'      \item cor_vars: Correlation between random effects,
+#'      \item ...: Additional parameters needed for rand_gen function.
+#'    }
 #' @param random_param3 A list of named elements that must contain: 
-#'             random_var = variance of random parameters,
-#'             rand_gen = Name of simulation function for random effects.
+#'    \itemize{
+#'        \item random_var = variance of random parameters,
+#'        \item rand_gen = Name of simulation function for random effects.
+#'    }
 #'          Optional elements are:
-#'             ther: Theorectial mean and variance from rand_gen,
-#'             ther_sim: Simulate mean/variance for standardization purposes,
-#'             cor_vars: Correlation between random effects,
-#'             ...: Additional parameters needed for rand_gen function.
-#' @param cov_param List of arguments. Required arguments are:
+#'    \itemize{
+#'        \item ther: Theorectial mean and variance from rand_gen,
+#'        \item ther_sim: Simulate mean/variance for standardization purposes,
+#'        \item cor_vars: Correlation between random effects,
+#'        \item ...: Additional parameters needed for rand_gen function.
+#'    }
+#' @param cov_param List of arguments to pass to the continuous generating 
+#'   function. Required arguments include:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
@@ -210,31 +263,45 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), co
 #'   Optional arguments to the distribution functions are in a nested list,
 #'    see the examples for example code for this.
 #'  Does not include intercept, time, factors, or interactions.
+#'  
 #' @param k Number of third level clusters.
 #' @param n Level two sample size within each level three cluster.
 #' @param p Within cluster sample size within each level two cluster.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
 #' @param cor_vars A vector of correlations between variables.
-#' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
-#'      each list must include numlevels and var_type (must be "lvl1" or "lvl2");
-#'      optional specifications are: replace, prob, value.labels.
-#' @param unbal A vector of sample sizes for the number of observations for each level 2
-#'  cluster. Must have same length as level two sample size n. Alternative specification
-#'  can be TRUE, which uses additional argument, unbalCont.
-#' @param unbal3 A vector of sample sizes for the number of observations for each level 3
-#'  cluster. Must have same length as level two sample size k. Alternative specification
-#'  can be TRUE, which uses additional argument, unbalCont3.
-#' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum level one size,
-#'  will be drawn from a random uniform distribution with min and max specified.
-#' @param unbalCont3 When unbal3 = TRUE, this specifies the minimum and maximum level two size,
-#'  will be drawn from a random uniform distribution with min and max specified.
-#' @param contrasts An optional list that specifies the contrasts to be used for factor
-#'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
-#'      more detail.
+#' @param fact_vars A nested list of factor, categorical, or ordinal variable 
+#'      specification, each list must include:
+#'   \itemize{
+#'        \item numlevels = Number of levels for ordinal or factor variables.
+#'        \item var_type = Must be 'single', 'lvl1', 'lvl2', or 'lvl3'.
+#'    }
+#'    Optional arguments include:
+#'    \itemize{
+#'        \item replace
+#'        \item prob
+#'        \item value.labels
+#'    }
+#'     See also \code{\link{sample}} for use of these optional arguments.
+#' @param unbal A vector of sample sizes for the number of observations for 
+#'  each level 2 cluster. Must have same length as level two sample size n. 
+#'  Alternative specification can be TRUE, which uses additional argument, 
+#'  unbalCont.
+#' @param unbal3 A vector of sample sizes for the number of observations for 
+#'  each level 3 cluster. Must have same length as level two sample size k. 
+#'  Alternative specification can be TRUE, which uses additional argument, 
+#'  unbalCont3.
+#' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum 
+#'  level one size, will be drawn from a random uniform distribution with min 
+#'  and max specified.
+#' @param unbalCont3 When unbal3 = TRUE, this specifies the minimum and 
+#'  maximum level two size, will be drawn from a random uniform distribution 
+#'  with min and max specified.
+#' @param contrasts An optional list that specifies the contrasts to be used 
+#'  for factor variables (i.e. those variables with .f or .c). 
+#'  See \code{\link{contrasts}} for more detail.
 #' @param ... Not currently used.
 #' 
 #' @examples 
-#' \donttest{
 #' # Three level example
 #' fixed <- ~1 + time + diff + act + actClust + time:act
 #' random <- ~1 + time + diff
@@ -242,39 +309,43 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), co
 #' fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 #' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 #' random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-#' cov_param <- list(mean = c(0, 0, 0), sd = c(1.5, 4, 2),
-#' var_type = c("lvl1", "lvl2", "lvl3"))
+#' cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
+#'    var_type = c("lvl1", "lvl2", "lvl3"),
+#'    opts = list(list(mean = 0, sd = 1.5),
+#'    list(mean = 0, sd = 4),
+#'    list(mean = 0, sd = 2)))
 #' k <- 10
 #' n <- 15
 #' p <- 10
 #' data_str <- "long"
-#' temp.three <- sim_glm_nested3(fixed, random, random3, fixed_param, random_param,
-#' random_param3, cov_param, k, n, p, data_str = data_str)
-#' head(temp.three)
-#' }
+#' temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param, 
+#'   random_param3, cov_param, k,n, p, data_str = data_str)
+#'   
 #' @export 
-sim_glm_nested3 <- function(fixed, random, random3, fixed_param, random_param = list(), 
-                            random_param3 = list(), cov_param, k, n, p,
-                            data_str, cor_vars = NULL, fact_vars = list(NULL),
-                            unbal = FALSE, unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
+sim_glm_nested3 <- function(fixed, random, random3, fixed_param, 
+                            random_param = list(), random_param3 = list(), 
+                            cov_param, k, n, p, data_str, cor_vars = NULL, 
+                            fact_vars = list(NULL), unbal = FALSE, 
+                            unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
                             contrasts = NULL, ...) {
+
+  fixed_vars <- attr(terms(fixed),"term.labels")    
+  rand.vars <- attr(terms(random),"term.labels")   
+  rand.vars3 <- attr(terms(random3),"term.labels")  
   
-  # if(randCor > 1 | randCor < -1 | randCor3 > 1 | randCor3 < -1) 
-  #   stop("Random effect correlation out of range")
-  
-  fixed_vars <- attr(terms(fixed),"term.labels")    ##Extracting fixed effect term labels
-  rand.vars <- attr(terms(random),"term.labels")   ##Extracting random effect term labels
-  rand.vars3 <- attr(terms(random3),"term.labels")   ##Extracting random effect term labels
-  
-  if(length(rand.vars)+1 != length(random_param$random_var)) stop("Random lengths not equal")
-  if(length(rand.vars3)+1 != length(random_param3$random_var)) stop("Third level random lengths not equal")
+  if(length(rand.vars)+1 != length(random_param$random_var)) 
+    stop("Random lengths not equal")
+  if(length(rand.vars3)+1 != length(random_param3$random_var)) 
+    stop("Third level random lengths not equal")
   
   if(unbal3 == FALSE) {
     lvl2ss <- rep(n, k)
     n <- sum(lvl2ss)
   } else {
-    if(length(unbalCont3) < 2) stop("Must specify unbalCont3 when unbal3 = TRUE")
-    lvl2ss <- round(runif(n = k, min = min(unbalCont3), max = max(unbalCont3)), 0)
+    if(length(unbalCont3) < 2) 
+      stop("Must specify unbalCont3 when unbal3 = TRUE")
+    lvl2ss <- round(runif(n = k, min = min(unbalCont3), 
+                          max = max(unbalCont3)), 0)
     n <- sum(lvl2ss)
   }
   
@@ -297,7 +368,8 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param, random_param = 
   rand_eff3 <- do.call(sim_rand_eff, c(random_param3, n = k))
   
   Xmat <- sim_fixef_nested3(fixed, fixed_vars, cov_param, k, n = lvl2ss, 
-                            p = lvl1ss, data_str = data_str, cor_vars = cor_vars, 
+                            p = lvl1ss, data_str = data_str, 
+                            cor_vars = cor_vars, 
                             fact_vars = fact_vars, contrasts = contrasts)
   
   if(ncol(Xmat) != length(fixed_param)) {
@@ -307,23 +379,24 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param, random_param = 
   
   reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx) 
     rep(rand_eff[,xx], times = lvl1ss)))
-  colnames(reff) <- c(unlist(lapply(1:ncol(rand_eff), function(xx) paste("b", xx-1, "_2", sep = ""))))
+  colnames(reff) <- c(unlist(lapply(1:ncol(rand_eff), function(xx) 
+    paste("b", xx-1, "_2", sep = ""))))
   
   reff3 <- do.call("cbind", lapply(1:ncol(rand_eff3), function(xx) 
     rep(rand_eff3[,xx], times = lvl2ss)))
-  colnames(reff3) <- c(unlist(lapply(1:ncol(rand_eff3), function(xx) paste("b", xx-1, "_3", sep = ""))))
+  colnames(reff3) <- c(unlist(lapply(1:ncol(rand_eff3), function(xx) 
+    paste("b", xx-1, "_3", sep = ""))))
   
   Zmat <- model.matrix(random, data.frame(Xmat))
   Zmat3 <- model.matrix(random3, data.frame(Xmat))
   
-  sim_data <- data_glm_nested3(Xmat, Zmat, Zmat3, fixed_param, rand_eff, rand_eff3,
-                               k, n = lvl2ss, p = lvl1ss)
+  sim_data <- data_glm_nested3(Xmat, Zmat, Zmat3, fixed_param, rand_eff, 
+                               rand_eff3, k, n = lvl2ss, p = lvl1ss)
   
   Xmat <- data.frame(Xmat, reff, sim_data)
   Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
   Xmat$clustID <- rep(1:n, times = lvl1ss)
   Xmat$clust3ID <- rep(1:k, times = lvl3ss)
-  return(Xmat)
+  
+  Xmat
 }
-
-

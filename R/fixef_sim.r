@@ -1,18 +1,22 @@
 #' Simulates design matrix.
 #' 
-#' Input fixed variables, sample size, and number of within variables, returns design matrix.
+#' Input fixed variables, sample size, and number of within variables, 
+#' returns design matrix.
 #' 
-#' Simulates the fixed effects for the \code{\link{sim_reg}} function when a linear mixed
-#' model is specified.  This function assumes a time variable when longitudinal data 
-#' is specified and does include any interactions that are specified.
+#' Simulates the fixed effects for the \code{\link{sim_reg}} function when a 
+#' linear mixed model is specified.  This function assumes a time variable 
+#' when longitudinal data is specified and does include any interactions that 
+#' are specified.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.
 #' @param fixed_vars Character vector of covariates for design matrix.
-#' @param cov_param List of arguments. Required arguments are:
+#' @param cov_param List of arguments to pass to the continuous generating 
+#'   function. Required arguments include:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       either 'lvl1' or 'lvl2'. Must be same order as fixed formula above.
+#'       either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
+#'       above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
 #'    see the examples for example code for this.
@@ -21,12 +25,22 @@
 #' @param p Number of within cluster units.
 #' @param data_str Type of data. Must be "cross", or "long".
 #' @param cor_vars A vector of correlations between variables.
-#' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
-#'      each list must include numlevels and var_type (must be "lvl1" or "lvl2");
-#'      optional specifications are: replace, prob, value.labels.
-#' @param contrasts An optional list that specifies the contrasts to be used for factor
-#'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
-#'      more detail.
+#' @param fact_vars A nested list of factor, categorical, or ordinal variable 
+#'      specification, each list must include:
+#'   \itemize{
+#'        \item numlevels = Number of levels for ordinal or factor variables.
+#'        \item var_type = Must be 'lvl1' or 'lvl2'.
+#'    }
+#'    Optional arguments include:
+#'    \itemize{
+#'        \item replace
+#'        \item prob
+#'        \item value.labels
+#'    }
+#'     See also \code{\link{sample}} for use of these optional arguments.
+#' @param contrasts An optional list that specifies the contrasts to be used 
+#'  for factor variables (i.e. those variables with .f or .c). 
+#'  See \code{\link{contrasts}} for more detail.
 #' @importFrom purrr pmap
 #' @export 
 sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str, 
@@ -45,7 +59,8 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   n.cont <- length(cov_param[[1]])
   
   if(length(fact.loc) > 0){
-    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], fixed_vars[int.loc])
+    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], 
+                    fixed_vars[int.loc])
   }
   
   if(length(fact.loc) > 0){
@@ -69,7 +84,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
         cov_param$opts[[xx]]))
     
     Xmat <- do.call(cbind, purrr::invoke_map(lapply(seq_len(n.cont), 
-                                                    function(xx) sim_continuous),
+                                                   function(xx) sim_continuous),
                                              cov_param_args, 
                                              n = n,
                                              k = NULL,
@@ -91,8 +106,8 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
       cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd)
       es <- eigen(cov, symmetric = TRUE)
       ev <- es$values
-      Xmat <- t(cov_mu + es$vectors %*% diag(sqrt(pmax(ev, 0)), length(cov_sd)) %*% 
-                  t(Xmat))
+      Xmat <- t(cov_mu + es$vectors %*% diag(sqrt(pmax(ev, 0)), 
+                                             length(cov_sd)) %*% t(Xmat))
     }
     if(data_str == "long") {
       Xmat <- cbind(unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1)), 
@@ -100,7 +115,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
     }
   } else {
     if(data_str == 'long') {
-      Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx])-1))
+      Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1))
     } else {
       Xmat <- NULL
     }
@@ -124,16 +139,19 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
    fixed <- search_factors(fixed_vars)
  }
  Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
+ 
  Xmat
 }
 
 #' Simulates design matrix.
 #' 
-#' Input fixed variables, sample size, and number of within variables, returns design matrix.
+#' Input fixed variables, sample size, and number of within variables, returns 
+#'design matrix.
 #' 
-#' Simulates the fixed effects for the \code{\link{sim_reg}} function when a linear mixed
-#' model is specified.  This function assumes a time variable when longitudinal data 
-#' is specified and does include any interactions that are specified.
+#' Simulates the fixed effects for the \code{\link{sim_reg}} function when a 
+#' linear mixed model is specified.  This function assumes a time variable when 
+#' longitudinal data is specified and does include any interactions that are 
+#' specified.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.
 #' @param fixed_vars Character vector of covariates for design matrix.
@@ -152,9 +170,19 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 #' @param p Number of within cluster units.
 #' @param data_str Type of data. Must be "cross", or "long".
 #' @param cor_vars A vector of correlations between variables.
-#' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
-#'      each list must include numlevels and var_type (must be "lvl1", "lvl2", or "lvl3");
-#'      optional specifications are: replace, prob, value.labels.
+#' @param fact_vars A nested list of factor, categorical, or ordinal variable 
+#'      specification, each list must include:
+#'   \itemize{
+#'        \item numlevels = Number of levels for ordinal or factor variables.
+#'        \item var_type = Must be 'lvl1', 'lvl2', or 'lvl3'.
+#'    }
+#'    Optional arguments include:
+#'    \itemize{
+#'        \item replace
+#'        \item prob
+#'        \item value.labels
+#'    }
+#'     See also \code{\link{sample}} for use of these optional arguments.
 #' @param contrasts An optional list that specifies the contrasts to be used for factor
 #'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
 #'      more detail.
@@ -175,7 +203,8 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   n.cont <- length(cov_param[[1]])
   
   if(length(fact.loc) > 0){
-    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], fixed_vars[int.loc])
+    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], 
+                    fixed_vars[int.loc])
   }
   
   if(length(fact.loc) > 0){
@@ -196,7 +225,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
         cov_param$opts[[xx]]))
     
     Xmat <- do.call(cbind, purrr::invoke_map(lapply(seq_len(n.cont), 
-                                                    function(xx) sim_continuous),
+                                                  function(xx) sim_continuous),
                                              cov_param_args, 
                                              n = n,
                                              k = k,
@@ -218,8 +247,8 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
       cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd)
       es <- eigen(cov, symmetric = TRUE)
       ev <- es$values
-      Xmat <- t(cov_mu + es$vectors %*% diag(sqrt(pmax(ev, 0)), length(cov_sd)) %*% 
-                  t(Xmat))
+      Xmat <- t(cov_mu + es$vectors %*% diag(sqrt(pmax(ev, 0)), 
+                                             length(cov_sd)) %*% t(Xmat))
     }
     if(data_str == "long") {
       Xmat <- cbind(unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1)), 
@@ -227,7 +256,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     }
   } else {
     if(data_str == 'long') {
-      Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx])-1))
+      Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1))
     } else {
       Xmat <- NULL
     }
@@ -251,36 +280,50 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     fixed <- search_factors(fixed_vars)
   }
   Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
+  
   Xmat
 }
 
 
 #' Simulates design matrix for single level model.
 #' 
-#' Input fixed variables, sample size, and number of within variables, returns design matrix.
+#' Input fixed variables, sample size, and number of within variables, 
+#' returns design matrix.
 #' 
-#' Simulates the fixed effects for the \code{\link{sim_reg}} function when simulating a 
-#' simple regression model.
+#' Simulates the fixed effects for the \code{\link{sim_reg}} function when 
+#' simulating a simple regression model.
 #' 
 #' @param fixed One sided formula for fixed effects in the simulation.
 #' @param fixed_vars Character vector of covariates for design matrix.
 #' @param n Number of clusters.
-#' @param cov_param List of arguments. Required arguments are:
+#' @param cov_param List of arguments to pass to the continuous generating 
+#'   function. Required arguments include:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       'single'. Must be same order as fixed formula above.
+#'       either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
+#'       above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
 #'    see the examples for example code for this.
-#'  Does not include intercept, factors, or interactions.
+#'  Does not include intercept, time, factors, or interactions.
 #' @param cor_vars A vector of correlations between variables.
-#' @param fact_vars A nested list of factor, categorical, or ordinal variable specification, 
-#'      each list must include numlevels and var_type (must be "single");
-#'      optional specifications are: replace, prob, value.labels.
-#' @param contrasts An optional list that specifies the contrasts to be used for factor
-#'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
-#'      more detail.
+#' @param fact_vars A nested list of factor, categorical, or ordinal variable 
+#'      specification, each list must include:
+#'   \itemize{
+#'        \item numlevels = Number of levels for ordinal or factor variables.
+#'        \item var_type = Must be 'single'.
+#'    }
+#'    Optional arguments include:
+#'    \itemize{
+#'        \item replace
+#'        \item prob
+#'        \item value.labels
+#'    }
+#'     See also \code{\link{sample}} for use of these optional arguments.
+#' @param contrasts An optional list that specifies the contrasts to be used 
+#'  for factor variables (i.e. those variables with .f or .c). 
+#'  See \code{\link{contrasts}} for more detail.
 #' @importFrom purrr pmap
 #' @export 
 sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL, 
@@ -298,7 +341,8 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   n.cont <- length(cov_param[[1]])
   
   if(length(fact.loc)> 0){
-    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], fixed_vars[int.loc])
+    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], 
+                    fixed_vars[int.loc])
   }
   
   if(n.fact > 0){
@@ -335,8 +379,8 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
       cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd)
       es <- eigen(cov, symmetric = TRUE)
       ev <- es$values
-      Xmat <- t(cov_mu + es$vectors %*% diag(sqrt(pmax(ev, 0)), length(cov_sd)) %*% 
-        t(Xmat))
+      Xmat <- t(cov_mu + es$vectors %*% diag(sqrt(pmax(ev, 0)), 
+                                             length(cov_sd)) %*% t(Xmat))
     }
   } else {
     Xmat <- NULL
@@ -358,31 +402,32 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
     fixed <- search_factors(fixed_vars)
   }
   Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
+  
   Xmat
 }
 
 #' Simulate categorical, factor, or discrete variables
 #' 
-#' Function that simulates discrete, factor, or categorical variables.  Is essentially
-#' a wrapper around the sample function from base R.
+#' Function that simulates discrete, factor, or categorical variables.  
+#' Is essentially a wrapper around the sample function from base R.
 #' 
 #' @param k Number of third level clusters.
 #' @param n Number of clusters or number of observations for single level
 #' @param p Number of within cluster observations for multilevel
-#' @param numlevels Scalar indicating the number of levels for categorical, factor, or discrete variable
+#' @param numlevels Scalar indicating the number of levels for categorical, 
+#'   factor, or discrete variable
 #' @param replace Whether to replace levels of categorical variable, TRUE/FALSE
-#' @param prob Probability of levels for variable, must be same length as numlevels
-#' @param var_type Variable type for the variable, must be either "lvl1", "lvl2", or "single"
+#' @param prob Probability of levels for variable, must be same length as 
+#'  numlevels
+#' @param var_type Variable type for the variable, must be either 
+#'   "lvl1", "lvl2", "lvl3", or "single"
 #' @param value.labels Optional argument with value labels for variable, 
 #'        converts variable to factor.
 #' @export 
 sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL, 
                        var_type = c('lvl1', 'lvl2', 'lvl3', 'single'), 
                        value.labels = NULL) {
-  
-  #if(is.null(prob) == FALSE & (length(prob) == numlevels | length(prob) == length(numlevels)) == FALSE) {
-  #  stop("prob must be same length as numlevels")
-  #}
+
   if(var_type == 'single' | var_type == 'lvl2') {
     if(replace == FALSE & numlevels < n) {
       stop("If replace = FALSE, numlevels must be greater than n for lvl2 or single")
@@ -410,7 +455,7 @@ sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
   
   var_type <- match.arg(var_type)
   
-  catVar <- switch(var_type,
+  cat_var <- switch(var_type,
          single = sample(x = numlevels, size = n, replace = replace, 
                          prob = prob),
          lvl3 = rep(sample(x = numlevels, size = k, replace = replace, 
@@ -425,10 +470,10 @@ sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
     if(length(value.labels) != numlevels) { 
       stop("value.labels must be same length as numlevels") 
       }
-    catVar <- factor(catVar, labels = value.labels)
+    cat_var <- factor(cat_var, labels = value.labels)
   }
   
-  return(catVar)
+  cat_var
 }
 
 #' Simulate continuous variables

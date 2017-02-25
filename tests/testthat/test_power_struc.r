@@ -20,10 +20,19 @@ test_that('correct structure', {
                        n = n, error_var = error_var, with_err_gen = with_err_gen, 
                        data_str = "single", pow_param = pow_param, alpha = alpha,
                        pow_dist = pow_dist, pow_tail = pow_tail, 
-                       replicates = replicates)
+                       replicates = replicates, raw_power = FALSE)
   
   expect_equal(nrow(power_out), 4)
   expect_equal(ncol(power_out), 6)
+  
+  power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
+                       n = n, error_var = error_var, with_err_gen = with_err_gen, 
+                       data_str = "single", pow_param = pow_param, alpha = alpha,
+                       pow_dist = pow_dist, pow_tail = pow_tail, 
+                       replicates = replicates, raw_power = TRUE)
+  
+  expect_equal(nrow(power_out), 4)
+  expect_equal(ncol(power_out), 7)
   
   fixed <- ~ 1 + act + diff + numCourse + act:numCourse
   fixed_param <- c(0.5, 1.1, 0.6, 0.9, 1.1)
@@ -45,7 +54,8 @@ test_that('correct structure', {
                        n = n, error_var = error_var, with_err_gen = with_err_gen, 
                        data_str = "single", pow_param = pow_param, alpha = alpha,
                        pow_dist = pow_dist, pow_tail = pow_tail, 
-                       replicates = replicates, terms_vary = terms_vary)
+                       replicates = replicates, terms_vary = terms_vary, 
+                       raw_power = FALSE)
   
   expect_equal(nrow(power_out), 4*5*3)
   expect_equal(length(table(power_out$n)), 5)
@@ -71,7 +81,8 @@ test_that('correct structure', {
                        n = n, error_var = error_var, with_err_gen = with_err_gen, 
                        data_str = "single", pow_param = pow_param, alpha = alpha,
                        pow_dist = pow_dist, pow_tail = pow_tail, 
-                       replicates = replicates, terms_vary = terms_vary)
+                       replicates = replicates, terms_vary = terms_vary, 
+                       raw_power = FALSE)
   
   expect_equal(nrow(power_out), 1*5*3)
 })
@@ -95,7 +106,7 @@ test_that('sim_glm power', {
                            n = n, data_str = "single", 
                            pow_param = pow_param, alpha = alpha,
                            pow_dist = pow_dist, pow_tail = pow_tail, 
-                           replicates = replicates)
+                           replicates = replicates, raw_power = FALSE)
   expect_equal(nrow(power_out), 3)
   expect_equal(ncol(power_out), 6)
   
@@ -118,7 +129,8 @@ test_that('sim_glm power', {
                            n = n, data_str = "single", 
                            pow_param = pow_param, alpha = alpha,
                            pow_dist = pow_dist, pow_tail = pow_tail, 
-                           replicates = replicates, terms_vary = terms_vary)
+                           replicates = replicates, terms_vary = terms_vary, 
+                           raw_power = FALSE)
   expect_equal(nrow(power_out), 3*3)
   expect_equal(ncol(power_out), 7)
 })
@@ -149,7 +161,7 @@ test_that('two level power continuous', {
                        data_str = data_str, unbal = FALSE, 
                        pow_param = pow_param, alpha = alpha,
                        pow_dist = pow_dist, pow_tail = pow_tail, 
-                       replicates = replicates)
+                       replicates = replicates, raw_power = FALSE)
   
   expect_equal(nrow(power_out), 3)
 })
@@ -187,7 +199,7 @@ test_that("three level power continuous", {
                        data_str = data_str, unbal = FALSE, unbal3 = FALSE, 
                        pow_param = pow_param, alpha = alpha,
                        pow_dist = pow_dist, pow_tail = pow_tail, 
-                       replicates = replicates)
+                       replicates = replicates, raw_power = FALSE)
   
   expect_equal(nrow(power_out), 4)
 })
@@ -217,7 +229,7 @@ test_that('two level power dich', {
                        data_str = data_str, unbal = FALSE, 
                        pow_param = pow_param, alpha = alpha,
                        pow_dist = pow_dist, pow_tail = pow_tail, 
-                       replicates = replicates)
+                       replicates = replicates, raw_power = FALSE)
   
   expect_equal(nrow(power_out), 3)
 })
@@ -253,7 +265,7 @@ test_that("three level power dich", {
                        data_str = data_str, unbal = FALSE, unbal3 = FALSE, 
                        pow_param = pow_param, alpha = alpha,
                        pow_dist = pow_dist, pow_tail = pow_tail, 
-                       replicates = replicates)
+                       replicates = replicates, raw_power = FALSE)
   
   expect_equal(nrow(power_out), 3)
 })

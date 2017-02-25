@@ -110,10 +110,15 @@
 #'  the power simulation. The names must match arguments to the simulation 
 #'  function, see \code{\link{sim_reg}} for examples. Values specified here 
 #'  should not be included as arguments in the function call.
+#' @param raw_power TRUE/FALSE indicating whether raw power output should be 
+#'  returned. Default is TRUE, which will create a new nested column with 
+#'  raw data by variable(s) manipulated in power analysis.
 #' @param ... Currently not used.
 #' @importFrom dplyr group_by
 #' @importFrom dplyr summarise
 #' @importFrom dplyr '%>%'
+#' @importFrom dplyr left_join
+#' @importFrom tidyr nest
 #' @export 
 sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param, 
                     random_param = list(NULL), random_param3 = list(NULL), 
@@ -125,7 +130,7 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                     lvl1_err_params = NULL, arima_mod = list(NULL),
                     missing = FALSE, missing_args = list(NULL),
                    pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
-                    replicates, terms_vary = NULL, ...) {
+                    replicates, terms_vary = NULL, raw_power = TRUE, ...) {
   
   args <- list(fixed = fixed, random = random, random3 = random3,
                fixed_param = fixed_param, random_param = random_param,
@@ -165,13 +170,13 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
   
   if(data_str == "single"){
     if(is.null(terms_vary)) {
-      temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) 
-          do.call('sim_pow_single', args)
+      temp_pow <- do.call("rbind", lapply(seq_len(replicates), function(xx) 
+          cbind(id = xx, do.call('sim_pow_single', args))
         ))
     } else {
       if(any(sapply(conds, is.list))) {
         temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
-          do.call("rbind", lapply(1:replicates, function(xx) 
+          do.call("rbind", lapply(seq_len(replicates), function(xx) 
             cbind(rep = xx, do.call('sim_pow_single', args[[tt]]), 
                   simp_conds[tt, , drop = FALSE], 
                   lapply(seq_along(list_conds), function(xx) 
@@ -180,7 +185,7 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
           ))))
       } else {
         temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
-          do.call("rbind", lapply(1:replicates, function(xx) 
+          do.call("rbind", lapply(seq_len(replicates), function(xx) 
             cbind(do.call('sim_pow_single', args[[tt]]), 
                   conds[tt, , drop = FALSE], row.names = NULL)
           ))))
@@ -189,13 +194,13 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
   } else {
     if(is.null(k)) {
       if(is.null(terms_vary)) {
-        temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) 
+        temp_pow <- do.call("rbind", lapply(seq_len(replicates), function(xx) 
             do.call('sim_pow_nested', args)
           ))
       } else {
         if(any(sapply(conds, is.list))) {
           temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
-            do.call("rbind", lapply(1:replicates, function(xx) 
+            do.call("rbind", lapply(seq_len(replicates), function(xx) 
               cbind(rep = xx, do.call('sim_pow_nested', args[[tt]]), 
                     simp_conds[tt, , drop = FALSE], 
                     lapply(seq_along(list_conds), function(xx) 
@@ -204,7 +209,7 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
             ))))
         } else {
           temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
-            do.call("rbind", lapply(1:replicates, function(xx) 
+            do.call("rbind", lapply(seq_len(replicates), function(xx) 
               cbind(do.call('sim_pow_nested', args[[tt]]), 
                     conds[tt, , drop = FALSE], row.names = NULL)
             ))))
@@ -212,13 +217,13 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
       }
     } else {
       if(is.null(terms_vary)) {
-        temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) 
+        temp_pow <- do.call("rbind", lapply(seq_len(replicates), function(xx) 
             do.call('sim_pow_nested3', args)
           ))
       } else {
         if(any(sapply(conds, is.list))) {
           temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
-            do.call("rbind", lapply(1:replicates, function(xx) 
+            do.call("rbind", lapply(seq_len(replicates), function(xx) 
               cbind(rep = xx, do.call('sim_pow_nested3', args[[tt]]), 
                     simp_conds[tt, , drop = FALSE], 
                     lapply(seq_along(list_conds), function(xx) 
@@ -227,7 +232,7 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
             ))))
         } else {
           temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
-            do.call("rbind", lapply(1:replicates, function(xx) 
+            do.call("rbind", lapply(seq_len(replicates), function(xx) 
               cbind(do.call('sim_pow_nested3', args[[tt]]), 
                     conds[tt, , drop = FALSE], row.names = NULL)
             ))))
@@ -236,25 +241,24 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
     }
   }
   
-  if(is.null(terms_vary)) {
-    power <- temp_pow %>%
-      dplyr::group_by_('var') %>%
-      dplyr::summarise(avg_test_stat = mean(test_stat),
-                       sd_test_stat = sd(test_stat),
-                       power = mean(reject),
-                       num_reject = sum(reject),
-                       num_repl = replicates)
-  } else {
-    grp_by <- lapply(c('var', names(terms_vary)), as.symbol)
-    
-    power <- temp_pow %>%
+  grp_by <- lapply(c('var', names(terms_vary)), as.symbol)
+  
+  power <- temp_pow %>%
+    dplyr::group_by_(.dots = grp_by) %>%
+    dplyr::summarise(avg_test_stat = mean(test_stat),
+                     sd_test_stat = sd(test_stat),
+                     power = mean(reject),
+                     num_reject = sum(reject),
+                     num_repl = replicates)
+  
+  if(raw_power) {
+    nest_power <- temp_pow %>%
       dplyr::group_by_(.dots = grp_by) %>%
-      dplyr::summarise(avg_test_stat = mean(test_stat),
-                       sd_test_stat = sd(test_stat),
-                       power = mean(reject),
-                       num_reject = sum(reject),
-                       num_repl = replicates)
+      tidyr::nest()
+    
+    power <- left_join(power, nest_power, by = paste(grp_by, sep = ','))
   }
+  
   power
 }
 
@@ -359,6 +363,9 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
 #'  the power simulation. The names must match arguments to the simulation 
 #'  function, see \code{\link{sim_glm}} for examples. Values specified here 
 #'  should not be included as arguments in the function call.
+#' @param raw_power TRUE/FALSE indicating whether raw power output should be 
+#'  returned. Default is TRUE, which will create a new nested column with 
+#'  raw data by variable(s) manipulated in power analysis.
 #' @param ... Current not used.
 #' @importFrom dplyr group_by
 #' @importFrom dplyr summarise
@@ -372,7 +379,7 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                     unbalCont = NULL, unbalCont3 = NULL,
                     missing = FALSE, missing_args = list(NULL),
                   pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
-                    replicates, terms_vary = NULL, ...) {
+                    replicates, terms_vary = NULL, raw_power = TRUE, ...) {
   
   args <- list(fixed = fixed, random = random, random3 = random3,
                fixed_param = fixed_param, random_param = random_param,
@@ -410,13 +417,13 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
   
   if(data_str == "single"){
     if(is.null(terms_vary)) {
-      temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) 
+      temp_pow <- do.call("rbind", lapply(seq_len(replicates), function(xx) 
         do.call('sim_pow_glm_single', args)
       ))
     } else {
       if(any(sapply(conds, is.list))) {
         temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
-          do.call("rbind", lapply(1:replicates, function(xx) 
+          do.call("rbind", lapply(seq_len(replicates), function(xx) 
             cbind(rep = xx, do.call('sim_pow_glm_single', args[[tt]]), 
                   simp_conds[tt, , drop = FALSE], 
                   lapply(seq_along(list_conds), function(xx) 
@@ -425,7 +432,7 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
           ))))
       } else {
         temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
-          do.call("rbind", lapply(1:replicates, function(xx) 
+          do.call("rbind", lapply(seq_len(replicates), function(xx) 
             cbind(do.call('sim_pow_glm_single', args[[tt]]), 
                   conds[tt, , drop = FALSE], row.names = NULL)
           ))))
@@ -434,13 +441,13 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
   } else {
     if(is.null(k)) {
       if(is.null(terms_vary)) {
-        temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) 
+        temp_pow <- do.call("rbind", lapply(seq_len(replicates), function(xx) 
           do.call('sim_pow_glm_nested', args)
         ))
       } else {
         if(any(sapply(conds, is.list))) {
           temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
-            do.call("rbind", lapply(1:replicates, function(xx) 
+            do.call("rbind", lapply(seq_len(replicates), function(xx) 
               cbind(rep = xx, do.call('sim_pow_glm_nested', args[[tt]]), 
                     simp_conds[tt, , drop = FALSE], 
                     lapply(seq_along(list_conds), function(xx) 
@@ -449,7 +456,7 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
             ))))
         } else {
           temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
-            do.call("rbind", lapply(1:replicates, function(xx) 
+            do.call("rbind", lapply(seq_len(replicates), function(xx) 
               cbind(do.call('sim_pow_glm_nested', args[[tt]]), 
                     conds[tt, , drop = FALSE], row.names = NULL)
             ))))
@@ -457,13 +464,13 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
       }
     } else {
       if(is.null(terms_vary)) {
-        temp_pow <- do.call("rbind", lapply(1:replicates, function(xx) 
+        temp_pow <- do.call("rbind", lapply(seq_len(replicates), function(xx) 
           do.call('sim_pow_glm_nested3', args)
         ))
       } else {
         if(any(sapply(conds, is.list))) {
           temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
-            do.call("rbind", lapply(1:replicates, function(xx) 
+            do.call("rbind", lapply(seq_len(replicates), function(xx) 
               cbind(rep = xx, do.call('sim_pow_glm_nested3', args[[tt]]), 
                     simp_conds[tt, , drop = FALSE], 
                     lapply(seq_along(list_conds), function(xx) 
@@ -472,7 +479,7 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
             ))))
         } else {
           temp_pow <- do.call('rbind', lapply(seq_along(args), function(tt)
-            do.call("rbind", lapply(1:replicates, function(xx) 
+            do.call("rbind", lapply(seq_len(replicates), function(xx) 
               cbind(do.call('sim_pow_glm_nested3', args[[tt]]), 
                     conds[tt, , drop = FALSE], row.names = NULL)
             ))))
@@ -481,24 +488,23 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
     }
   }
   
-  if(is.null(terms_vary)) {
-    power <- temp_pow %>%
-      dplyr::group_by_('var') %>%
-      dplyr::summarise(avg_test_stat = mean(test_stat),
-                       sd_test_stat = sd(test_stat),
-                       power = mean(reject),
-                       num_reject = sum(reject),
-                       num_repl = replicates)
-  } else {
-    grp_by <- lapply(c('var', names(terms_vary)), as.symbol)
-    
-    power <- temp_pow %>%
+  grp_by <- lapply(c('var', names(terms_vary)), as.symbol)
+  
+  power <- temp_pow %>%
+    dplyr::group_by_(.dots = grp_by) %>%
+    dplyr::summarise(avg_test_stat = mean(test_stat),
+                     sd_test_stat = sd(test_stat),
+                     power = mean(reject),
+                     num_reject = sum(reject),
+                     num_repl = replicates)
+  
+  if(raw_power) {
+    nest_power <- temp_pow %>%
       dplyr::group_by_(.dots = grp_by) %>%
-      dplyr::summarise(avg_test_stat = mean(test_stat),
-                       sd_test_stat = sd(test_stat),
-                       power = mean(reject),
-                       num_reject = sum(reject),
-                       num_repl = replicates)
+      tidyr::nest()
+    
+    power <- left_join(power, nest_power, by = paste(grp_by, sep = ','))
   }
+  
   power
 }

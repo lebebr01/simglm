@@ -15,7 +15,8 @@ Depends:
     stats,
     Matrix,
     dplyr,
-    purrr
+    purrr,
+    tidyr
 Suggests:
     knitr,
     lme4,

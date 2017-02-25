@@ -54,7 +54,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   } else {
     int.loc <- 0
   }
-  fact.loc <- grep("\\.f$|\\.o$|\\.c$|_f$|_c$|_f$", 
+  fact.loc <- grep("\\.f$|\\.o$|\\.c$|_f$|_c$|_o$", 
                    fixed_vars, ignore.case = TRUE) 
   w.var <- length(grep("lvl1", cov_param$var_type, ignore.case = TRUE))
   n.cont <- length(cov_param[[1]])
@@ -200,7 +200,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   } else {
     int.loc <- 0
   }
-  fact.loc <- grep("\\.f$|\\.o$|\\.c$|_f$|_c$|_f$", 
+  fact.loc <- grep("\\.f$|\\.o$|\\.c$|_f$|_c$|_o$", 
                    fixed_vars, ignore.case = TRUE) 
   n.cont <- length(cov_param[[1]])
   
@@ -338,12 +338,12 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   } else {
     int.loc <- 0
   }
-  fact.loc <- grep("\\.f$|\\.o$|\\.c$|_f$|_c$|_f$", 
+  fact.loc <- grep("\\.f$|\\.o$|\\.c$|_f$|_c$|_o$", 
                    fixed_vars, ignore.case = TRUE)  
   n.fact <- length(fact.loc[fact.loc != int.loc])
   n.cont <- length(cov_param[[1]])
   
-  if(length(fact.loc)> 0){
+  if(length(fact.loc) > 0){
     fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], 
                     fixed_vars[int.loc])
   }

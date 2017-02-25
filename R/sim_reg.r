@@ -119,7 +119,7 @@
 #'    data_str = "single")
 #' # Fitting regression to obtain parameter estimates
 #' summary(lm(sim_data ~ 1 + act + diff + numCourse + act:numCourse, 
-#'    data = temp.single))
+#'    data = temp_single))
 #' 
 #' # Longitudinal linear mixed model example
 #' fixed <- ~1 + time + diff + act + time:act
@@ -143,7 +143,7 @@
 #' library(lme4)
 #' lmer(sim_data ~ 1 + time + diff + act + time:act + 
 #'   (1 + time + diff | clustID), 
-#'   data = temp.long)
+#'   data = temp_long)
 #' 
 #' # Three level example
 #' fixed <- ~1 + time + diff + act + actClust + time:act
@@ -170,7 +170,7 @@
 #' library(lme4)
 #' lmer(sim_data ~ 1 + time + diff + act + actClust + time:act + 
 #'    (1 + time + diff | clustID) +  
-#'    (1 | clust3ID), data = temp.three)
+#'    (1 | clust3ID), data = temp_three)
 #' 
 sim_reg <- function(fixed, random, random3, fixed_param, 
                     random_param = list(), random_param3 = list(), cov_param, 

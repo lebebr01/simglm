@@ -457,7 +457,7 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
   sim_data <- data_reg_nested3(Xmat, Zmat, Zmat3, fixed_param, rand_eff, 
                                rand_eff3, k, n = lvl2ss, p = lvl1ss, err = err)
   
-  Xmat <- data.frame(Xmat,reff,sim_data)
+  Xmat <- data.frame(Xmat, reff, reff3, sim_data)
   Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
   Xmat$clustID <- rep(1:n, times = lvl1ss)
   Xmat$clust3ID <- rep(1:k, times = lvl3ss)

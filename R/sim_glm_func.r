@@ -383,7 +383,7 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param,
     paste("b", xx-1, "_2", sep = ""))))
   
   reff3 <- do.call("cbind", lapply(1:ncol(rand_eff3), function(xx) 
-    rep(rand_eff3[,xx], times = lvl2ss)))
+    rep(rand_eff3[,xx], times = lvl3ss)))
   colnames(reff3) <- c(unlist(lapply(1:ncol(rand_eff3), function(xx) 
     paste("b", xx-1, "_3", sep = ""))))
   

@@ -54,7 +54,6 @@ Moving from two level to three level models is straightforward. Now there are fo
 
 To specify a design that has an unbalanced number of observations within each level two cluster, but balanced level two units within each level three cluster, the following code can be used. Notice here that **unbal** is set to TRUE, but **unbal3** is set to FALSE. Similarly, **unbalCont** specifies the minimum and maximum values for the number of observations within each level two cluster and **unbalCont3** is set to NULL.
 ```{r bal3lvl2}
-library(simglm)
 fixed <- ~1 + time + diff + act + actClust + time:act
 random <- ~1 + time + diff
 random3 <- ~ 1 + time
@@ -92,7 +91,6 @@ tapply(temp_three$clustID, temp_three$clust3ID, func_temp)
 
 Moving to a design that is unbalanced at both levels is straightforward. Now the **unbal3** argument is set to TRUE and the **unbalCont3** argument is a vector that contains the minimum and maximum number of level two clusters that are contained within a level three cluster. Note that now only the number of clusters needs to be specified, the number of level one and two clusters are randomly generated.
 ```{r unbal3lvl2}
-library(simglm)
 fixed <- ~1 + time + diff + act + actClust + time:act
 random <- ~1 + time + diff
 random3 <- ~ 1 + time

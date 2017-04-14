@@ -32,4 +32,3 @@ attempting to simulate a mixture normal/bimodal distribution.
 desireVar(2.5, 2, means = c(-1, 1), equalWeight = TRUE)
 }
 }
-

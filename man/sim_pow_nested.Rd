@@ -123,4 +123,3 @@ about power.  Use \code{\link{sim_pow}} as a convenient wrapper for this.
 \seealso{
 \code{\link{sim_pow}} for a wrapper to replicate.
 }
-

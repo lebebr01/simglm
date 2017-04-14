@@ -44,4 +44,3 @@ used for standardization be simulated.}
 \description{
 Input error simulation parameters and outputs simulated errors.
 }
-

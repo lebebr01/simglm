@@ -75,4 +75,3 @@ temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param,
   cov_param = cov_param, n = n, data_str = "single")
   
 }
-

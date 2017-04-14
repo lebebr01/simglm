@@ -32,4 +32,3 @@ converts variable to factor.}
 Function that simulates discrete, factor, or categorical variables.  
 Is essentially a wrapper around the sample function from base R.
 }
-

@@ -25,6 +25,6 @@ Suggests:
     shiny,
     e1071
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 Author: Brandon LeBeau [aut, cre]
 Maintainer: Brandon LeBeau <lebebr01+simglm@gmail.com>

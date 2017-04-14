@@ -166,4 +166,3 @@ temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param,
 
 
 }
-

@@ -16,4 +16,3 @@ constant supported.}
 Input variances of random effects and correlation between random effects,
 returns variance-covariance matrix of random effects.
 }
-

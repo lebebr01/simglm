@@ -23,4 +23,3 @@ of gender, socioeconomic status, or age. Note, this function is similar to
 dropout missing data, but instead of missing due to time, this is missing
 due to another covariate.
 }
-

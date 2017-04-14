@@ -141,4 +141,3 @@ temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param,
 \code{\link{sim_reg}} for a convenient wrapper for all data 
   conditions.
 }
-

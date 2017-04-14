@@ -105,4 +105,3 @@ temp_long <- sim_glm(fixed, random, random3 = NULL, fixed_param,
 random_param, random_param3 = NULL,
  cov_param, k = NULL, n, p, data_str = data_str)
 }
-

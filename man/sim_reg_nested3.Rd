@@ -161,4 +161,3 @@ temp_three <- sim_reg(fixed, random, random3, fixed_param, random_param,
 \code{\link{sim_reg}} for a convenient wrapper for all data 
  conditions.
 }
-

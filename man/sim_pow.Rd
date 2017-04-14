@@ -163,4 +163,3 @@ simple regression and the linear mixed model power functions. This function
 replicates the power call a specified number of times and prints outs a 
 matrix with the results.
 }
-

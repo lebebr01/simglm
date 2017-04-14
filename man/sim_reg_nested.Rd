@@ -129,4 +129,3 @@ temp_long <- sim_reg(fixed, random, random3 = NULL, fixed_param,
 \code{\link{sim_reg}} for a convenient wrapper for all data 
  conditions.
 }
-

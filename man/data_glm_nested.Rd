@@ -25,4 +25,3 @@ returns simulated data in the logistic metric and
 converted to 0/1 based on the probabilities and the 
 binomial distribution with 1 trial.
 }
-

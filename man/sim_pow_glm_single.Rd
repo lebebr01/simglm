@@ -81,4 +81,3 @@ for this.
 \seealso{
 \code{\link{sim_pow_glm}} for a wrapper to replicate.
 }
-

@@ -44,4 +44,3 @@ Input error simulation parameters and outputs simulated errors.
 \details{
 Simulates error term for single level regression models.
 }
-

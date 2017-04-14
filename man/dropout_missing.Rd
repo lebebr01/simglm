@@ -33,4 +33,3 @@ variable would be marked as NA (1) or not (0). The second is a
 re-representation of the response variable with the values coded as 
 NA named 'sim_data2'.
 }
-

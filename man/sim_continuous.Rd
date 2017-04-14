@@ -26,4 +26,3 @@ R distribution function (e.g. 'rnorm').}
 Function that simulates continuous variables. Any distribution function in 
 R is supported.
 }
-

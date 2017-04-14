@@ -54,4 +54,3 @@ returns design matrix.
 Simulates the fixed effects for the \code{\link{sim_reg}} function when 
 simulating a simple regression model.
 }
-

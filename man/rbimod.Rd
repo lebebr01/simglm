@@ -41,4 +41,3 @@ simData <- rbimod(400, mean = c(-14, -4, 6, 20), var = c(rep(1.2, 4)),
 plot(density(simData))
 }
 }
-

@@ -38,4 +38,3 @@ simulating a linear mixed model, both cross sectional and longitudinal.
 Allows the ability to simulate random effects from a Laplace, 
 chi-square (1), mixture normal, or normal distribution.
 }
-

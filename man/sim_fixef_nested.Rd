@@ -60,4 +60,3 @@ linear mixed model is specified.  This function assumes a time variable
 when longitudinal data is specified and does include any interactions that 
 are specified.
 }
-

@@ -31,4 +31,3 @@ droput, random, or missing at random (mar) missing data.}
 This function is a wrapper to easily call the specific types of 
 missing data mechanisms.
 }
-

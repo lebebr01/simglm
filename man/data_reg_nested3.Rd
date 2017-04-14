@@ -31,4 +31,3 @@ data_reg_nested3(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3, k, n, p, err)
 Takes simulation parameter arguments and 
 returns simulated data.
 }
-

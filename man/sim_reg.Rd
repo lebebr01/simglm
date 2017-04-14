@@ -206,4 +206,3 @@ lmer(sim_data ~ 1 + time + diff + act + actClust + time:act +
    (1 | clust3ID), data = temp_three)
 
 }
-

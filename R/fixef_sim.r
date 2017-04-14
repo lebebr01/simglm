@@ -111,12 +111,23 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
                                              length(cov_sd)) %*% t(Xmat))
     }
     if(data_str == "long") {
-      Xmat <- cbind(unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1)), 
-                    Xmat)
+      if(is.null(cov_param$time_var)) {
+        Xmat <- cbind(unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1)), 
+                      Xmat)
+      } else {
+        Xmat <- cbind(unlist(lapply(seq_along(p), function(xx) 
+          cov_param$time_var[1:p[xx]])), 
+                      Xmat)
+      }
     }
   } else {
     if(data_str == 'long') {
-      Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1))
+      if(is.null(cov_param$time_var)) {
+        Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1))
+      } else {
+        Xmat <- unlist(lapply(seq_along(p), function(xx) 
+          cov_param$time_var[1:p[xx]]))
+      }
     } else {
       Xmat <- NULL
     }
@@ -253,12 +264,23 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
                                              length(cov_sd)) %*% t(Xmat))
     }
     if(data_str == "long") {
-      Xmat <- cbind(unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1)), 
-                    Xmat)
+      if(is.null(cov_param$time_var)) {
+        Xmat <- cbind(unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1)), 
+                      Xmat)
+      } else {
+        Xmat <- cbind(unlist(lapply(seq_along(p), function(xx) 
+          cov_param$time_var[1:p[xx]])), 
+                      Xmat)
+      }
     }
   } else {
     if(data_str == 'long') {
-      Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1))
+      if(is.null(cov_param$time_var)) {
+        Xmat <- unlist(lapply(seq_along(p), function(xx) (1:p[xx]) - 1))
+      } else {
+        Xmat <- unlist(lapply(seq_along(p), function(xx) 
+          cov_param$time_var[1:p[xx]]))
+      }
     } else {
       Xmat <- NULL
     }

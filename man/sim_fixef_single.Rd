@@ -19,8 +19,7 @@ sim_fixef_single(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
  \itemize{
    \item dist_fun: This is a quoted R distribution function.
    \item var_type: This is the level of variable to generate. Must be 
-     either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
-     above.
+     'single'. Must be same order as fixed formula above.
  }
  Optional arguments to the distribution functions are in a nested list,
   see the examples for example code for this.

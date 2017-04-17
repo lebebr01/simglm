@@ -7,7 +7,7 @@ test_that("dropout missing occurring", {
   fixed_param <- c(4, 2, 6, 2.3, 7)
   random_param <- list(random_var = c(7, 4, 2), rand_gen = "rnorm")
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                    var_type = c("lvl1", "lvl2"), 
+                    var_type = c("level1", "level2"), 
                     opts = list(list(mean = 0, sd = 1.5),
                                 list(mean = 0, sd = 4)))
   n <- 150

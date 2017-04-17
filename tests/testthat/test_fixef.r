@@ -6,32 +6,32 @@ test_that('sim_factor are discrete', {
                           var_type = 'single')), 4)
   expect_length(table(sim_factor(n = 100, p = rep(3, 100),numlevels = 4, 
                                  prob = c(.25, .25, .25, .25), 
-                                     var_type = 'lvl1')), 4)
+                                     var_type = 'level1')), 4)
   expect_length(table(sim_factor(n = 100, p = rep(3, 100), numlevels = 4, 
                                  prob = c(.25, .25, .25, .25), 
-                                     var_type = 'lvl2')), 4)
+                                     var_type = 'level2')), 4)
   expect_length(table(sim_factor(n = 100, p = rep(3, 100), k = 30, 
                                  numlevels = 4, 
                                  prob = c(.25, .25, .25, .25), 
-                                     var_type = 'lvl3')), 4)
+                                     var_type = 'level3')), 4)
 })
 
 test_that('sim_factor errors', {
   expect_error(sim_factor(n = 100, p = rep(3, 100), numlevels = 4, 
                           replace = FALSE,
                           prob = c(.25, .25, .25, .25), 
-                          var_type = 'lvl2'))
+                          var_type = 'level2'))
   expect_error(sim_factor(n = 100, numlevels = 4, replace = FALSE,
                           prob = c(.25, .25, .25, .25),
                           var_type = 'single'))
   expect_error(sim_factor(n = 100, p = rep(3, 100), numlevels = 4, 
                           replace = FALSE,
                           prob = c(.25, .25, .25, .25),
-                          var_type = 'lvl1'))
+                          var_type = 'level1'))
   expect_error(sim_factor(n = 100, p = rep(3, 100), k = 30, numlevels = 4, 
                           replace = FALSE,
                           prob = c(.25, .25, .25, .25), 
-                          var_type = 'lvl3'))
+                          var_type = 'level3'))
 })
 
 test_that('sim_continuous are continuous', {
@@ -40,14 +40,14 @@ test_that('sim_continuous are continuous', {
                                      var_type = 'single')), 100)
   expect_length(table(sim_continuous(n = 100, p = rep(3, 100), 
                                      dist_fun = 'rnorm', mean = 0, sd = 1, 
-                                     var_type = 'lvl1')), 300)
+                                     var_type = 'level1')), 300)
   expect_length(table(sim_continuous(n = 100, p = rep(3, 100), 
                                      dist_fun = 'rnorm', mean = 0, sd = 1, 
-                                     var_type = 'lvl2')), 100)
+                                     var_type = 'level2')), 100)
   expect_length(table(sim_continuous(n = 100, p = rep(3, 100), k = 30, 
                                      dist_fun = 'rnorm',
                                      mean = 0, sd = 1, 
-                                     var_type = 'lvl3')), 30)
+                                     var_type = 'level3')), 30)
 })
 
 test_that('correlated fixef variables single level', {
@@ -107,7 +107,7 @@ test_that('fixef correlated 2 level', {
   p <- rep(10, 5000)
   data_str <- 'cross'
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                    var_type = c("lvl1", "lvl2"),
+                    var_type = c("level1", "level2"),
                     opts = list(list(mean = 0, sd = 4), 
                                 list(mean = 0, sd = 3)))
   cor_vars <- .6
@@ -134,7 +134,7 @@ test_that('fixef correlated 2 level', {
   p <- rep(10, 5000)
   data_str <- 'cross'
   cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
-                    var_type = c("lvl1", "lvl2", 'lvl2'),
+                    var_type = c("level1", "level2", 'level2'),
                     opts = list(list(mean = 0, sd = 4),
                                 list(mean = 0, sd = 3),
                                 list(mean = 0, sd = 1)))
@@ -165,7 +165,7 @@ test_that('fixef correlation three level', {
   p <- rep(10, 3000)
   data_str <- 'cross'
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                    var_type = c("lvl1", "lvl2"),
+                    var_type = c("level1", "level2"),
                     opts = list(list(mean = 0, sd = 4),
                                 list(mean = 0, sd = 3)))
   cor_vars <- .3
@@ -193,7 +193,7 @@ test_that('fixef correlation three level', {
   p <- rep(10, 2000)
   data_str <- 'cross'
   cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
-                    var_type = c("lvl1", "lvl2", 'lvl3'),
+                    var_type = c("level1", "level2", 'level3'),
                     opts = list(list(mean = 0, sd = 4),
                                 list(mean = 0, sd = 3),
                                 list(mean = 0, sd = 2)))
@@ -228,7 +228,7 @@ test_that('.f and .c are expanded but not .o', {
   fixef_single <- sim_fixef_single(fixed = fixed, 
                                 fixed_vars = attr(terms(fixed),"term.labels"), 
                            cov_param = cov_param, n = n, fact_vars = fact_vars)
-  fact_vars <- list(numlevels = c(36, 8, 5), var_type = c('lvl2', 'lvl1', "lvl1"))
+  fact_vars <- list(numlevels = c(36, 8, 5), var_type = c('level2', 'level1', "level1"))
   fixef_nested <- sim_fixef_nested(fixed = fixed, 
                                 fixed_vars = attr(terms(fixed),"term.labels"), 
                                    p = rep(4, n), cov_param = cov_param, n = n, 

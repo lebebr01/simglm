@@ -22,7 +22,7 @@ test_that('correct length sim_reg', {
   fixed_param <- c(4, 2, 6, 2.3, 7)
   random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                    var_type = c("lvl1", "lvl2"),
+                    var_type = c("level1", "level2"),
                     opts = list(list(mean = 0, sd = 1.5),
                                 list(mean = 0, sd = 4)))
   n <- 150
@@ -45,7 +45,7 @@ test_that('correct length sim_reg', {
   random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
   random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
   cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
-                    var_type = c("lvl1", "lvl2", "lvl3"),
+                    var_type = c("level1", "level2", "level3"),
                     opts = list(list(mean = 0, sd = 1.5),
                                 list(mean = 0, sd = 4), 
                                 list(mean = 0, sd = 2)))
@@ -84,7 +84,7 @@ test_that('correct length sim_glm', {
   fixed_param <- c(.1, .5, .4, .01, .8)
   random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                    var_type = c("lvl1", "lvl2"),
+                    var_type = c("level1", "level2"),
                     opts = list(list(mean = 0, sd = 1.5),
                                 list(mean = 0, sd = 4)))
   n <- 150
@@ -105,7 +105,7 @@ test_that('correct length sim_glm', {
   random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
   random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
   cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
-                    var_type = c("lvl1", "lvl2", "lvl3"),
+                    var_type = c("level1", "level2", "level3"),
                     opts = list(list(mean = 0, sd = 1.5),
                                 list(mean = 0, sd = 4),
                                 list(mean = 0, sd = 2)))

@@ -15,7 +15,8 @@
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
+#'       either 'level1' or 'level2'. 
+#'       Must be same order as fixed formula 
 #'       above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
@@ -29,7 +30,7 @@
 #'      specification, each list must include:
 #'   \itemize{
 #'        \item numlevels = Number of levels for ordinal or factor variables.
-#'        \item var_type = Must be 'lvl1' or 'lvl2'.
+#'        \item var_type = Must be 'level1' or 'level2'.
 #'    }
 #'    Optional arguments include:
 #'    \itemize{
@@ -56,7 +57,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   }
   fact.loc <- grep("\\.f$|\\.o$|\\.c$|_f$|_c$|_o$", 
                    fixed_vars, ignore.case = TRUE) 
-  w.var <- length(grep("lvl1", cov_param$var_type, ignore.case = TRUE))
+  w.var <- length(grep("level1", cov_param$var_type, ignore.case = TRUE))
   n.cont <- length(cov_param[[1]])
   
   if(length(fact.loc) > 0){
@@ -67,8 +68,8 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   if(length(fact.loc) > 0){
     n.fact <- ifelse(length(int.loc) > 0, length(fact.loc[fact.loc != int.loc]), 
                      length(fact.loc))
-    n.fact.lvl1 <- length(grep("lvl1", fact_vars$var_type, ignore.case = TRUE))
-    n.fact.lvl2 <- length(grep("lvl2", fact_vars$var_type, ignore.case = TRUE))
+    n.fact.lvl1 <- length(grep("level1", fact_vars$var_type, ignore.case = TRUE))
+    n.fact.lvl2 <- length(grep("level2", fact_vars$var_type, ignore.case = TRUE))
   } else {
     n.fact <- 0
   } 
@@ -171,7 +172,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
+#'       either 'level1', 'level2', or 'level3'. Must be same order as fixed formula 
 #'       above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
@@ -186,7 +187,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 #'      specification, each list must include:
 #'   \itemize{
 #'        \item numlevels = Number of levels for ordinal or factor variables.
-#'        \item var_type = Must be 'lvl1', 'lvl2', or 'lvl3'.
+#'        \item var_type = Must be 'level1', 'level2', or 'level3'.
 #'    }
 #'    Optional arguments include:
 #'    \itemize{
@@ -325,8 +326,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
-#'       above.
+#'       'single'. Must be same order as fixed formula above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
 #'    see the examples for example code for this.
@@ -445,27 +445,27 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
 #' @param prob Probability of levels for variable, must be same length as 
 #'  numlevels
 #' @param var_type Variable type for the variable, must be either 
-#'   "lvl1", "lvl2", "lvl3", or "single"
+#'   "level1", "level2", "level3", or "single"
 #' @param value.labels Optional argument with value labels for variable, 
 #'        converts variable to factor.
 #' @export 
 sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL, 
-                       var_type = c('lvl1', 'lvl2', 'lvl3', 'single'), 
+                       var_type = c('level1', 'level2', 'level3', 'single'), 
                        value.labels = NULL) {
 
-  if(var_type == 'single' | var_type == 'lvl2') {
+  if(var_type == 'single' | var_type == 'level2') {
     if(replace == FALSE & numlevels < n) {
-      stop("If replace = FALSE, numlevels must be greater than n for lvl2 or single")
+      stop("If replace = FALSE, numlevels must be greater than n for level2 or single")
     }
   }
-  if(var_type == "lvl1") {
+  if(var_type == "level1") {
     if(replace == FALSE & numlevels < sum(p)){
-      stop("If replace = FALSE, numlevels must be greater than sum(p) for lvl1")
+      stop("If replace = FALSE, numlevels must be greater than sum(p) for level1")
     }
   }
-  if(var_type == "lvl3") {
+  if(var_type == "level3") {
     if(replace == FALSE & numlevels < k) {
-      stop("If replace = FALSE, numlevels must be greater than k for lvl3")
+      stop("If replace = FALSE, numlevels must be greater than k for level3")
     }
   }
   
@@ -483,11 +483,11 @@ sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
   cat_var <- switch(var_type,
          single = sample(x = numlevels, size = n, replace = replace, 
                          prob = prob),
-         lvl3 = rep(sample(x = numlevels, size = k, replace = replace, 
+         level3 = rep(sample(x = numlevels, size = k, replace = replace, 
                            prob = prob), times = lvl3ss),
-         lvl2 = rep(sample(x = numlevels, size = length(p), replace = replace, 
+         level2 = rep(sample(x = numlevels, size = length(p), replace = replace, 
                            prob = prob), times = p),
-         lvl1 = sample(x = numlevels, size = sum(p), replace = replace, 
+         level1 = sample(x = numlevels, size = sum(p), replace = replace, 
                        prob = prob)
          )
   
@@ -511,12 +511,12 @@ sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
 #' @param p Number of within cluster observations for multilevel
 #' @param dist_fun A distribution function. This argument takes a quoted
 #'      R distribution function (e.g. 'rnorm').
-#' @param var_type Variable type for the variable, must be either "lvl1", 
-#'      "lvl2", or "single"
+#' @param var_type Variable type for the variable, must be either "level1", 
+#'      "level2", "level3", or "single"
 #' @param ... Additional parameters to pass to the dist_fun argument.
 #' @export 
 sim_continuous <- function(k = NULL, n, p, dist_fun,
-                           var_type = c('lvl1', 'lvl2', 'lvl3', 'single'),
+                           var_type = c('level1', 'level2', 'level3', 'single'),
                            ...) {
   
   end <- cumsum(n)
@@ -532,11 +532,11 @@ sim_continuous <- function(k = NULL, n, p, dist_fun,
   
   contVar <- switch(var_type,
                    single = unlist(lapply(n, FUN = dist_fun, ...)),
-                   lvl3 = rep(unlist(lapply(k, FUN = dist_fun, ...)), 
+                   level3 = rep(unlist(lapply(k, FUN = dist_fun, ...)), 
                               times = lvl3ss),
-                   lvl2 = rep(unlist(lapply(length(p), FUN = dist_fun, ...)), 
+                   level2 = rep(unlist(lapply(length(p), FUN = dist_fun, ...)), 
                               times = p),
-                   lvl1 = unlist(lapply(sum(p), FUN = dist_fun, ...))
+                   level1 = unlist(lapply(sum(p), FUN = dist_fun, ...))
   )
   contVar
 }

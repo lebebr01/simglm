@@ -22,8 +22,7 @@ Must be same length as fixed.}
  \itemize{
    \item dist_fun: This is a quoted R distribution function.
    \item var_type: This is the level of variable to generate. Must be 
-     either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
-     above.
+     either 'single'. Must be same order as fixed formula above.
  }
  Optional arguments to the distribution functions are in a nested list,
   see the examples for example code for this.
@@ -49,7 +48,7 @@ See \code{\link{arima.sim}} for examples.}
    specification, each list must include:
 \itemize{
      \item numlevels = Number of levels for ordinal or factor variables.
-     \item var_type = Must be 'single', 'lvl1', 'lvl2', or 'lvl3'.
+     \item var_type = Must be 'single'.
  }
  Optional arguments include:
  \itemize{

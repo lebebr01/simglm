@@ -148,7 +148,7 @@ random <- ~1 + time + diff
 fixed_param <- c(4, 2, 6, 2.3, 7)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = "rnorm")
 cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                  var_type = c("lvl1", "lvl2"), 
+                  var_type = c("level1", "level2"), 
                   opts = list(list(mean = 0, sd = 1.5),
                               list(mean = 0, sd = 4)))
 n <- 150
@@ -167,7 +167,7 @@ Highlighting the new agruments needed, the first is a one sided formula `random`
 
 The optional named arguments to the `random_param` argument include `ther`, `ther_sim`, and `cor_vars`. First, `cor_vars` is a vector of correlations between random effects, the default is no correlation between random effects. The argument `ther` represents a vector of the theoretical mean and standard deviation of the random effects. This can be used to center simulated values at 0 or scale them to have a standard deviation of 1. The following standardization formula is used: $z = \frac{X - \mu}{\sigma}$, where $\mu$ and $\sigma$ are the values specified within the `ther` argument. The default values are 0 and 1 for $\mu$ and $\sigma$ respectively so that no scaling is performed. The `ther_sim` argument does the same process as `ther`, but the $\mu$ and $\sigma$ values are empirically drawn by sampling one million values from the `rand_gen` specified. Lastly, depending on the `rand_gen` function specified, additional arguments may be needed for that distribution function and can be specified as well. For example, if `rand_gen = 'rchisq'`, including `df = 1` would simulate a chi-square distribution with one degree of freedom. 
 
-The specification of the covariates is still done with the `cov_param` argument, however, now the `var_type` portion of `cov_param` must be either "lvl1" or "lvl2" to represent either level 1 or level 2 variables respectively. Note that the time variable is not included in the `cov_param` argument and is automatically specified as discrete starting from 0.  In the future, differing time scales will be expanded.
+The specification of the covariates is still done with the `cov_param` argument, however, now the `var_type` portion of `cov_param` must be either "level1" or "level2" to represent either level 1 or level 2 variables respectively. Note that the time variable is not included in the `cov_param` argument and is automatically specified as discrete starting from 0.  In the future, differing time scales will be expanded.
 
 The other new terms needed are straightforward, `p` is the within cluster sample size (i.e. how many repeated measurements) and `data_str` is now "long" for longitudinal data.
 
@@ -195,7 +195,7 @@ random <- ~1 + time + diff
 fixed_param <- c(4, 2, 6, 2.3, 7)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 cov_param <- list(dist_fun = c('rnorm', 'rnorm'), 
-                  var_type = c("lvl1", "lvl2"), 
+                  var_type = c("level1", "level2"), 
                   time_var = c(0, 0.5, 1, 3, 5),
                   opts = list(list(mean = 0, sd = 1.5), 
                               list(mean = 0, sd = 4)))

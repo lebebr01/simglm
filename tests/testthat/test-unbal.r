@@ -15,11 +15,11 @@ test_that("return error",{
   error_var <- 4
   with_err_gen <- 'rnorm'
   data_str <- "cross"
-  unbalCont <- NULL
+  unbal_design <- NULL
   expect_error(sim_reg(fixed = fixed, random = random, fixed_param = fixed_param, 
                        random_param = random_param, cov_param = cov_param, k = NULL, 
                        n = n, p = NULL, error_var = error_var,
                        with_err_gen = with_err_gen, data_str = data_str, unbal = TRUE, 
-                       unbalCont = unbalCont),
+                       unbal_design = unbal_design),
                "Must specify unbalCont when unbal = TRUE")
 })

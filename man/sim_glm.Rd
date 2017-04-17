@@ -53,7 +53,8 @@ Must be same length as fixed.}
  \itemize{
    \item dist_fun: This is a quoted R distribution function.
    \item var_type: This is the level of variable to generate. Must be 
-     either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
+     either 'single', 'level1', 'level2', or 'level3'. 
+     Must be same order as fixed formula 
      above.
  }
  Optional arguments to the distribution functions are in a nested list,
@@ -74,7 +75,7 @@ Does not include intercept, time, factors, or interactions.}
    specification, each list must include:
 \itemize{
      \item numlevels = Number of levels for ordinal or factor variables.
-     \item var_type = Must be 'single', 'lvl1', 'lvl2', or 'lvl3'.
+     \item var_type = Must be 'single', 'level1', 'level2', or 'level3'.
  }
  Optional arguments include:
  \itemize{
@@ -131,7 +132,7 @@ random <- ~1 + time + diff
 fixed_param <- c(4, 2, 6, 2.3, 7)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-   var_type = c("lvl1", "lvl2"),
+   var_type = c("level1", "level2"),
    opts = list(list(mean = 0, sd = 1.5),
    list(mean = 0, sd = 4)))
 n <- 150
@@ -150,7 +151,7 @@ fixed_param <- c(4, 2, 6, 2.3, 7, 0)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
 cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
-   var_type = c("lvl1", "lvl2", "lvl3"),
+   var_type = c("level1", "level2", "level3"),
    opts = list(list(mean = 0, sd = 1.5),
    list(mean = 0, sd = 4),
    list(mean = 0, sd = 2)))

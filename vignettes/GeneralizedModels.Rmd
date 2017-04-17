@@ -50,7 +50,7 @@ random <- ~1
 fixed_param <- c(2, 0.5, 0.3)
 random_param <- list(random_var = 7, rand_gen = "rnorm", ther_sim = TRUE)
 cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                  var_type = c("lvl1", "lvl2"),
+                  var_type = c("level1", "level2"),
                   opts = list(list(mean = 0, sd = 2),
                               list(mean = 0, sd = 1.4)))
 n <- 150
@@ -74,7 +74,7 @@ fixed_param <- c(4, 0.8, 0.15, 1.1)
 random_param <- list(random_var = 7, rand_gen = "rnorm")
 random_param3 <- list(random_var = 4, rand_gen = "rnorm")
 cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
-                  var_type = c("lvl1", "lvl2", "lvl3"),
+                  var_type = c("level1", "level2", "level3"),
                   opts = list(list(mean = 0, sd = 1.5),
                               list(mean = 0, sd = 4),
                               list(mean = 0, sd = 2)))

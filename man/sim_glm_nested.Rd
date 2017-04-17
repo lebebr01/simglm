@@ -6,7 +6,7 @@
 \usage{
 sim_glm_nested(fixed, random, fixed_param, random_param = list(), cov_param,
   n, p, data_str, cor_vars = NULL, fact_vars = list(NULL), unbal = FALSE,
-  unbalCont = NULL, contrasts = NULL, ...)
+  unbal_design = NULL, contrasts = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.
@@ -68,11 +68,15 @@ Does not include intercept, time, factors, or interactions.}
 \item{unbal}{A vector of sample sizes for the number of observations for 
 each level 2 cluster. Must have same length as level two sample size n. 
 Alternative specification can be TRUE, which uses additional argument, 
-unbalCont.}
+unbal_design.}
 
-\item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum 
-level one size, will be drawn from a random uniform distribution with min 
-and max specified.}
+\item{unbal_design}{When unbal = TRUE, this specifies the design for unbalanced
+simulation in one of two ways. It can represent the minimum and maximum 
+sample size within a cluster via a named list. This will be drawn from a 
+random uniform distribution with min and max specified. 
+Secondly, the sample sizes within each cluster can be specified. 
+This takes the form of a vector that must have the same length 
+as the level two sample size.}
 
 \item{contrasts}{An optional list that specifies the contrasts to be used 
 for factor variables (i.e. those variables with .f or .c). 

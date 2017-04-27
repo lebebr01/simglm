@@ -388,6 +388,7 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
                                              p = NULL
                                              ))
     
+    # move this to a new function to simplify here.
     if(!is.null(cor_vars)) {
       
       cov_data <- purrr::invoke_map(cov_param$dist_fun, cov_param$opts, 
@@ -446,12 +447,12 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
 #'  numlevels
 #' @param var_type Variable type for the variable, must be either 
 #'   "level1", "level2", "level3", or "single"
-#' @param value.labels Optional argument with value labels for variable, 
+#' @param value_labels Optional argument with value labels for variable, 
 #'        converts variable to factor.
 #' @export 
 sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL, 
                        var_type = c('level1', 'level2', 'level3', 'single'), 
-                       value.labels = NULL) {
+                       value_labels = NULL) {
 
   if(var_type == 'single' | var_type == 'level2') {
     if(replace == FALSE & numlevels < n) {
@@ -491,11 +492,11 @@ sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
                        prob = prob)
          )
   
-  if(!is.null(value.labels)) {
-    if(length(value.labels) != numlevels) { 
-      stop("value.labels must be same length as numlevels") 
+  if(!is.null(value_labels)) {
+    if(length(value_labels) != numlevels) { 
+      stop("value_labels must be same length as numlevels") 
       }
-    cat_var <- factor(cat_var, labels = value.labels)
+    cat_var <- factor(cat_var, labels = value_labels)
   }
   
   cat_var

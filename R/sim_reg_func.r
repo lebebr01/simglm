@@ -215,7 +215,7 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
                            arima_mod = list(NULL), contrasts = NULL, ...) {
 
   fixed_vars <- attr(terms(fixed),"term.labels")  
-  rand.vars <- attr(terms(random),"term.labels")  
+  rand_vars <- attr(terms(random),"term.labels")  
 
   if(unbal$level2 == FALSE) {
     lvl1ss <- rep(p, n)
@@ -399,12 +399,12 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
                             contrasts = NULL, ...) {
 
   fixed_vars <- attr(terms(fixed),"term.labels")   
-  rand.vars <- attr(terms(random),"term.labels")   
-  rand.vars3 <- attr(terms(random3),"term.labels") 
+  rand_vars <- attr(terms(random),"term.labels")   
+  rand_vars3 <- attr(terms(random3),"term.labels") 
   
-  if(length(rand.vars)+1 != length(random_param$random_var)) 
+  if(length(rand_vars)+1 != length(random_param$random_var)) 
     stop("Random lengths not equal")
-  if(length(rand.vars3)+1 != length(random_param3$random_var)) 
+  if(length(rand_vars3)+1 != length(random_param3$random_var)) 
     stop("Third level random lengths not equal")
   
   if(unbal$level3 == FALSE) {

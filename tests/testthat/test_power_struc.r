@@ -158,7 +158,7 @@ test_that('two level power continuous', {
                        random_param = random_param, cov_param = cov_param, 
                        k = NULL, n = n, p = p,
                        error_var = error_var, with_err_gen = "rnorm",
-                       data_str = data_str, unbal = FALSE, 
+                       data_str = data_str, unbal = list(level2 = FALSE), 
                        pow_param = pow_param, alpha = alpha,
                        pow_dist = pow_dist, pow_tail = pow_tail, 
                        replicates = replicates, raw_power = FALSE)
@@ -227,7 +227,7 @@ test_that('two level power dich', {
                        fixed_param = fixed_param, 
                        random_param = random_param, cov_param = cov_param, 
                        k = NULL, n = n, p = p,
-                       data_str = data_str, unbal = FALSE, 
+                       data_str = data_str, unbal = list(level2 = FALSE), 
                        pow_param = pow_param, alpha = alpha,
                        pow_dist = pow_dist, pow_tail = pow_tail, 
                        replicates = replicates, raw_power = FALSE)

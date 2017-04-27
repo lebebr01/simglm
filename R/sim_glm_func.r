@@ -178,17 +178,17 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(),
   if(length(rand.vars)+1 != length(random_param$random_var)) 
     stop("Random lengths not equal")
 
-  if(unbal == FALSE) {
+  if(unbal$level2 == FALSE) {
     lvl1ss <- rep(p, n)
     if(is.null(lvl1ss)) stop("lvl1ss is NULL")
   } else {
-    if(length(unbal_design) < 2) stop("Must specify unbalCont when unbal = TRUE")
-    if(is.null(names(unbal_design))) {
-      if(length(unbal_design) != n) stop('unbalCont must be same length as n')
-      lvl1ss <- unbal_design
+    if(length(unbal_design$level2) < 2) stop("Must specify unbal_design when unbal = TRUE")
+    if(is.null(names(unbal_design$level2))) {
+      if(length(unbal_design$level2) != n) stop('unbal_design must be same length as n')
+      lvl1ss <- unbal_design$level2
     } else {
-      lvl1ss <- round(runif(n = n, min = unbal_design$min, 
-                            max = unbal_design$max), 0)
+      lvl1ss <- round(runif(n = n, min = unbal_design$level2$min, 
+                            max = unbal_design$level2$max), 0)
     }
   }
   

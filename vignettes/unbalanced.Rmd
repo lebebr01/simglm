@@ -35,13 +35,13 @@ unbal <- TRUE
 error_var <- 4
 with_err_gen <- 'rnorm'
 data_str <- "cross"
-unbal_design <- list(min = 3, max = 10)
+unbal_design <- list(level2 = list(min = 3, max = 10))
 temp_cross <- sim_reg(fixed = fixed, random = random, 
                       fixed_param = fixed_param, 
                       random_param = random_param, cov_param = cov_param,
                       k = NULL, n = n, p = NULL, error_var = error_var,
                       with_err_gen = with_err_gen, data_str = data_str, 
-                      unbal = TRUE, unbal_design = unbal_design)
+                      unbal = list(level2 = TRUE), unbal_design = unbal_design)
 ```
 
 The unbalanced design can be verified by running a table on the cluster ID variable. As can be seen from the output below, the sample size of the clusters ranges from a small of 3 to a maximum of 10.
@@ -111,9 +111,9 @@ unbal_design <- list(level2 = list(min = 3, max = 15),
 temp_three <- sim_reg(fixed = fixed, random = random, random3 = random3,
       fixed_param = fixed_param, random_param = random_param, 
       random_param3 = random_param3, cov_param = cov_param, k = k,
-      n = NULL, p = NULL, unbal = unbal, unbal3 = unbal3, error_var = error_var,
+      n = NULL, p = NULL, unbal = unbal, error_var = error_var,
       with_err_gen = with_err_gen, 
-      data_str = data_str, unbal_design = unbal_design, unbalCont3 = unbalCont3)
+      data_str = data_str, unbal_design = unbal_design)
 ```
 
 Lastly, showing that the design is indeed unbalanced at both levels.
@@ -139,13 +139,13 @@ unbal <- TRUE
 error_var <- 4
 with_err_gen <- 'rnorm'
 data_str <- "cross"
-unbal_design <- c(6, 3, 5, 2, 10, 7)
+unbal_design <- list(level2 = c(6, 3, 5, 2, 10, 7))
 temp_cross <- sim_reg(fixed = fixed, random = random, 
                       fixed_param = fixed_param, 
                       random_param = random_param, cov_param = cov_param,
                       k = NULL, n = n, p = NULL, error_var = error_var,
                       with_err_gen = with_err_gen, data_str = data_str, 
-                      unbal = TRUE, unbal_design = unbal_design)
+                      unbal = list(level2 = TRUE), unbal_design = unbal_design)
 ```
 
 The sample sizes of each cluster can then be tabulated.
@@ -173,13 +173,13 @@ unbal <- TRUE
 error_var <- 4
 with_err_gen <- 'rnorm'
 data_str <- "cross"
-unbal_design <- list(min = 3, max = 10)
+unbal_design <- list(level2 = list(min = 3, max = 10))
 temp_cross <- sim_reg(fixed = fixed, random = random, 
                       fixed_param = fixed_param, 
                       random_param = random_param, cov_param = cov_param,
                       k = NULL, n = n, p = NULL, error_var = error_var,
                       with_err_gen = with_err_gen, data_str = data_str, 
-                      unbal = TRUE, unbal_design = unbal_design, 
+                      unbal = list(level2 = TRUE), unbal_design = unbal_design, 
                       fact_vars = fact_vars)
 ```
 
@@ -206,8 +206,8 @@ unbal_design <- list(level2 = list(min = 3, max = 8),
 temp_three <- sim_reg(fixed = fixed, random = random, random3 = random3,
       fixed_param = fixed_param, random_param = random_param, 
       random_param3 = random_param3, cov_param = cov_param, k = k,
-      n = NULL, p = NULL, unbal = unbal, unbal3 = unbal3, error_var = error_var,
+      n = NULL, p = NULL, unbal = unbal, error_var = error_var,
       with_err_gen = with_err_gen, 
-      data_str = data_str, unbal_design = unbal_design, unbalCont3 = unbalCont3,
+      data_str = data_str, unbal_design = unbal_design,
       fact_vars = fact_vars)
 ```

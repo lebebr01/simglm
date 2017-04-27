@@ -160,7 +160,7 @@ temp_long <- sim_reg(fixed = fixed, random = random,
                      random_param = random_param, cov_param = cov_param, 
                      k = NULL, n = n, p = p,
                      error_var = error_var, with_err_gen = "rnorm",
-                     data_str = data_str, unbal = FALSE)
+                     data_str = data_str, unbal = list(level2 = FALSE))
 ```
 
 Highlighting the new agruments needed, the first is a one sided formula `random`. This specifies which terms should be specified above. Related to `random`, `random_param` is a list of characteristics when simulation the random effects. This list must contain two named components: `random_var` and `rand_gen`. These two components represent the variance of the terms specified in the one sided `random` formula and `rand_gen` which represents a quoted distribution function (e.g. 'rnorm') to simulate the random effects. The `random_var` component must be the same length as the number of terms in `random`. 

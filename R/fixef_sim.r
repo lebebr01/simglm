@@ -94,22 +94,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
     ))
     
     if(!is.null(cor_vars)) {
-      cov_data <- purrr::invoke_map(cov_param$dist_fun, cov_param$opts, 
-                                    n = 1000000)
-      cov_mu <- round(sapply(cov_data, mean), 2)
-      cov_sd <- round(sapply(cov_data, sd), 2)
-      
-      Xmat <- do.call('cbind', lapply(seq_len(ncol(Xmat)), function(xx) 
-        standardize(Xmat[, xx], mean = cov_mu[xx], sd = cov_sd[xx])))
-      
-      c_mat <- matrix(nrow = n.cont, ncol = n.cont)
-      diag(c_mat) <- 1
-      c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
-      cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd)
-      es <- eigen(cov, symmetric = TRUE)
-      ev <- es$values
-      Xmat <- t(cov_mu + es$vectors %*% diag(sqrt(pmax(ev, 0)), 
-                                             length(cov_sd)) %*% t(Xmat))
+      Xmat <- corr_variables(Xmat, cor_vars, cov_param, standardize = TRUE)
     }
     if(data_str == "long") {
       if(is.null(cov_param$time_var)) {
@@ -247,22 +232,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     ))
     
     if(!is.null(cor_vars)) {
-      cov_data <- purrr::invoke_map(cov_param$dist_fun, cov_param$opts, 
-                                    n = 1000000)
-      cov_mu <- round(sapply(cov_data, mean), 2)
-      cov_sd <- round(sapply(cov_data, sd), 2)
-      
-      Xmat <- do.call('cbind', lapply(seq_len(ncol(Xmat)), function(xx) 
-        standardize(Xmat[, xx], mean = cov_mu[xx], sd = cov_sd[xx])))
-      
-      c_mat <- matrix(nrow = n.cont, ncol = n.cont)
-      diag(c_mat) <- 1
-      c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
-      cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd)
-      es <- eigen(cov, symmetric = TRUE)
-      ev <- es$values
-      Xmat <- t(cov_mu + es$vectors %*% diag(sqrt(pmax(ev, 0)), 
-                                             length(cov_sd)) %*% t(Xmat))
+      Xmat <- corr_variables(Xmat, cor_vars, cov_param, standardize = TRUE)
     }
     if(data_str == "long") {
       if(is.null(cov_param$time_var)) {
@@ -388,25 +358,8 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
                                              p = NULL
                                              ))
     
-    # move this to a new function to simplify here.
     if(!is.null(cor_vars)) {
-      
-      cov_data <- purrr::invoke_map(cov_param$dist_fun, cov_param$opts, 
-                                  n = 1000000)
-      cov_mu <- round(sapply(cov_data, mean), 2)
-      cov_sd <- round(sapply(cov_data, sd), 2)
-      
-      Xmat <- do.call('cbind', lapply(seq_len(ncol(Xmat)), function(xx) 
-        standardize(Xmat[, xx], mean = cov_mu[xx], sd = cov_sd[xx])))
-      
-      c_mat <- matrix(nrow = n.cont, ncol = n.cont)
-      diag(c_mat) <- 1
-      c_mat[upper.tri(c_mat)] <- c_mat[lower.tri(c_mat)] <- cor_vars
-      cov <- diag(cov_sd) %*% c_mat %*% diag(cov_sd)
-      es <- eigen(cov, symmetric = TRUE)
-      ev <- es$values
-      Xmat <- t(cov_mu + es$vectors %*% diag(sqrt(pmax(ev, 0)), 
-                                             length(cov_sd)) %*% t(Xmat))
+      Xmat <- corr_variables(Xmat, cor_vars, cov_param, standardize = TRUE)
     }
   } else {
     Xmat <- NULL

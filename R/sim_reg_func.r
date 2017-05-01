@@ -231,23 +231,26 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
     }
   }
 
-  rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
+  
 
   Xmat <- sim_fixef_nested(fixed = fixed, fixed_vars = fixed_vars, 
                            cov_param = cov_param, n = n, p = lvl1ss, 
                             data_str = data_str, cor_vars = cor_vars, 
-                           fact_vars = fact_vars, contrasts = contrasts)
+                           fact_vars = fact_vars, 
+                           contrasts = contrasts)
   
   if(ncol(Xmat) != length(fixed_param)) {
     stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
                'variables in design matrix'))
   }
   
-  reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx) 
+  rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
+
+  reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx)
     rep(rand_eff[,xx], times = lvl1ss)))
-  colnames(reff) <- c(unlist(lapply(1:ncol(rand_eff), function(xx) 
+  colnames(reff) <- c(unlist(lapply(1:ncol(rand_eff), function(xx)
     paste("b", xx-1, sep = ""))))
-  
+
   Zmat <- model.matrix(random, data.frame(Xmat))
 
   err <- sim_err_nested(error_var, n, p = lvl1ss, with_err_gen = with_err_gen,
@@ -285,8 +288,8 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
 #'  Must be same length as fixed.
 #' @param random_param A list of named elements that must contain: 
 #'   \itemize{
-#'      \item  random_var = variance of random parameters,
-#'      \item  rand_gen = Name of simulation function for random effects.
+#'      \item  random_var: variance of random parameters,
+#'      \item  rand_gen: Name of simulation function for random effects.
 #'   }
 #'          Optional elements are:
 #'   \itemize{
@@ -451,9 +454,6 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
   lvl3ss <- sapply(lapply(1:length(beg), function(xx) 
     lvl1ss[beg[xx]:end[xx]]), sum)
   
-  rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
-  rand_eff3 <- do.call(sim_rand_eff, c(random_param3, n = k))
-  
   Xmat <- sim_fixef_nested3(fixed, fixed_vars, cov_param, k, n = lvl2ss, 
                             p = lvl1ss, data_str = data_str, 
                             cor_vars = cor_vars, 
@@ -464,6 +464,9 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
                'variables in design matrix'))
   }
   
+  rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
+  rand_eff3 <- do.call(sim_rand_eff, c(random_param3, n = k))
+  
   reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx) 
     rep(rand_eff[,xx], times = lvl1ss)))
   colnames(reff) <- c(unlist(lapply(1:ncol(rand_eff), function(xx) 
@@ -473,7 +476,7 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
     rep(rand_eff3[,xx], times = lvl3ss)))
   colnames(reff3) <- c(unlist(lapply(1:ncol(rand_eff3), function(xx) 
     paste("b", xx-1, "_3", sep = ""))))
-  
+
   Zmat <- model.matrix(random, data.frame(Xmat))
   Zmat3 <- model.matrix(random3, data.frame(Xmat))
   

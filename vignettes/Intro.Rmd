@@ -146,7 +146,7 @@ This package currently supports the simulation of two-level nested or two-level 
 fixed <- ~1 + time + diff + act + time:act
 random <- ~1 + time + diff
 fixed_param <- c(4, 2, 6, 2.3, 7)
-random_param <- list(random_var = c(7, 4, 2), rand_gen = "rnorm")
+random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
                   var_type = c("level1", "level2"), 
                   opts = list(list(mean = 0, sd = 1.5),

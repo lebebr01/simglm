@@ -11,7 +11,7 @@ test_that("return error",{
                                 list(mean = 0, sd = 4)))
   n <- 150
   p <- 30
-  unbal <- TRUE
+  unbal <- list(level2 = TRUE)
   error_var <- 4
   with_err_gen <- 'rnorm'
   data_str <- "cross"
@@ -35,7 +35,7 @@ test_that("Direct Specification Unbalanced", {
                     opts = list(list(mean = 0, sd = 1.5),
                                 list(mean = 0, sd = 4)))
   n <- 6
-  unbal <- TRUE
+  unbal <- list(level2 = TRUE)
   error_var <- 4
   with_err_gen <- 'rnorm'
   data_str <- "cross"

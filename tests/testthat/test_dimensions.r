@@ -56,7 +56,8 @@ test_that('correct length sim_reg', {
   with_err_gen <- 'rnorm'
   data_str <- "long"
   temp_three <- sim_reg(fixed, random, random3, fixed_param, random_param, 
-                        random_param3, cov_param, k,n, p, error_var, with_err_gen, data_str = data_str)
+                        random_param3, cov_param, k,n, p, error_var, with_err_gen, 
+                        data_str = data_str)
   expect_equal(nrow(temp_three), 15*10*10)
   expect_equal(length(table(temp_three$withinID)), 10)
   expect_equal(length(table(temp_three$clustID)), 15*10)

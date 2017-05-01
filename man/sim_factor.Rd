@@ -5,7 +5,7 @@
 \title{Simulate categorical, factor, or discrete variables}
 \usage{
 sim_factor(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
-  var_type = c("level1", "level2", "level3", "single"), value.labels = NULL)
+  var_type = c("level1", "level2", "level3", "single"), value_labels = NULL)
 }
 \arguments{
 \item{k}{Number of third level clusters.}
@@ -25,7 +25,7 @@ numlevels}
 \item{var_type}{Variable type for the variable, must be either 
 "level1", "level2", "level3", or "single"}
 
-\item{value.labels}{Optional argument with value labels for variable, 
+\item{value_labels}{Optional argument with value labels for variable, 
 converts variable to factor.}
 }
 \description{

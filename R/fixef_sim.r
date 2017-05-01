@@ -42,7 +42,7 @@
 #' @param contrasts An optional list that specifies the contrasts to be used 
 #'  for factor variables (i.e. those variables with .f or .c). 
 #'  See \code{\link{contrasts}} for more detail.
-#' @importFrom purrr pmap
+#' @importFrom purrr pmap invoke_map
 #' @export 
 sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str, 
                              cor_vars = NULL, fact_vars = list(NULL), 
@@ -184,7 +184,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 #' @param contrasts An optional list that specifies the contrasts to be used for factor
 #'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
 #'      more detail.
-#' @importFrom purrr pmap
+#' @importFrom purrr pmap invoke_map
 #' @export 
 sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str, 
                              cor_vars = NULL, fact_vars = list(NULL),
@@ -318,7 +318,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #' @param contrasts An optional list that specifies the contrasts to be used 
 #'  for factor variables (i.e. those variables with .f or .c). 
 #'  See \code{\link{contrasts}} for more detail.
-#' @importFrom purrr pmap
+#' @importFrom purrr pmap invoke_map
 #' @export 
 sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL, 
                              fact_vars = list(NULL), contrasts = NULL){

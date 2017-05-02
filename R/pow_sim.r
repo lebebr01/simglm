@@ -108,7 +108,8 @@
 #' @param nlme_fit_mod Valid nlme syntax to be used for model fitting. 
 #'   This should be specified as a named list with fixed and random components.
 #' @param arima_fit_mod Valid nlme syntax for fitting serial correlation structures.
-#'   See \code{\link{nlme::corStruct}} for help.
+#'   See \code{\link{nlme::corStruct}} for help. This must be specified to 
+#'   include serial correlation.
 #' @param ... Not currently used.
 #' @importFrom purrr is_formula
 #' @export 
@@ -307,7 +308,8 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
 #' @param nlme_fit_mod Valid nlme syntax to be used for model fitting. 
 #'   This should be specified as a named list with fixed and random components.
 #' @param arima_fit_mod Valid nlme syntax for fitting serial correlation structures.
-#'   See \code{\link{nlme::corStruct}} for help.
+#'   See \code{\link{nlme::corStruct}} for help. This must be specified to 
+#'   include serial correlation.
 #' @param ... Not currently used.
 #' @export 
 sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(), 

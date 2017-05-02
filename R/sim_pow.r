@@ -113,6 +113,16 @@
 #' @param raw_power TRUE/FALSE indicating whether raw power output should be 
 #'  returned. Default is TRUE, which will create a new nested column with 
 #'  raw data by variable(s) manipulated in power analysis.
+#' @param lm_fit_mod Valid lm syntax to be used for model fitting.
+#' @param glm_fit_mod Valid glm syntax to be used for model fitting.
+#' @param lme4_fit_mod Valid lme4 syntax to be used for model fitting.
+#' @param nlme_fit_mod Valid nlme syntax to be used for model fitting. 
+#'   This should be specified as a named list with fixed and random components.
+#' @param arima_fit_mod Valid nlme syntax for fitting serial correlation structures.
+#'   See \code{\link{nlme::corStruct}} for help. This must be specified to 
+#'   include serial correlation.
+#' @param glm_fit_family Valid family syntax to pass to the glm function.
+#' @param lme4_fit_family Valid lme4 family specification passed to glmer.
 #' @param ... Currently not used.
 #' @importFrom dplyr group_by
 #' @importFrom dplyr summarise
@@ -130,7 +140,11 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                     lvl1_err_params = NULL, arima_mod = list(NULL),
                     missing = FALSE, missing_args = list(NULL),
                    pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
-                    replicates, terms_vary = NULL, raw_power = TRUE, ...) {
+                    replicates, terms_vary = NULL, raw_power = TRUE, 
+                   lm_fit_mod = NULL, glm_fit_mod = NULL, 
+                   lme4_fit_mod = NULL, nlme_fit_mod = NULL,
+                   arima_fit_mod = NULL, glm_fit_family = NULL, 
+                   lme4_fit_family = NULL, ...) {
   
   args <- list(fixed = fixed, random = random, random3 = random3,
                fixed_param = fixed_param, random_param = random_param,
@@ -143,7 +157,11 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                lvl1_err_params = lvl1_err_params,
                arima_mod = arima_mod, missing = missing, 
                missing_args = missing_args, pow_param = pow_param, 
-               alpha = alpha, pow_dist = pow_dist, pow_tail = pow_tail)
+               alpha = alpha, pow_dist = pow_dist, pow_tail = pow_tail, 
+               lm_fit_mod = lm_fit_mod, glm_fit_mod = glm_fit_mod,
+               lme4_fit_mod = lme4_fit_mod, nlme_fit_mod = nlme_fit_mod,
+               arima_fit_mod = arima_fit_mod, glm_fit_family = glm_fit_family, 
+               lme4_fit_family = lme4_fit_family)
   
   if(!is.null(terms_vary)) {
     args[names(terms_vary)] <- NULL

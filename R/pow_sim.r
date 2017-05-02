@@ -104,7 +104,13 @@
 #' @param pow_dist Which distribution should be used when testing hypothesis 
 #'  test, z or t?
 #' @param pow_tail One-tailed or two-tailed test?
+#' @param lme4_fit_mod Valid lme4 syntax to be used for model fitting.
+#' @param nlme_fit_mod Valid nlme syntax to be used for model fitting. 
+#'   This should be specified as a named list with fixed and random components.
+#' @param arima_fit_mod Valid nlme syntax for fitting serial correlation structures.
+#'   See \code{\link{nlme::corStruct}} for help.
 #' @param ... Not currently used.
+#' @importFrom purrr is_formula
 #' @export 
 sim_pow_nested3 <- function(fixed, random, random3, fixed_param, 
                             random_param = list(), random_param3 = list(), 
@@ -115,8 +121,9 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
                             unbal_design = list("level2" = NULL, "level3" = NULL),
                             lvl1_err_params = NULL, arima_mod = list(NULL), 
                             missing = FALSE, missing_args = list(NULL),
-                           pow_param = NULL, alpha, pow_dist = c("z", "t"), 
-                           pow_tail = c(1, 2), ...) {
+                            pow_param = NULL, alpha, pow_dist = c("z", "t"), 
+                            pow_tail = c(1, 2), lme4_fit_mod = NULL, 
+                            nlme_fit_mod = NULL, arima_fit_mod = NULL, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")   
   rand_vars <- attr(terms(random),"term.labels")
@@ -139,30 +146,58 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
                                          missing_args))
   }
   
-  if(arima) {
-    # fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
-    # ran1 <- paste("~", paste(rand_vars, collapse = "+"), "|clustID", sep = "")
-    # 
-    # temp_mod <- nlme::lme(fixed = as.formula(fix1), data = temp_nest, 
-    # random = as.formula(ran1))
-    # test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
-  } else {
-    fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
-    if(missing) {
-      fix1 <- gsub('sim_data', 'sim_data2', fix1)
+  if(!is.null(lme4_fit_mod)) {
+    if(!purrr::is_formula(lme4_fit_mod)) {
+      stop('lme4_fit_mod must be a formula to pass to lmer')
     }
-    ran1 <- paste("(", paste(rand_vars, collapse = "+"), "| clustID)", sep = "")
-    if(length(rand_vars3) == 0) {
-      ran2 <- '(1 | clust3ID)'
-    } else {
-      ran2 <- paste('(', paste(rand_vars3, collapse = "+"), "| clust3ID)", 
-                    sep = "")
-    }
-    fm1 <- as.formula(paste(fix1, ran1, ran2, sep = "+ "))
-    
-    temp_mod <- lme4::lmer(fm1, data = temp_nest)
+    temp_mod <- lme4::lmer(lme4_fit_mod, data = temp_nest)
     test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
-  }
+  } else {
+    if(!is.null(nlme_fit_mod)) {
+      if(all(unlist(lapply(nlme_fit_mod, purrr::is_formula)))) {
+        temp_mod <- nlme::lme(fixed = nlme_fit_mod$fixed, data = temp_nest,
+                              random = nlme_fit_mod$random)
+        test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
+      } else {
+        
+      }
+    } else {
+      if(arima) {
+        fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
+        if(missing) {
+          fix1 <- gsub('sim_data', 'sim_data2', fix1)
+        }
+        ran1 <- paste("list(clustID =~", paste(rand_vars, collapse = "+"), sep = "")
+        if(length(rand_vars3) == 0) {
+          ran2 <- 'clust3ID = ~ 1)'
+        } else {
+          ran2 <- paste('clust3ID = ~', paste(rand_vars3, collapse = "+"), ')',  
+                        sep = "")
+        }
+        ran <- paste(ran1, ran2, collapse = ', ')
+        
+        temp_mod <- nlme::lme(fixed = as.formula(fix1), data = temp_nest,
+                              random = eval(parse(text = ran)))
+        test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
+      } else {
+        fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
+        if(missing) {
+          fix1 <- gsub('sim_data', 'sim_data2', fix1)
+        }
+        ran1 <- paste("(", paste(rand_vars, collapse = "+"), "| clustID)", sep = "")
+        if(length(rand_vars3) == 0) {
+          ran2 <- '(1 | clust3ID)'
+        } else {
+          ran2 <- paste('(', paste(rand_vars3, collapse = "+"), "| clust3ID)", 
+                        sep = "")
+        }
+        fm1 <- as.formula(paste(fix1, ran1, ran2, sep = "+ "))
+        
+        temp_mod <- lme4::lmer(fm1, data = temp_nest)
+        test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
+      }
+    }
+  } 
   
   crit <- qnorm(alpha/pow_tail, lower.tail = FALSE)
   
@@ -268,6 +303,11 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
 #' @param pow_dist Which distribution should be used when testing hypothesis 
 #'  test, z or t?
 #' @param pow_tail One-tailed or two-tailed test?
+#' @param lme4_fit_mod Valid lme4 syntax to be used for model fitting.
+#' @param nlme_fit_mod Valid nlme syntax to be used for model fitting. 
+#'   This should be specified as a named list with fixed and random components.
+#' @param arima_fit_mod Valid nlme syntax for fitting serial correlation structures.
+#'   See \code{\link{nlme::corStruct}} for help.
 #' @param ... Not currently used.
 #' @export 
 sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(), 
@@ -276,7 +316,9 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
                         unbal = FALSE, unbal_design = NULL, lvl1_err_params = NULL,
                         arima_mod = list(NULL), missing = FALSE, 
                         missing_args = list(NULL), pow_param = NULL, alpha, 
-                        pow_dist = c("z", "t"), pow_tail = c(1, 2), ...) {
+                        pow_dist = c("z", "t"), pow_tail = c(1, 2), 
+                        lme4_fit_mod = NULL, 
+                        nlme_fit_mod = NULL, arima_fit_mod = NULL, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")    
   rand_vars <- attr(terms(random),"term.labels")
@@ -287,7 +329,7 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
   if(any(pow_param %ni% c(fixed_vars, '(Intercept)'))) { 
     stop('pow_param must be a subset of fixed')
   }
-
+  
   temp_nest <- sim_reg_nested(fixed, random, fixed_param, random_param, 
                               cov_param, n, p, error_var, with_err_gen, arima,
                               data_str, cor_vars, fact_vars, unbal, unbal_design,
@@ -297,25 +339,45 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
                                          missing_args))
   }
   
-  if(arima) {
-    # fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
-    # ran1 <- paste("~", paste(rand_vars, collapse = "+"), "|clustID", sep = "")
-    # 
-    # temp_mod <- nlme::lme(fixed = as.formula(fix1), data = temp_nest, 
-    # random = as.formula(ran1))
-    # test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
-  } else {
-    fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
-    if(missing) {
-      fix1 <- gsub('sim_data', 'sim_data2', fix1)
+  if(!is.null(lme4_fit_mod)) {
+    if(!purrr::is_formula(lme4_fit_mod)) {
+      stop('lme4_fit_mod must be a formula to pass to lmer')
     }
-    ran1 <- paste("(", paste(rand_vars, collapse = "+"), "|clustID)", sep = "")
-    fm1 <- as.formula(paste(fix1, ran1, sep = "+ "))
-    
-    temp_mod <- lme4::lmer(fm1, data = temp_nest)
+    temp_mod <- lme4::lmer(lme4_fit_mod, data = temp_nest)
     test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
+  } else {
+    if(!is.null(nlme_fit_mod)) {
+      if(all(unlist(lapply(nlme_fit_mod, purrr::is_formula)))) {
+        temp_mod <- nlme::lme(fixed = nlme_fit_mod$fixed, data = temp_nest,
+                              random = nlme_fit_mod$random)
+        test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
+      } else {
+        
+      }
+    } else {
+      if(arima) {
+        fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
+        if(missing) {
+          fix1 <- gsub('sim_data', 'sim_data2', fix1)
+        }
+        ran1 <- paste("~", paste(rand_vars, collapse = "+"), "|clustID", sep = "")
+        
+        temp_mod <- nlme::lme(fixed = as.formula(fix1), data = temp_nest,
+                              random = as.formula(ran1))
+        test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
+      } else {
+        fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
+        if(missing) {
+          fix1 <- gsub('sim_data', 'sim_data2', fix1)
+        }
+        ran1 <- paste("(", paste(rand_vars, collapse = "+"), "|clustID)", sep = "")
+        fm1 <- as.formula(paste(fix1, ran1, sep = "+ "))
+        
+        temp_mod <- lme4::lmer(fm1, data = temp_nest)
+        test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
+      }
+    }
   }
-  
   crit <- qnorm(alpha/pow_tail, lower.tail = FALSE)
   
   if(is.null(pow_param)) {
@@ -330,7 +392,7 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
   
   reject
 }
-
+  
 
 #' Function to simulate power.
 #' 
@@ -395,6 +457,7 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
 #' @param pow_dist Which distribution should be used when testing hypothesis 
 #'  test, z or t?
 #' @param pow_tail One-tailed or two-tailed test?
+#' @param lm_fit_mod Valid lm syntax to be used for model fitting.
 #' @param ... Additional specification needed to pass to the random generating 
 #'             function defined by with_err_gen.
 #' @export 
@@ -403,7 +466,8 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var,
                       fact_vars = list(NULL), lvl1_err_params = NULL, 
                       arima_mod = list(NULL), missing = FALSE, 
                       missing_args = list(NULL), pow_param = NULL, alpha, 
-                      pow_dist = c("z", "t"), pow_tail = c(1, 2), ...) {
+                      pow_dist = c("z", "t"), pow_tail = c(1, 2), 
+                      lm_fit_mod = NULL, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")
   
@@ -416,14 +480,22 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var,
                                 cor_vars, fact_vars, lvl1_err_params, arima_mod,
                                 ...)
 
-  fm1 <- as.formula(paste("sim_data ~", paste(fixed_vars, collapse = "+")))
-  if(missing) {
-    temp_single <- do.call(missing_data, c(list(sim_data = temp_single), 
-                                           missing_args))
-    fm1 <- as.formula(paste("sim_data2 ~", paste(fixed_vars, collapse = "+")))
+  if(!is.null(lm_fit_mod)) {
+    if(!purrr::is_formula(lm_fit_mod)) {
+      stop('lm_fit_mod must be a formula to pass to lm')
+    }
+    temp_lm <- lm(lm_fit_mod, data = temp_single)
+  } else {
+    fm1 <- as.formula(paste("sim_data ~", paste(fixed_vars, collapse = "+")))
+    if(missing) {
+      temp_single <- do.call(missing_data, c(list(sim_data = temp_single), 
+                                             missing_args))
+      fm1 <- as.formula(paste("sim_data2 ~", paste(fixed_vars, collapse = "+")))
+    }
+    
+    temp_lm <- lm(fm1, data = temp_single)
   }
-  
-  temp_lm <- lm(fm1, data = temp_single)
+    
   
   crit <- ifelse(pow_dist == "z", qnorm(alpha/pow_tail, lower.tail = FALSE), 
                 qt(alpha/pow_tail, df = nrow(temp_single) - length(fixed_param),

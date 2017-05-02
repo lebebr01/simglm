@@ -9,7 +9,8 @@ sim_pow_nested(fixed, random, fixed_param, random_param = list(), cov_param,
   fact_vars = list(NULL), unbal = FALSE, unbal_design = NULL,
   lvl1_err_params = NULL, arima_mod = list(NULL), missing = FALSE,
   missing_args = list(NULL), pow_param = NULL, alpha, pow_dist = c("z",
-  "t"), pow_tail = c(1, 2), ...)
+  "t"), pow_tail = c(1, 2), lme4_fit_mod = NULL, nlme_fit_mod = NULL,
+  arima_fit_mod = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -113,6 +114,14 @@ testing.}
 test, z or t?}
 
 \item{pow_tail}{One-tailed or two-tailed test?}
+
+\item{lme4_fit_mod}{Valid lme4 syntax to be used for model fitting.}
+
+\item{nlme_fit_mod}{Valid nlme syntax to be used for model fitting. 
+This should be specified as a named list with fixed and random components.}
+
+\item{arima_fit_mod}{Valid nlme syntax for fitting serial correlation structures.
+See \code{\link{nlme::corStruct}} for help.}
 
 \item{...}{Not currently used.}
 }

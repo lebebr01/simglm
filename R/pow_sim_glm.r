@@ -95,6 +95,8 @@
 #' @param pow_dist Which distribution should be used when testing hypothesis 
 #'  test, z or t?
 #' @param pow_tail One-tailed or two-tailed test?
+#' @param lme4_fit_mod Valid lme4 formula syntax to be used for model fitting.
+#' @param lme4_fit_family Valid lme4 family specification passed to glmer.
 #' @param ... Not currently used.
 #' @export 
 sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param, 
@@ -104,7 +106,8 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
                             unbalCont = NULL, unbalCont3 = NULL, 
                             missing = FALSE, missing_args = list(NULL),
                            pow_param = NULL, alpha, pow_dist = c("z", "t"), 
-                           pow_tail = c(1, 2), ...) {
+                           pow_tail = c(1, 2), 
+                           lme4_fit_mod = NULL, lme4_fit_family, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")  
   rand_vars <- attr(terms(random),"term.labels")
@@ -126,21 +129,30 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
                                          missing_args))
   }
   
-  fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
-  if(missing) {
-    fix1 <- gsub('sim_data', 'sim_data2', fix1)
-  }
-  ran1 <- paste("(", paste(rand_vars, collapse = "+"), "| clustID)", sep = "")
-  if(length(rand_vars3) == 0) {
-    ran2 <- '(1 | clust3ID)'
+  if(!is.null(lme4_fit_mod)) {
+    if(!purrr::is_formula(lme4_fit_mod)) {
+      stop('lme4_fit_mod must be a formula to pass to glmer')
+    }
+    temp_mod <- lme4::glmer(lme4_fit_mod, data = temp_nest, 
+                            family = lme4_fit_family)
+    test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
   } else {
-    ran2 <- paste('(', paste(rand_vars3, collapse = "+"), "| clust3ID)", 
-                  sep = "")
+    fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
+    if(missing) {
+      fix1 <- gsub('sim_data', 'sim_data2', fix1)
+    }
+    ran1 <- paste("(", paste(rand_vars, collapse = "+"), "| clustID)", sep = "")
+    if(length(rand_vars3) == 0) {
+      ran2 <- '(1 | clust3ID)'
+    } else {
+      ran2 <- paste('(', paste(rand_vars3, collapse = "+"), "| clust3ID)", 
+                    sep = "")
+    }
+    fm1 <- as.formula(paste(fix1, ran1, ran2, sep = "+ "))
+    
+    temp_mod <- lme4::glmer(fm1, data = temp_nest, family = binomial)
+    test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
   }
-  fm1 <- as.formula(paste(fix1, ran1, ran2, sep = "+ "))
-  
-  temp_mod <- lme4::glmer(fm1, data = temp_nest, family = binomial)
-  test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
   
   crit <- qnorm(alpha/pow_tail, lower.tail = FALSE)
   
@@ -232,6 +244,8 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
 #' @param pow_dist Which distribution should be used when testing hypothesis 
 #'  test, z or t?
 #' @param pow_tail One-tailed or two-tailed test?
+#' @param lme4_fit_mod Valid lme4 formula syntax to be used for model fitting.
+#' @param lme4_fit_family Valid lme4 family specification passed to glmer.
 #' @param ... Not currently used.
 #' @export 
 sim_pow_glm_nested <- function(fixed, random, fixed_param, 
@@ -240,7 +254,7 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
                           unbal = FALSE, unbalCont = NULL, missing = FALSE, 
                           missing_args = list(NULL), pow_param = NULL, 
                           alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
-                          ...) {
+                          lme4_fit_mod = NULL, lme4_fit_family, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")    
   rand_vars <- attr(terms(random),"term.labels")
@@ -260,16 +274,24 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
                                          missing_args))
   }
   
-  fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
-  if(missing) {
-    fix1 <- gsub('sim_data', 'sim_data2', fix1)
+  if(!is.null(lme4_fit_mod)) {
+    if(!purrr::is_formula(lme4_fit_mod)) {
+      stop('lme4_fit_mod must be a formula to pass to glmer')
+    }
+    temp_mod <- lme4::glmer(lme4_fit_mod, data = temp_nest, 
+                            family = lme4_fit_family)
+    test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
+  } else {
+    fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
+    if(missing) {
+      fix1 <- gsub('sim_data', 'sim_data2', fix1)
+    }
+    ran1 <- paste("(", paste(rand_vars, collapse = "+"), "|clustID)", sep = "")
+    fm1 <- as.formula(paste(fix1, ran1, sep = "+ "))
+    
+    temp_mod <- lme4::glmer(fm1, data = temp_nest, family = binomial)
+    test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
   }
-  ran1 <- paste("(", paste(rand_vars, collapse = "+"), "|clustID)", sep = "")
-  fm1 <- as.formula(paste(fix1, ran1, sep = "+ "))
-  
-  temp_mod <- lme4::glmer(fm1, data = temp_nest, family = binomial)
-  test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
-  
   crit <- qnorm(alpha/pow_tail, lower.tail = FALSE)
   
   if(is.null(pow_param)) {
@@ -339,6 +361,8 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
 #' @param pow_dist Which distribution should be used when testing hypothesis 
 #'  test, z or t?
 #' @param pow_tail One-tailed or two-tailed test?
+#' @param glm_fit_mod Valid glm syntax to be used for model fitting.
+#' @param glm_fit_family Valid family syntax to pass to the glm function.
 #' @param ... Additional specification needed to pass to the random generating 
 #'             function defined by with_err_gen.
 #' @export 
@@ -346,7 +370,8 @@ sim_pow_glm_single <- function(fixed, fixed_param, cov_param, n, data_str,
                            cor_vars = NULL, fact_vars = list(NULL),
                            missing = FALSE, missing_args = list(NULL),
                            pow_param = NULL, alpha, pow_dist = c("z", "t"), 
-                           pow_tail = c(1, 2), ...) {
+                           pow_tail = c(1, 2), glm_fit_mod = NULL, 
+                           glm_fit_family, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")
   
@@ -356,15 +381,23 @@ sim_pow_glm_single <- function(fixed, fixed_param, cov_param, n, data_str,
   
   temp_single <- sim_glm_single(fixed, fixed_param, cov_param, n, data_str, 
                                 cor_vars, fact_vars, ...)
-
-  fm1 <- as.formula(paste("sim_data ~", paste(fixed_vars, collapse = "+")))
-  if(missing) {
-    temp_single <- do.call(missing_data, c(list(sim_data = temp_single), 
-                                           missing_args))
-    fm1 <- as.formula(paste("sim_data2 ~", paste(fixed_vars, collapse = "+")))
+  if(!is.null(glm_fit_mod)) {
+    if(!purrr::is_formula(glm_fit_mod)) {
+      stop('glm_fit_mod must be a formula to pass to glm')
+    }
+    temp_lm <- glm(glm_fit_mod, data = temp_single, 
+                   family = glm_fit_family)
+  } else {
+    fm1 <- as.formula(paste("sim_data ~", paste(fixed_vars, collapse = "+")))
+    if(missing) {
+      temp_single <- do.call(missing_data, c(list(sim_data = temp_single), 
+                                             missing_args))
+      fm1 <- as.formula(paste("sim_data2 ~", paste(fixed_vars, collapse = "+")))
+    }
+    
+    temp_lm <- glm(fm1, data = temp_single, family = binomial)
   }
   
-  temp_lm <- glm(fm1, data = temp_single, family = binomial)
   
   crit <- ifelse(pow_dist == "z", qnorm(alpha/pow_tail, lower.tail = FALSE), 
                 qt(alpha/pow_tail, df = nrow(temp_single) - length(fixed_param),

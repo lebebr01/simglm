@@ -8,7 +8,7 @@ sim_pow_glm_nested(fixed, random, fixed_param, random_param = list(),
   cov_param, n, p, data_str, cor_vars = NULL, fact_vars = list(NULL),
   unbal = FALSE, unbalCont = NULL, missing = FALSE,
   missing_args = list(NULL), pow_param = NULL, alpha, pow_dist = c("z",
-  "t"), pow_tail = c(1, 2), ...)
+  "t"), pow_tail = c(1, 2), lme4_fit_mod = NULL, lme4_fit_family, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -92,6 +92,10 @@ testing.}
 test, z or t?}
 
 \item{pow_tail}{One-tailed or two-tailed test?}
+
+\item{lme4_fit_mod}{Valid lme4 formula syntax to be used for model fitting.}
+
+\item{lme4_fit_family}{Valid lme4 family specification passed to glmer.}
 
 \item{...}{Not currently used.}
 }

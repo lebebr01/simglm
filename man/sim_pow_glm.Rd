@@ -28,8 +28,8 @@ Must be same length as fixed.}
 
 \item{random_param}{A list of named elements that must contain: 
 \itemize{
-   \item  random_var = variance of random parameters,
-   \item  rand_gen = Name of simulation function for random effects.
+   \item  random_var: variance of random parameters,
+   \item  rand_gen: Name of simulation function for random effects.
 }
        Optional elements are:
 \itemize{
@@ -41,8 +41,8 @@ Must be same length as fixed.}
 
 \item{random_param3}{A list of named elements that must contain: 
 \itemize{
-    \item random_var = variance of random parameters,
-    \item rand_gen = Name of simulation function for random effects.
+    \item random_var: variance of random parameters,
+    \item rand_gen: Name of simulation function for random effects.
 }
       Optional elements are:
 \itemize{
@@ -57,8 +57,8 @@ Must be same length as fixed.}
  \itemize{
    \item dist_fun: This is a quoted R distribution function.
    \item var_type: This is the level of variable to generate. Must be 
-     either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
-     above.
+     either 'single', 'level1', 'level2', or 'level3'. 
+     Must be same order as fixed formula above.
  }
  Optional arguments to the distribution functions are in a nested list,
   see the examples for example code for this.
@@ -78,7 +78,7 @@ Does not include intercept, time, factors, or interactions.}
    specification, each list must include:
 \itemize{
      \item numlevels = Number of levels for ordinal or factor variables.
-     \item var_type = Must be 'single', 'lvl1', 'lvl2', or 'lvl3'.
+     \item var_type = Must be 'single', 'level1', 'level2', or 'level3'.
  }
  Optional arguments include:
  \itemize{

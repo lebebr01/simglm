@@ -23,8 +23,8 @@ Must be same length as fixed.}
 
 \item{random_param}{A list of named elements that must contain: 
 \itemize{
-   \item  random_var = variance of random parameters,
-   \item  rand_gen = Name of simulation function for random effects.
+   \item  random_var: variance of random parameters,
+   \item  rand_gen: Name of simulation function for random effects.
 }
        Optional elements are:
 \itemize{
@@ -67,8 +67,8 @@ See \code{\link{arima.sim}} for examples.}
 \item{fact_vars}{A nested list of factor, categorical, or ordinal variable 
    specification, each list must include:
 \itemize{
-     \item numlevels = Number of levels for ordinal or factor variables.
-     \item var_type = Must be 'level1' or 'level2'.
+     \item numlevels: Number of levels for ordinal or factor variables.
+     \item var_type: Must be 'level1' or 'level2'.
  }
  Optional arguments include:
  \itemize{

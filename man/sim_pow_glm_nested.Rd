@@ -38,8 +38,8 @@ Must be same length as fixed.}
  \itemize{
    \item dist_fun: This is a quoted R distribution function.
    \item var_type: This is the level of variable to generate. Must be 
-     either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
-     above.
+     either 'level1' or 'level2'. 
+     Must be same order as fixed formula above.
  }
  Optional arguments to the distribution functions are in a nested list,
   see the examples for example code for this.
@@ -56,8 +56,8 @@ Does not include intercept, time, factors, or interactions.}
 \item{fact_vars}{A nested list of factor, categorical, or ordinal variable 
    specification, each list must include:
 \itemize{
-     \item numlevels = Number of levels for ordinal or factor variables.
-     \item var_type = Must be 'lvl1' or 'lvl2'.
+     \item numlevels: Number of levels for ordinal or factor variables.
+     \item var_type: Must be 'level1' or 'level2'.
  }
  Optional arguments include:
  \itemize{

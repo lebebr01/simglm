@@ -17,8 +17,8 @@
 #'  Must be same length as fixed.
 #' @param random_param A list of named elements that must contain: 
 #'   \itemize{
-#'      \item  random_var = variance of random parameters,
-#'      \item  rand_gen = Name of simulation function for random effects.
+#'      \item  random_var: variance of random parameters,
+#'      \item  rand_gen: Name of simulation function for random effects.
 #'   }
 #'          Optional elements are:
 #'   \itemize{
@@ -29,8 +29,8 @@
 #'    }
 #' @param random_param3 A list of named elements that must contain: 
 #'    \itemize{
-#'        \item random_var = variance of random parameters,
-#'        \item rand_gen = Name of simulation function for random effects.
+#'        \item random_var: variance of random parameters,
+#'        \item rand_gen: Name of simulation function for random effects.
 #'    }
 #'          Optional elements are:
 #'    \itemize{
@@ -44,8 +44,8 @@
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
-#'       above.
+#'       either 'single', 'level1', 'level2', or 'level3'. 
+#'       Must be same order as fixed formula above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
 #'    see the examples for example code for this.
@@ -66,7 +66,7 @@
 #'      specification, each list must include:
 #'   \itemize{
 #'        \item numlevels = Number of levels for ordinal or factor variables.
-#'        \item var_type = Must be 'single', 'lvl1', 'lvl2', or 'lvl3'.
+#'        \item var_type = Must be 'single', 'level1', 'level2', or 'level3'.
 #'    }
 #'    Optional arguments include:
 #'    \itemize{
@@ -281,8 +281,8 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
 #'  Must be same length as fixed.
 #' @param random_param A list of named elements that must contain: 
 #'   \itemize{
-#'      \item  random_var = variance of random parameters,
-#'      \item  rand_gen = Name of simulation function for random effects.
+#'      \item  random_var: variance of random parameters,
+#'      \item  rand_gen: Name of simulation function for random effects.
 #'   }
 #'          Optional elements are:
 #'   \itemize{
@@ -293,8 +293,8 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
 #'    }
 #' @param random_param3 A list of named elements that must contain: 
 #'    \itemize{
-#'        \item random_var = variance of random parameters,
-#'        \item rand_gen = Name of simulation function for random effects.
+#'        \item random_var: variance of random parameters,
+#'        \item rand_gen: Name of simulation function for random effects.
 #'    }
 #'          Optional elements are:
 #'    \itemize{
@@ -308,8 +308,8 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
-#'       above.
+#'       either 'single', 'level1', 'level2', or 'level3'. 
+#'       Must be same order as fixed formula above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
 #'    see the examples for example code for this.
@@ -323,7 +323,7 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
 #'      specification, each list must include:
 #'   \itemize{
 #'        \item numlevels = Number of levels for ordinal or factor variables.
-#'        \item var_type = Must be 'single', 'lvl1', 'lvl2', or 'lvl3'.
+#'        \item var_type = Must be 'single', 'level1', 'level2', or 'level3'.
 #'    }
 #'    Optional arguments include:
 #'    \itemize{

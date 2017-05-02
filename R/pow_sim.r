@@ -18,8 +18,8 @@
 #'  Must be same length as fixed.
 #' @param random_param A list of named elements that must contain: 
 #'   \itemize{
-#'      \item  random_var = variance of random parameters,
-#'      \item  rand_gen = Name of simulation function for random effects.
+#'      \item  random_var: variance of random parameters,
+#'      \item  rand_gen: Name of simulation function for random effects.
 #'   }
 #'          Optional elements are:
 #'   \itemize{
@@ -30,8 +30,8 @@
 #'    }
 #' @param random_param3 A list of named elements that must contain: 
 #'    \itemize{
-#'        \item random_var = variance of random parameters,
-#'        \item rand_gen = Name of simulation function for random effects.
+#'        \item random_var: variance of random parameters,
+#'        \item rand_gen: Name of simulation function for random effects.
 #'    }
 #'          Optional elements are:
 #'    \itemize{
@@ -66,8 +66,8 @@
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable 
 #'      specification, each list must include:
 #'   \itemize{
-#'        \item numlevels = Number of levels for ordinal or factor variables.
-#'        \item var_type = Must be 'level1', 'level2', or 'level3'.
+#'        \item numlevels: Number of levels for ordinal or factor variables.
+#'        \item var_type: Must be 'level1', 'level2', or 'level3'.
 #'    }
 #'    Optional arguments include:
 #'    \itemize{
@@ -197,8 +197,8 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
 #'  Must be same length as fixed.
 #' @param random_param A list of named elements that must contain: 
 #'   \itemize{
-#'      \item  random_var = variance of random parameters,
-#'      \item  rand_gen = Name of simulation function for random effects.
+#'      \item  random_var: variance of random parameters,
+#'      \item  rand_gen: Name of simulation function for random effects.
 #'   }
 #'          Optional elements are:
 #'   \itemize{
@@ -232,8 +232,8 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable 
 #'      specification, each list must include:
 #'   \itemize{
-#'        \item numlevels = Number of levels for ordinal or factor variables.
-#'        \item var_type = Must be 'level1' or 'level2'.
+#'        \item numlevels: Number of levels for ordinal or factor variables.
+#'        \item var_type: Must be 'level1' or 'level2'.
 #'    }
 #'    Optional arguments include:
 #'    \itemize{
@@ -352,7 +352,7 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       either 'single'. Must be same order as fixed formula above.
+#'       'single'. Must be same order as fixed formula above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
 #'    see the examples for example code for this.
@@ -370,8 +370,8 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable 
 #'      specification, each list must include:
 #'   \itemize{
-#'        \item numlevels = Number of levels for ordinal or factor variables.
-#'        \item var_type = Must be 'single'.
+#'        \item numlevels: Number of levels for ordinal or factor variables.
+#'        \item var_type: Must be 'single'.
 #'    }
 #'    Optional arguments include:
 #'    \itemize{

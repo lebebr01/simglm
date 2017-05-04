@@ -75,20 +75,19 @@
 #'        \item value.labels
 #'    }
 #'     See also \code{\link{sample}} for use of these optional arguments.
-#' @param unbal A vector of sample sizes for the number of observations for 
-#'  each level 2 cluster. Must have same length as level two sample size n. 
-#'  Alternative specification can be TRUE, which uses additional argument, 
-#'  unbalCont.
-#' @param unbal3 A vector of sample sizes for the number of observations for 
-#'  each level 3 cluster. Must have same length as level two sample size k. 
-#'  Alternative specification can be TRUE, which uses additional argument, 
-#'  unbalCont3.
-#' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum 
-#'  level one size, will be drawn from a random uniform distribution with min 
-#'  and max specified.
-#' @param unbalCont3 When unbal3 = TRUE, this specifies the minimum and maximum 
-#'  level two size, will be drawn from a random uniform distribution with min 
-#'  and max specified.
+#' @param unbal A named TRUE/FALSE list specifying whether unbalanced simulation 
+#'  design is desired. The named elements must be: "level2" or "level3" representing
+#'  unbalanced simulation for level two and three respectively. Default is FALSE,
+#'  indicating balanced sample sizes at both levels.
+#' @param unbal_design When unbal = TRUE, this specifies the design for unbalanced
+#'  simulation in one of two ways. It can represent the minimum and maximum 
+#'  sample size within a cluster via a named list. This will be drawn from a 
+#'  random uniform distribution with min and max specified. 
+#'  Secondly, the actual sample sizes within each cluster
+#'  can be specified. This takes the form of a vector that must have the same length 
+#'  as the level two or three sample size. These are specified as a named list in which
+#'  level two sample size is controlled via "level2" and level three sample size is 
+#'  controlled via "level3".
 #' @param lvl1_err_params Additional parameters passed as a list on to the 
 #'  level one error generating function
 #' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
@@ -114,15 +113,12 @@
 #'  returned. Default is TRUE, which will create a new nested column with 
 #'  raw data by variable(s) manipulated in power analysis.
 #' @param lm_fit_mod Valid lm syntax to be used for model fitting.
-#' @param glm_fit_mod Valid glm syntax to be used for model fitting.
 #' @param lme4_fit_mod Valid lme4 syntax to be used for model fitting.
 #' @param nlme_fit_mod Valid nlme syntax to be used for model fitting. 
 #'   This should be specified as a named list with fixed and random components.
 #' @param arima_fit_mod Valid nlme syntax for fitting serial correlation structures.
 #'   See \code{\link{nlme::corStruct}} for help. This must be specified to 
 #'   include serial correlation.
-#' @param glm_fit_family Valid family syntax to pass to the glm function.
-#' @param lme4_fit_family Valid lme4 family specification passed to glmer.
 #' @param ... Currently not used.
 #' @importFrom dplyr group_by
 #' @importFrom dplyr summarise
@@ -135,16 +131,14 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                     cov_param, k = NULL, n, p = NULL, 
                     error_var, with_err_gen, arima = FALSE,
                     data_str, cor_vars = NULL, fact_vars = list(NULL), 
-                    unbal = FALSE, unbal3 = FALSE, 
-                    unbalCont = NULL, unbalCont3 = NULL,
+                    unbal = list("level2" = FALSE, "level3" = FALSE), 
+                    unbal_design = list("level2" = NULL, "level3" = NULL),
                     lvl1_err_params = NULL, arima_mod = list(NULL),
                     missing = FALSE, missing_args = list(NULL),
                    pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                     replicates, terms_vary = NULL, raw_power = TRUE, 
-                   lm_fit_mod = NULL, glm_fit_mod = NULL, 
-                   lme4_fit_mod = NULL, nlme_fit_mod = NULL,
-                   arima_fit_mod = NULL, glm_fit_family = NULL, 
-                   lme4_fit_family = NULL, ...) {
+                   lm_fit_mod = NULL, lme4_fit_mod = NULL, nlme_fit_mod = NULL,
+                   arima_fit_mod = NULL, ...) {
   
   args <- list(fixed = fixed, random = random, random3 = random3,
                fixed_param = fixed_param, random_param = random_param,
@@ -152,16 +146,14 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                cov_param = cov_param, k = k, n = n, p = p, 
                error_var = error_var, with_err_gen = with_err_gen, 
                arima = arima, data_str = data_str, cor_vars = cor_vars, 
-               fact_vars = fact_vars, unbal = unbal, unbal3 = unbal3,
-               unbalCont = unbalCont, unbalCont3 = unbalCont3,
+               fact_vars = fact_vars, unbal = unbal,
+               unbal_design = unbal_design,
                lvl1_err_params = lvl1_err_params,
                arima_mod = arima_mod, missing = missing, 
                missing_args = missing_args, pow_param = pow_param, 
                alpha = alpha, pow_dist = pow_dist, pow_tail = pow_tail, 
-               lm_fit_mod = lm_fit_mod, glm_fit_mod = glm_fit_mod,
-               lme4_fit_mod = lme4_fit_mod, nlme_fit_mod = nlme_fit_mod,
-               arima_fit_mod = arima_fit_mod, glm_fit_family = glm_fit_family, 
-               lme4_fit_family = lme4_fit_family)
+               lm_fit_mod = lm_fit_mod, lme4_fit_mod = lme4_fit_mod, 
+               nlme_fit_mod = nlme_fit_mod, arima_fit_mod = arima_fit_mod)
   
   if(!is.null(terms_vary)) {
     args[names(terms_vary)] <- NULL
@@ -350,20 +342,19 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
 #'        \item value.labels
 #'    }
 #'     See also \code{\link{sample}} for use of these optional arguments.
-#' @param unbal A vector of sample sizes for the number of observations for each
-#'  level 2 cluster. Must have same length as level two sample size n. 
-#'  Alternative specification can be TRUE, which uses additional argument, 
-#'  unbalCont.
-#' @param unbal3 A vector of sample sizes for the number of observations for 
-#'  each level 3 cluster. Must have same length as level two sample size k. 
-#'  Alternative specification can be TRUE, which uses additional argument, 
-#'  unbalCont3.
-#' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum 
-#'  level one size, will be drawn from a random uniform distribution with min 
-#'  and max specified.
-#' @param unbalCont3 When unbal3 = TRUE, this specifies the minimum and maximum 
-#'  level two size, will be drawn from a random uniform distribution with min 
-#'  and max specified.
+#' @param unbal A named TRUE/FALSE list specifying whether unbalanced simulation 
+#'  design is desired. The named elements must be: "level2" or "level3" representing
+#'  unbalanced simulation for level two and three respectively. Default is FALSE,
+#'  indicating balanced sample sizes at both levels.
+#' @param unbal_design When unbal = TRUE, this specifies the design for unbalanced
+#'  simulation in one of two ways. It can represent the minimum and maximum 
+#'  sample size within a cluster via a named list. This will be drawn from a 
+#'  random uniform distribution with min and max specified. 
+#'  Secondly, the actual sample sizes within each cluster
+#'  can be specified. This takes the form of a vector that must have the same length 
+#'  as the level two or three sample size. These are specified as a named list in which
+#'  level two sample size is controlled via "level2" and level three sample size is 
+#'  controlled via "level3".
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -384,6 +375,10 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
 #' @param raw_power TRUE/FALSE indicating whether raw power output should be 
 #'  returned. Default is TRUE, which will create a new nested column with 
 #'  raw data by variable(s) manipulated in power analysis.
+#' @param glm_fit_mod Valid glm syntax to be used for model fitting.
+#' @param lme4_fit_mod Valid lme4 syntax to be used for model fitting.
+#' @param glm_fit_family Valid family syntax to pass to the glm function.
+#' @param lme4_fit_family Valid lme4 family specification passed to glmer.
 #' @param ... Current not used.
 #' @importFrom dplyr group_by
 #' @importFrom dplyr summarise
@@ -393,22 +388,25 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                     random_param = list(NULL), random_param3 = list(NULL), 
                     cov_param, k = NULL, n, p = NULL, 
                     data_str, cor_vars = NULL, fact_vars = list(NULL), 
-                    unbal = FALSE, unbal3 = FALSE, 
-                    unbalCont = NULL, unbalCont3 = NULL,
+                    unbal = list("level2" = FALSE, "level3" = FALSE), 
+                    unbal_design = list("level2" = NULL, "level3" = NULL),
                     missing = FALSE, missing_args = list(NULL),
                   pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
-                    replicates, terms_vary = NULL, raw_power = TRUE, ...) {
+                    replicates, terms_vary = NULL, raw_power = TRUE, 
+                  glm_fit_mod = NULL, lme4_fit_mod = NULL, 
+                  glm_fit_family = NULL, lme4_fit_family = NULL, ...) {
   
   args <- list(fixed = fixed, random = random, random3 = random3,
                fixed_param = fixed_param, random_param = random_param,
                random_param3 = random_param3,
                cov_param = cov_param, k = k, n = n, p = p, 
                data_str = data_str, cor_vars = cor_vars, 
-               fact_vars = fact_vars, unbal = unbal, unbal3 = unbal3,
-               unbalCont = unbalCont, unbalCont3 = unbalCont3,
+               fact_vars = fact_vars, unbal = unbal, unbal_design = unbal_design,
                missing = missing, missing_args = missing_args,
                pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
-               pow_tail = pow_tail)
+               pow_tail = pow_tail, glm_fit_mod = glm_fit_mod, 
+               lme4_fit_mod = lme4_fit_mod, glm_fit_family = glm_fit_family,
+               lme4_fit_family = lme4_fit_family)
   
   if(!is.null(terms_vary)) {
     args[names(terms_vary)] <- NULL

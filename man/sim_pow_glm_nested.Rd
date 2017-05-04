@@ -6,9 +6,10 @@
 \usage{
 sim_pow_glm_nested(fixed, random, fixed_param, random_param = list(),
   cov_param, n, p, data_str, cor_vars = NULL, fact_vars = list(NULL),
-  unbal = FALSE, unbalCont = NULL, missing = FALSE,
-  missing_args = list(NULL), pow_param = NULL, alpha, pow_dist = c("z",
-  "t"), pow_tail = c(1, 2), lme4_fit_mod = NULL, lme4_fit_family, ...)
+  unbal = list(level2 = FALSE, level3 = FALSE), unbal_design = list(level2 =
+  NULL, level3 = NULL), missing = FALSE, missing_args = list(NULL),
+  pow_param = NULL, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2),
+  lme4_fit_mod = NULL, lme4_fit_family, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -67,14 +68,20 @@ Does not include intercept, time, factors, or interactions.}
  }
   See also \code{\link{sample}} for use of these optional arguments.}
 
-\item{unbal}{A vector of sample sizes for the number of observations for each
-level 2 cluster. Must have same length as level two sample size n. 
-Alternative specification can be TRUE, which uses additional argument, 
-unbalCont.}
+\item{unbal}{A named TRUE/FALSE list specifying whether unbalanced simulation 
+design is desired. The named elements must be: "level2" or "level3" representing
+unbalanced simulation for level two and three respectively. Default is FALSE,
+indicating balanced sample sizes at both levels.}
 
-\item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum 
-level one size, will be drawn from a random uniform distribution with min 
-and max specified.}
+\item{unbal_design}{When unbal = TRUE, this specifies the design for unbalanced
+simulation in one of two ways. It can represent the minimum and maximum 
+sample size within a cluster via a named list. This will be drawn from a 
+random uniform distribution with min and max specified. 
+Secondly, the actual sample sizes within each cluster
+can be specified. This takes the form of a vector that must have the same length 
+as the level two or three sample size. These are specified as a named list in which
+level two sample size is controlled via "level2" and level three sample size is 
+controlled via "level3".}
 
 \item{missing}{TRUE/FALSE flag indicating whether missing data should be 
 simulated.}

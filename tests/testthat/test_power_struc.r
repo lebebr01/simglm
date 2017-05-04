@@ -144,8 +144,8 @@ test_that('two level power continuous', {
                     var_type = c("level1", "level2"), 
                     opts = list(list(mean = 0, sd = 1),
                                 list(mean = 0, sd = 1)))
-  n <- 150
-  p <- 30
+  n <- 15
+  p <- 3
   error_var <- 1
   data_str <- "long"
   pow_param <- c('time', 'diff', 'act')
@@ -215,8 +215,8 @@ test_that('two level power dich', {
                     var_type = c("level1", "level2"),
                     opts = list(list(mean = 0, sd = 1),
                                 list(mean = 0, sd = 1)))
-  n <- 150
-  p <- 30
+  n <- 20
+  p <- 8
   data_str <- "long"
   pow_param <- c('time', 'diff', 'act')
   alpha <- .01
@@ -250,7 +250,7 @@ test_that("three level power dich", {
                                 list(mean = 0, sd = 2)))
   k <- 10
   n <- 15
-  p <- 5
+  p <- 6
   data_str <- "cross"
   pow_param <- c('diff', 'act', 'actClust')
   alpha <- .01

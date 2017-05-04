@@ -7,14 +7,13 @@
 sim_pow(fixed, random = NULL, random3 = NULL, fixed_param,
   random_param = list(NULL), random_param3 = list(NULL), cov_param,
   k = NULL, n, p = NULL, error_var, with_err_gen, arima = FALSE, data_str,
-  cor_vars = NULL, fact_vars = list(NULL), unbal = FALSE,
-  unbal3 = FALSE, unbalCont = NULL, unbalCont3 = NULL,
+  cor_vars = NULL, fact_vars = list(NULL), unbal = list(level2 = FALSE,
+  level3 = FALSE), unbal_design = list(level2 = NULL, level3 = NULL),
   lvl1_err_params = NULL, arima_mod = list(NULL), missing = FALSE,
   missing_args = list(NULL), pow_param, alpha, pow_dist = c("z", "t"),
   pow_tail = c(1, 2), replicates, terms_vary = NULL, raw_power = TRUE,
-  lm_fit_mod = NULL, glm_fit_mod = NULL, lme4_fit_mod = NULL,
-  nlme_fit_mod = NULL, arima_fit_mod = NULL, glm_fit_family = NULL,
-  lme4_fit_family = NULL, ...)
+  lm_fit_mod = NULL, lme4_fit_mod = NULL, nlme_fit_mod = NULL,
+  arima_fit_mod = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -101,23 +100,20 @@ See \code{\link{arima.sim}} for examples.}
  }
   See also \code{\link{sample}} for use of these optional arguments.}
 
-\item{unbal}{A vector of sample sizes for the number of observations for 
-each level 2 cluster. Must have same length as level two sample size n. 
-Alternative specification can be TRUE, which uses additional argument, 
-unbalCont.}
+\item{unbal}{A named TRUE/FALSE list specifying whether unbalanced simulation 
+design is desired. The named elements must be: "level2" or "level3" representing
+unbalanced simulation for level two and three respectively. Default is FALSE,
+indicating balanced sample sizes at both levels.}
 
-\item{unbal3}{A vector of sample sizes for the number of observations for 
-each level 3 cluster. Must have same length as level two sample size k. 
-Alternative specification can be TRUE, which uses additional argument, 
-unbalCont3.}
-
-\item{unbalCont}{When unbal = TRUE, this specifies the minimum and maximum 
-level one size, will be drawn from a random uniform distribution with min 
-and max specified.}
-
-\item{unbalCont3}{When unbal3 = TRUE, this specifies the minimum and maximum 
-level two size, will be drawn from a random uniform distribution with min 
-and max specified.}
+\item{unbal_design}{When unbal = TRUE, this specifies the design for unbalanced
+simulation in one of two ways. It can represent the minimum and maximum 
+sample size within a cluster via a named list. This will be drawn from a 
+random uniform distribution with min and max specified. 
+Secondly, the actual sample sizes within each cluster
+can be specified. This takes the form of a vector that must have the same length 
+as the level two or three sample size. These are specified as a named list in which
+level two sample size is controlled via "level2" and level three sample size is 
+controlled via "level3".}
 
 \item{lvl1_err_params}{Additional parameters passed as a list on to the 
 level one error generating function}
@@ -156,8 +152,6 @@ raw data by variable(s) manipulated in power analysis.}
 
 \item{lm_fit_mod}{Valid lm syntax to be used for model fitting.}
 
-\item{glm_fit_mod}{Valid glm syntax to be used for model fitting.}
-
 \item{lme4_fit_mod}{Valid lme4 syntax to be used for model fitting.}
 
 \item{nlme_fit_mod}{Valid nlme syntax to be used for model fitting. 
@@ -166,10 +160,6 @@ This should be specified as a named list with fixed and random components.}
 \item{arima_fit_mod}{Valid nlme syntax for fitting serial correlation structures.
 See \code{\link{nlme::corStruct}} for help. This must be specified to 
 include serial correlation.}
-
-\item{glm_fit_family}{Valid family syntax to pass to the glm function.}
-
-\item{lme4_fit_family}{Valid lme4 family specification passed to glmer.}
 
 \item{...}{Currently not used.}
 }

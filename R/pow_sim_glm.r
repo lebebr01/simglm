@@ -70,20 +70,19 @@
 #'        \item value.labels
 #'    }
 #'     See also \code{\link{sample}} for use of these optional arguments.
-#' @param unbal A vector of sample sizes for the number of observations for each 
-#'  level 2 cluster. Must have same length as level two sample size n. 
-#'  Alternative specification can be TRUE, which uses additional argument, 
-#'  unbalCont.
-#' @param unbal3 A vector of sample sizes for the number of observations for 
-#'  each level 3 cluster. Must have same length as level two sample size k. 
-#'  Alternative specification can be TRUE, which uses additional argument, 
-#'  unbalCont3.
-#' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum 
-#'  level one size, will be drawn from a random uniform distribution with min 
-#'  and max specified.
-#' @param unbalCont3 When unbal3 = TRUE, this specifies the minimum and maximum 
-#'  level two size, will be drawn from a random uniform distribution with min 
-#'  and max specified.
+#' @param unbal A named TRUE/FALSE list specifying whether unbalanced simulation 
+#'  design is desired. The named elements must be: "level2" or "level3" representing
+#'  unbalanced simulation for level two and three respectively. Default is FALSE,
+#'  indicating balanced sample sizes at both levels.
+#' @param unbal_design When unbal = TRUE, this specifies the design for unbalanced
+#'  simulation in one of two ways. It can represent the minimum and maximum 
+#'  sample size within a cluster via a named list. This will be drawn from a 
+#'  random uniform distribution with min and max specified. 
+#'  Secondly, the actual sample sizes within each cluster
+#'  can be specified. This takes the form of a vector that must have the same length 
+#'  as the level two or three sample size. These are specified as a named list in which
+#'  level two sample size is controlled via "level2" and level three sample size is 
+#'  controlled via "level3".
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -100,14 +99,15 @@
 #' @param ... Not currently used.
 #' @export 
 sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param, 
-                            random_param = list(), random_param3 = list(), 
-                            cov_param, k, n, p, data_str, cor_vars = NULL, 
-                            fact_vars = list(NULL), unbal = FALSE, unbal3 = FALSE, 
-                            unbalCont = NULL, unbalCont3 = NULL, 
-                            missing = FALSE, missing_args = list(NULL),
-                           pow_param = NULL, alpha, pow_dist = c("z", "t"), 
-                           pow_tail = c(1, 2), 
-                           lme4_fit_mod = NULL, lme4_fit_family, ...) {
+                                random_param = list(), random_param3 = list(), 
+                                cov_param, k, n, p, data_str, cor_vars = NULL, 
+                                fact_vars = list(NULL), 
+                                unbal = list("level2" = FALSE, "level3" = FALSE), 
+                                unbal_design = list("level2" = NULL, "level3" = NULL),
+                                missing = FALSE, missing_args = list(NULL),
+                                pow_param = NULL, alpha, pow_dist = c("z", "t"), 
+                                pow_tail = c(1, 2), 
+                                lme4_fit_mod = NULL, lme4_fit_family, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")  
   rand_vars <- attr(terms(random),"term.labels")
@@ -123,7 +123,7 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
   temp_nest <- sim_glm_nested3(fixed, random, random3, fixed_param, random_param, 
                                random_param3, cov_param, k, n, p, 
                                data_str, cor_vars, fact_vars, 
-                               unbal, unbal3, unbalCont, unbalCont3, ...)
+                               unbal, unbal_design, ...)
   if(missing) {
     temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), 
                                          missing_args))
@@ -226,13 +226,19 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
 #'        \item value.labels
 #'    }
 #'     See also \code{\link{sample}} for use of these optional arguments.
-#' @param unbal A vector of sample sizes for the number of observations for each
-#'  level 2 cluster. Must have same length as level two sample size n. 
-#'  Alternative specification can be TRUE, which uses additional argument, 
-#'  unbalCont.
-#' @param unbalCont When unbal = TRUE, this specifies the minimum and maximum 
-#'  level one size, will be drawn from a random uniform distribution with min 
-#'  and max specified.
+#' @param unbal A named TRUE/FALSE list specifying whether unbalanced simulation 
+#'  design is desired. The named elements must be: "level2" or "level3" representing
+#'  unbalanced simulation for level two and three respectively. Default is FALSE,
+#'  indicating balanced sample sizes at both levels.
+#' @param unbal_design When unbal = TRUE, this specifies the design for unbalanced
+#'  simulation in one of two ways. It can represent the minimum and maximum 
+#'  sample size within a cluster via a named list. This will be drawn from a 
+#'  random uniform distribution with min and max specified. 
+#'  Secondly, the actual sample sizes within each cluster
+#'  can be specified. This takes the form of a vector that must have the same length 
+#'  as the level two or three sample size. These are specified as a named list in which
+#'  level two sample size is controlled via "level2" and level three sample size is 
+#'  controlled via "level3".
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -251,7 +257,9 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
 sim_pow_glm_nested <- function(fixed, random, fixed_param, 
                           random_param = list(), cov_param, n, p, data_str, 
                           cor_vars = NULL, fact_vars = list(NULL),
-                          unbal = FALSE, unbalCont = NULL, missing = FALSE, 
+                          unbal = list("level2" = FALSE, "level3" = FALSE), 
+                          unbal_design = list("level2" = NULL, "level3" = NULL),
+                          missing = FALSE, 
                           missing_args = list(NULL), pow_param = NULL, 
                           alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                           lme4_fit_mod = NULL, lme4_fit_family, ...) {
@@ -268,7 +276,7 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
 
   temp_nest <- sim_glm_nested(fixed, random, fixed_param, random_param, 
                               cov_param, n, p, data_str, cor_vars, fact_vars, 
-                              unbal, unbalCont, ...)
+                              unbal, unbal_design, ...)
   if(missing) {
     temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), 
                                          missing_args))

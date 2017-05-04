@@ -160,7 +160,13 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
                               random = nlme_fit_mod$random)
         test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
       } else {
-        
+        if(!purrr::is_formula(nlme_fit_mod$fixed)) {
+          stop('nlme_fit_mod$fixed must be a formula to pass to lme')
+        } 
+        temp_mod <- nlme::lme(fixed = nlme_fit_mod$fixed, data = temp_nest,
+                              random = eval(parse(text = nlme_fit_mod$random)), 
+                              correlation = arima_fit_mod)
+        test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
       }
     } else {
       if(arima) {
@@ -178,7 +184,8 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
         ran <- paste(ran1, ran2, collapse = ', ')
         
         temp_mod <- nlme::lme(fixed = as.formula(fix1), data = temp_nest,
-                              random = eval(parse(text = ran)))
+                              random = eval(parse(text = ran)),
+                              correlation = arima_fit_mod)
         test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
       } else {
         fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
@@ -351,10 +358,17 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
     if(!is.null(nlme_fit_mod)) {
       if(all(unlist(lapply(nlme_fit_mod, purrr::is_formula)))) {
         temp_mod <- nlme::lme(fixed = nlme_fit_mod$fixed, data = temp_nest,
-                              random = nlme_fit_mod$random)
+                              random = nlme_fit_mod$random, 
+                              correlation = arima_fit_mod)
         test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
       } else {
-        
+        if(!purrr::is_formula(nlme_fit_mod$fixed)) {
+          stop('nlme_fit_mod$fixed must be a formula to pass to lme')
+        } 
+        temp_mod <- nlme::lme(fixed = nlme_fit_mod$fixed, data = temp_nest,
+                              random = eval(parse(text = nlme_fit_mod$random)), 
+                              correlation = arima_fit_mod)
+        test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
       }
     } else {
       if(arima) {
@@ -365,7 +379,8 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
         ran1 <- paste("~", paste(rand_vars, collapse = "+"), "|clustID", sep = "")
         
         temp_mod <- nlme::lme(fixed = as.formula(fix1), data = temp_nest,
-                              random = as.formula(ran1))
+                              random = as.formula(ran1), 
+                              correlation = arima_fit_mod)
         test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
       } else {
         fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))

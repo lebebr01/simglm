@@ -158,7 +158,7 @@ raw data by variable(s) manipulated in power analysis.}
 This should be specified as a named list with fixed and random components.}
 
 \item{arima_fit_mod}{Valid nlme syntax for fitting serial correlation structures.
-See \code{\link{nlme::corStruct}} for help. This must be specified to 
+See \code{\link{corStruct}} for help. This must be specified to 
 include serial correlation.}
 
 \item{...}{Currently not used.}

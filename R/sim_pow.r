@@ -117,7 +117,7 @@
 #' @param nlme_fit_mod Valid nlme syntax to be used for model fitting. 
 #'   This should be specified as a named list with fixed and random components.
 #' @param arima_fit_mod Valid nlme syntax for fitting serial correlation structures.
-#'   See \code{\link{nlme::corStruct}} for help. This must be specified to 
+#'   See \code{\link{corStruct}} for help. This must be specified to 
 #'   include serial correlation.
 #' @param ... Currently not used.
 #' @importFrom dplyr group_by

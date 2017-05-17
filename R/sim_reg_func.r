@@ -54,6 +54,11 @@
 #' @param contrasts An optional list that specifies the contrasts to be used 
 #'  for factor variables (i.e. those variables with .f or .c). 
 #'  See \code{\link{contrasts}} for more detail.
+#' @param homogeneity Either TRUE (default) indicating homogeneity of variance
+#'  assumption is assumed or FALSE to indicate desire to generate heterogeneity 
+#'  of variance.
+#' @param heterogeneity_var Variable name as a character string to use for 
+#'  heterogeneity of variance simulation.
 #' @param ... Not currently used.
 #' @export 
 #' @examples 
@@ -77,7 +82,8 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var,
                            with_err_gen, arima = FALSE, data_str, 
                            cor_vars = NULL, fact_vars = list(NULL), 
                            lvl1_err_params = NULL, arima_mod = list(NULL), 
-                           contrasts = NULL, ...) {
+                           contrasts = NULL, homogeneity = TRUE,
+                           heterogeneity_var = NULL, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")   
 
@@ -92,9 +98,10 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var,
   
   err <- sim_err_single(error_var, n, with_err_gen, arima = arima, 
                         lvl1_err_params = lvl1_err_params, 
-                        arima_mod = arima_mod)
+                        arima_mod = arima_mod, homogeneity = homogeneity, 
+                        Xmat, heterogeneity_var = NULL)
   
-  sim_data <- data_reg_single(Xmat, fixed_param, n, err)
+  sim_data <- data_reg_single(Xmat, fixed_param, n)
   
   Xmat <- data.frame(Xmat,sim_data)
   Xmat$ID <- 1:n

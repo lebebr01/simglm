@@ -177,13 +177,14 @@ sim_reg <- function(fixed, random, random3, fixed_param,
                     data_str, cor_vars = NULL, fact_vars = list(NULL), 
                     unbal = list("level2" = FALSE, "level3" = FALSE), 
                     unbal_design = list("level2" = NULL, "level3" = NULL), 
-                    lvl1_err_params = NULL,
-                    arima_mod = list(NULL), ...) {
+                    lvl1_err_params = NULL, arima_mod = list(NULL), 
+                    contrasts = NULL, homogeneity = TRUE,
+                    heterogeneity_var = NULL,...) {
   
   if(data_str == "single"){
     sim_reg_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen, 
                    arima, data_str, cor_vars, fact_vars, lvl1_err_params, 
-                   arima_mod, ...)
+                   arima_mod, contrasts, homogeneity, heterogeneity_var, ...)
   } else {
   	if (is.null(k)){
   	  sim_reg_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 

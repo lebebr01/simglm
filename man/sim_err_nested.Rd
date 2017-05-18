@@ -6,7 +6,8 @@
 \usage{
 sim_err_nested(error_var, n, p, with_err_gen, arima = FALSE,
   lvl1_err_params = NULL, arima_mod = list(NULL), ther = c(0, 1),
-  ther_sim = FALSE, ...)
+  ther_sim = FALSE, homogeneity = TRUE, fixef = NULL,
+  heterogeneity_var = NULL, ...)
 }
 \arguments{
 \item{error_var}{Scalar of error variance}
@@ -38,6 +39,16 @@ is then rescaled to have the variance specified by error_var.}
 \item{ther_sim}{A TRUE/FALSE flag indicating whether the error simulation 
 function should be simulated, that is should the mean and standard deviation
 used for standardization be simulated.}
+
+\item{homogeneity}{Either TRUE (default) indicating homogeneity of variance
+assumption is assumed or FALSE to indicate desire to generate heterogeneity 
+of variance.}
+
+\item{fixef}{The design matrix, this is passed internally and used for 
+heterogeneity of variance simulation.}
+
+\item{heterogeneity_var}{Variable name as a character string to use for 
+heterogeneity of variance simulation.}
 
 \item{...}{Not currently used.}
 }

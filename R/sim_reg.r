@@ -198,12 +198,13 @@ sim_reg <- function(fixed, random, random3, fixed_param,
   	  sim_reg_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 
   	                 error_var, with_err_gen, arima, data_str, cor_vars, 
   	                 fact_vars, unbal, unbal_design, lvl1_err_params, 
-  	                 arima_mod, ...)
+  	                 arima_mod, contrasts, homogeneity, heterogeneity_var, ...)
   } else {
     sim_reg_nested3(fixed, random, random3, fixed_param, random_param, 
                     random_param3, cov_param, k, n, p, error_var, with_err_gen, 
                     arima, data_str, cor_vars, fact_vars, unbal, 
-                    unbal_design, lvl1_err_params, arima_mod, ...)
+                    unbal_design, lvl1_err_params, arima_mod, contrasts,
+                    homogeneity, heterogeneity_var, ...)
   }
  }
 }
@@ -299,6 +300,7 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' @param contrasts An optional list that specifies the contrasts to be used 
 #'      for factor variables (i.e. those variables with .f or .c). 
 #'      See \code{\link{contrasts}} for more detail.
+#' @param ... Not currently used.
 #' @export 
 #' 
 #' @examples

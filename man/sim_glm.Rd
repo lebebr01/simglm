@@ -103,6 +103,8 @@ controlled via "level3".}
 \item{contrasts}{An optional list that specifies the contrasts to be used 
 for factor variables (i.e. those variables with .f or .c). 
 See \code{\link{contrasts}} for more detail.}
+
+\item{...}{Not currently used.}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

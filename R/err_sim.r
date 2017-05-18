@@ -23,30 +23,61 @@
 #' @param ther_sim A TRUE/FALSE flag indicating whether the error simulation 
 #'  function should be simulated, that is should the mean and standard deviation
 #'  used for standardization be simulated.
+#' @param homogeneity Either TRUE (default) indicating homogeneity of variance
+#'  assumption is assumed or FALSE to indicate desire to generate heterogeneity 
+#'  of variance.
+#' @param fixef The design matrix, this is passed internally and used for 
+#'  heterogeneity of variance simulation.
+#' @param heterogeneity_var Variable name as a character string to use for 
+#'  heterogeneity of variance simulation.
 #' @param ... Not currently used.
 #' @export 
 sim_err_nested <- function(error_var, n, p, with_err_gen, arima = FALSE,
                            lvl1_err_params = NULL, arima_mod = list(NULL),
-                           ther = c(0, 1), ther_sim = FALSE, ...){
+                           ther = c(0, 1), ther_sim = FALSE, 
+                           homogeneity = TRUE, fixef = NULL, 
+                           heterogeneity_var = NULL, ...){
   
   if(ther_sim) {
     ther_val <- do.call(with_err_gen, c(list(n = 10000000), lvl1_err_params))
     ther <- c(mean(ther_val), sd(ther_val))
   }
   
-  if(arima) {
-    args <- c(list(model = arima_mod, 
-                   rand.gen = eval(parse(text = with_err_gen))), 
-              lvl1_err_params)
-    err <- unlist(lapply(mapply(arima.sim, n = p,
-                                MoreArgs = args, SIMPLIFY = FALSE), 
-                         standardize, mean = ther[1], sd = ther[2])) * 
-      sqrt(error_var)
+  if(homogeneity) {
+    if(arima) {
+      args <- c(list(model = arima_mod, 
+                     rand.gen = eval(parse(text = with_err_gen))), 
+                lvl1_err_params)
+      err <- unlist(lapply(mapply(arima.sim, n = p,
+                                  MoreArgs = args, SIMPLIFY = FALSE), 
+                           standardize, mean = ther[1], sd = ther[2])) * 
+        sqrt(error_var)
+    } else {
+      args <- c(list(n = p), lvl1_err_params)
+      err <- unlist(lapply(mapply(with_err_gen, n = p, 
+                                  MoreArgs = lvl1_err_params, SIMPLIFY = FALSE), 
+                           standardize, mean = ther[1], sd = ther[2])) * sqrt(error_var)
+    }
   } else {
-    args <- c(list(n = p), lvl1_err_params)
-    err <- unlist(lapply(mapply(with_err_gen, n = p, 
-         MoreArgs = lvl1_err_params, SIMPLIFY = FALSE), 
-         standardize, mean = ther[1], sd = ther[2])) * sqrt(error_var)
+    if(arima) {
+      args <- c(list(model = arima_mod, 
+                     rand.gen = eval(parse(text = with_err_gen))), 
+                lvl1_err_params)
+      err <- unlist(lapply(mapply(arima.sim, n = p,
+                                  MoreArgs = args, SIMPLIFY = FALSE), 
+                           standardize, mean = ther[1], sd = ther[2]))
+      err <- heterogeneity(error_var, fixef = fixef,
+                           heterogeneity_var,
+                           err)
+    } else {
+      args <- c(list(n = p), lvl1_err_params)
+      err <- unlist(lapply(mapply(with_err_gen, n = p, 
+                                  MoreArgs = lvl1_err_params, SIMPLIFY = FALSE), 
+                           standardize, mean = ther[1], sd = ther[2]))
+      err <- heterogeneity(error_var, fixef = fixef,
+                           heterogeneity_var,
+                           err)
+    }
   }
   err
 }

@@ -193,6 +193,11 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var,
 #' @param contrasts An optional list that specifies the contrasts to be used 
 #'      for factor variables (i.e. those variables with .f or .c). 
 #'      See \code{\link{contrasts}} for more detail.
+#' @param homogeneity Either TRUE (default) indicating homogeneity of variance
+#'  assumption is assumed or FALSE to indicate desire to generate heterogeneity 
+#'  of variance.
+#' @param heterogeneity_var Variable name as a character string to use for 
+#'  heterogeneity of variance simulation.
 #' @param ... Not currently used.
 #' @export 
 #' @examples 
@@ -219,7 +224,8 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
                            arima = FALSE, data_str, cor_vars = NULL, 
                            fact_vars = list(NULL), unbal = FALSE, 
                            unbal_design = NULL, lvl1_err_params = NULL, 
-                           arima_mod = list(NULL), contrasts = NULL, ...) {
+                           arima_mod = list(NULL), contrasts = NULL, 
+                           homogeneity = TRUE, heterogeneity_var = NULL, ...) {
 
   fixed_vars <- attr(terms(fixed),"term.labels")  
   rand_vars <- attr(terms(random),"term.labels")  
@@ -262,7 +268,9 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
 
   err <- sim_err_nested(error_var, n, p = lvl1ss, with_err_gen = with_err_gen,
                         arima = arima, lvl1_err_params = lvl1_err_params, 
-                        arima_mod = arima_mod, ...)
+                        arima_mod = arima_mod, homogeneity = homogeneity,
+                        fixef = Xmat, heterogeneity_var = heterogeneity_var,
+                        ...)
 
  sim_data <- data_reg_nested(Xmat, Zmat, fixed_param, rand_eff, n, 
                              p = lvl1ss, err = err)
@@ -373,6 +381,11 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
 #' @param contrasts An optional list that specifies the contrasts to be used 
 #'      for factor variables (i.e. those variables with .f or .c). 
 #'      See \code{\link{contrasts}} for more detail.
+#' @param homogeneity Either TRUE (default) indicating homogeneity of variance
+#'  assumption is assumed or FALSE to indicate desire to generate heterogeneity 
+#'  of variance.
+#' @param heterogeneity_var Variable name as a character string to use for 
+#'  heterogeneity of variance simulation.
 #' @param ... Not currently used.
 #' @export 
 #' @examples 
@@ -406,7 +419,8 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
                             unbal = list("level2" = FALSE, "level3" = FALSE), 
                             unbal_design = list("level2" = NULL, "level3" = NULL),
                             lvl1_err_params = NULL, arima_mod = list(NULL),
-                            contrasts = NULL, ...) {
+                            contrasts = NULL, homogeneity = TRUE,
+                            heterogeneity_var = NULL, ...) {
 
   fixed_vars <- attr(terms(fixed),"term.labels")   
   rand_vars <- attr(terms(random),"term.labels")   
@@ -490,7 +504,9 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
   err <- sim_err_nested(error_var, n = n, p = lvl1ss, 
                         with_err_gen = with_err_gen, arima = arima, 
                         lvl1_err_params = lvl1_err_params, 
-                        arima_mod = arima_mod, ...)
+                        arima_mod = arima_mod, homogeneity = homogeneity,
+                        fixef = Xmat, heterogeneity_var = heterogeneity_var, 
+                        ...)
   
   sim_data <- data_reg_nested3(Xmat, Zmat, Zmat3, fixed_param, rand_eff, 
                                rand_eff3, k, n = lvl2ss, p = lvl1ss, err = err)

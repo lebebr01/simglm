@@ -9,7 +9,7 @@ sim_reg_nested3(fixed, random, random3, fixed_param, random_param = list(),
   arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL),
   unbal = list(level2 = FALSE, level3 = FALSE), unbal_design = list(level2 =
   NULL, level3 = NULL), lvl1_err_params = NULL, arima_mod = list(NULL),
-  contrasts = NULL, ...)
+  contrasts = NULL, homogeneity = TRUE, heterogeneity_var = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -120,6 +120,13 @@ See \code{\link{arima.sim}} for examples.}
 \item{contrasts}{An optional list that specifies the contrasts to be used 
 for factor variables (i.e. those variables with .f or .c). 
 See \code{\link{contrasts}} for more detail.}
+
+\item{homogeneity}{Either TRUE (default) indicating homogeneity of variance
+assumption is assumed or FALSE to indicate desire to generate heterogeneity 
+of variance.}
+
+\item{heterogeneity_var}{Variable name as a character string to use for 
+heterogeneity of variance simulation.}
 
 \item{...}{Not currently used.}
 }

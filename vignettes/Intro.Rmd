@@ -206,7 +206,8 @@ with_err_gen <- 'rnorm'
 data_str <- "long"
 temp_long <- sim_reg(fixed, random, random3 = NULL, fixed_param, 
                      random_param, random_param3 = NULL,
-                     cov_param, k = NULL, n, p, error_var, with_err_gen, data_str = data_str)
+                     cov_param, k = NULL, n, p, error_var, with_err_gen, 
+                     data_str = data_str)
 head(temp_long)
 ```
 

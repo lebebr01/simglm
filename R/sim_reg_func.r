@@ -99,9 +99,9 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var,
   err <- sim_err_single(error_var, n, with_err_gen, arima = arima, 
                         lvl1_err_params = lvl1_err_params, 
                         arima_mod = arima_mod, homogeneity = homogeneity, 
-                        Xmat, heterogeneity_var = NULL)
+                        fixef = Xmat, heterogeneity_var = heterogeneity_var)
   
-  sim_data <- data_reg_single(Xmat, fixed_param, n)
+  sim_data <- data_reg_single(Xmat, fixed_param, n, err)
   
   Xmat <- data.frame(Xmat,sim_data)
   Xmat$ID <- 1:n

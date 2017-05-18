@@ -81,7 +81,7 @@ sim_err_nested <- function(error_var, n, p, with_err_gen, arima = FALSE,
 #' @param homogeneity Either TRUE (default) indicating homogeneity of variance
 #'  assumption is assumed or FALSE to indicate desire to generate heterogeneity 
 #'  of variance.
-#' @param Xmat The design matrix, this is passed internally and used for 
+#' @param fixef The design matrix, this is passed internally and used for 
 #'  heterogeneity of variance simulation.
 #' @param heterogeneity_var Variable name as a character string to use for 
 #'  heterogeneity of variance simulation.
@@ -90,7 +90,8 @@ sim_err_nested <- function(error_var, n, p, with_err_gen, arima = FALSE,
 sim_err_single <- function(error_var, n, with_err_gen, arima = FALSE, 
                            lvl1_err_params = NULL, arima_mod = list(NULL),
                            ther = c(0, 1), ther_sim = FALSE, 
-                           homogeneity = TRUE, Xmat, heterogeneity_var = NULL,
+                           homogeneity = TRUE, fixef = NULL, 
+                           heterogeneity_var = NULL,
                            ...){
   
   if(ther_sim) {
@@ -117,14 +118,14 @@ sim_err_single <- function(error_var, n, with_err_gen, arima = FALSE,
                 lvl1_err_params)
       err <- standardize(do.call(arima.sim, args),
                          mean = ther[1], sd = ther[2])
-      err <- heterogeneity(error_var, fixef,
+      err <- heterogeneity(error_var, fixef = fixef,
                            heterogeneity_var,
                            err)
     } else {
       args <- c(list(n = n), lvl1_err_params)
       err <- standardize(do.call(with_err_gen, args),
                          mean = ther[1], sd = ther[2])
-      err <- heterogeneity(error_var, fixef = Xmat,
+      err <- heterogeneity(error_var, fixef = fixef,
                            heterogeneity_var,
                            err)
     }

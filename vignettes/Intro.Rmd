@@ -23,7 +23,7 @@ The `simglm` package aims to define a consistent framework for simulating regres
 Currently development is happening on github. To install the package, use the `devtools` package:
 ```{r install, eval=FALSE}
 library(devtools)
-install_github("lebebr01/simglm")
+install_github("lebebr01/simglm", build_vignettes = TRUE)
 library(simglm)
 ```
 This should load the `devtools` package, install the `simglm` package, and finally load the `simglm` package. The package has currently not been tested on a Mac machine. I do not anticipate any problems installing on a Mac however.
@@ -137,6 +137,57 @@ cor(temp_single_o[, 2:3])
 ```
 
 The skewness and kurtosis can be ways to ensure that these distributions are actually generated as desired. For example, the skewness and kurtosis for the `rt` distribution are: `r e1071::skewness(temp_single_o$act)` and `r e1071::kurtosis(temp_single_o$act)`. Similarly done for the `rgamma` distribution: `r e1071::skewness(temp_single_o$diff)` and `r e1071::kurtosis(temp_single_o$diff)`.
+
+#### Heterogeneity
+It is also possible to build in heterogeneity of variance into the simulation design. This is done through two arguments, `homogeneity` and `heterogeneity_var`. Below is a possible specification within a single level framework. By specifying `homogeneity = FALSE`, this indicates that some level of heterogeneity is desired. Finally, by passing a variable name as a character string to the `heterogeneity_var` argument, this is the variable in which heterogeneity in the residuals depends on (i.e. this variable is used to group variables).
+
+```{r heterogeneity}
+fixed <- ~ 1 + act + diff + numCourse + act:numCourse
+fixed_param <- c(2, 4, 1, 3.5, 2)
+cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
+                  var_type = c("single", "single", "single"),
+                  cov_param = list(list(mean = 0, sd = 4),
+                                   list(mean = 0, sd = 3),
+                                   list(mean = 0, sd = 3)))
+n <- 1500
+error_var <- c(3, 50, 10)
+with_err_gen = 'rnorm'
+
+temp_single <- sim_reg(fixed = fixed, fixed_param = fixed_param, 
+                       cov_param = cov_param,
+                       n = n, error_var = error_var, 
+                       with_err_gen = with_err_gen, 
+                       data_str = "single", 
+                       homogeneity = FALSE, heterogeneity_var = 'diff')
+```
+
+The outcome of the heterogeneity from the simulation is best show with a figure.
+
+```{r heterogeneity_figure}
+library(ggplot2)
+ggplot(temp_single, aes(x = diff, y = err)) + 
+  geom_point(size = 3) + theme_bw()
+```
+
+As you can see from the figure, there is an increase in the error variance in the middle of the variable "diff" and smaller amounts of variance in the tails. What was done internally was that the variable "diff" was grouped into 3 groups (based on the length of the argument `error_var`) and the variance values passed from `error_var` are used to create the heterogeneity. In many instances, heterogeneity is thought of with regard to groups. This can be shown with the following:
+
+```{r hetero_groups, eval = FALSE}
+fixed <- ~ 1 + act_o + diff.o + numCourse_f
+fixed_param <- c(0.8, 1, 0.2, 0.1, 0, 0.15, 0.2)
+cov_param <- NULL
+fact_vars <- list(numlevels = c(36, 8, 5), 
+                  var_type = c('single', 'single', "single"))
+n <- 150
+error_var <- c(3, 10, 20, 5, 4)
+with_err_gen = 'rnorm'
+temp_single_o <- sim_reg(fixed = fixed, fixed_param = fixed_param, 
+                         cov_param = cov_param, n = n, error_var = error_var,
+                         with_err_gen = with_err_gen, data_str = "single", 
+                         fact_vars = fact_vars, 
+                         homogeneity = FALSE, heterogeneity_var = 'numCourse_f')
+```
+
+
 
 
 

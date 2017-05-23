@@ -59,6 +59,7 @@
 #' @param heterogeneity_var Variable name as a character string to use for 
 #'  heterogeneity of variance simulation.
 #' @param ... Not currently used.
+#' @importFrom dplyr bind_cols
 #' @export 
 #' @examples 
 #' #' # generating parameters for single level regression

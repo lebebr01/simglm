@@ -135,10 +135,15 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
    } 
  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
    fixed <- search_factors(fixed_vars)
+   Omat <- Xmat
  }
  Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
  
- Xmat
+ if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+   list(Xmat = Xmat, Omat = data.frame(Omat))
+ } else {
+   Xmat
+ }
 }
 
 #' Simulates design matrix.
@@ -273,10 +278,15 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   } 
   if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
     fixed <- search_factors(fixed_vars)
+    Omat <- Xmat
   }
   Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
   
-  Xmat
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+    list(Xmat = Xmat, Omat = data.frame(Omat))
+  } else {
+    Xmat
+  }
 }
 
 
@@ -379,10 +389,15 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   } 
   if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
     fixed <- search_factors(fixed_vars)
+    Omat <- Xmat
   }
   Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
   
-  Xmat
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+    list(Xmat = Xmat, Omat = data.frame(Omat))
+  } else {
+    Xmat
+  }
 }
 
 #' Simulate categorical, factor, or discrete variables

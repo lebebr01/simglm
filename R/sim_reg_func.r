@@ -18,8 +18,7 @@
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       either 'lvl1', 'lvl2', or 'lvl3'. Must be same order as fixed formula 
-#'       above.
+#'       'single'. Must be same order as fixed formula above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
 #'    see the examples for example code for this.
@@ -32,7 +31,7 @@
 #'             be correlated. If TRUE, must specify a valid model to pass to 
 #'             arima.sim via the arima_mod argument. 
 #'             See \code{\link{arima.sim}} for examples.
-#' @param data_str Type of data. Must be "cross", "long", or "single".
+#' @param data_str Type of data. Must be "single".
 #' @param cor_vars A vector of correlations between variables.
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable 
 #'      specification, each list must include:
@@ -91,19 +90,36 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var,
                            cov_param = cov_param, cor_vars = cor_vars, 
                            fact_vars = fact_vars, contrasts = contrasts)
   
-  if(ncol(Xmat) != length(fixed_param)) {
-    stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
-               'variables in design matrix'))
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+    if(ncol(Xmat$Xmat) != length(fixed_param)) {
+      stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
+                 'variables in design matrix'))
+    }
+    
+    err <- sim_err_single(error_var, n, with_err_gen, arima = arima, 
+                          lvl1_err_params = lvl1_err_params, 
+                          arima_mod = arima_mod, homogeneity = homogeneity, 
+                          fixef = Xmat$Omat, heterogeneity_var = heterogeneity_var)
+    
+    sim_data <- data_reg_single(Xmat$Xmat, fixed_param, n, err)
+    Xmat <- dplyr::bind_cols(data.frame(Xmat$Xmat), 
+                             data.frame(Xmat$Omat), 
+                             data.frame(sim_data))
+  } else {
+    if(ncol(Xmat) != length(fixed_param)) {
+      stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
+                 'variables in design matrix'))
+    }
+    
+    err <- sim_err_single(error_var, n, with_err_gen, arima = arima, 
+                          lvl1_err_params = lvl1_err_params, 
+                          arima_mod = arima_mod, homogeneity = homogeneity, 
+                          fixef = Xmat, heterogeneity_var = heterogeneity_var)
+    
+    sim_data <- data_reg_single(Xmat, fixed_param, n, err)
+    Xmat <- data.frame(Xmat, sim_data)
   }
   
-  err <- sim_err_single(error_var, n, with_err_gen, arima = arima, 
-                        lvl1_err_params = lvl1_err_params, 
-                        arima_mod = arima_mod, homogeneity = homogeneity, 
-                        fixef = Xmat, heterogeneity_var = heterogeneity_var)
-  
-  sim_data <- data_reg_single(Xmat, fixed_param, n, err)
-  
-  Xmat <- data.frame(Xmat,sim_data)
   Xmat$ID <- 1:n
   
   Xmat
@@ -160,7 +176,7 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var,
 #'             be correlated. If TRUE, must specify a valid model to pass to 
 #'             arima.sim via the arima_mod argument. 
 #'             See \code{\link{arima.sim}} for examples.
-#' @param data_str Type of data. Must be "cross", "long", or "single".
+#' @param data_str Type of data. Must be "cross" or "long".
 #' @param cor_vars A vector of correlations between variables.
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable 
 #'      specification, each list must include:
@@ -251,31 +267,55 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
                             data_str = data_str, cor_vars = cor_vars, 
                            fact_vars = fact_vars, 
                            contrasts = contrasts)
-  
-  if(ncol(Xmat) != length(fixed_param)) {
-    stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
-               'variables in design matrix'))
-  }
-  
+
   rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
 
   reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx)
     rep(rand_eff[,xx], times = lvl1ss)))
   colnames(reff) <- c(unlist(lapply(1:ncol(rand_eff), function(xx)
     paste("b", xx-1, sep = ""))))
-
-  Zmat <- model.matrix(random, data.frame(Xmat))
-
-  err <- sim_err_nested(error_var, n, p = lvl1ss, with_err_gen = with_err_gen,
-                        arima = arima, lvl1_err_params = lvl1_err_params, 
-                        arima_mod = arima_mod, homogeneity = homogeneity,
-                        fixef = Xmat, heterogeneity_var = heterogeneity_var,
-                        ...)
-
- sim_data <- data_reg_nested(Xmat, Zmat, fixed_param, rand_eff, n, 
-                             p = lvl1ss, err = err)
   
- Xmat <- data.frame(Xmat,reff,sim_data)
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+    if(ncol(Xmat$Xmat) != length(fixed_param)) {
+      stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
+                 'variables in design matrix'))
+    }
+    
+    Zmat <- model.matrix(random, data.frame(Xmat$Xmat))
+    
+    err <- sim_err_nested(error_var, n, p = lvl1ss, with_err_gen = with_err_gen,
+                          arima = arima, lvl1_err_params = lvl1_err_params, 
+                          arima_mod = arima_mod, homogeneity = homogeneity,
+                          fixef = Xmat$Omat, heterogeneity_var = heterogeneity_var,
+                          ...)
+    
+    sim_data <- data_reg_nested(Xmat$Xmat, Zmat, fixed_param, rand_eff, n, 
+                                p = lvl1ss, err = err)
+    
+    Xmat <- dplyr::bind_cols(data.frame(Xmat$Xmat), 
+                             data.frame(Xmat$Omat), 
+                             data.frame(reff),
+                             data.frame(sim_data))
+  } else {
+    if(ncol(Xmat) != length(fixed_param)) {
+      stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
+                 'variables in design matrix'))
+    }
+    
+    Zmat <- model.matrix(random, data.frame(Xmat))
+    
+    err <- sim_err_nested(error_var, n, p = lvl1ss, with_err_gen = with_err_gen,
+                          arima = arima, lvl1_err_params = lvl1_err_params, 
+                          arima_mod = arima_mod, homogeneity = homogeneity,
+                          fixef = Xmat, heterogeneity_var = heterogeneity_var,
+                          ...)
+    
+    sim_data <- data_reg_nested(Xmat, Zmat, fixed_param, rand_eff, n, 
+                                p = lvl1ss, err = err)
+    
+    Xmat <- data.frame(Xmat, reff, sim_data)
+  }
+
  Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
  Xmat$clustID <- rep(1:n, times = lvl1ss)
  
@@ -346,7 +386,7 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
 #'             be correlated. If TRUE, must specify a valid model to pass to 
 #'             arima.sim via the arima_mod argument. 
 #'             See \code{\link{arima.sim}} for examples.
-#' @param data_str Type of data. Must be "cross", "long", or "single".
+#' @param data_str Type of data. Must be "cross" or "long".
 #' @param cor_vars A vector of correlations between variables.
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable 
 #'      specification, each list must include:
@@ -497,21 +537,52 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
     rep(rand_eff3[,xx], times = lvl3ss)))
   colnames(reff3) <- c(unlist(lapply(1:ncol(rand_eff3), function(xx) 
     paste("b", xx-1, "_3", sep = ""))))
+  
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+    if(ncol(Xmat$Xmat) != length(fixed_param)) {
+      stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
+                 'variables in design matrix'))
+    }
+    
+    Zmat <- model.matrix(random, data.frame(Xmat$Xmat))
+    Zmat3 <- model.matrix(random3, data.frame(Xmat$Xmat))
+    
+    err <- sim_err_nested(error_var, n, p = lvl1ss, with_err_gen = with_err_gen,
+                          arima = arima, lvl1_err_params = lvl1_err_params, 
+                          arima_mod = arima_mod, homogeneity = homogeneity,
+                          fixef = Xmat$Omat, heterogeneity_var = heterogeneity_var,
+                          ...)
+    
+    sim_data <- data_reg_nested3(Xmat$Xmat, Zmat, Zmat3, fixed_param, rand_eff, 
+                                 rand_eff3, k, n = lvl2ss, p = lvl1ss, 
+                                 err = err)
+    
+    Xmat <- dplyr::bind_cols(data.frame(Xmat$Xmat), 
+                             data.frame(Xmat$Omat), 
+                             data.frame(reff),
+                             data.frame(reff3),
+                             data.frame(sim_data))
+  } else {
+    if(ncol(Xmat) != length(fixed_param)) {
+      stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
+                 'variables in design matrix'))
+    }
+    Zmat <- model.matrix(random, data.frame(Xmat))
+    Zmat3 <- model.matrix(random3, data.frame(Xmat))
+    
+    err <- sim_err_nested(error_var, n = n, p = lvl1ss, 
+                          with_err_gen = with_err_gen, arima = arima, 
+                          lvl1_err_params = lvl1_err_params, 
+                          arima_mod = arima_mod, homogeneity = homogeneity,
+                          fixef = Xmat, heterogeneity_var = heterogeneity_var, 
+                          ...)
+    
+    sim_data <- data_reg_nested3(Xmat, Zmat, Zmat3, fixed_param, rand_eff, 
+                                 rand_eff3, k, n = lvl2ss, p = lvl1ss, err = err)
+    
+    Xmat <- data.frame(Xmat, reff, reff3, sim_data)
+  }
 
-  Zmat <- model.matrix(random, data.frame(Xmat))
-  Zmat3 <- model.matrix(random3, data.frame(Xmat))
-  
-  err <- sim_err_nested(error_var, n = n, p = lvl1ss, 
-                        with_err_gen = with_err_gen, arima = arima, 
-                        lvl1_err_params = lvl1_err_params, 
-                        arima_mod = arima_mod, homogeneity = homogeneity,
-                        fixef = Xmat, heterogeneity_var = heterogeneity_var, 
-                        ...)
-  
-  sim_data <- data_reg_nested3(Xmat, Zmat, Zmat3, fixed_param, rand_eff, 
-                               rand_eff3, k, n = lvl2ss, p = lvl1ss, err = err)
-  
-  Xmat <- data.frame(Xmat, reff, reff3, sim_data)
   Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
   Xmat$clustID <- rep(1:n, times = lvl1ss)
   Xmat$clust3ID <- rep(1:k, times = lvl3ss)

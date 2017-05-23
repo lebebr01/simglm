@@ -171,7 +171,7 @@ ggplot(temp_single, aes(x = diff, y = err)) +
 
 As you can see from the figure, there is an increase in the error variance in the middle of the variable "diff" and smaller amounts of variance in the tails. What was done internally was that the variable "diff" was grouped into 3 groups (based on the length of the argument `error_var`) and the variance values passed from `error_var` are used to create the heterogeneity. In many instances, heterogeneity is thought of with regard to groups. This can be shown with the following:
 
-```{r hetero_groups, eval = FALSE}
+```{r hetero_groups}
 fixed <- ~ 1 + act_o + diff.o + numCourse_f
 fixed_param <- c(0.8, 1, 0.2, 0.1, 0, 0.15, 0.2)
 cov_param <- NULL
@@ -187,8 +187,12 @@ temp_single_o <- sim_reg(fixed = fixed, fixed_param = fixed_param,
                          homogeneity = FALSE, heterogeneity_var = 'numCourse_f')
 ```
 
+Showing a plot of the outcome.
 
-
+```{r hetero_groups_fig}
+ggplot(temp_single_o, aes(x = factor(numCourse_f), y = err)) + 
+  geom_boxplot() + theme_bw()
+```
 
 
 ### Nested Data

@@ -254,10 +254,10 @@ test_that('.f and .c are expanded but not .o', {
                                 n = n, fact_vars = fact_vars,
                                 data_str = 'long')
   
-  expect_equal(ncol(fixef_single), 11)
-  expect_equal(ncol(fixef_nested), 11)
-  expect_equal(ncol(fixef_nested3), 11)
-  expect_equal(ncol(fixef_nested_l), 12)
-  expect_equal(ncol(fixef_nested3_l), 12)
+  expect_equal(ncol(fixef_single$Xmat), 11)
+  expect_equal(ncol(fixef_nested$Xmat), 11)
+  expect_equal(ncol(fixef_nested3$Xmat), 11)
+  expect_equal(ncol(fixef_nested_l$Xmat), 12)
+  expect_equal(ncol(fixef_nested3_l$Xmat), 12)
   
 })

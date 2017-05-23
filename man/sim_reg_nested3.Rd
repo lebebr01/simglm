@@ -78,7 +78,7 @@ be correlated. If TRUE, must specify a valid model to pass to
 arima.sim via the arima_mod argument. 
 See \code{\link{arima.sim}} for examples.}
 
-\item{data_str}{Type of data. Must be "cross", "long", or "single".}
+\item{data_str}{Type of data. Must be "cross" or "long".}
 
 \item{cor_vars}{A vector of correlations between variables.}
 

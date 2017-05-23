@@ -121,7 +121,7 @@ sim_err_nested <- function(error_var, n, p, with_err_gen, arima = FALSE,
 sim_err_single <- function(error_var, n, with_err_gen, arima = FALSE, 
                            lvl1_err_params = NULL, arima_mod = list(NULL),
                            ther = c(0, 1), ther_sim = FALSE, 
-                           homogeneity = TRUE, fixef = NULL, 
+                           homogeneity = TRUE, fixef = NULL,
                            heterogeneity_var = NULL,
                            ...){
   
@@ -152,6 +152,7 @@ sim_err_single <- function(error_var, n, with_err_gen, arima = FALSE,
       err <- heterogeneity(error_var, fixef = fixef,
                            heterogeneity_var,
                            err)
+      
     } else {
       args <- c(list(n = n), lvl1_err_params)
       err <- standardize(do.call(with_err_gen, args),

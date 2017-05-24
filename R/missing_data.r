@@ -60,6 +60,8 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
     stop(paste(clust_var, 'not found in variables of data supplied'))
   }
   
+  sim_data <- data.frame(sim_data)
+  
   len_groups <- tapply(sim_data[, resp_var], 
                        sim_data[, clust_var], 
                        length)
@@ -97,7 +99,7 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
   sim_data$sim_data2 <- with(sim_data, ifelse(missing == 1, NA, 
                                               eval(parse(text = resp_var))))
   
-  sim_data
+  tibble::as_tibble(sim_data)
 }
 
 
@@ -128,6 +130,8 @@ random_missing <- function(sim_data, resp_var = 'sim_data', miss_prop,
   if(resp_var %ni% names(sim_data)) {
     stop(paste(resp_var, 'not found in variables of data supplied'))
   }
+  
+  sim_data <- data.frame(sim_data)
 
   if(is.null(clust_var)){
     sim_data$miss_prob <- round(runif(nrow(sim_data)), 3)
@@ -177,7 +181,7 @@ random_missing <- function(sim_data, resp_var = 'sim_data', miss_prop,
                                                 eval(parse(text = resp_var))))
   }
 
-  sim_data
+  tibble::as_tibble(sim_data)
 }
 
 #' Missing at Random
@@ -204,6 +208,8 @@ mar_missing <- function(sim_data, resp_var, miss_cov, miss_prop) {
     stop(paste(miss_cov, 'not found in variables of data supplied'))
   }
   
+  sim_data <- data.frame(sim_data)
+  
   num_obs <- nrow(sim_data)
 
   uniq_vals <- dplyr::arrange(data.frame(cov = with(sim_data, 
@@ -219,5 +225,5 @@ mar_missing <- function(sim_data, resp_var, miss_cov, miss_prop) {
                        with(sim_data2, ifelse(miss_prob < miss_prop, NA, 
                                               eval(parse(text = resp_var)))))
   
-  sim_data2
+  tibble::as_tibble(sim_data2)
 }

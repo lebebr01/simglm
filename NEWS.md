@@ -1,3 +1,11 @@
+# simglm 0.5.0
+* Heterogeneity of variance simulation
+* Flexible time specification for longitudinal models
+* Change 'lvl' to 'level' throughout package
+* Flexible specification of unbalanced simulation
+* Misspecification of model for power analysis
+* Expand power output.
+
 # simglm 0.4.0
 
 * Update to add ability to simulate covariates from any R distribution function

@@ -18,7 +18,7 @@ test_that('Single level', {
                          with_err_gen = with_err_gen, 
                          data_str = "single", 
                          homogeneity = FALSE, heterogeneity_var = 'diff')
-  temp_single$group <- cut(temp_single[, 'diff'], 
+  temp_single$group <- cut(temp_single[['diff']], 
                            length(error_var), labels = FALSE)
   expect_equal(as.numeric(tapply(temp_single$err, temp_single$group, var)), 
                error_var, tolerance = 1)
@@ -73,7 +73,7 @@ test_that('three level cross', {
                         data_str = data_str, homogeneity = FALSE, 
                         heterogeneity_var = 'act')
   
-  temp_three$group <- cut(temp_three[, 'act'], 
+  temp_three$group <- cut(temp_three[['act']], 
                            length(error_var), labels = FALSE)
   expect_equal(as.numeric(tapply(temp_three$err, temp_three$group, var)), 
                error_var, tolerance = 1)

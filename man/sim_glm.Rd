@@ -49,17 +49,17 @@ Must be same length as fixed.}
 }}
 
 \item{cov_param}{List of arguments to pass to the continuous generating 
- function. Required arguments include:
- \itemize{
-   \item dist_fun: This is a quoted R distribution function.
-   \item var_type: This is the level of variable to generate. Must be 
-     either 'single', 'level1', 'level2', or 'level3'. 
-     Must be same order as fixed formula 
-     above.
- }
- Optional arguments to the distribution functions are in a nested list,
-  see the examples for example code for this.
-Does not include intercept, time, factors, or interactions.}
+function, must be the same order as the variables specified in fixed. 
+This list does not include intercept, time, factors, or 
+interactions. Required arguments include:
+\itemize{
+  \item dist_fun: This is a quoted R distribution function.
+  \item var_type: This is the level of variable to generate. Must be 
+    either 'single', 'level1', 'level2', or 'level3'. 
+    Must be same order as fixed formula above.
+}
+Optional arguments to the distribution functions are in a nested list,
+ see the examples or vignettes for example code.}
 
 \item{k}{Number of third level clusters.}
 

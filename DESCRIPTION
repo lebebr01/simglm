@@ -16,7 +16,8 @@ Depends:
     Matrix,
     dplyr,
     purrr,
-    tidyr
+    tidyr,
+    tibble
 Suggests:
     knitr,
     lme4,

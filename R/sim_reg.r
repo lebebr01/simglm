@@ -43,7 +43,9 @@
 #'        \item ...: Additional parameters needed for rand_gen function.
 #'    }
 #' @param cov_param List of arguments to pass to the continuous generating 
-#'   function. Required arguments include:
+#'   function, must be the same order as the variables specified in fixed. 
+#'   This list does not include intercept, time, factors, or 
+#'   interactions. Required arguments include:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
@@ -51,9 +53,7 @@
 #'       Must be same order as fixed formula above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
-#'    see the examples for example code for this.
-#'  Does not include intercept, time, factors, or interactions.
-#'    
+#'    see the examples or vignettes for example code.   
 #' @param k Number of third level clusters.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
@@ -254,18 +254,17 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #'        \item ...: Additional parameters needed for rand_gen function.
 #'    }
 #' @param cov_param List of arguments to pass to the continuous generating 
-#'   function. Required arguments include:
+#'   function, must be the same order as the variables specified in fixed. 
+#'   This list does not include intercept, time, factors, or 
+#'   interactions. Required arguments include:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
 #'       either 'single', 'level1', 'level2', or 'level3'. 
-#'       Must be same order as fixed formula 
-#'       above.
+#'       Must be same order as fixed formula above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
-#'    see the examples for example code for this.
-#'  Does not include intercept, time, factors, or interactions.
-#'  
+#'    see the examples or vignettes for example code.   
 #' @param k Number of third level clusters.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.

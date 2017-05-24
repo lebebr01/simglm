@@ -14,15 +14,17 @@
 #' @param fixed_param Fixed effect parameter values (i.e. beta weights). 
 #'  Must be same length as fixed.
 #' @param cov_param List of arguments to pass to the continuous generating 
-#'   function. Required arguments include:
+#'   function, must be the same order as the variables specified in fixed. 
+#'   This list does not include intercept, time, factors, or 
+#'   interactions. Required arguments include:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       'single'. Must be same order as fixed formula above.
+#'       'single'.
+#'       Must be same order as fixed formula above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
-#'    see the examples for example code for this.
-#'  Does not include intercept, time, factors, or interactions.
+#'    see the examples or vignettes for example code.
 #' @param n Cluster sample size.
 #' @param error_var Scalar of error variance.
 #' @param with_err_gen Simulated within cluster error distribution. 
@@ -60,6 +62,7 @@
 #'  heterogeneity of variance simulation.
 #' @param ... Not currently used.
 #' @importFrom dplyr bind_cols
+#' @importFrom tibble as_tibble
 #' @export 
 #' @examples 
 #' #' # generating parameters for single level regression
@@ -123,7 +126,7 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var,
   
   Xmat$ID <- 1:n
   
-  Xmat
+  tibble::as_tibble(Xmat)
 }
 
 
@@ -157,17 +160,17 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var,
 #'      \item ...: Additional parameters needed for rand_gen function.
 #'    }
 #' @param cov_param List of arguments to pass to the continuous generating 
-#'   function. Required arguments include:
+#'   function, must be the same order as the variables specified in fixed. 
+#'   This list does not include intercept, time, factors, or 
+#'   interactions. Required arguments include:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       either 'level1' or 'level2'. Must be same order as fixed formula 
-#'       above.
+#'       'level1' or 'level2'.
+#'       Must be same order as fixed formula above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
-#'    see the examples for example code for this.
-#'  Does not include intercept, time, factors, or interactions.
-#' 
+#'    see the examples or vignettes for example code.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
 #' @param error_var Scalar of error variance.
@@ -216,6 +219,7 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var,
 #' @param heterogeneity_var Variable name as a character string to use for 
 #'  heterogeneity of variance simulation.
 #' @param ... Not currently used.
+#' @importFrom tibble as_tibble
 #' @export 
 #' @examples 
 #' #' # Longitudinal linear mixed model example
@@ -320,7 +324,7 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
  Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
  Xmat$clustID <- rep(1:n, times = lvl1ss)
  
- Xmat
+ tibble::as_tibble(Xmat)
 }
 
 #' Function to simulate three level nested data
@@ -367,16 +371,17 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
 #'        \item ...: Additional parameters needed for rand_gen function.
 #'    }
 #' @param cov_param List of arguments to pass to the continuous generating 
-#'   function. Required arguments include:
+#'   function, must be the same order as the variables specified in fixed. 
+#'   This list does not include intercept, time, factors, or 
+#'   interactions. Required arguments include:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       either 'level1', 'level2', or 'level3'. Must be same order as fixed formula 
-#'       above.
+#'       'level1', 'level2', or 'level3'. 
+#'       Must be same order as fixed formula above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
-#'    see the examples for example code for this.
-#'  Does not include intercept, time, factors, or interactions.
+#'    see the examples or vignettes for example code.
 #' @param k Number of third level clusters.
 #' @param n Level two cluster sample size within each level three cluster.
 #' @param p Within cluster sample size within each level two cluster.
@@ -428,6 +433,7 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
 #' @param heterogeneity_var Variable name as a character string to use for 
 #'  heterogeneity of variance simulation.
 #' @param ... Not currently used.
+#' @importFrom tibble as_tibble
 #' @export 
 #' @examples 
 #' #' # Three level example
@@ -588,5 +594,5 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
   Xmat$clustID <- rep(1:n, times = lvl1ss)
   Xmat$clust3ID <- rep(1:k, times = lvl3ss)
  
-  Xmat
+  tibble::as_tibble(Xmat)
 }

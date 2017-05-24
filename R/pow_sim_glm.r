@@ -42,16 +42,17 @@
 #'        \item ...: Additional parameters needed for rand_gen function.
 #'    }
 #' @param cov_param List of arguments to pass to the continuous generating 
-#'   function. Required arguments include:
+#'   function, must be the same order as the variables specified in fixed. 
+#'   This list does not include intercept, time, factors, or 
+#'   interactions. Required arguments include:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       either 'level1', 'level2', or 'level3'. Must be same order as fixed formula 
-#'       above.
+#'       'level1', 'level2', or 'level3'. 
+#'       Must be same order as fixed formula above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
-#'    see the examples for example code for this.
-#'  Does not include intercept, time, factors, or interactions.
+#'    see the examples or vignettes for example code.
 #' @param k Number of third level clusters.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
@@ -199,16 +200,17 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
 #'      \item ...: Additional parameters needed for rand_gen function.
 #'    }
 #' @param cov_param List of arguments to pass to the continuous generating 
-#'   function. Required arguments include:
+#'   function, must be the same order as the variables specified in fixed. 
+#'   This list does not include intercept, time, factors, or 
+#'   interactions. Required arguments include:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       either 'level1' or 'level2'. 
+#'       'level1' or 'level2'. 
 #'       Must be same order as fixed formula above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
-#'    see the examples for example code for this.
-#'  Does not include intercept, time, factors, or interactions.
+#'    see the examples or vignettes for example code.
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
@@ -333,15 +335,17 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
 #' @param fixed_param Fixed effect parameter values (i.e. beta weights). 
 #'  Must be same length as fixed.
 #' @param cov_param List of arguments to pass to the continuous generating 
-#'   function. Required arguments include:
+#'   function, must be the same order as the variables specified in fixed. 
+#'   This list does not include intercept, time, factors, or 
+#'   interactions. Required arguments include:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
 #'     \item var_type: This is the level of variable to generate. Must be 
-#'       'single'. Must be same order as fixed formula above.
+#'       'single'. 
+#'       Must be same order as fixed formula above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
-#'    see the examples for example code for this.
-#'  Does not include intercept, time, factors, or interactions.
+#'    see the examples or vignettes for example code.
 #' @param n Cluster sample size.
 #' @param data_str Type of data. Must be "cross", "long", or "single".
 #' @param cor_vars A vector of correlations between variables.

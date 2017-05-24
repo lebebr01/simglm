@@ -77,6 +77,8 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
   Xmat <- data.frame(Xmat,sim_data)
   Xmat$ID <- 1:n
   
+  Xmat <- Xmat[, !duplicated(colnames(Xmat))]
+  
   tibble::as_tibble(Xmat)
 }
 
@@ -217,6 +219,8 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(),
   Xmat <- data.frame(Xmat,reff,sim_data)
   Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
   Xmat$clustID <- rep(1:n, times = lvl1ss)
+  
+  Xmat <- Xmat[, !duplicated(colnames(Xmat))]
   
   tibble::as_tibble(Xmat)
 }
@@ -428,6 +432,8 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param,
   Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
   Xmat$clustID <- rep(1:n, times = lvl1ss)
   Xmat$clust3ID <- rep(1:k, times = lvl3ss)
+  
+  Xmat <- Xmat[, !duplicated(colnames(Xmat))]
   
   tibble::as_tibble(Xmat)
 }

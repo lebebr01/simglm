@@ -472,7 +472,7 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
 #' @importFrom dplyr summarise
 #' @importFrom dplyr '%>%'
 #' 
-#' @example 
+#' @examples
 #' 
 #' # single level dichotomous (glm) example
 #' fixed <- ~ 1 + act + diff

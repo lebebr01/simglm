@@ -196,27 +196,46 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(),
     }
   }
   
-  rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
-  
   Xmat <- sim_fixef_nested(fixed, fixed_vars, cov_param, n, lvl1ss, 
                            data_str = data_str, cor_vars = cor_vars, 
                            fact_vars = fact_vars, contrasts = contrasts)
   
-  if(ncol(Xmat) != length(fixed_param)) {
-    stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
-               'variables in design matrix'))
-  }
+  rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
   
   reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx) 
     rep(rand_eff[,xx], times = lvl1ss)))
   colnames(reff) <- c(unlist(lapply(1:ncol(rand_eff), function(xx) 
     paste("b", xx-1, sep = ""))))
   
-  Zmat <- model.matrix(random, data.frame(Xmat))
-
-  sim_data <- data_glm_nested(Xmat, Zmat, fixed_param, rand_eff, n, p = lvl1ss)
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+    if(ncol(Xmat$Xmat) != length(fixed_param)) {
+      stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
+                 'variables in design matrix'))
+    }
+    
+    Zmat <- model.matrix(random, data.frame(Xmat$Xmat))
+    
+    sim_data <- data_glm_nested(Xmat$Xmat, Zmat, fixed_param, rand_eff, n, 
+                                p = lvl1ss)
+    
+    Xmat <- dplyr::bind_cols(data.frame(Xmat$Xmat), 
+                             data.frame(Xmat$Omat), 
+                             data.frame(reff),
+                             data.frame(sim_data))
+  } else {
+    if(ncol(Xmat) != length(fixed_param)) {
+      stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
+                 'variables in design matrix'))
+    }
+    
+    Zmat <- model.matrix(random, data.frame(Xmat))
+    
+    sim_data <- data_glm_nested(Xmat, Zmat, fixed_param, rand_eff, n, 
+                                p = lvl1ss)
+    
+    Xmat <- data.frame(Xmat, reff, sim_data)
+  }
   
-  Xmat <- data.frame(Xmat,reff,sim_data)
   Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
   Xmat$clustID <- rep(1:n, times = lvl1ss)
   

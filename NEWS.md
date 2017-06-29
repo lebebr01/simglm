@@ -1,3 +1,6 @@
+#simglm 0.5.1
+* Bug fix for sim_glm when using fact_vars generation options.
+
 # simglm 0.5.0
 * Heterogeneity of variance simulation
 * Flexible time specification for longitudinal models

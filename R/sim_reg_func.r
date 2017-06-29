@@ -530,12 +530,7 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
                             p = lvl1ss, data_str = data_str, 
                             cor_vars = cor_vars, 
                             fact_vars = fact_vars, contrasts = contrasts)
-  
-  if(ncol(Xmat) != length(fixed_param)) {
-    stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
-               'variables in design matrix'))
-  }
-  
+
   rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
   rand_eff3 <- do.call(sim_rand_eff, c(random_param3, n = k))
   

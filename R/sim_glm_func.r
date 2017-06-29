@@ -418,18 +418,13 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param,
   lvl3ss <- sapply(lapply(1:length(beg), function(xx) 
     lvl1ss[beg[xx]:end[xx]]), sum)
   
-  rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
-  rand_eff3 <- do.call(sim_rand_eff, c(random_param3, n = k))
-  
   Xmat <- sim_fixef_nested3(fixed, fixed_vars, cov_param, k, n = lvl2ss, 
                             p = lvl1ss, data_str = data_str, 
                             cor_vars = cor_vars, 
                             fact_vars = fact_vars, contrasts = contrasts)
   
-  if(ncol(Xmat) != length(fixed_param)) {
-    stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
-               'variables in design matrix'))
-  }
+  rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
+  rand_eff3 <- do.call(sim_rand_eff, c(random_param3, n = k))
   
   reff <- do.call("cbind", lapply(1:ncol(rand_eff), function(xx) 
     rep(rand_eff[,xx], times = lvl1ss)))
@@ -441,13 +436,37 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param,
   colnames(reff3) <- c(unlist(lapply(1:ncol(rand_eff3), function(xx) 
     paste("b", xx-1, "_3", sep = ""))))
   
-  Zmat <- model.matrix(random, data.frame(Xmat))
-  Zmat3 <- model.matrix(random3, data.frame(Xmat))
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+    if(ncol(Xmat$Xmat) != length(fixed_param)) {
+      stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
+                 'variables in design matrix'))
+    }
+    
+    Zmat <- model.matrix(random, data.frame(Xmat$Xmat))
+    Zmat3 <- model.matrix(random3, data.frame(Xmat$Xmat))
+    
+    sim_data <- data_glm_nested3(Xmat$Xmat, Zmat, Zmat3, fixed_param, rand_eff, 
+                                 rand_eff3, k, n = lvl2ss, p = lvl1ss)
+    
+    Xmat <- dplyr::bind_cols(data.frame(Xmat$Xmat), 
+                             data.frame(Xmat$Omat), 
+                             data.frame(reff),
+                             data.frame(reff3),
+                             data.frame(sim_data))
+  } else {
+    if(ncol(Xmat) != length(fixed_param)) {
+      stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
+                 'variables in design matrix'))
+    }
+    Zmat <- model.matrix(random, data.frame(Xmat))
+    Zmat3 <- model.matrix(random3, data.frame(Xmat))
+    
+    sim_data <- data_glm_nested3(Xmat, Zmat, Zmat3, fixed_param, rand_eff, 
+                                 rand_eff3, k, n = lvl2ss, p = lvl1ss)
+    
+    Xmat <- data.frame(Xmat, reff, reff3, sim_data)
+  }
   
-  sim_data <- data_glm_nested3(Xmat, Zmat, Zmat3, fixed_param, rand_eff, 
-                               rand_eff3, k, n = lvl2ss, p = lvl1ss)
-  
-  Xmat <- data.frame(Xmat, reff, reff3, sim_data)
   Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
   Xmat$clustID <- rep(1:n, times = lvl1ss)
   Xmat$clust3ID <- rep(1:k, times = lvl3ss)

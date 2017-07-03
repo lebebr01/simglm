@@ -361,8 +361,7 @@ sim_glm <- function(fixed, random, random3, fixed_param, random_param = list(),
                     data_str, cor_vars = NULL, fact_vars = list(NULL), 
                     unbal = list("level2" = FALSE, "level3" = FALSE), 
                     unbal_design = list("level2" = NULL, "level3" = NULL),
-                    contrasts = NULL, outcome_type = c('logistic', 'poisson'), 
-                    ...) {
+                    contrasts = NULL, outcome_type, ...) {
   
   if(data_str == "single"){
     sim_glm_single(fixed, fixed_param, cov_param, n, data_str, 

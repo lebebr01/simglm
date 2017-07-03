@@ -1,9 +1,8 @@
 #' Generate logistic regression outcome
 #' 
 #' Takes simulation parameter arguments and 
-#' returns simulated data in the logistic metric and
-#' converted to 0/1 based on the probabilities and the 
-#' binomial distribution with 1 trial.
+#' returns simulated data for two different probability distributions. 
+#' One is logistic (0/1) outcome and the second being poisson (count) outcomes.
 #' 
 #' @param Xmat A matrix of covariates.
 #' @param beta A vector of regression parameters.
@@ -13,7 +12,7 @@
 #'   be counts.
 #' @export
 data_glm_single <- function(Xmat, beta, n, 
-                            outcome_type = c('logistic', 'poisson')) {
+                            outcome_type) {
   if(outcome_type == 'logistic') {
     Fbeta <-(Xmat %*% beta)
     logistic <- exp(Fbeta)/(1 + exp(Fbeta))
@@ -35,9 +34,8 @@ data_glm_single <- function(Xmat, beta, n,
 #' Generate logistic regression outcome
 #' 
 #' Takes simulation parameter arguments and 
-#' returns simulated data in the logistic metric and
-#' converted to 0/1 based on the probabilities and the 
-#' binomial distribution with 1 trial.
+#' returns simulated data for two different probability distributions. 
+#' One is logistic (0/1) outcome and the second being poisson (count) outcomes.
 #' 
 #' @param Xmat A matrix of covariates.
 #' @param Zmat Design matrix for random effects.
@@ -51,7 +49,7 @@ data_glm_single <- function(Xmat, beta, n,
 #' @importFrom Matrix bdiag
 #' @export
 data_glm_nested <- function(Xmat, Zmat, beta, rand_eff, n, p, 
-                            outcome_type = c('logistic', 'poisson')) {
+                            outcome_type) {
   
   Fbeta <- (Xmat %*% beta) 
   
@@ -83,9 +81,8 @@ data_glm_nested <- function(Xmat, Zmat, beta, rand_eff, n, p,
 #' Simulates three level nested data with a single third level random effect
 #' 
 #' Takes simulation parameter arguments and 
-#' returns simulated data in the logistic metric and
-#' converted to 0/1 based on the probabilities and the 
-#' binomial distribution with 1 trial.
+#' returns simulated data for two different probability distributions. 
+#' One is logistic (0/1) outcome and the second being poisson (count) outcomes.
 #' 
 #' @param Xmat A matrix of covariates.
 #' @param Zmat Design matrix for random effects.
@@ -102,7 +99,7 @@ data_glm_nested <- function(Xmat, Zmat, beta, rand_eff, n, p,
 #' @importFrom Matrix bdiag
 #' @export 
 data_glm_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3, 
-                             k, n, p, outcome_type = c('logistic', 'poisson')) {
+                             k, n, p, outcome_type) {
   
   
   end <- cumsum(n)
@@ -139,7 +136,7 @@ data_glm_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3,
   } else {
     log_out <- Fbeta + re + re3
     pois <- exp(log_out)
-    sim_data <- rpois(length(prob), pois)
+    sim_data <- rpois(length(pois), pois)
     sim_data <- cbind(Fbeta, re, re3, log_out, pois, sim_data)
     colnames(sim_data) <- c("Fbeta", "randEff", 'randEff3', 'log_out', 
                             'poisson', "sim_data")

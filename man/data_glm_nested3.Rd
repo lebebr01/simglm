@@ -5,7 +5,7 @@
 \title{Simulates three level nested data with a single third level random effect}
 \usage{
 data_glm_nested3(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3, k, n, p,
-  outcome_type = c("logistic", "poisson"))
+  outcome_type)
 }
 \arguments{
 \item{Xmat}{A matrix of covariates.}
@@ -32,7 +32,6 @@ be counts.}
 }
 \description{
 Takes simulation parameter arguments and 
-returns simulated data in the logistic metric and
-converted to 0/1 based on the probabilities and the 
-binomial distribution with 1 trial.
+returns simulated data for two different probability distributions. 
+One is logistic (0/1) outcome and the second being poisson (count) outcomes.
 }

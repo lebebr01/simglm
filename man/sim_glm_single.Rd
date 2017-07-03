@@ -5,8 +5,7 @@
 \title{Simulation single level logistic regression model}
 \usage{
 sim_glm_single(fixed, fixed_param, cov_param, n, data_str, cor_vars = NULL,
-  fact_vars = list(NULL), contrasts = NULL, outcome_type = c("logistic",
-  "poisson"), ...)
+  fact_vars = list(NULL), contrasts = NULL, outcome_type, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.

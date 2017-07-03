@@ -64,9 +64,7 @@
 #' @export
 sim_glm_single <- function(fixed, fixed_param, cov_param, n, 
                            data_str, cor_vars = NULL, fact_vars = list(NULL),
-                           contrasts = NULL, 
-                           outcome_type = c('logistic', 'poisson'),
-                           ...) {
+                           contrasts = NULL, outcome_type, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")    
   
@@ -184,7 +182,7 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(),
                            cov_param, n, p, data_str, cor_vars = NULL, 
                            fact_vars = list(NULL), unbal = FALSE, 
                            unbal_design = NULL, contrasts = NULL, 
-                           outcome_type = c('logistic', 'poisson'), ...) {
+                           outcome_type, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")    
   rand.vars <- attr(terms(random),"term.labels")   
@@ -226,7 +224,7 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(),
     Zmat <- model.matrix(random, data.frame(Xmat$Xmat))
     
     sim_data <- data_glm_nested(Xmat$Xmat, Zmat, fixed_param, rand_eff, n, 
-                                p = lvl1ss, outcome_type)
+                                p = lvl1ss, outcome_type = outcome_type)
     
     Xmat <- dplyr::bind_cols(data.frame(Xmat$Xmat), 
                              data.frame(Xmat$Omat), 
@@ -241,7 +239,7 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(),
     Zmat <- model.matrix(random, data.frame(Xmat))
     
     sim_data <- data_glm_nested(Xmat, Zmat, fixed_param, rand_eff, n, 
-                                p = lvl1ss)
+                                p = lvl1ss, outcome_type = outcome_type)
     
     Xmat <- data.frame(Xmat, reff, sim_data)
   }
@@ -378,7 +376,7 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param,
                             unbal = list("level2" = FALSE, "level3" = FALSE), 
                             unbal_design = list("level2" = NULL, "level3" = NULL),
                             contrasts = NULL, 
-                            outcome_type = c('logistic', 'poisson'), ...) {
+                            outcome_type, ...) {
 
   fixed_vars <- attr(terms(fixed),"term.labels")    
   rand.vars <- attr(terms(random),"term.labels")   
@@ -462,7 +460,7 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param,
     
     sim_data <- data_glm_nested3(Xmat$Xmat, Zmat, Zmat3, fixed_param, rand_eff, 
                                  rand_eff3, k, n = lvl2ss, p = lvl1ss, 
-                                 outcome_type)
+                                 outcome_type = outcome_type)
     
     Xmat <- dplyr::bind_cols(data.frame(Xmat$Xmat), 
                              data.frame(Xmat$Omat), 
@@ -478,7 +476,8 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param,
     Zmat3 <- model.matrix(random3, data.frame(Xmat))
     
     sim_data <- data_glm_nested3(Xmat, Zmat, Zmat3, fixed_param, rand_eff, 
-                                 rand_eff3, k, n = lvl2ss, p = lvl1ss)
+                                 rand_eff3, k, n = lvl2ss, p = lvl1ss,
+                                 outcome_type = outcome_type)
     
     Xmat <- data.frame(Xmat, reff, reff3, sim_data)
   }

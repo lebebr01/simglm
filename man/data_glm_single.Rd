@@ -4,7 +4,7 @@
 \alias{data_glm_single}
 \title{Generate logistic regression outcome}
 \usage{
-data_glm_single(Xmat, beta, n, outcome_type = c("logistic", "poisson"))
+data_glm_single(Xmat, beta, n, outcome_type)
 }
 \arguments{
 \item{Xmat}{A matrix of covariates.}
@@ -19,7 +19,6 @@ be counts.}
 }
 \description{
 Takes simulation parameter arguments and 
-returns simulated data in the logistic metric and
-converted to 0/1 based on the probabilities and the 
-binomial distribution with 1 trial.
+returns simulated data for two different probability distributions. 
+One is logistic (0/1) outcome and the second being poisson (count) outcomes.
 }

@@ -8,9 +8,9 @@ sim_pow_glm_nested3(fixed, random, random3, fixed_param,
   random_param = list(), random_param3 = list(), cov_param, k, n, p,
   data_str, cor_vars = NULL, fact_vars = list(NULL), unbal = list(level2 =
   FALSE, level3 = FALSE), unbal_design = list(level2 = NULL, level3 = NULL),
-  missing = FALSE, missing_args = list(NULL), pow_param = NULL, alpha,
-  pow_dist = c("z", "t"), pow_tail = c(1, 2), lme4_fit_mod = NULL,
-  lme4_fit_family, ...)
+  outcome_type, missing = FALSE, missing_args = list(NULL),
+  pow_param = NULL, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2),
+  lme4_fit_mod = NULL, lme4_fit_family, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -102,6 +102,10 @@ can be specified. This takes the form of a vector that must have the same length
 as the level two or three sample size. These are specified as a named list in which
 level two sample size is controlled via "level2" and level three sample size is 
 controlled via "level3".}
+
+\item{outcome_type}{A vector specifying the type of outcome, must be either
+logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+be counts.}
 
 \item{missing}{TRUE/FALSE flag indicating whether missing data should be 
 simulated.}

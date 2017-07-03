@@ -8,11 +8,11 @@ sim_pow_glm(fixed, random = NULL, random3 = NULL, fixed_param,
   random_param = list(NULL), random_param3 = list(NULL), cov_param,
   k = NULL, n, p = NULL, data_str, cor_vars = NULL,
   fact_vars = list(NULL), unbal = list(level2 = FALSE, level3 = FALSE),
-  unbal_design = list(level2 = NULL, level3 = NULL), missing = FALSE,
-  missing_args = list(NULL), pow_param, alpha, pow_dist = c("z", "t"),
-  pow_tail = c(1, 2), replicates, terms_vary = NULL, raw_power = TRUE,
-  glm_fit_mod = NULL, lme4_fit_mod = NULL, glm_fit_family = NULL,
-  lme4_fit_family = NULL, ...)
+  unbal_design = list(level2 = NULL, level3 = NULL), outcome_type,
+  missing = FALSE, missing_args = list(NULL), pow_param, alpha,
+  pow_dist = c("z", "t"), pow_tail = c(1, 2), replicates,
+  terms_vary = NULL, raw_power = TRUE, glm_fit_mod = NULL,
+  lme4_fit_mod = NULL, glm_fit_family = NULL, lme4_fit_family = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -105,6 +105,10 @@ as the level two or three sample size. These are specified as a named list in wh
 level two sample size is controlled via "level2" and level three sample size is 
 controlled via "level3".}
 
+\item{outcome_type}{A vector specifying the type of outcome, must be either
+logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+be counts.}
+
 \item{missing}{TRUE/FALSE flag indicating whether missing data should be 
 simulated.}
 
@@ -172,6 +176,7 @@ replicates <- 2
 power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, 
                          cov_param = cov_param, 
                          n = n, data_str = "single", 
+                         outcome_type = 'logistic', 
                          pow_param = pow_param, alpha = alpha,
                          pow_dist = pow_dist, pow_tail = pow_tail, 
                          replicates = replicates, raw_power = FALSE)

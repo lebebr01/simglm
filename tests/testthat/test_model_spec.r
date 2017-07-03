@@ -71,7 +71,8 @@ test_that('glm model specification', {
   pow_tail <- 2
   replicates <- 2
   expect_error(sim_pow_glm(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
-                       n = n, data_str = "single", pow_param = pow_param, alpha = alpha,
+                       n = n, data_str = "single", outcome_type = 'logistic', 
+                       pow_param = pow_param, alpha = alpha,
                        pow_dist = pow_dist, pow_tail = pow_tail, 
                        replicates = replicates, raw_power = FALSE, 
                        glm_fit_mod = TRUE),   
@@ -81,7 +82,8 @@ test_that('glm model specification', {
   glm_fit_family <- binomial
   
   power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
-                           n = n, data_str = "single", pow_param = pow_param, alpha = alpha,
+                           n = n, data_str = "single", outcome_type = 'logistic', 
+                           pow_param = pow_param, alpha = alpha,
                            pow_dist = pow_dist, pow_tail = pow_tail, 
                            replicates = replicates, raw_power = FALSE, 
                            glm_fit_mod = glm_fit_mod, glm_fit_family = glm_fit_family)
@@ -164,7 +166,8 @@ test_that('lme4 glm model specification', {
   expect_error(sim_pow_glm(fixed, random, random3 = NULL, fixed_param, 
                        random_param, random_param3 = NULL,
                        cov_param, k = NULL, n, p, 
-                       data_str = data_str, pow_param = pow_param, alpha = alpha,
+                       data_str = data_str, outcome_type = 'logistic', 
+                       pow_param = pow_param, alpha = alpha,
                        pow_dist = pow_dist, pow_tail = pow_tail, 
                        replicates = replicates, raw_power = FALSE, 
                        lme4_fit_mod = TRUE),

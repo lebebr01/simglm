@@ -71,7 +71,7 @@ data_glm_nested <- function(Xmat, Zmat, beta, rand_eff, n, p,
     log_out <- Fbeta + re
     pois <- exp(log_out)
     sim_data <- rpois(length(pois), pois)
-    sim_data <- cbind(Fbeta, re, expected, pois, sim_data)
+    sim_data <- cbind(Fbeta, re, log_out, pois, sim_data)
     colnames(sim_data) <- c("Fbeta", "randEff", 'log_out', 'poisson', "sim_data")
   }
   

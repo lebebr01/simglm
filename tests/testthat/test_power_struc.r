@@ -103,7 +103,7 @@ test_that('sim_glm power', {
   
   power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, 
                            cov_param = cov_param, 
-                           n = n, data_str = "single", 
+                           n = n, data_str = "single", outcome_type = 'logistic',
                            pow_param = pow_param, alpha = alpha,
                            pow_dist = pow_dist, pow_tail = pow_tail, 
                            replicates = replicates, raw_power = FALSE)
@@ -126,7 +126,7 @@ test_that('sim_glm power', {
   
   power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, 
                            cov_param = cov_param, 
-                           n = n, data_str = "single", 
+                           n = n, data_str = "single",  outcome_type = 'logistic',
                            pow_param = pow_param, alpha = alpha,
                            pow_dist = pow_dist, pow_tail = pow_tail, 
                            replicates = replicates, terms_vary = terms_vary, 
@@ -228,6 +228,7 @@ test_that('two level power dich', {
                        random_param = random_param, cov_param = cov_param, 
                        k = NULL, n = n, p = p,
                        data_str = data_str, unbal = list(level2 = FALSE), 
+                       outcome_type = 'logistic',
                        pow_param = pow_param, alpha = alpha,
                        pow_dist = pow_dist, pow_tail = pow_tail, 
                        replicates = replicates, raw_power = FALSE)
@@ -264,6 +265,7 @@ test_that("three level power dich", {
                        cov_param = cov_param, 
                        k = k, n = n, p = p,
                        data_str = data_str, 
+                       outcome_type = 'logistic',
                        unbal = list(level2 = FALSE, level3 = FALSE),
                        pow_param = pow_param, alpha = alpha,
                        pow_dist = pow_dist, pow_tail = pow_tail, 

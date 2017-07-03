@@ -84,6 +84,9 @@
 #'  as the level two or three sample size. These are specified as a named list in which
 #'  level two sample size is controlled via "level2" and level three sample size is 
 #'  controlled via "level3".
+#' @param outcome_type A vector specifying the type of outcome, must be either
+#'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+#'   be counts.
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -105,6 +108,7 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
                                 fact_vars = list(NULL), 
                                 unbal = list("level2" = FALSE, "level3" = FALSE), 
                                 unbal_design = list("level2" = NULL, "level3" = NULL),
+                                outcome_type, 
                                 missing = FALSE, missing_args = list(NULL),
                                 pow_param = NULL, alpha, pow_dist = c("z", "t"), 
                                 pow_tail = c(1, 2), 
@@ -124,7 +128,7 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
   temp_nest <- sim_glm_nested3(fixed, random, random3, fixed_param, random_param, 
                                random_param3, cov_param, k, n, p, 
                                data_str, cor_vars, fact_vars, 
-                               unbal, unbal_design, ...)
+                               unbal, unbal_design, outcome_type, ...)
   if(missing) {
     temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), 
                                          missing_args))
@@ -151,7 +155,12 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
     }
     fm1 <- as.formula(paste(fix1, ran1, ran2, sep = "+ "))
     
-    temp_mod <- lme4::glmer(fm1, data = temp_nest, family = binomial)
+    if(outcome_type == 'logistic') {
+      temp_mod <- lme4::glmer(fm1, data = temp_nest, family = binomial)
+    } else {
+      temp_mod <- lme4::glmer(fm1, data = temp_nest, family = poisson)
+    }
+    
     test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
   }
   
@@ -241,6 +250,9 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
 #'  as the level two or three sample size. These are specified as a named list in which
 #'  level two sample size is controlled via "level2" and level three sample size is 
 #'  controlled via "level3".
+#' @param outcome_type A vector specifying the type of outcome, must be either
+#'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+#'   be counts.
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -261,7 +273,7 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
                           cor_vars = NULL, fact_vars = list(NULL),
                           unbal = list("level2" = FALSE, "level3" = FALSE), 
                           unbal_design = list("level2" = NULL, "level3" = NULL),
-                          missing = FALSE, 
+                          outcome_type, missing = FALSE, 
                           missing_args = list(NULL), pow_param = NULL, 
                           alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                           lme4_fit_mod = NULL, lme4_fit_family, ...) {
@@ -278,7 +290,7 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
 
   temp_nest <- sim_glm_nested(fixed, random, fixed_param, random_param, 
                               cov_param, n, p, data_str, cor_vars, fact_vars, 
-                              unbal, unbal_design, ...)
+                              unbal, unbal_design, outcome_type, ...)
   if(missing) {
     temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), 
                                          missing_args))
@@ -299,7 +311,13 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
     ran1 <- paste("(", paste(rand_vars, collapse = "+"), "|clustID)", sep = "")
     fm1 <- as.formula(paste(fix1, ran1, sep = "+ "))
     
-    temp_mod <- lme4::glmer(fm1, data = temp_nest, family = binomial)
+    if(outcome_type == 'logistic') {
+      temp_mod <- lme4::glmer(fm1, data = temp_nest, family = binomial)
+    } else 
+    {
+      temp_mod <- lme4::glmer(fm1, data = temp_nest, family = poisson)
+    }
+    
     test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
   }
   crit <- qnorm(alpha/pow_tail, lower.tail = FALSE)
@@ -362,6 +380,9 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
 #'        \item value.labels
 #'    }
 #'     See also \code{\link{sample}} for use of these optional arguments.
+#' @param outcome_type A vector specifying the type of outcome, must be either
+#'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+#'   be counts.
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -380,6 +401,7 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
 #' @export 
 sim_pow_glm_single <- function(fixed, fixed_param, cov_param, n, data_str, 
                            cor_vars = NULL, fact_vars = list(NULL),
+                           outcome_type,
                            missing = FALSE, missing_args = list(NULL),
                            pow_param = NULL, alpha, pow_dist = c("z", "t"), 
                            pow_tail = c(1, 2), glm_fit_mod = NULL, 
@@ -392,7 +414,7 @@ sim_pow_glm_single <- function(fixed, fixed_param, cov_param, n, data_str,
   }
   
   temp_single <- sim_glm_single(fixed, fixed_param, cov_param, n, data_str, 
-                                cor_vars, fact_vars, ...)
+                                cor_vars, fact_vars, outcome_type, ...)
   if(!is.null(glm_fit_mod)) {
     if(!purrr::is_formula(glm_fit_mod)) {
       stop('glm_fit_mod must be a formula to pass to glm')
@@ -407,9 +429,13 @@ sim_pow_glm_single <- function(fixed, fixed_param, cov_param, n, data_str,
       fm1 <- as.formula(paste("sim_data2 ~", paste(fixed_vars, collapse = "+")))
     }
     
-    temp_lm <- glm(fm1, data = temp_single, family = binomial)
+    if(outcome_type == 'logistic') {
+      temp_lm <- glm(fm1, data = temp_single, family = binomial)
+    } else {
+      temp_lm <- glm(fm1, data = temp_single, family = poisson)
+    }
+    
   }
-  
   
   crit <- ifelse(pow_dist == "z", qnorm(alpha/pow_tail, lower.tail = FALSE), 
                 qt(alpha/pow_tail, df = nrow(temp_single) - length(fixed_param),

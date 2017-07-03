@@ -318,6 +318,10 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' n <- 150
 #' temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param, 
 #'   cov_param = cov_param, n = n, data_str = "single", outcome_type = 'logistic')
+#'   
+#'   # counts
+#' temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param, 
+#'   cov_param = cov_param, n = n, data_str = "single", outcome_type = 'poisson')
 #' 
 #' # Longitudinal linear mixed model example
 #' fixed <- ~1 + time + diff + act + time:act
@@ -335,6 +339,10 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' random_param, random_param3 = NULL,
 #'  cov_param, k = NULL, n, p, data_str = data_str, outcome_type = 'logistic')
 #' 
+#'  # counts 
+#' temp_long <- sim_glm(fixed, random, random3 = NULL, fixed_param, 
+#' random_param, random_param3 = NULL,
+#'  cov_param, k = NULL, n, p, data_str = data_str, outcome_type = 'poisson')
 #' 
 #' # Three level example
 #' fixed <- ~1 + time + diff + act + actClust + time:act
@@ -354,6 +362,10 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' data_str <- "long"
 #' temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param, 
 #'   random_param3, cov_param, k,n, p, data_str = data_str, outcome_type = 'logistic')
+#'   
+#'   # count data sim
+#'   temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param, 
+#'   random_param3, cov_param, k,n, p, data_str = data_str, outcome_type = 'poisson')
 #' 
 #' 
 sim_glm <- function(fixed, random, random3, fixed_param, random_param = list(), 

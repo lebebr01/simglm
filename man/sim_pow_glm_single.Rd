@@ -5,7 +5,7 @@
 \title{Function to simulate power.}
 \usage{
 sim_pow_glm_single(fixed, fixed_param, cov_param, n, data_str,
-  cor_vars = NULL, fact_vars = list(NULL), missing = FALSE,
+  cor_vars = NULL, fact_vars = list(NULL), outcome_type, missing = FALSE,
   missing_args = list(NULL), pow_param = NULL, alpha, pow_dist = c("z",
   "t"), pow_tail = c(1, 2), glm_fit_mod = NULL, glm_fit_family, ...)
 }
@@ -48,6 +48,10 @@ Optional arguments to the distribution functions are in a nested list,
      \item value.labels
  }
   See also \code{\link{sample}} for use of these optional arguments.}
+
+\item{outcome_type}{A vector specifying the type of outcome, must be either
+logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+be counts.}
 
 \item{missing}{TRUE/FALSE flag indicating whether missing data should be 
 simulated.}

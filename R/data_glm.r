@@ -77,7 +77,6 @@ data_glm_nested <- function(Xmat, Zmat, beta, rand_eff, n, p,
     colnames(sim_data) <- c("Fbeta", "randEff", 'log_out', 'poisson', "sim_data")
   }
   
-  
   sim_data
 }
 

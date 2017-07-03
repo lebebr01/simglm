@@ -70,7 +70,7 @@ to help when running simulation studies.
 # generating parameters for single level regression
 set.seed(2)
 fixed <- ~1 + act + diff + numCourse + act:numCourse
-fixed_param <- c(2, 4, 1, 3.5, 2)
+fixed_param <- c(0.1, -0.2, 0.15, 0.5, -0.02)
 cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
    var_type = c("single", "single", "single"),
    opts = list(list(mean = 0, sd = 4),

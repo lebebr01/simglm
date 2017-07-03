@@ -102,7 +102,7 @@ other variables to help when running simulation studies.
 # Longitudinal linear mixed model example
 fixed <- ~1 + time + diff + act + time:act
 random <- ~1 + time + diff
-fixed_param <- c(4, 2, 6, 2.3, 7)
+fixed_param <- c(0.1, -0.2, 0.15, 0.5, -0.02)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
    var_type = c("level1", "level2"),

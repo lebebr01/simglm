@@ -124,7 +124,7 @@ and many other variables useful to help when running simulation studies.
 fixed <- ~1 + time + diff + act + actClust + time:act
 random <- ~1 + time + diff
 random3 <- ~ 1 + time
-fixed_param <- c(4, 2, 6, 2.3, 7, 0)
+fixed_param <- c(0.1, -0.2, 0.15, 0.5, -0.02, 0.04)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
 cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 

@@ -309,7 +309,7 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' # generating parameters for single level regression
 #' set.seed(2)
 #' fixed <- ~1 + act + diff + numCourse + act:numCourse
-#' fixed_param <- c(2, 4, 1, 3.5, 2)
+#' fixed_param <- c(0.1, -0.2, 0.15, 0.5, -0.02)
 #' cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
 #'    var_type = c("single", "single", "single"),
 #'    opts = list(list(mean = 0, sd = 4),
@@ -322,7 +322,7 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' # Longitudinal linear mixed model example
 #' fixed <- ~1 + time + diff + act + time:act
 #' random <- ~1 + time + diff
-#' fixed_param <- c(4, 2, 6, 2.3, 7)
+#' fixed_param <- c(0.1, -0.2, 0.15, 0.5, -0.02)
 #' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 #' cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
 #'    var_type = c("level1", "level2"),
@@ -340,7 +340,7 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' fixed <- ~1 + time + diff + act + actClust + time:act
 #' random <- ~1 + time + diff
 #' random3 <- ~ 1 + time
-#' fixed_param <- c(4, 2, 6, 2.3, 7, 0)
+#' fixed_param <- c(0.1, -0.2, 0.15, 0.5, -0.02, 0.03)
 #' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 #' random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
 #' cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 

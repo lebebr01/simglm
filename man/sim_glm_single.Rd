@@ -5,7 +5,8 @@
 \title{Simulation single level logistic regression model}
 \usage{
 sim_glm_single(fixed, fixed_param, cov_param, n, data_str, cor_vars = NULL,
-  fact_vars = list(NULL), contrasts = NULL, ...)
+  fact_vars = list(NULL), contrasts = NULL, outcome_type = c("logistic",
+  "poisson"), ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.
@@ -51,6 +52,10 @@ Optional arguments to the distribution functions are in a nested list,
 for factor variables (i.e. those variables with .f or .c). 
 See \code{\link{contrasts}} for more detail.}
 
+\item{outcome_type}{A vector specifying the type of outcome, must be either
+logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+be counts.}
+
 \item{...}{Not currently used.}
 }
 \description{
@@ -73,6 +78,7 @@ cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
    list(mean = 0, sd = 3)))
 n <- 150
 temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param, 
-  cov_param = cov_param, n = n, data_str = "single")
+  cov_param = cov_param, n = n, data_str = "single", 
+  outcome_type = 'logistic')
   
 }

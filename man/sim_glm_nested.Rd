@@ -6,7 +6,8 @@
 \usage{
 sim_glm_nested(fixed, random, fixed_param, random_param = list(), cov_param,
   n, p, data_str, cor_vars = NULL, fact_vars = list(NULL), unbal = FALSE,
-  unbal_design = NULL, contrasts = NULL, ...)
+  unbal_design = NULL, contrasts = NULL, outcome_type = c("logistic",
+  "poisson"), ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.
@@ -83,6 +84,10 @@ as the level two sample size.}
 for factor variables (i.e. those variables with .f or .c). 
 See \code{\link{contrasts}} for more detail.}
 
+\item{outcome_type}{A vector specifying the type of outcome, must be either
+logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+be counts.}
+
 \item{...}{Not currently used.}
 }
 \description{
@@ -108,5 +113,5 @@ p <- 30
 data_str <- "long"
 temp_long <- sim_glm(fixed, random, random3 = NULL, fixed_param, 
 random_param, random_param3 = NULL,
- cov_param, k = NULL, n, p, data_str = data_str)
+ cov_param, k = NULL, n, p, data_str = data_str, outcome_type = 'logistic')
 }

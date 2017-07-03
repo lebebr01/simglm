@@ -7,7 +7,8 @@
 sim_glm_nested3(fixed, random, random3, fixed_param, random_param = list(),
   random_param3 = list(), cov_param, k, n, p, data_str, cor_vars = NULL,
   fact_vars = list(NULL), unbal = list(level2 = FALSE, level3 = FALSE),
-  unbal_design = list(level2 = NULL, level3 = NULL), contrasts = NULL, ...)
+  unbal_design = list(level2 = NULL, level3 = NULL), contrasts = NULL,
+  outcome_type = c("logistic", "poisson"), ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -104,6 +105,10 @@ controlled via "level3".}
 for factor variables (i.e. those variables with .f or .c). 
 See \code{\link{contrasts}} for more detail.}
 
+\item{outcome_type}{A vector specifying the type of outcome, must be either
+logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+be counts.}
+
 \item{...}{Not currently used.}
 }
 \description{
@@ -132,7 +137,8 @@ n <- 15
 p <- 10
 data_str <- "long"
 temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param, 
-  random_param3, cov_param, k,n, p, data_str = data_str)
+  random_param3, cov_param, k,n, p, data_str = data_str, 
+  outcome_type = 'logistic')
   
 }
 \seealso{

@@ -41,6 +41,9 @@
 #' @param contrasts An optional list that specifies the contrasts to be used 
 #'      for factor variables (i.e. those variables with .f or .c). 
 #'      See \code{\link{contrasts}} for more detail.
+#' @param outcome_type A vector specifying the type of outcome, must be either
+#'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+#'   be counts.
 #' @param ... Not currently used.
 #' @importFrom tibble as_tibble
 #' @examples 
@@ -55,12 +58,15 @@
 #'    list(mean = 0, sd = 3)))
 #' n <- 150
 #' temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param, 
-#'   cov_param = cov_param, n = n, data_str = "single")
+#'   cov_param = cov_param, n = n, data_str = "single", 
+#'   outcome_type = 'logistic')
 #'   
 #' @export
 sim_glm_single <- function(fixed, fixed_param, cov_param, n, 
                            data_str, cor_vars = NULL, fact_vars = list(NULL),
-                           contrasts = NULL, ...) {
+                           contrasts = NULL, 
+                           outcome_type = c('logistic', 'poisson'),
+                           ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")    
   
@@ -72,7 +78,7 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
                'variables in design matrix'))
   }
   
-  sim_data <- data_glm_single(Xmat, fixed_param, n)
+  sim_data <- data_glm_single(Xmat, fixed_param, n, outcome_type)
   
   Xmat <- data.frame(Xmat,sim_data)
   Xmat$ID <- 1:n
@@ -151,6 +157,9 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
 #' @param contrasts An optional list that specifies the contrasts to be used 
 #'   for factor variables (i.e. those variables with .f or .c). 
 #'   See \code{\link{contrasts}} for more detail.
+#' @param outcome_type A vector specifying the type of outcome, must be either
+#'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+#'   be counts.
 #' @param ... Not currently used.
 #' @importFrom tibble as_tibble
 #'      
@@ -169,12 +178,13 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
 #' data_str <- "long"
 #' temp_long <- sim_glm(fixed, random, random3 = NULL, fixed_param, 
 #' random_param, random_param3 = NULL,
-#'  cov_param, k = NULL, n, p, data_str = data_str)
+#'  cov_param, k = NULL, n, p, data_str = data_str, outcome_type = 'logistic')
 #' @export
 sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(), 
                            cov_param, n, p, data_str, cor_vars = NULL, 
                            fact_vars = list(NULL), unbal = FALSE, 
-                           unbal_design = NULL, contrasts = NULL, ...) {
+                           unbal_design = NULL, contrasts = NULL, 
+                           outcome_type = c('logistic', 'poisson'), ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")    
   rand.vars <- attr(terms(random),"term.labels")   
@@ -216,7 +226,7 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(),
     Zmat <- model.matrix(random, data.frame(Xmat$Xmat))
     
     sim_data <- data_glm_nested(Xmat$Xmat, Zmat, fixed_param, rand_eff, n, 
-                                p = lvl1ss)
+                                p = lvl1ss, outcome_type)
     
     Xmat <- dplyr::bind_cols(data.frame(Xmat$Xmat), 
                              data.frame(Xmat$Omat), 
@@ -333,6 +343,9 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(),
 #' @param contrasts An optional list that specifies the contrasts to be used 
 #'  for factor variables (i.e. those variables with .f or .c). 
 #'  See \code{\link{contrasts}} for more detail.
+#' @param outcome_type A vector specifying the type of outcome, must be either
+#'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+#'   be counts.
 #' @param ... Not currently used.
 #' @importFrom tibble as_tibble
 #' 
@@ -354,7 +367,8 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(),
 #' p <- 10
 #' data_str <- "long"
 #' temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param, 
-#'   random_param3, cov_param, k,n, p, data_str = data_str)
+#'   random_param3, cov_param, k,n, p, data_str = data_str, 
+#'   outcome_type = 'logistic')
 #'   
 #' @export 
 sim_glm_nested3 <- function(fixed, random, random3, fixed_param, 
@@ -363,7 +377,8 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param,
                             fact_vars = list(NULL), 
                             unbal = list("level2" = FALSE, "level3" = FALSE), 
                             unbal_design = list("level2" = NULL, "level3" = NULL),
-                            contrasts = NULL, ...) {
+                            contrasts = NULL, 
+                            outcome_type = c('logistic', 'poisson'), ...) {
 
   fixed_vars <- attr(terms(fixed),"term.labels")    
   rand.vars <- attr(terms(random),"term.labels")   
@@ -446,7 +461,8 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param,
     Zmat3 <- model.matrix(random3, data.frame(Xmat$Xmat))
     
     sim_data <- data_glm_nested3(Xmat$Xmat, Zmat, Zmat3, fixed_param, rand_eff, 
-                                 rand_eff3, k, n = lvl2ss, p = lvl1ss)
+                                 rand_eff3, k, n = lvl2ss, p = lvl1ss, 
+                                 outcome_type)
     
     Xmat <- dplyr::bind_cols(data.frame(Xmat$Xmat), 
                              data.frame(Xmat$Omat), 

@@ -4,7 +4,8 @@
 \alias{data_glm_nested3}
 \title{Simulates three level nested data with a single third level random effect}
 \usage{
-data_glm_nested3(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3, k, n, p)
+data_glm_nested3(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3, k, n, p,
+  outcome_type = c("logistic", "poisson"))
 }
 \arguments{
 \item{Xmat}{A matrix of covariates.}
@@ -24,6 +25,10 @@ data_glm_nested3(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3, k, n, p)
 \item{n}{Number of clusters.}
 
 \item{p}{Number of units within each cluster.}
+
+\item{outcome_type}{A vector specifying the type of outcome, must be either
+logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+be counts.}
 }
 \description{
 Takes simulation parameter arguments and 

@@ -7,7 +7,8 @@
 sim_glm(fixed, random, random3, fixed_param, random_param = list(),
   random_param3 = list(), cov_param, k, n, p, data_str, cor_vars = NULL,
   fact_vars = list(NULL), unbal = list(level2 = FALSE, level3 = FALSE),
-  unbal_design = list(level2 = NULL, level3 = NULL), contrasts = NULL, ...)
+  unbal_design = list(level2 = NULL, level3 = NULL), contrasts = NULL,
+  outcome_type = c("logistic", "poisson"), ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.
@@ -104,6 +105,10 @@ controlled via "level3".}
 for factor variables (i.e. those variables with .f or .c). 
 See \code{\link{contrasts}} for more detail.}
 
+\item{outcome_type}{A vector specifying the type of outcome, must be either
+logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+be counts.}
+
 \item{...}{Not currently used.}
 }
 \description{
@@ -130,7 +135,7 @@ cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
    list(mean = 0, sd = 3)))
 n <- 150
 temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param, 
-  cov_param = cov_param, n = n, data_str = "single")
+  cov_param = cov_param, n = n, data_str = "single", outcome_type = 'logistic')
 
 # Longitudinal linear mixed model example
 fixed <- ~1 + time + diff + act + time:act
@@ -146,7 +151,7 @@ p <- 30
 data_str <- "long"
 temp_long <- sim_glm(fixed, random, random3 = NULL, fixed_param, 
 random_param, random_param3 = NULL,
- cov_param, k = NULL, n, p, data_str = data_str)
+ cov_param, k = NULL, n, p, data_str = data_str, outcome_type = 'logistic')
 
 
 # Three level example
@@ -166,7 +171,7 @@ n <- 15
 p <- 10
 data_str <- "long"
 temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param, 
-  random_param3, cov_param, k,n, p, data_str = data_str)
+  random_param3, cov_param, k,n, p, data_str = data_str, outcome_type = 'logistic')
 
 
 }

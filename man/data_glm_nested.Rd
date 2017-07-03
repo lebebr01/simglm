@@ -4,7 +4,8 @@
 \alias{data_glm_nested}
 \title{Generate logistic regression outcome}
 \usage{
-data_glm_nested(Xmat, Zmat, beta, rand_eff, n, p)
+data_glm_nested(Xmat, Zmat, beta, rand_eff, n, p, outcome_type = c("logistic",
+  "poisson"))
 }
 \arguments{
 \item{Xmat}{A matrix of covariates.}
@@ -18,6 +19,10 @@ data_glm_nested(Xmat, Zmat, beta, rand_eff, n, p)
 \item{n}{Number of clusters.}
 
 \item{p}{Number of units within each cluster.}
+
+\item{outcome_type}{A vector specifying the type of outcome, must be either
+logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+be counts.}
 }
 \description{
 Takes simulation parameter arguments and 

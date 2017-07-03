@@ -4,7 +4,7 @@
 \alias{data_glm_single}
 \title{Generate logistic regression outcome}
 \usage{
-data_glm_single(Xmat, beta, n)
+data_glm_single(Xmat, beta, n, outcome_type = c("logistic", "poisson"))
 }
 \arguments{
 \item{Xmat}{A matrix of covariates.}
@@ -12,6 +12,10 @@ data_glm_single(Xmat, beta, n)
 \item{beta}{A vector of regression parameters.}
 
 \item{n}{Number of clusters.}
+
+\item{outcome_type}{A vector specifying the type of outcome, must be either
+logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+be counts.}
 }
 \description{
 Takes simulation parameter arguments and 

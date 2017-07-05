@@ -128,7 +128,8 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
   temp_nest <- sim_glm_nested3(fixed, random, random3, fixed_param, random_param, 
                                random_param3, cov_param, k, n, p, 
                                data_str, cor_vars, fact_vars, 
-                               unbal, unbal_design, outcome_type, ...)
+                               unbal, unbal_design, outcome_type = outcome_type, 
+                               ...)
   if(missing) {
     temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), 
                                          missing_args))
@@ -290,7 +291,7 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
 
   temp_nest <- sim_glm_nested(fixed, random, fixed_param, random_param, 
                               cov_param, n, p, data_str, cor_vars, fact_vars, 
-                              unbal, unbal_design, outcome_type, ...)
+                              unbal, unbal_design, outcome_type = outcome_type, ...)
   if(missing) {
     temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), 
                                          missing_args))
@@ -414,7 +415,8 @@ sim_pow_glm_single <- function(fixed, fixed_param, cov_param, n, data_str,
   }
   
   temp_single <- sim_glm_single(fixed, fixed_param, cov_param, n, data_str, 
-                                cor_vars, fact_vars, outcome_type, ...)
+                                cor_vars, fact_vars, outcome_type = outcome_type, 
+                                ...)
   if(!is.null(glm_fit_mod)) {
     if(!purrr::is_formula(glm_fit_mod)) {
       stop('glm_fit_mod must be a formula to pass to glm')

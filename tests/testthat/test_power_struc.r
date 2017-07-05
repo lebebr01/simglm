@@ -110,6 +110,15 @@ test_that('sim_glm power', {
   expect_equal(nrow(power_out), 3)
   expect_equal(ncol(power_out), 6)
   
+  power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, 
+                           cov_param = cov_param, 
+                           n = n, data_str = "single", outcome_type = 'poisson',
+                           pow_param = pow_param, alpha = alpha,
+                           pow_dist = pow_dist, pow_tail = pow_tail, 
+                           replicates = replicates, raw_power = FALSE)
+  expect_equal(nrow(power_out), 3)
+  expect_equal(ncol(power_out), 6)
+  
   fixed <- ~ 1 + act + diff
   fixed_param <- c(0.1, 0.5, 0.3)
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),

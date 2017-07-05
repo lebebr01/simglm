@@ -31,14 +31,14 @@ test_that('correct length', {
   Xmat <- cbind(rnorm(50), rnorm(50), rnorm(50))
   beta <- c(4, 3, 1)
   err <- rnorm(50)
-  expect_equal(nrow(data_reg_single(Xmat, beta, 50, err, outcome_type = 'logistic')), 50)
+  expect_equal(nrow(data_reg_single(Xmat, beta, 50, err)), 50)
 })
 
 test_that('Fbeta + err = sim_data', {
   Xmat <- cbind(rnorm(50), rnorm(50), rnorm(50))
   beta <- c(4, 3, 1)
   err <- rnorm(50)
-  tmp <- data_reg_single(Xmat, beta, 50, err, outcome_type = 'logistic')
+  tmp <- data_reg_single(Xmat, beta, 50, err)
   expect_equal(tmp[, 1] + tmp[, 2], tmp[, 3])
 })
 

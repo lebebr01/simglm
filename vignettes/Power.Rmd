@@ -280,6 +280,7 @@ replicates <- 10
 power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, 
                          cov_param = cov_param, 
                          n = n, data_str = "single", 
+                         outcome_type = 'logistic',
                          pow_param = pow_param, alpha = alpha,
                          pow_dist = pow_dist, pow_tail = pow_tail, 
                          replicates = replicates)
@@ -307,6 +308,7 @@ terms_vary <- list(n = c(20, 40, 60, 80, 100),
 power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, 
                          cov_param = cov_param, 
                          n = n, data_str = "single", 
+                         outcome_type = 'logistic',
                          pow_param = pow_param, alpha = alpha,
                          pow_dist = pow_dist, pow_tail = pow_tail, 
                          replicates = replicates, terms_vary = terms_vary)

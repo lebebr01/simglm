@@ -1,4 +1,10 @@
-#simglm 0.5.1
+# simglm 0.5.2
+* Addition of count outcome from sim_glm.
+    - This added an additional argument that must be specified:
+        * outcome_type = 'logistic' = 0/1 dichotomous simulation
+        * outcome_type = 'poisson' = count outcomes.
+
+# simglm 0.5.1
 * Bug fix for sim_glm when using fact_vars generation options.
 
 # simglm 0.5.0

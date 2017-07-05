@@ -5,6 +5,11 @@ warnings_are_errors: true
 sudo: false
 cache: packages
 
+addons:
+  apt:
+    packages:
+    - libnlopt-dev
+
 
 matrix:
   include:

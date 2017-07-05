@@ -34,8 +34,8 @@ n <- 150
 
 temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param, 
                        cov_param = cov_param, 
-                       n = n, data_str = "single")
-head(temp_single)
+                       n = n, data_str = "single", outcome_type = 'logistic')
+print(temp_single, n = 5)
 ```
 
 As you can see from the code above, the syntax is virtually identical to the syntax for the `sim_reg` function. The largest difference is the omission of the `error_var` and `rand_gen` commands. The returned data frame includes the response variable in the logistic function (Fbeta), the probability found by taking $\frac{exp(Fbeta)}{1 + exp(Fbeta)}$ (logistic), and the returned 0/1 variable by using the `rbinom` function using the probabilities defined above (sim_data).
@@ -59,8 +59,8 @@ data_str <- "cross"
 temp_cross <- sim_glm(fixed, random, random3 = NULL, fixed_param,
                      random_param, random_param3 = NULL,
                      cov_param, k = NULL, n, p,
-                     data_str = data_str)
-head(temp_cross)
+                     data_str = data_str, outcome_type = 'logistic')
+print(temp_cross, n = 5)
 ```
 
 ## Three level example
@@ -83,9 +83,27 @@ n <- 150
 p <- 30
 data_str <- "cross"
 temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param,
-                      random_param3, cov_param, k, n, p, data_str = data_str)
-head(temp_three)
+                      random_param3, cov_param, k, n, p, data_str = data_str,
+                      outcome_type = 'logistic')
+print(temp_three, n = 5)
 ```
 
 
+# Count Outcomes
+The package also has the ability to simulate count outcomes in addition to the 0/1 dichotomous outcomes. The syntax is the same as above, except the `outcome_type` argument is modified from `logistic` to `poisson`. As some may have realized from above, the dichotomous outcomes are assumed to follow a logistic metric where as the count outcomes follow a poisson model. Belwo is an adapted example from above.
+
+```{r count_single}
+fixed <- ~ 1 + act + diff
+fixed_param <- c(-0.5, 0.5, 0.3)
+cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                  var_type = c("single", "single"),
+                  opts = list(list(mean = 0, sd = 4),
+                              list(mean = 0, sd = 3)))
+n <- 150
+
+temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param, 
+                       cov_param = cov_param, 
+                       n = n, data_str = "single", outcome_type = 'poisson')
+print(temp_single, n = 5)
+```
 

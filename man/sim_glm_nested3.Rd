@@ -7,7 +7,8 @@
 sim_glm_nested3(fixed, random, random3, fixed_param, random_param = list(),
   random_param3 = list(), cov_param, k, n, p, data_str, cor_vars = NULL,
   fact_vars = list(NULL), unbal = list(level2 = FALSE, level3 = FALSE),
-  unbal_design = list(level2 = NULL, level3 = NULL), contrasts = NULL, ...)
+  unbal_design = list(level2 = NULL, level3 = NULL), contrasts = NULL,
+  outcome_type, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -104,6 +105,10 @@ controlled via "level3".}
 for factor variables (i.e. those variables with .f or .c). 
 See \code{\link{contrasts}} for more detail.}
 
+\item{outcome_type}{A vector specifying the type of outcome, must be either
+logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+be counts.}
+
 \item{...}{Not currently used.}
 }
 \description{
@@ -119,7 +124,7 @@ and many other variables useful to help when running simulation studies.
 fixed <- ~1 + time + diff + act + actClust + time:act
 random <- ~1 + time + diff
 random3 <- ~ 1 + time
-fixed_param <- c(4, 2, 6, 2.3, 7, 0)
+fixed_param <- c(0.1, -0.2, 0.15, 0.5, -0.02, 0.04)
 random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
 cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
@@ -132,7 +137,8 @@ n <- 15
 p <- 10
 data_str <- "long"
 temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param, 
-  random_param3, cov_param, k,n, p, data_str = data_str)
+  random_param3, cov_param, k,n, p, data_str = data_str, 
+  outcome_type = 'logistic')
   
 }
 \seealso{

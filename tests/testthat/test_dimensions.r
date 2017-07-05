@@ -98,7 +98,7 @@ test_that('correct length sim_glm', {
                                 list(mean = 0, sd = 3)))
   n <- 150
   temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param, 
-                         n = n, data_str = "single")
+                         n = n, data_str = "single", outcome_type = 'logistic')
   expect_equal(nrow(temp_single), 150)
   expect_equal(length(table(temp_single$ID)), 150)
   
@@ -116,7 +116,8 @@ test_that('correct length sim_glm', {
   p <- 30
   data_str <- "long"
   temp_long <- sim_glm(fixed, random, random3 = NULL, fixed_param, random_param, random_param3 = NULL,
-                       cov_param, k = NULL, n, p, data_str = data_str)
+                       cov_param, k = NULL, n, p, data_str = data_str, 
+                       outcome_type = 'logistic')
   expect_equal(nrow(temp_long), 150*30)
   expect_equal(length(table(temp_long$withinID)), 30)
   expect_equal(length(table(temp_long$clustID)), 150)
@@ -139,7 +140,8 @@ test_that('correct length sim_glm', {
   p <- 10
   data_str <- "long"
   temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param, 
-                        random_param3, cov_param, k,n, p, data_str = data_str)
+                        random_param3, cov_param, k,n, p, data_str = data_str, 
+                        outcome_type = 'logistic')
   expect_equal(nrow(temp_three), 15*10*10)
   expect_equal(length(table(temp_three$withinID)), 10)
   expect_equal(length(table(temp_three$clustID)), 15*10)

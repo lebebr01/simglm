@@ -299,6 +299,9 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' @param contrasts An optional list that specifies the contrasts to be used 
 #'      for factor variables (i.e. those variables with .f or .c). 
 #'      See \code{\link{contrasts}} for more detail.
+#' @param outcome_type A vector specifying the type of outcome, must be either
+#'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
+#'   be counts.
 #' @param ... Not currently used.
 #' @export 
 #' 
@@ -306,7 +309,7 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' # generating parameters for single level regression
 #' set.seed(2)
 #' fixed <- ~1 + act + diff + numCourse + act:numCourse
-#' fixed_param <- c(2, 4, 1, 3.5, 2)
+#' fixed_param <- c(0.1, -0.2, 0.15, 0.5, -0.02)
 #' cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
 #'    var_type = c("single", "single", "single"),
 #'    opts = list(list(mean = 0, sd = 4),
@@ -314,12 +317,16 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #'    list(mean = 0, sd = 3)))
 #' n <- 150
 #' temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param, 
-#'   cov_param = cov_param, n = n, data_str = "single")
+#'   cov_param = cov_param, n = n, data_str = "single", outcome_type = 'logistic')
+#'   
+#'   # counts
+#' temp_single <- sim_glm(fixed = fixed, fixed_param = fixed_param, 
+#'   cov_param = cov_param, n = n, data_str = "single", outcome_type = 'poisson')
 #' 
 #' # Longitudinal linear mixed model example
 #' fixed <- ~1 + time + diff + act + time:act
 #' random <- ~1 + time + diff
-#' fixed_param <- c(4, 2, 6, 2.3, 7)
+#' fixed_param <- c(0.1, -0.2, 0.15, 0.5, -0.02)
 #' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 #' cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
 #'    var_type = c("level1", "level2"),
@@ -330,14 +337,18 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' data_str <- "long"
 #' temp_long <- sim_glm(fixed, random, random3 = NULL, fixed_param, 
 #' random_param, random_param3 = NULL,
-#'  cov_param, k = NULL, n, p, data_str = data_str)
+#'  cov_param, k = NULL, n, p, data_str = data_str, outcome_type = 'logistic')
 #' 
+#'  # counts 
+#' temp_long <- sim_glm(fixed, random, random3 = NULL, fixed_param, 
+#' random_param, random_param3 = NULL,
+#'  cov_param, k = NULL, n, p, data_str = data_str, outcome_type = 'poisson')
 #' 
 #' # Three level example
 #' fixed <- ~1 + time + diff + act + actClust + time:act
 #' random <- ~1 + time + diff
 #' random3 <- ~ 1 + time
-#' fixed_param <- c(4, 2, 6, 2.3, 7, 0)
+#' fixed_param <- c(0.1, -0.2, 0.15, 0.5, -0.02, 0.03)
 #' random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
 #' random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
 #' cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
@@ -350,7 +361,11 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' p <- 10
 #' data_str <- "long"
 #' temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param, 
-#'   random_param3, cov_param, k,n, p, data_str = data_str)
+#'   random_param3, cov_param, k,n, p, data_str = data_str, outcome_type = 'logistic')
+#'   
+#'   # count data sim
+#'   temp_three <- sim_glm(fixed, random, random3, fixed_param, random_param, 
+#'   random_param3, cov_param, k,n, p, data_str = data_str, outcome_type = 'poisson')
 #' 
 #' 
 sim_glm <- function(fixed, random, random3, fixed_param, random_param = list(), 
@@ -358,20 +373,21 @@ sim_glm <- function(fixed, random, random3, fixed_param, random_param = list(),
                     data_str, cor_vars = NULL, fact_vars = list(NULL), 
                     unbal = list("level2" = FALSE, "level3" = FALSE), 
                     unbal_design = list("level2" = NULL, "level3" = NULL),
-                    contrasts = NULL, ...) {
+                    contrasts = NULL, outcome_type, ...) {
   
   if(data_str == "single"){
     sim_glm_single(fixed, fixed_param, cov_param, n, data_str, 
-                   cor_vars, fact_vars, contrasts, ...)
+                   cor_vars, fact_vars, contrasts, outcome_type, ...)
   } else {
     if (is.null(k)){
       sim_glm_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 
                      data_str, cor_vars, fact_vars, unbal, unbal_design, 
-                     contrasts, ...)
+                     contrasts, outcome_type, ...)
     } else {
       sim_glm_nested3(fixed, random, random3, fixed_param, random_param, 
                       random_param3, cov_param, k, n, p, data_str, cor_vars, 
-                      fact_vars, unbal, unbal_design, contrasts, ...)
+                      fact_vars, unbal, unbal_design, contrasts,
+                      outcome_type, ...)
     }
   }
 }

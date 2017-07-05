@@ -14,9 +14,6 @@ addons:
 matrix:
   include:
     - os: linux
-      dist: precise
-      sudo: false
-    - os: linux
       dist: trusty
       env: R_CODECOV=true
     - os: osx

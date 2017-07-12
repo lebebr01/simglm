@@ -27,6 +27,18 @@ server <- function(input, output, session) {
                   value = 'cov', width = '75px'))
     )
   })
+  output$cov_dist_misc <- renderUI({
+    args <- extract_needed_args(input$cov_dist)
+    if(length(args) == 0) {
+      NULL
+    } else {
+      lapply(1:length(args), function(i)
+        div(style = 'display:inline-block', 
+            textInput(args[i], label = as.character(args[i]), 
+                      value = '', width = '75px'))
+      )
+    }
+  })
   output$lvl1_err_misc <- renderUI({
     args <- extract_needed_args(input$lvl1_err_dist)
     if(length(args) == 0) {
@@ -134,9 +146,19 @@ server <- function(input, output, session) {
       lapply(1:num_covs, function(i) 
         div(style = 'display:inline-block', 
             textInput(paste0('type', i), label = cov_names[i], 
-                      value = 'lvl1', width = '75px'))
+                      value = 'level1', width = '75px'))
       )
     }
+  })
+  
+  output$cov_dist <- renderUI({
+    num_covs <- input$number_cov - input$num_discrete
+    cov_names <- paste0('Dist ', cov_names())
+    lapply(1:num_covs, function(i) 
+      div(style = 'display:inline-block', 
+          textInput(paste0('c_dist', i), label = cov_names[i], 
+                       value = 'rnorm', width = '75px'))
+    )
   })
   
   output$lvl2_err <- renderUI({
@@ -155,7 +177,8 @@ server <- function(input, output, session) {
   })
   output$num_levels <- renderUI({
     num_covs <- input$num_discrete
-    cov_names <- paste0('Levels ', cov_names()[grep('\\.f|\\.c|\\.o', cov_names())])
+    cov_names <- paste0('Levels ', cov_names()[
+      grep('\\.f|\\.c|\\.o|\\_f|\\_c|\\_o', cov_names())])
     lapply(1:num_covs, function(i)
       div(style = 'display:inline-block',
           numericInput(paste0('levels', i), label = cov_names[i],
@@ -175,7 +198,7 @@ server <- function(input, output, session) {
       lapply(1:num_covs, function(i) 
         div(style = 'display:inline-block', 
             textInput(paste0('type_dis', i), label = cov_names[i], 
-                      value = 'lvl1', width = '75px'))
+                      value = 'level1', width = '75px'))
       )
     }
   })
@@ -256,14 +279,23 @@ server <- function(input, output, session) {
     sapply(1:num_betas, function(i) input[[paste0('beta', i)]])
   })
   cov_param <- reactive({
-    num_cov <- input$number_cov
+    num_cov <- input$number_cov - input$num_discrete
+    if(input$change_cov_dist) {
+      dist_fun_cov <- sapply(1:num_cov, function(i) input[[paste0('c_dist', i)]])
+    } else {
+      dist_fun_cov <- sapply(1:num_cov, function(i) 'rnorm')
+    }
     mean_cov <- sapply(1:num_cov, function(i) input[[paste0('mean', i)]])
     sd_cov <- sapply(1:num_cov, function(i) input[[paste0('sd', i)]])
     type_cov <- sapply(1:num_cov, function(i) input[[paste0('type', i)]])
+    opts <- lapply(1:num_cov, function(i) list(
+      input[[paste0('mean', i)]], input[[paste0('sd', i)]]
+    ))
     
-    list(mean = mean_cov,
-         sd = sd_cov,
-         var_type = type_cov)
+    list(dist_fun = dist_fun_cov, 
+         var_type = type_cov, 
+         opts = opts
+    )
   })
   data_str <- reactive({
     if(input$type_model == 1) {
@@ -304,31 +336,25 @@ server <- function(input, output, session) {
          rand_gen = 'rnorm')
   })
   unbal <- reactive({
-    if(input$unbal_lvl2) {
-      TRUE
+    if(input$unbal_lvl2 & input$unbal_lvl3) {
+      list(level2 = TRUE, level3 = TRUE)
     } else {
-      FALSE
+      if(input$unbal_lvl2 & !input$unbal_lvl3) {
+        list(level2 = TRUE, level3 = FALSE)
+      } else {
+        if(!input$unbal_lvl2 & input$unbal_lvl3) {
+          list(level2 = FALSE, level3 = TRUE)
+        } else {
+          list(level2 = FALSE, level3 = FALSE)
+        }
+      }
     }
   })
-  unbalCont <- reactive({
+  unbal_design <- reactive({
     if(input$unbal_lvl2) {
       c(input$min_cl2, input$max_cl2)
     } else {
-      NULL
-    }
-  })
-  unbal3 <- reactive({
-    if(input$unbal_lvl3) {
-      TRUE
-    } else {
-      FALSE
-    }
-  })
-  unbalCont3 <- reactive({
-    if(input$unbal_lvl3) {
-      c(input$min_cl3, input$max_cl3)
-    } else {
-      NULL
+      list(level2 = NULL, level3 = NULL)
     }
   })
   # arima <- reactive({
@@ -395,15 +421,16 @@ server <- function(input, output, session) {
                   random_param = random_param(), cov_param = cov_param(),
                   k = NULL, n = n(), p = p(),
                   error_var = error_var(), with_err_gen = with_err_gen(),
-                  data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
+                  data_str = data_str(), unbal = unbal(), 
+                  unbal_design = unbal_design(),
                   fact_vars = fact_vars()
           )
         } else {
           sim_reg(fixed(), random(), random3(), fixed_param(), random_param(), 
                   random_param3(), cov_param(), k(), n(), p(), 
                   error_var(), with_err_gen(),
-                  data_str = data_str(), unbal = unbal(), unbalCont = unbalCont(),
-                  unbal3 = unbal3(), unbalCont3 = unbalCont3(),
+                  data_str = data_str(), unbal = unbal(), 
+                  unbal_design = unbalCont(),
                   fact_vars = fact_vars()
           )
         }
@@ -694,17 +721,30 @@ server <- function(input, output, session) {
            ')')
   })
   cov_param_code <- reactive({
-    num_cov <- input$number_cov
-    mean_cov <- paste(sapply(1:num_cov, function(i) input[[paste0('mean', i)]]),
-                      collapse = ', ')
-    sd_cov <- paste(sapply(1:num_cov, function(i) input[[paste0('sd', i)]]),
-                    collapse = ', ')
+    
+    num_cov <- input$number_cov - input$num_discrete
+    if(input$change_cov_dist) {
+      dist_fun_cov <- paste(sQuote(sapply(1:num_cov, function(i) input[[paste0('c_dist', i)]])),
+                            collapse = ', ')
+    } else {
+      dist_fun_cov <- paste(sQuote(sapply(1:num_cov, function(i) 'rnorm')),
+                            collapse = ', ')
+    }
     type_cov <- paste(sQuote(sapply(1:num_cov, function(i) input[[paste0('type', i)]])),
                       collapse = ', ')
+    opts <- lapply(1:num_cov, function(i) list(
+      mean = input[[paste0('mean', i)]], 
+      sd = input[[paste0('sd', i)]]
+    ))
+    opts_text <- lapply(1:num_cov, function(i) 
+      paste(paste(attr(unlist(opts[[i]]), 'names'), 
+                  unlist(opts[[i]]), sep = ' = '), collapse = ', ')
+    )
     
-    paste0('cov_param <- list(mean = c(', mean_cov, '), ',
-           'sd = c(', sd_cov, '), ',
-         'var_type = c(', type_cov, '))')
+    paste0('cov_param <- list(dist_fun = c(', dist_fun_cov, 
+           '), var_type = c(', type_cov, 
+           '), opts = list(list(', paste(opts_text, collapse = '), list('),
+           ')))')
   })
   data_str_code <- reactive({
     if(input$type_model == 1) {
@@ -746,31 +786,26 @@ server <- function(input, output, session) {
          ", rand_gen = 'rnorm')")
   })
   unbal_code <- reactive({
+    if(input$unbal_lvl2 & input$unbal_lvl3) {
+      'unbal <- list(level2 = TRUE, level3 = TRUE)'
+    } else {
+      if(input$unbal_lvl2 & !input$unbal_lvl3) {
+        'unbal <- list(level2 = TRUE, level3 = FALSE)'
+      } else {
+        if(!input$unbal_lvl2 & input$unbal_lvl3) {
+          'unbal <- list(level2 = FALSE, level3 = TRUE)'
+        } else {
+          'unbal <- list(level2 = FALSE, level3 = FALSE)'
+        }
+      }
+    }
+  })
+  unbal_design_code <- reactive({
     if(input$unbal_lvl2) {
-      'unbal <- TRUE'
+      'unbal_design <- list(level2 = c(input$min_cl2, input$max_cl2), 
+                              level3 = NULL);'
     } else {
-      'unbal <- FALSE'
-    }
-  })
-  unbalCont_code <- reactive({
-    if(input$unbal_lvl2) {
-      paste0('unbalCont <- c(', input$min_cl2, ', ', input$max_cl2, ')')
-    } else {
-      'unbalCont <- NULL'
-    }
-  })
-  unbal3_code <- reactive({
-    if(input$unbal_lvl3) {
-      'unbal3 <- TRUE'
-    } else {
-      'unbal3 <- FALSE'
-    }
-  })
-  unbalCont3_code <- reactive({
-    if(input$unbal_lvl3) {
-      paste0('unbalCont3 <- c(', input$min_cl3, ', ', input$max_cl3, ')')
-    } else {
-      'unbalCont3 <- NULL'
+      'unbal_design <- list(level2 = NULL, level3 = NULL)'
     }
   })
   fact_vars_code <- reactive({
@@ -840,7 +875,7 @@ server <- function(input, output, session) {
           code_out <- paste(fixed_code(), random_code(), fixed_param_code(), random_param_code(),
                             cov_param_code(), n_code(), p_code(),
                             error_var_code(), with_err_gen_code(), data_str_code(), fact_vars_code(),
-                            unbal_code(), unbalCont_code(), str7, sep = '<br/>')
+                            unbal_code(), unbal_design_code(), str7, sep = '<br/>')
         } 
         else {
           str7 <- 'temp_nested <- sim_reg(fixed, random, random3, fixed_param, random_param, <br/>
@@ -851,9 +886,8 @@ server <- function(input, output, session) {
                             fixed_param_code(), random_param_code(), random_param3_code(),
                             cov_param_code(), k_code(), n_code(), p_code(),
                             error_var_code(), with_err_gen_code(), data_str_code(), fact_vars_code(),
-                            unbal_code(), unbal3_code(), unbalCont_code(), 
-                            unbalCont3_code(), str7, 
-                            sep = '<br/>')
+                            unbal_code(), unbal_design_code(), 
+                            str7, sep = '<br/>')
         }
       }
     } else {

@@ -19,8 +19,9 @@ ui <- dashboardPage(skin = "green",
               h2('Introduction to simglm'),
               h5('Specify basic model simulation parameters here. Optional simulation arguments are found in the second tab.'),
               fluidRow(
+                column(width = 4,
                 box(title = 'Model', status = 'primary',
-                    collapsible = TRUE, width = 2, collapsed = FALSE,
+                    collapsible = TRUE, width = NULL, collapsed = FALSE,
                     radioButtons('type_model', 'Type of Model:',
                                  choices = c('Single Level' = 1, 
                                              'Two-Level' = 2,
@@ -35,7 +36,7 @@ ui <- dashboardPage(skin = "green",
                     )
                 ),
                 box(title = 'Sample Sizes', status = 'primary',
-                    collapsible = TRUE, width = 2, collapsed = FALSE,
+                    collapsible = TRUE, width = NULL, collapsed = FALSE,
                     numericInput('samp_size_lvl1', 'Sample Size Level 1', 
                                  value = 20),
                     conditionalPanel(
@@ -49,7 +50,7 @@ ui <- dashboardPage(skin = "green",
                                    value = 2)
                     )
                     ),
-                box(title = 'Random Errors', width = 2, collapsed = FALSE,
+                box(title = 'Random Errors', width = NULL, collapsed = FALSE,
                     collapsible = TRUE, status = 'primary',
                     conditionalPanel(
                       condition = 'input.type_outcome == 1',
@@ -65,8 +66,9 @@ ui <- dashboardPage(skin = "green",
                       numericInput('lvl3_err', 'Level 3 Error Variance',
                                 value = 1)
                     )
-                    ),
-                box(title = 'Covariate Details', width = 6, collapsed = FALSE,
+                    )
+                ),
+                box(title = 'Continuous Covariate Details', width = 4, collapsed = FALSE,
                     collapsible = TRUE, status = 'primary',
                     checkboxInput('incl_int', 'Include Intercept?', TRUE),
                     numericInput('number_cov', 'Number of Covariates',
@@ -77,7 +79,37 @@ ui <- dashboardPage(skin = "green",
                     uiOutput('sd_cov'),
                     uiOutput('type_cov'),
                     p('Note: If discrete variables, the number of covariates will
-                      not match the mean, sds, and type above. See optional tab.')
+                      not match the mean, sds, and type above. See optional tab.'),
+                    checkboxInput('change_name', 'Specify Covariate Name?',
+                                  value = FALSE),
+                    conditionalPanel(
+                      condition = 'input.change_name == true',
+                      uiOutput('change_cov')
+                    ),
+                    checkboxInput('change_cov_dist', 'Specify Covariate Distibution?',
+                                  value = FALSE),
+                    conditionalPanel(
+                      condition = 'input.change_cov_dist == true',
+                      uiOutput('cov_dist'),
+                      uiOutput('cov_dist_misc')
+                    )
+                    ),
+                box(width = 4, collapsible = TRUE, collapsed = FALSE,
+                    title = 'Discrete Covariates', status = 'warning',
+                    checkboxInput('dis_cov', 'Discrete Covariates?',
+                                  value = FALSE),
+                    conditionalPanel(
+                      condition = 'input.dis_cov == true',
+                      numericInput('num_discrete', 'Number of Discrete Covariates',
+                                   value = 0)
+                    ),
+                    conditionalPanel(
+                      condition = 'input.num_discrete > 0',
+                      uiOutput('num_levels'),
+                      uiOutput('var_type'),
+                      p('Note: Need to add .f, .c, or .o in covariate names for discrete 
+                        covariate simulation.')
+                      )
                     )
               ),
               fluidRow(
@@ -107,7 +139,8 @@ ui <- dashboardPage(skin = "green",
                     title = 'Outcome', status = 'warning',
                     radioButtons('type_outcome', 'Type of Outcome:',
                                  choices = c('Continuous' = 1,
-                                             'Binary' = 2),
+                                             'Binary' = 2, 
+                                             'Count' = 3),
                                  selected = 1)
                 ),
                 box(width = 2, collapsible = TRUE, collapsed = FALSE,
@@ -152,23 +185,6 @@ ui <- dashboardPage(skin = "green",
                       p('Note: Missing proportion must be between 0 and 1.')
                     )
                 ),
-                box(width = 2, collapsible = TRUE, collapsed = FALSE,
-                    title = 'Discrete Covariates', status = 'warning',
-                    checkboxInput('dis_cov', 'Discrete Covariates?',
-                                  value = FALSE),
-                    conditionalPanel(
-                      condition = 'input.dis_cov == true',
-                      numericInput('num_discrete', 'Number of Discrete Covariates',
-                                   value = 0)
-                    ),
-                    conditionalPanel(
-                      condition = 'input.num_discrete > 0',
-                      uiOutput('num_levels'),
-                      uiOutput('var_type'),
-                      p('Note: Need to add .f, .c, or .o in covariate names for discrete 
-                        covariate simulation.')
-                    )
-                ),
                 # box(width = 2, collapsible = TRUE, collapsed = FALSE,
                 #     title = 'Serial Correlation', status = 'warning',
                 #     checkboxInput('sc', 'Serial Correlation?',
@@ -179,15 +195,10 @@ ui <- dashboardPage(skin = "green",
                 #                    choices = c(''))
                 #     )
                 # ),
-                box(width = 2, collapsible = TRUE, collapsed = FALSE,
-                    title = 'Covariate Misc', status = 'warning',
-                    checkboxInput('change_name', 'Specify Covariate Name?',
-                                  value = FALSE),
-                    conditionalPanel(
-                      condition = 'input.change_name == true',
-                      uiOutput('change_cov')
-                    )
-                    ),
+                # box(width = 2, collapsible = TRUE, collapsed = FALSE,
+                #     title = 'Covariate Misc', status = 'warning',
+                #     
+                #     ),
                 box(
                   width = 2, collapsible = TRUE, collapsed = FALSE,
                   title = 'Random Error Dist', status = 'warning',

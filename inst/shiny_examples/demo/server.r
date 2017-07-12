@@ -1109,9 +1109,9 @@ server <- function(input, output, session) {
     }
   })
   
-  output$hcontainter <- renderHighchart({
-      hchart(power_sim(), 'spline', x = n, y = power, group = var)
-  })
+  # output$hcontainter <- renderHighchart({
+  #     hchart(power_sim(), 'spline', x = n, y = power, group = var)
+  # })
   
   output$power_table <- renderDataTable({
     datatable(power_sim())

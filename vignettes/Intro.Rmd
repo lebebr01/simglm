@@ -39,9 +39,9 @@ fixed <- ~ 1 + act + diff + numCourse + act:numCourse
 fixed_param <- c(2, 4, 1, 3.5, 2)
 cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
                   var_type = c("single", "single", "single"),
-                  cov_param = list(list(mean = 0, sd = 4),
-                                   list(mean = 0, sd = 3),
-                                   list(mean = 0, sd = 3)))
+                  opts = list(list(mean = 0, sd = 4),
+                              list(mean = 0, sd = 3),
+                              list(mean = 0, sd = 3)))
 n <- 150
 error_var <- 3
 with_err_gen = 'rnorm'

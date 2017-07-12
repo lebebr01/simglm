@@ -1,3 +1,8 @@
+# simglm 0.5.3
+* Fixed basic functionality of Shiny application
+   - This includes simulation and power
+       + Needs more testing at this stage.
+
 # simglm 0.5.2
 * Addition of count outcome from sim_glm.
     - This added an additional argument that must be specified:

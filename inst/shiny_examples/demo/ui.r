@@ -369,34 +369,37 @@ ui <- dashboardPage(skin = "green",
                   dataTableOutput('power_table')
                 )
               ),
-              # fluidRow(
-              #   box(
-              #     width = 12, title = 'Power Graphics',
-              #     collapsible = TRUE, collapsed = FALSE,
-              #     status = 'warning',
+              fluidRow(
+                box(
+                  width = 12, title = 'Power Graphics',
+                  collapsible = TRUE, collapsed = FALSE,
+                  status = 'warning',
               #     checkboxInput('interactive', 'Interactive Plots?',
               #                   value = FALSE),
               #     conditionalPanel(
               #       condition = 'input.interactive == true',
               #       highchartOutput('hcontainter')
               #     )
-              #     conditionalPanel(
+                  # conditionalPanel(
               #       condition = 'input.interactive == false',
-              #       fluidRow(
-              #         box(width = 3,
-              #             uiOutput('power_x')
-              #         ),
-              #         box(width = 3,
-              #             uiOutput('power_group')
-              #         ),
-              #         box(width = 3,
-              #             uiOutput('power_facet')
-              #         )
-              #       ),
-              #       plotOutput('power_plot_out')
-              #     )
-              #   )
-              # ),
+                    fluidRow(
+                      box(width = 3,
+                          uiOutput('power_x'),
+                          verbatimTextOutput('power_x_print')
+                      ),
+                      box(width = 3,
+                          uiOutput('power_group'),
+                          verbatimTextOutput('power_group_print')
+                      ),
+                      box(width = 3,
+                          uiOutput('power_facet'),
+                          verbatimTextOutput('power_facet_print')
+                      )
+                    ),
+                    plotOutput('power_plot_out')
+                  )
+                # )
+              ),
               fluidRow(
                 box(
                   width = 12, title = 'Power Code',

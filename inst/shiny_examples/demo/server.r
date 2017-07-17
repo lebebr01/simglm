@@ -1095,17 +1095,30 @@ server <- function(input, output, session) {
   })
   
   output$power_facet <- renderUI({
-    selectInput('power_facet', 'Facet plots?',
+    selectInput('power_facet_var', 'Facet plots?',
                 choices = c(Choose = '', names(power_sim())), width = '200px')
   })
+  
+  output$power_group_print <- renderPrint({ input$power_group_var})
+  output$power_x_print <- renderPrint({ input$power_x_axis})
+  output$power_facet_print <- renderPrint({ input$power_facet_var})
   
   output$power_plot_out <- renderPlot({
     data <- power_sim()
     if(input$power_group_var == '') {
-      power_point(data)
+      power_point(data, x = input$power_x_axis, y = 'power')
     } else {
-      data[[input$power_group_var]] <- as.character(data[[input$power_group_var]])
-      power_point_group(data, group = input$power_group_var)
+      if(input$power_facet_var == '') {
+        data[[input$power_group_var]] <- as.character(data[[input$power_group_var]])
+        power_point_group(data, x = input$power_x_axis, y = 'power', 
+                          group = input$power_group_var)
+      } else {
+        data[[input$power_group_var]] <- as.character(data[[input$power_group_var]])
+        data[[input$power_facet_var]] <- as.character(data[[input$power_facet_var]])
+        power_point_group(data, x = input$power_x_axis, y = 'power', 
+                          group = input$power_group_var, 
+                          facet_var = input$power_facet_var) 
+      }
     }
   })
   

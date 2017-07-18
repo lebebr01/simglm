@@ -1086,7 +1086,7 @@ server <- function(input, output, session) {
   output$power_x <- renderUI({
     selectInput('power_x_axis', 'Variable for x-axis',
                 choices = c(Choose = '', names(power_sim())), width = '200px', 
-                selected = NULL)
+                selected = 'var')
   })
   
   output$power_group <- renderUI({
@@ -1098,10 +1098,6 @@ server <- function(input, output, session) {
     selectInput('power_facet_var', 'Facet plots?',
                 choices = c(Choose = '', names(power_sim())), width = '200px')
   })
-  
-  output$power_group_print <- renderPrint({ input$power_group_var})
-  output$power_x_print <- renderPrint({ input$power_x_axis})
-  output$power_facet_print <- renderPrint({ input$power_facet_var})
   
   output$power_plot_out <- renderPlot({
     data <- power_sim()

@@ -20,7 +20,7 @@ power_point_group <- function(data, x, y, group_var = NULL,
     geom_point(size = 4, aes_string(color = group_var, shape = group_var)) + 
     geom_line(aes_string(linetype = group_var, color = group_var)) + 
     ylab("Power") 
-  if(facet_var == '') {
+  if(is.null(facet_var)) {
     p
   } else {
     p + facet_wrap(facet_var)

@@ -384,16 +384,13 @@ ui <- dashboardPage(skin = "green",
               #       condition = 'input.interactive == false',
                     fluidRow(
                       box(width = 3,
-                          uiOutput('power_x'),
-                          verbatimTextOutput('power_x_print')
+                          uiOutput('power_x')
                       ),
                       box(width = 3,
-                          uiOutput('power_group'),
-                          verbatimTextOutput('power_group_print')
+                          uiOutput('power_group')
                       ),
                       box(width = 3,
-                          uiOutput('power_facet'),
-                          verbatimTextOutput('power_facet_print')
+                          uiOutput('power_facet')
                       )
                     ),
                     plotOutput('power_plot_out')

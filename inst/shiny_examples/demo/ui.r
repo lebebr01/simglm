@@ -371,6 +371,15 @@ ui <- dashboardPage(skin = "green",
               ),
               fluidRow(
                 box(
+                  width = 12, collapsible = TRUE, collapsed = FALSE,
+                  status = 'warning',
+                  downloadButton('downloadDataPower', 'Download Power Data'),
+                  h5('Clicking the download button with download the current 
+                     power data generated in the table above.')
+                  )
+              ),
+              fluidRow(
+                box(
                   width = 12, title = 'Power Graphics',
                   collapsible = TRUE, collapsed = FALSE,
                   status = 'warning',

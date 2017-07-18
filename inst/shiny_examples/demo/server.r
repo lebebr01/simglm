@@ -643,6 +643,15 @@ server <- function(input, output, session) {
     }
   )
   
+  output$downloadDataPower <- downloadHandler(
+    filename = function() { 
+      paste('power_data.csv', sep='') 
+    },
+    content = function(file) {
+      write.csv(power_sim(), file, row.names = FALSE)
+    }
+  )
+  
   n_code <- reactive({
     if(input$type_model == 2 | input$type_model == 3) {
       paste0('n <- ', input$samp_size_lvl2)

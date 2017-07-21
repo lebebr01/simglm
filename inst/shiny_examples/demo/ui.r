@@ -383,28 +383,30 @@ ui <- dashboardPage(skin = "green",
                   width = 12, title = 'Power Graphics',
                   collapsible = TRUE, collapsed = FALSE,
                   status = 'warning',
-              #     checkboxInput('interactive', 'Interactive Plots?',
-              #                   value = FALSE),
-              #     conditionalPanel(
-              #       condition = 'input.interactive == true',
-              #       highchartOutput('hcontainter')
-              #     )
-                  # conditionalPanel(
-              #       condition = 'input.interactive == false',
-                    fluidRow(
-                      box(width = 3,
-                          uiOutput('power_x')
-                      ),
-                      box(width = 3,
-                          uiOutput('power_group')
-                      ),
-                      box(width = 3,
-                          uiOutput('power_facet')
-                      )
+                  # checkboxInput('interactive', 'Interactive Plots?',
+                  #               value = FALSE),
+                  fluidRow(
+                    box(width = 3,
+                        uiOutput('power_x')
                     ),
+                    box(width = 3,
+                        uiOutput('power_group')
+                    ),
+                    box(width = 3,
+                        uiOutput('power_facet')
+                    )
+                  ),
+                  fluidRow(
+                  # conditionalPanel(
+                  #   condition = 'input.interactive == true',
+                  #   highchartOutput('hcontainer')
+                  # ),
+              # conditionalPanel(
+              #       condition = 'input.interactive == false',
                     plotOutput('power_plot_out')
                   )
-                # )
+                 # )
+                )
               ),
               fluidRow(
                 box(

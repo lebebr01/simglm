@@ -1127,8 +1127,21 @@ server <- function(input, output, session) {
     }
   })
   
-  # output$hcontainter <- renderHighchart({
-  #     hchart(power_sim(), 'spline', x = n, y = power, group = var)
+  # output$hcontainer <- renderHighchart({
+  #   if(input$power_group_var == '') {
+  #     hc <- highchart() %>%
+  #       hc_chart(type = 'scatter') %>%
+  #       hc_add_series(data = list_parse(
+  #         select_(power_sim(), 'power', input$power_x_axis)
+  #       ))
+  #     hchart(power_sim(), 'line', hcaes(x = input$power_x_axis, 
+  #            y = 'power'))
+  #   } else {
+  #     hchart(power_sim(), 'line', x = input$power_x_axis, 
+  #            y = 'power', 
+  #            group = input$power_group_var)
+  #   }
+  #   hc
   # })
   
   output$power_table <- renderDataTable({

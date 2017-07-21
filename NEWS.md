@@ -1,3 +1,8 @@
+# simglm 0.6.0
+* Shiny Application works again!
+   - Can now simulate and run power. 
+   - Able to download simulation and power tables (I think).
+
 # simglm 0.5.3
 * Fixed basic functionality of Shiny application
    - This includes simulation and power

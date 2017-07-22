@@ -6,17 +6,23 @@
 
 
 ## Package Installation
-This package can be installed by using the devtools package.
+This package can be directly installed through CRAN:
+
+
+```r
+install.packages("simglm")
+```
+
+The development version of the package can be installed by using the devtools package.
 
 
 ```r
 library(devtools)
 install_github("lebebr01/simglm")
-library(simglm)
 ```
 
 ## Introduction to the simglm package
-The best way to become oriented with the `simglm` package is through the package vignette. There are two ways to get to the vignette (both will open a browser to view the vignette):
+The best way to become oriented with the `simglm` package is through the package vignette. There are two ways to get to the vignettes (both will open a browser to view the vignette). Below is an example loading the "Intro" vignette directly:
 
 
 ```r
@@ -24,7 +30,7 @@ browseVignettes()
 vignette("Intro", package = "simglm")
 ```
 
-Note: You may need to tell R to build the vignettes when installing the `simglm` package by doing the following:
+Note: If you install the development version of the package, you may need to tell R to build the vignettes when installing the `simglm` package by doing the following:
 
 ```r
 install_github("lebebr01/simglm", build_vignettes = TRUE)
@@ -34,6 +40,7 @@ install_github("lebebr01/simglm", build_vignettes = TRUE)
 
 A flexible suite of functions to simulate nested data.  
 Currently supports the following features:
+
 * Longitudinal data simulation
 * Three levels of nesting
 * Specification of distribution of random components (random effects and random error)
@@ -48,7 +55,13 @@ Currently supports the following features:
 * Single level simulation
 * Power by simulation
     + Vary parameters for a factorial simulation design.
+    + Can vary model fitted to the data to misspecify directly.
 * Simulation of missing data
 * Include other distributions for covariate simulation.
+* Continuous, Logistic (dichotomous), and Poisson (count) outcome variables.
+
+## Bugs/Feature Requests
+
+Bugs and feature requests are welcomed. Please track these on GitHub here: <https://github.com/lebebr01/simglm/issues>. I'm also open to pull requests.
 
 Enjoy!

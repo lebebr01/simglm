@@ -16,6 +16,15 @@ matrix:
     - os: linux
       dist: trusty
       env: R_CODECOV=true
+      r: oldrel
+    - os: linux
+      dist: trusty
+      env: R_CODECOV=true
+      r: release
+    - os: linux
+      dist: trusty
+      env: R_CODECOV=true
+      r: devel
     - os: osx
       osx_image: xcode8
       brew_packages: poppler

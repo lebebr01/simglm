@@ -1,7 +1,9 @@
 ## Test Environments
 * local windows install, R 3.4.1
-* win-builder (devel and release)
-* ubuntu 12.04 (travis CI) R 3.4.0
+* Ubuntu 14.04.5 LTS (travis CI) 
+    - R 3.3.3
+    - R 3.4.0
+    - R Development
 * OS X 10.11.6 (travis CI) R 3.4.1
 
 ## R CMD check results

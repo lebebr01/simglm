@@ -93,6 +93,14 @@
 #'  level one error generating function
 #' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
 #'             See \code{\link{arima.sim}} for examples.
+#' @param contrasts An optional list that specifies the contrasts to be used 
+#'  for factor variables (i.e. those variables with .f or .c). 
+#'  See \code{\link{contrasts}} for more detail.
+#' @param homogeneity Either TRUE (default) indicating homogeneity of variance
+#'  assumption is assumed or FALSE to indicate desire to generate heterogeneity 
+#'  of variance.
+#' @param heterogeneity_var Variable name as a character string to use for 
+#'  heterogeneity of variance simulation.
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -221,6 +229,8 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                     unbal = list("level2" = FALSE, "level3" = FALSE), 
                     unbal_design = list("level2" = NULL, "level3" = NULL),
                     lvl1_err_params = NULL, arima_mod = list(NULL),
+                    contrasts = NULL, homogeneity = TRUE,
+                    heterogeneity_var = NULL,
                     missing = FALSE, missing_args = list(NULL),
                    pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                     replicates, terms_vary = NULL, raw_power = TRUE, 
@@ -236,7 +246,9 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                fact_vars = fact_vars, unbal = unbal,
                unbal_design = unbal_design,
                lvl1_err_params = lvl1_err_params,
-               arima_mod = arima_mod, missing = missing, 
+               arima_mod = arima_mod, contrasts = contrasts,
+               homogeneity = homogeneity, heterogeneity_var = heterogeneity_var,
+               missing = missing, 
                missing_args = missing_args, pow_param = pow_param, 
                alpha = alpha, pow_dist = pow_dist, pow_tail = pow_tail, 
                lm_fit_mod = lm_fit_mod, lme4_fit_mod = lme4_fit_mod, 

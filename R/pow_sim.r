@@ -94,6 +94,14 @@
 #' level one error generating function
 #' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
 #'             See \code{\link{arima.sim}} for examples.
+#' @param contrasts An optional list that specifies the contrasts to be used 
+#'  for factor variables (i.e. those variables with .f or .c). 
+#'  See \code{\link{contrasts}} for more detail.
+#' @param homogeneity Either TRUE (default) indicating homogeneity of variance
+#'  assumption is assumed or FALSE to indicate desire to generate heterogeneity 
+#'  of variance.
+#' @param heterogeneity_var Variable name as a character string to use for 
+#'  heterogeneity of variance simulation.
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -122,6 +130,8 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
                             unbal = list("level2" = FALSE, "level3" = FALSE), 
                             unbal_design = list("level2" = NULL, "level3" = NULL),
                             lvl1_err_params = NULL, arima_mod = list(NULL), 
+                            contrasts = NULL, homogeneity = TRUE,
+                            heterogeity_var = NULL,
                             missing = FALSE, missing_args = list(NULL),
                             pow_param = NULL, alpha, pow_dist = c("z", "t"), 
                             pow_tail = c(1, 2), lme4_fit_mod = NULL, 
@@ -142,7 +152,8 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
                                random_param3, cov_param, k, n, p, error_var, 
                                with_err_gen, arima, data_str, cor_vars, 
                                fact_vars, unbal, unbal_design, 
-                               lvl1_err_params, arima_mod, ...)
+                               lvl1_err_params, arima_mod, contrasts, 
+                               homogeneity, heterogeneity_var, ...)
   if(missing) {
     temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), 
                                          missing_args))
@@ -302,6 +313,14 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
 #'  one error generating function
 #' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
 #'             See \code{\link{arima.sim}} for examples.
+#' @param contrasts An optional list that specifies the contrasts to be used 
+#'  for factor variables (i.e. those variables with .f or .c). 
+#'  See \code{\link{contrasts}} for more detail.
+#' @param homogeneity Either TRUE (default) indicating homogeneity of variance
+#'  assumption is assumed or FALSE to indicate desire to generate heterogeneity 
+#'  of variance.
+#' @param heterogeneity_var Variable name as a character string to use for 
+#'  heterogeneity of variance simulation.
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -325,7 +344,9 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
                         cov_param, n, p, error_var, with_err_gen, arima = FALSE, 
                         data_str, cor_vars = NULL, fact_vars = list(NULL),
                         unbal = FALSE, unbal_design = NULL, lvl1_err_params = NULL,
-                        arima_mod = list(NULL), missing = FALSE, 
+                        arima_mod = list(NULL), contrasts = NULL, 
+                        homogeneity = TRUE, heterogeneity_var = NULL, 
+                        missing = FALSE, 
                         missing_args = list(NULL), pow_param = NULL, alpha, 
                         pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                         lme4_fit_mod = NULL, 
@@ -344,7 +365,8 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
   temp_nest <- sim_reg_nested(fixed, random, fixed_param, random_param, 
                               cov_param, n, p, error_var, with_err_gen, arima,
                               data_str, cor_vars, fact_vars, unbal, unbal_design,
-                              lvl1_err_params, arima_mod, ...)
+                              lvl1_err_params, arima_mod, contrasts, 
+                              homogeneity, heterogeneity_var, ...)
   if(missing) {
     temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), 
                                          missing_args))
@@ -467,6 +489,14 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
 #'   level one error generating function
 #' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
 #'             See \code{\link{arima.sim}} for examples.
+#' @param contrasts An optional list that specifies the contrasts to be used 
+#'  for factor variables (i.e. those variables with .f or .c). 
+#'  See \code{\link{contrasts}} for more detail.
+#' @param homogeneity Either TRUE (default) indicating homogeneity of variance
+#'  assumption is assumed or FALSE to indicate desire to generate heterogeneity 
+#'  of variance.
+#' @param heterogeneity_var Variable name as a character string to use for 
+#'  heterogeneity of variance simulation.
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'   simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -485,20 +515,23 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
 sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var, 
                       with_err_gen, arima = FALSE, data_str, cor_vars = NULL, 
                       fact_vars = list(NULL), lvl1_err_params = NULL, 
-                      arima_mod = list(NULL), missing = FALSE, 
+                      arima_mod = list(NULL), contrasts = NULL, 
+                      homogeneity = TRUE, heterogeneity_var = NULL, 
+                      missing = FALSE, 
                       missing_args = list(NULL), pow_param = NULL, alpha, 
                       pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                       lm_fit_mod = NULL, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")
   
-  if(any(pow_param %ni% c(fixed_vars, '(Intercept)', 'Intercept'))) { 
-    stop('pow_param must be a subset of fixed')
-  }
+  # if(any(pow_param %ni% c(fixed_vars, '(Intercept)', 'Intercept'))) { 
+  #   stop('pow_param must be a subset of fixed')
+  # }
   
   temp_single <- sim_reg_single(fixed, fixed_param, cov_param, n, error_var, 
                                 with_err_gen, arima, data_str, 
                                 cor_vars, fact_vars, lvl1_err_params, arima_mod,
+                                contrasts, homogeneity, heterogeneity_var,
                                 ...)
 
   if(!is.null(lm_fit_mod)) {

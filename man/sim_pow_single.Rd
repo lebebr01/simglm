@@ -6,7 +6,8 @@
 \usage{
 sim_pow_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen,
   arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL),
-  lvl1_err_params = NULL, arima_mod = list(NULL), missing = FALSE,
+  lvl1_err_params = NULL, arima_mod = list(NULL), contrasts = NULL,
+  homogeneity = TRUE, heterogeneity_var = NULL, missing = FALSE,
   missing_args = list(NULL), pow_param = NULL, alpha, pow_dist = c("z",
   "t"), pow_tail = c(1, 2), lm_fit_mod = NULL, ...)
 }
@@ -65,6 +66,17 @@ level one error generating function}
 
 \item{arima_mod}{A list indicating the ARIMA model to pass to arima.sim. 
 See \code{\link{arima.sim}} for examples.}
+
+\item{contrasts}{An optional list that specifies the contrasts to be used 
+for factor variables (i.e. those variables with .f or .c). 
+See \code{\link{contrasts}} for more detail.}
+
+\item{homogeneity}{Either TRUE (default) indicating homogeneity of variance
+assumption is assumed or FALSE to indicate desire to generate heterogeneity 
+of variance.}
+
+\item{heterogeneity_var}{Variable name as a character string to use for 
+heterogeneity of variance simulation.}
 
 \item{missing}{TRUE/FALSE flag indicating whether missing data should be 
 simulated.}

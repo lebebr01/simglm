@@ -398,8 +398,15 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
       probs <- fact_vars$prob
       fact_vars$prob <- NULL
     }
+    if(is.null(fact_vars$replace)) {
+      replace_f <- NULL
+    } else {
+      replace_f <- fact_vars$replace
+      fact_vars$replace <- NULL
+    }
     Xmat <- cbind(Xmat,  do.call(cbind, purrr::pmap(fact_vars, sim_factor,
-                                                    prob = probs)))
+                                                    prob = probs,
+                                                    replace = replace_f)))
   }
   
   if(n.int == 0){

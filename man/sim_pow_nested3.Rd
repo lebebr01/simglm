@@ -9,7 +9,7 @@ sim_pow_nested3(fixed, random, random3, fixed_param, random_param = list(),
   arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL),
   unbal = list(level2 = FALSE, level3 = FALSE), unbal_design = list(level2 =
   NULL, level3 = NULL), lvl1_err_params = NULL, arima_mod = list(NULL),
-  contrasts = NULL, homogeneity = TRUE, heterogeity_var = NULL,
+  contrasts = NULL, homogeneity = TRUE, heterogeneity_var = NULL,
   missing = FALSE, missing_args = list(NULL), pow_param = NULL, alpha,
   pow_dist = c("z", "t"), pow_tail = c(1, 2), lme4_fit_mod = NULL,
   nlme_fit_mod = NULL, arima_fit_mod = NULL, ...)
@@ -129,6 +129,9 @@ See \code{\link{contrasts}} for more detail.}
 assumption is assumed or FALSE to indicate desire to generate heterogeneity 
 of variance.}
 
+\item{heterogeneity_var}{Variable name as a character string to use for 
+heterogeneity of variance simulation.}
+
 \item{missing}{TRUE/FALSE flag indicating whether missing data should be 
 simulated.}
 
@@ -156,9 +159,6 @@ See \code{\link{corStruct}} for help. This must be specified to
 include serial correlation.}
 
 \item{...}{Not currently used.}
-
-\item{heterogeneity_var}{Variable name as a character string to use for 
-heterogeneity of variance simulation.}
 }
 \description{
 Takes simulation conditions as input, exports power.

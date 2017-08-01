@@ -124,7 +124,14 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
                          n = lapply(seq_len(n.fact), function(xx) n), 
                          p = lapply(seq_len(n.fact), function(xx) p)), 
                     fact_vars)
-    Xmat <- cbind(Xmat,  do.call(cbind, purrr::pmap(fact_vars, sim_factor)))
+    if(is.null(fact_vars$prob)) {
+      probs <- NULL
+    } else {
+      probs <- fact_vars$prob
+      fact_vars$prob <- NULL
+    }
+    Xmat <- cbind(Xmat,  do.call(cbind, purrr::pmap(fact_vars, sim_factor, 
+                                                    prob = probs)))
   }
   
    if(n.int == 0){
@@ -267,7 +274,14 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
                         n = lapply(seq_len(n.fact), function(xx) n), 
                         p = lapply(seq_len(n.fact), function(xx) p)), 
                    fact_vars)
-    Xmat <- cbind(Xmat,  do.call(cbind, purrr::pmap(fact_vars, sim_factor)))
+    if(is.null(fact_vars$prob)) {
+      probs <- NULL
+    } else {
+      probs <- fact_vars$prob
+      fact_vars$prob <- NULL
+    }
+    Xmat <- cbind(Xmat,  do.call(cbind, purrr::pmap(fact_vars, sim_factor,
+                                                    prob = probs)))
   }
   
   if(n.int == 0){
@@ -378,7 +392,14 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   if(length(fact.loc > 0)) {
     fact_vars <- c(list(k = rep(0, n.fact), n = rep(n, n.fact), 
                          p = rep(0, n.fact)), fact_vars)
-    Xmat <- cbind(Xmat,  do.call(cbind, purrr::pmap(fact_vars, sim_factor)))
+    if(is.null(fact_vars$prob)) {
+      probs <- NULL
+    } else {
+      probs <- fact_vars$prob
+      fact_vars$prob <- NULL
+    }
+    Xmat <- cbind(Xmat,  do.call(cbind, purrr::pmap(fact_vars, sim_factor,
+                                                    prob = probs)))
   }
   
   if(n.int == 0){

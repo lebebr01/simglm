@@ -3,16 +3,20 @@ context('fixef_sim')
 test_that('sim_factor are discrete', {
   expect_length(table(sim_factor(n = 100, numlevels = 4, 
                                  prob = c(.25, .25, .25, .25), 
+                                 replace = TRUE,
                           var_type = 'single')), 4)
   expect_length(table(sim_factor(n = 100, p = rep(3, 100),numlevels = 4, 
                                  prob = c(.25, .25, .25, .25), 
+                                 replace = TRUE,
                                      var_type = 'level1')), 4)
   expect_length(table(sim_factor(n = 100, p = rep(3, 100), numlevels = 4, 
                                  prob = c(.25, .25, .25, .25), 
+                                 replace = TRUE,
                                      var_type = 'level2')), 4)
   expect_length(table(sim_factor(n = 100, p = rep(3, 100), k = 30, 
                                  numlevels = 4, 
                                  prob = c(.25, .25, .25, .25), 
+                                 replace = TRUE,
                                      var_type = 'level3')), 4)
 })
 
@@ -221,7 +225,9 @@ test_that('.f and .c are expanded but not .o', {
   fixed_param <- c(0.8, 1, 0.2, 0.1, 0, 0.15, 0.2, 0.5, 0.02, -0.6, -0.1)
   cov_param <- NULL
   fact_vars <- list(numlevels = c(36, 8, 5), 
-                    var_type = c('single', 'single', "single"))
+                    var_type = c('single', 'single', "single"),
+                    opts = list(list(replace = TRUE), list(replace = TRUE),
+                                list(replace = TRUE)))
   n <- 150
   error_var <- 3
   with_err_gen = 'rnorm'

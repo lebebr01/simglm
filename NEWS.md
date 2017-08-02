@@ -1,3 +1,7 @@
+# simglm 0.6.1
+* Generalize fact_vars code
+   - This now is similar to cov_param
+
 # simglm 0.6.0
 * Shiny Application works again!
    - Can now simulate and run power. 

@@ -234,7 +234,11 @@ test_that('.f and .c are expanded but not .o', {
   fixef_single <- sim_fixef_single(fixed = fixed, 
                                 fixed_vars = attr(terms(fixed),"term.labels"), 
                            cov_param = cov_param, n = n, fact_vars = fact_vars)
-  fact_vars <- list(numlevels = c(36, 8, 5), var_type = c('level2', 'level1', "level1"))
+  
+  fact_vars <- list(numlevels = c(36, 8, 5), 
+                    var_type = c('level2', 'level1', "level1"),
+                    opts = list(list(replace = TRUE), list(replace = TRUE),
+                                list(replace = TRUE)))
   fixef_nested <- sim_fixef_nested(fixed = fixed, 
                                 fixed_vars = attr(terms(fixed),"term.labels"), 
                                    p = rep(4, n), cov_param = cov_param, n = n, 

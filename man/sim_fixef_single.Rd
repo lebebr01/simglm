@@ -33,7 +33,7 @@ Does not include intercept, time, factors, or interactions.}
      \item numlevels = Number of levels for ordinal or factor variables.
      \item var_type = Must be 'single'.
  }
- Optional arguments include:
+ Optional arguments passed on to sample in a nested list. These include:
  \itemize{
      \item replace
      \item prob

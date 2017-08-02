@@ -29,10 +29,10 @@
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable 
 #'      specification, each list must include:
 #'   \itemize{
-#'        \item numlevels = Number of levels for ordinal or factor variables.
-#'        \item var_type = Must be 'level1' or 'level2'.
+#'        \item numlevels: Number of levels for ordinal or factor variables.
+#'        \item var_type: Must be 'level1' or 'level2'.
 #'    }
-#'    Optional arguments include:
+#'    Optional arguments passed on to sample in a nested list. These include:
 #'    \itemize{
 #'        \item replace
 #'        \item prob
@@ -120,18 +120,20 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   }
 
   if(length(fact.loc) > 0) {
-    fact_vars <- c(list(k = lapply(seq_len(n.fact), function(xx) 0), 
-                         n = lapply(seq_len(n.fact), function(xx) n), 
-                         p = lapply(seq_len(n.fact), function(xx) p)), 
-                    fact_vars)
-    if(is.null(fact_vars$prob)) {
-      probs <- NULL
-    } else {
-      probs <- fact_vars$prob
-      fact_vars$prob <- NULL
-    }
-    Xmat <- cbind(Xmat,  do.call(cbind, purrr::pmap(fact_vars, sim_factor, 
-                                                    prob = probs)))
+    fact_vars_args <- lapply(seq_len(n.fact), function(xx)
+      c(fact_vars$numlevels[[xx]], 
+        fact_vars$var_type[[xx]],
+        fact_vars$opts[[xx]])
+    )
+    
+    Xmat <- cbind(Xmat, do.call(cbind, purrr::invoke_map(lapply(seq_len(n.fact), 
+                                                                function(xx) sim_factor),
+                                                         fact_vars_args, 
+                                                         n = n,
+                                                         k = NULL,
+                                                         p = p
+    ))
+    )
   }
   
    if(n.int == 0){
@@ -186,7 +188,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 #'        \item numlevels = Number of levels for ordinal or factor variables.
 #'        \item var_type = Must be 'level1', 'level2', or 'level3'.
 #'    }
-#'    Optional arguments include:
+#'    Optional arguments passed on to sample in a nested list. These include:
 #'    \itemize{
 #'        \item replace
 #'        \item prob
@@ -270,18 +272,20 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   }
   
   if(length(fact.loc) > 0) {
-    fact_vars <- c(list(k = lapply(seq_len(n.fact), function(xx) k), 
-                        n = lapply(seq_len(n.fact), function(xx) n), 
-                        p = lapply(seq_len(n.fact), function(xx) p)), 
-                   fact_vars)
-    if(is.null(fact_vars$prob)) {
-      probs <- NULL
-    } else {
-      probs <- fact_vars$prob
-      fact_vars$prob <- NULL
-    }
-    Xmat <- cbind(Xmat,  do.call(cbind, purrr::pmap(fact_vars, sim_factor,
-                                                    prob = probs)))
+    fact_vars_args <- lapply(seq_len(n.fact), function(xx)
+      c(fact_vars$numlevels[[xx]], 
+        fact_vars$var_type[[xx]],
+        fact_vars$opts[[xx]])
+    )
+    
+    Xmat <- cbind(Xmat, do.call(cbind, purrr::invoke_map(lapply(seq_len(n.fact), 
+                                                                function(xx) sim_factor),
+                                                         fact_vars_args, 
+                                                         n = n,
+                                                         k = k,
+                                                         p = p
+    ))
+    )
   }
   
   if(n.int == 0){
@@ -332,7 +336,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #'        \item numlevels = Number of levels for ordinal or factor variables.
 #'        \item var_type = Must be 'single'.
 #'    }
-#'    Optional arguments include:
+#'    Optional arguments passed on to sample in a nested list. These include:
 #'    \itemize{
 #'        \item replace
 #'        \item prob
@@ -390,16 +394,20 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   }
 
   if(length(fact.loc > 0)) {
-    fact_vars <- c(list(k = rep(0, n.fact), n = rep(n, n.fact), 
-                         p = rep(0, n.fact)), fact_vars)
-    if(is.null(fact_vars$prob)) {
-      probs <- NULL
-    } else {
-      probs <- fact_vars$prob
-      fact_vars$prob <- NULL
-    }
-    Xmat <- cbind(Xmat,  do.call(cbind, purrr::pmap(fact_vars, sim_factor,
-                                                    prob = probs)))
+    fact_vars_args <- lapply(seq_len(n.fact), function(xx)
+       c(fact_vars$numlevels[[xx]], 
+         fact_vars$var_type[[xx]],
+         fact_vars$opts[[xx]])
+      )
+    
+    Xmat <- cbind(Xmat, do.call(cbind, purrr::invoke_map(lapply(seq_len(n.fact), 
+                                                    function(xx) sim_factor),
+                                             fact_vars_args, 
+                                             n = n,
+                                             k = NULL,
+                                             p = NULL
+    ))
+    )
   }
   
   if(n.int == 0){
@@ -431,33 +439,29 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
 #' @param p Number of within cluster observations for multilevel
 #' @param numlevels Scalar indicating the number of levels for categorical, 
 #'   factor, or discrete variable
-#' @param replace Whether to replace levels of categorical variable, TRUE/FALSE
-#' @param prob Probability of levels for variable, must be same length as 
-#'  numlevels
 #' @param var_type Variable type for the variable, must be either 
 #'   "level1", "level2", "level3", or "single"
-#' @param value_labels Optional argument with value labels for variable, 
-#'        converts variable to factor.
+#' @param ... Additional parameters passed to the sample function.
 #' @export 
-sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL, 
-                       var_type = c('level1', 'level2', 'level3', 'single'), 
-                       value_labels = NULL) {
+sim_factor <- function(k = NULL, n, p, numlevels, 
+                       var_type = c('level1', 'level2', 'level3', 'single'),
+                       ...) {
 
-  if(var_type == 'single' | var_type == 'level2') {
-    if(replace == FALSE & numlevels < n) {
-      stop("If replace = FALSE, numlevels must be greater than n for level2 or single")
-    }
-  }
-  if(var_type == "level1") {
-    if(replace == FALSE & numlevels < sum(p)){
-      stop("If replace = FALSE, numlevels must be greater than sum(p) for level1")
-    }
-  }
-  if(var_type == "level3") {
-    if(replace == FALSE & numlevels < k) {
-      stop("If replace = FALSE, numlevels must be greater than k for level3")
-    }
-  }
+  # if(var_type == 'single' | var_type == 'level2') {
+  #   if(replace == FALSE & numlevels < n) {
+  #     stop("If replace = FALSE, numlevels must be greater than n for level2 or single")
+  #   }
+  # }
+  # if(var_type == "level1") {
+  #   if(replace == FALSE & numlevels < sum(p)){
+  #     stop("If replace = FALSE, numlevels must be greater than sum(p) for level1")
+  #   }
+  # }
+  # if(var_type == "level3") {
+  #   if(replace == FALSE & numlevels < k) {
+  #     stop("If replace = FALSE, numlevels must be greater than k for level3")
+  #   }
+  # }
   
   end <- cumsum(n)
   beg <- c(1, cumsum(n) + 1)
@@ -471,22 +475,18 @@ sim_factor <- function(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
   var_type <- match.arg(var_type)
   
   cat_var <- switch(var_type,
-         single = sample(x = numlevels, size = n, replace = replace, 
-                         prob = prob),
-         level3 = rep(sample(x = numlevels, size = k, replace = replace, 
-                           prob = prob), times = lvl3ss),
-         level2 = rep(sample(x = numlevels, size = length(p), replace = replace, 
-                           prob = prob), times = p),
-         level1 = sample(x = numlevels, size = sum(p), replace = replace, 
-                       prob = prob)
+         single = sample(x = numlevels, size = n, ...),
+         level3 = rep(sample(x = numlevels, size = k, ...), times = lvl3ss),
+         level2 = rep(sample(x = numlevels, size = length(p), ...), times = p),
+         level1 = sample(x = numlevels, size = sum(p), ...)
          )
   
-  if(!is.null(value_labels)) {
-    if(length(value_labels) != numlevels) { 
-      stop("value_labels must be same length as numlevels") 
-      }
-    cat_var <- factor(cat_var, labels = value_labels)
-  }
+  # if(!is.null(value_labels)) {
+  #   if(length(value_labels) != numlevels) { 
+  #     stop("value_labels must be same length as numlevels") 
+  #     }
+  #   cat_var <- factor(cat_var, labels = value_labels)
+  # }
   
   cat_var
 }

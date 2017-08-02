@@ -75,7 +75,9 @@ fixed <- ~ 1 + act_o + diff.o + numCourse_f + act_o:numCourse_f
 fixed_param <- c(0.8, 1, 0.2, 0.1, 0, 0.15, 0.2, 0.5, 0.02, -0.6, -0.1)
 cov_param <- NULL
 fact_vars <- list(numlevels = c(36, 8, 5), 
-                  var_type = c('single', 'single', "single"))
+                  var_type = c('single', 'single', "single"),
+                  opts = list(list(replace = TRUE), list(replace = TRUE),
+                              list(replace = TRUE)))
 n <- 150
 error_var <- 3
 with_err_gen = 'rnorm'
@@ -100,7 +102,8 @@ cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
                   var_type = c("single", "single"),
                   opts = list(list(mean = 0, sd = 4),
                               list(mean = 0, sd = 3)))
-fact_vars <- list(numlevels = 5, var_type = "single")
+fact_vars <- list(numlevels = 5, var_type = "single", 
+                  opts = list(list(replace = TRUE)))
 n <- 150
 error_var <- 3
 with_err_gen = 'rnorm'
@@ -123,7 +126,8 @@ cov_param <- list(dist_fun = c('rt', 'rgamma'),
                   var_type = c("single", "single"),
                   opts = list(list(df = 5),
                               list(shape = 2)))
-fact_vars <- list(numlevels = 5, var_type = "single")
+fact_vars <- list(numlevels = 5, var_type = "single",
+                  opts = list(list(replace = TRUE)))
 n <- 150
 error_var <- 3
 with_err_gen = 'rnorm'
@@ -176,7 +180,9 @@ fixed <- ~ 1 + act_o + diff.o + numCourse_f
 fixed_param <- c(0.8, 1, 0.2, 0.1, 0, 0.15, 0.2)
 cov_param <- NULL
 fact_vars <- list(numlevels = c(36, 8, 5), 
-                  var_type = c('single', 'single', "single"))
+                  var_type = c('single', 'single', "single"),
+                  opts = list(list(replace = TRUE), list(replace = TRUE),
+                              list(replace = TRUE)))
 n <- 150
 error_var <- c(3, 10, 20, 5, 4)
 with_err_gen = 'rnorm'
@@ -273,7 +279,7 @@ A similar framework can be used for cross-sectional data, such as when students 
 One last note about cross-sectional data.  As a default for longitudinal data, time is always considered to be in the model in some fashion (as noted above when talking about the `cov_param` object). Therefore, when specifying the `cov_param` and `fact_vars` objects, ensure information about all variables is there.
 
 #### Categorical Data for Nested Designs
-The same framework to specify categorical data for single level regression designs is used for nested designs. Just asign the ".f", ".c", or ".o" to the end of the name and the function will take care of the rest.
+The same framework to specify categorical data for single level regression designs is used for nested designs. Just asign the ".f", ".c", or ".o" (or "_f", "_c", or "_o") to the end of the name and the function will take care of the rest.
 
 ## Bugs/Feature Requests
 Lastly, for any bugs or feature requests go to the github repository to create post an issue. I will work to resolve them as quickly as possible. See [simglm github repository](https://github.com/lebebr01/simglm)

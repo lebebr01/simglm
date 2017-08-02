@@ -167,7 +167,8 @@ random_param <- list(random_var = c(7, 2), rand_gen = 'rnorm')
 cov_param <- list(dist_fun = 'rnorm', 
                   var_type = c("level1"),
                   opts = list(list(mean = 0, sd = 1.5)))
-fact_vars <- list(numlevels = c(36), var_type = c('level2'))
+fact_vars <- list(numlevels = c(36), var_type = c('level2'),
+                  opts = list(list(replace = TRUE)))
 n <- 150
 unbal <- TRUE
 error_var <- 4
@@ -195,7 +196,8 @@ random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
 cov_param <- list(dist_fun = 'rnorm', 
                   var_type = c("level1"),
                   opts = list(list(mean = 0, sd = 1.5)))
-fact_vars <- list(numlevels = c(36, 12), var_type = c('level2', 'level3'))
+fact_vars <- list(numlevels = c(36, 12), var_type = c('level2', 'level3'),
+                  opts = list(list(replace = TRUE), list(replace = TRUE)))
 k <- 10
 unbal <- list(level2 = TRUE, level3 = TRUE)
 error_var <- 4

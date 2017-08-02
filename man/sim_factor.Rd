@@ -4,8 +4,8 @@
 \alias{sim_factor}
 \title{Simulate categorical, factor, or discrete variables}
 \usage{
-sim_factor(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
-  var_type = c("level1", "level2", "level3", "single"), value_labels = NULL)
+sim_factor(k = NULL, n, p, numlevels, var_type = c("level1", "level2",
+  "level3", "single"), ...)
 }
 \arguments{
 \item{k}{Number of third level clusters.}
@@ -17,16 +17,10 @@ sim_factor(k = NULL, n, p, numlevels, replace = TRUE, prob = NULL,
 \item{numlevels}{Scalar indicating the number of levels for categorical, 
 factor, or discrete variable}
 
-\item{replace}{Whether to replace levels of categorical variable, TRUE/FALSE}
-
-\item{prob}{Probability of levels for variable, must be same length as 
-numlevels}
-
 \item{var_type}{Variable type for the variable, must be either 
 "level1", "level2", "level3", or "single"}
 
-\item{value_labels}{Optional argument with value labels for variable, 
-converts variable to factor.}
+\item{...}{Additional parameters passed to the sample function.}
 }
 \description{
 Function that simulates discrete, factor, or categorical variables.  

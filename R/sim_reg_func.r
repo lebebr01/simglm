@@ -220,6 +220,9 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var,
 #'  of variance.
 #' @param heterogeneity_var Variable name as a character string to use for 
 #'  heterogeneity of variance simulation.
+#' @param cross_class_params A list of named parameters when cross classified 
+#'  data structures are desired. Must include number of cross classified clusters 
+#'  and formula random effect structure (similar to random argument).
 #' @param ... Not currently used.
 #' @importFrom tibble as_tibble
 #' @export 
@@ -248,7 +251,8 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
                            fact_vars = list(NULL), unbal = FALSE, 
                            unbal_design = NULL, lvl1_err_params = NULL, 
                            arima_mod = list(NULL), contrasts = NULL, 
-                           homogeneity = TRUE, heterogeneity_var = NULL, ...) {
+                           homogeneity = TRUE, heterogeneity_var = NULL, 
+                           cross_class_params = list(NULL), ...) {
 
   fixed_vars <- attr(terms(fixed),"term.labels")  
   rand_vars <- attr(terms(random),"term.labels")  

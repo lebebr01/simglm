@@ -319,8 +319,6 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
       
       cross_zmat <- model.matrix(cross_class_params$random, 
                                  data.frame(Xmat$Xmat))
-      
-      Zmat <- cbind(Zmat, cross_zmat)
     }
     
     sim_data <- data_reg_nested(Xmat$Xmat, Zmat, fixed_param, rand_eff, n, 

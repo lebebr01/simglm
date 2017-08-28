@@ -252,7 +252,7 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
                            unbal_design = NULL, lvl1_err_params = NULL, 
                            arima_mod = list(NULL), contrasts = NULL, 
                            homogeneity = TRUE, heterogeneity_var = NULL, 
-                           cross_class_params = list(NULL), ...) {
+                           cross_class_params = NULL, ...) {
 
   fixed_vars <- attr(terms(fixed),"term.labels")  
   rand_vars <- attr(terms(random),"term.labels")  
@@ -299,6 +299,29 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
                           arima_mod = arima_mod, homogeneity = homogeneity,
                           fixef = Xmat$Omat, heterogeneity_var = heterogeneity_var,
                           ...)
+    
+    if(!is.null(cross_class_params)) {
+      cross_ids <- data.frame(id = sample(1:cross_class_params$num_ids, lvl1ss,
+                          replace = TRUE))
+      
+      cross_rand_eff <- do.call(sim_rand_eff, 
+                                c(cross_class_params$random_param,
+                                  n = cross_class_params$num_ids))
+      cross_rand_eff$id <- 1:cross_class_params$num_ids
+      
+      dplyr::left_join(cross_ids, cross_rand_eff, by = 'id')
+      
+      
+      cross_reff <- do.call("cbind", lapply(1:ncol(cross_rand_eff), function(xx)
+        rep(cross_rand_eff[,xx], times = lvl1ss)))
+      colnames(reff) <- c(unlist(lapply(1:ncol(cross_rand_eff), function(xx)
+        paste("b", xx-1, sep = ""))))
+      
+      cross_zmat <- model.matrix(cross_class_params$random, 
+                                 data.frame(Xmat$Xmat))
+      
+      Zmat <- cbind(Zmat, cross_zmat)
+    }
     
     sim_data <- data_reg_nested(Xmat$Xmat, Zmat, fixed_param, rand_eff, n, 
                                 p = lvl1ss, err = err)

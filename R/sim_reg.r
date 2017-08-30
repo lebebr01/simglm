@@ -104,6 +104,9 @@
 #'  of variance.
 #' @param heterogeneity_var Variable name as a character string to use for 
 #'  heterogeneity of variance simulation.
+#' @param cross_class_params A list of named parameters when cross classified 
+#'  data structures are desired. Must include number of cross classified clusters 
+#'  and formula random effect structure (similar to random argument).
 #' @param ... Not currently used.
 #' @import stats
 #' @export 
@@ -187,7 +190,8 @@ sim_reg <- function(fixed, random, random3, fixed_param,
                     unbal_design = list("level2" = NULL, "level3" = NULL), 
                     lvl1_err_params = NULL, arima_mod = list(NULL), 
                     contrasts = NULL, homogeneity = TRUE,
-                    heterogeneity_var = NULL, ...) {
+                    heterogeneity_var = NULL, cross_class_params = NULL, 
+                    ...) {
   
   if(data_str == "single"){
     sim_reg_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen, 
@@ -198,13 +202,15 @@ sim_reg <- function(fixed, random, random3, fixed_param,
   	  sim_reg_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 
   	                 error_var, with_err_gen, arima, data_str, cor_vars, 
   	                 fact_vars, unbal, unbal_design, lvl1_err_params, 
-  	                 arima_mod, contrasts, homogeneity, heterogeneity_var, ...)
+  	                 arima_mod, contrasts, homogeneity, heterogeneity_var, 
+  	                 cross_class_params, ...)
   } else {
     sim_reg_nested3(fixed, random, random3, fixed_param, random_param, 
                     random_param3, cov_param, k, n, p, error_var, with_err_gen, 
                     arima, data_str, cor_vars, fact_vars, unbal, 
                     unbal_design, lvl1_err_params, arima_mod, contrasts,
-                    homogeneity, heterogeneity_var, ...)
+                    homogeneity, heterogeneity_var, 
+                    cross_class_params, ...)
   }
  }
 }
@@ -302,6 +308,10 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #' @param outcome_type A vector specifying the type of outcome, must be either
 #'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
 #'   be counts.
+#' @param cross_class_params A list of named parameters when cross classified 
+#'  data structures are desired. Must include number of cross classified clusters 
+#'  and formula random effect structure (similar to random argument).
+#' @param ... Not currently used.
 #' @param ... Not currently used.
 #' @export 
 #' 
@@ -373,7 +383,8 @@ sim_glm <- function(fixed, random, random3, fixed_param, random_param = list(),
                     data_str, cor_vars = NULL, fact_vars = list(NULL), 
                     unbal = list("level2" = FALSE, "level3" = FALSE), 
                     unbal_design = list("level2" = NULL, "level3" = NULL),
-                    contrasts = NULL, outcome_type, ...) {
+                    contrasts = NULL, outcome_type, 
+                    cross_class_params = NULL, ...) {
   
   if(data_str == "single"){
     sim_glm_single(fixed, fixed_param, cov_param, n, data_str, 
@@ -382,12 +393,12 @@ sim_glm <- function(fixed, random, random3, fixed_param, random_param = list(),
     if (is.null(k)){
       sim_glm_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 
                      data_str, cor_vars, fact_vars, unbal, unbal_design, 
-                     contrasts, outcome_type, ...)
+                     contrasts, outcome_type, cross_class_params, ...)
     } else {
       sim_glm_nested3(fixed, random, random3, fixed_param, random_param, 
                       random_param3, cov_param, k, n, p, data_str, cor_vars, 
                       fact_vars, unbal, unbal_design, contrasts,
-                      outcome_type, ...)
+                      outcome_type, cross_class_params, ...)
     }
   }
 }

@@ -130,6 +130,10 @@ of variance.}
 heterogeneity of variance simulation.}
 
 \item{...}{Not currently used.}
+
+\item{cross_class_params}{A list of named parameters when cross classified 
+data structures are desired. Must include number of cross classified clusters 
+and formula random effect structure (similar to random argument).}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

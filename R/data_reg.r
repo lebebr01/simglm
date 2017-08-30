@@ -33,9 +33,11 @@ data_reg_single <- function(Xmat, beta, n, err) {
 #' @param n Number of clusters.
 #' @param p Number of units within each cluster.
 #' @param err A vector of within cluster errors.
+#' @param cross_class Currently not used
 #' @importFrom Matrix bdiag
 #' @export 
-data_reg_nested <- function(Xmat, Zmat, beta, rand_eff, n, p, err) {
+data_reg_nested <- function(Xmat, Zmat, beta, rand_eff, n, p, err,
+                            cross_class = NULL) {
   
    Fbeta <- (Xmat %*% beta) 
     
@@ -46,6 +48,10 @@ data_reg_nested <- function(Xmat, Zmat, beta, rand_eff, n, p, err) {
     ZmatBlock <- bdiag(ZmatList)
     reVec <- matrix(c(t(rand_eff)))
     re <- as.matrix(ZmatBlock %*% reVec)
+    
+    if(!is.null(cross_class)) {
+      
+    }
 
     sim_data <- Fbeta + re + err
     sim_data <- cbind(Fbeta, re, err, sim_data)

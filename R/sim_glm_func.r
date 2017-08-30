@@ -158,6 +158,10 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
 #' @param outcome_type A vector specifying the type of outcome, must be either
 #'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
 #'   be counts.
+#' @param cross_class_params A list of named parameters when cross classified 
+#'  data structures are desired. Must include number of cross classified clusters 
+#'  and formula random effect structure (similar to random argument).
+#' @param ... Not currently used.
 #' @param ... Not currently used.
 #' @importFrom tibble as_tibble
 #'      
@@ -182,7 +186,7 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(),
                            cov_param, n, p, data_str, cor_vars = NULL, 
                            fact_vars = list(NULL), unbal = FALSE, 
                            unbal_design = NULL, contrasts = NULL, 
-                           outcome_type, ...) {
+                           outcome_type, cross_class_params = NULL, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")    
   rand.vars <- attr(terms(random),"term.labels")   
@@ -246,6 +250,22 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(),
   
   Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
   Xmat$clustID <- rep(1:n, times = lvl1ss)
+  
+  if(!is.null(cross_class_params)) {
+    cross_ids <- data.frame(id = sample(1:cross_class_params$num_ids, sum(lvl1ss),
+                                        replace = TRUE))
+    
+    cross_rand_eff <- data.frame(do.call(sim_rand_eff, 
+                                         c(cross_class_params$random_param,
+                                           n = cross_class_params$num_ids)))
+    cross_rand_eff$id <- 1:cross_class_params$num_ids
+    
+    cross_eff <- dplyr::left_join(cross_ids, cross_rand_eff, by = 'id')
+    names(cross_eff) <- c('clust2id_cross', 'c1')
+    
+    Xmat <- dplyr::bind_cols(Xmat, cross_eff)
+    Xmat$sim_data <- Xmat$sim_data + Xmat$c1
+  }
   
   Xmat <- Xmat[, !duplicated(colnames(Xmat))]
   
@@ -344,6 +364,10 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(),
 #' @param outcome_type A vector specifying the type of outcome, must be either
 #'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
 #'   be counts.
+#' @param cross_class_params A list of named parameters when cross classified 
+#'  data structures are desired. Must include number of cross classified clusters 
+#'  and formula random effect structure (similar to random argument).
+#' @param ... Not currently used.
 #' @param ... Not currently used.
 #' @importFrom tibble as_tibble
 #' 
@@ -376,7 +400,7 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param,
                             unbal = list("level2" = FALSE, "level3" = FALSE), 
                             unbal_design = list("level2" = NULL, "level3" = NULL),
                             contrasts = NULL, 
-                            outcome_type, ...) {
+                            outcome_type, cross_class_params = NULL, ...) {
 
   fixed_vars <- attr(terms(fixed),"term.labels")    
   rand.vars <- attr(terms(random),"term.labels")   
@@ -485,6 +509,22 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param,
   Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
   Xmat$clustID <- rep(1:n, times = lvl1ss)
   Xmat$clust3ID <- rep(1:k, times = lvl3ss)
+  
+  if(!is.null(cross_class_params)) {
+    cross_ids <- data.frame(id = sample(1:cross_class_params$num_ids, sum(lvl1ss),
+                                        replace = TRUE))
+    
+    cross_rand_eff <- data.frame(do.call(sim_rand_eff, 
+                                         c(cross_class_params$random_param,
+                                           n = cross_class_params$num_ids)))
+    cross_rand_eff$id <- 1:cross_class_params$num_ids
+    
+    cross_eff <- dplyr::left_join(cross_ids, cross_rand_eff, by = 'id')
+    names(cross_eff) <- c('clust2id_cross', 'c1')
+    
+    Xmat <- dplyr::bind_cols(Xmat, cross_eff)
+    Xmat$sim_data <- Xmat$sim_data + Xmat$c1
+  }
   
   Xmat <- Xmat[, !duplicated(colnames(Xmat))]
   

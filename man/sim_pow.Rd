@@ -228,7 +228,7 @@ pow_param <- c('(Intercept)', 'act', 'diff', 'numCourse')
 alpha <- .01
 pow_dist <- "t"
 pow_tail <- 2
-replicates <- 2
+replicates <- 1
 terms_vary <- list(n = c(20, 40, 60, 80, 100), error_var = c(5, 10, 20))
 power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
                      n = n, error_var = error_var, with_err_gen = with_err_gen, 
@@ -260,7 +260,7 @@ pow_param <- c('time', 'diff', 'act', 'actClust')
 alpha <- .01
 pow_dist <- "z"
 pow_tail <- 2
-replicates <- 2
+replicates <- 1
 power_out <- sim_pow(fixed = fixed, random = random, random3 = random3,
                      fixed_param = fixed_param, 
                      random_param = random_param, 

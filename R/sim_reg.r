@@ -312,7 +312,6 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #'  data structures are desired. Must include number of cross classified clusters 
 #'  and formula random effect structure (similar to random argument).
 #' @param ... Not currently used.
-#' @param ... Not currently used.
 #' @export 
 #' 
 #' @examples

@@ -93,8 +93,6 @@ data structures are desired. Must include number of cross classified clusters
 and formula random effect structure (similar to random argument).}
 
 \item{...}{Not currently used.}
-
-\item{...}{Not currently used.}
 }
 \description{
 Takes simulation parameters as inputs and returns simulated data.

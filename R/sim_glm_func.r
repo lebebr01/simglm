@@ -162,7 +162,6 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
 #'  data structures are desired. Must include number of cross classified clusters 
 #'  and formula random effect structure (similar to random argument).
 #' @param ... Not currently used.
-#' @param ... Not currently used.
 #' @importFrom tibble as_tibble
 #'      
 #' @examples
@@ -367,7 +366,6 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(),
 #' @param cross_class_params A list of named parameters when cross classified 
 #'  data structures are desired. Must include number of cross classified clusters 
 #'  and formula random effect structure (similar to random argument).
-#' @param ... Not currently used.
 #' @param ... Not currently used.
 #' @importFrom tibble as_tibble
 #' 

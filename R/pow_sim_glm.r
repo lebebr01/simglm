@@ -87,6 +87,9 @@
 #' @param outcome_type A vector specifying the type of outcome, must be either
 #'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
 #'   be counts.
+#' @param cross_class_params A list of named parameters when cross classified 
+#'  data structures are desired. Must include number of cross classified clusters 
+#'  and formula random effect structure (similar to random argument).
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -108,7 +111,7 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
                                 fact_vars = list(NULL), 
                                 unbal = list("level2" = FALSE, "level3" = FALSE), 
                                 unbal_design = list("level2" = NULL, "level3" = NULL),
-                                outcome_type, 
+                                outcome_type, cross_class_params = NULL,
                                 missing = FALSE, missing_args = list(NULL),
                                 pow_param = NULL, alpha, pow_dist = c("z", "t"), 
                                 pow_tail = c(1, 2), 
@@ -129,7 +132,7 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
                                random_param3, cov_param, k, n, p, 
                                data_str, cor_vars, fact_vars, 
                                unbal, unbal_design, outcome_type = outcome_type, 
-                               ...)
+                               cross_class_params, ...)
   if(missing) {
     temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), 
                                          missing_args))
@@ -254,6 +257,9 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
 #' @param outcome_type A vector specifying the type of outcome, must be either
 #'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
 #'   be counts.
+#' @param cross_class_params A list of named parameters when cross classified 
+#'  data structures are desired. Must include number of cross classified clusters 
+#'  and formula random effect structure (similar to random argument).
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -274,7 +280,7 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
                           cor_vars = NULL, fact_vars = list(NULL),
                           unbal = list("level2" = FALSE, "level3" = FALSE), 
                           unbal_design = list("level2" = NULL, "level3" = NULL),
-                          outcome_type, missing = FALSE, 
+                          outcome_type, cross_class_params = NULL, missing = FALSE, 
                           missing_args = list(NULL), pow_param = NULL, 
                           alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                           lme4_fit_mod = NULL, lme4_fit_family, ...) {
@@ -291,7 +297,8 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
 
   temp_nest <- sim_glm_nested(fixed, random, fixed_param, random_param, 
                               cov_param, n, p, data_str, cor_vars, fact_vars, 
-                              unbal, unbal_design, outcome_type = outcome_type, ...)
+                              unbal, unbal_design, outcome_type = outcome_type, 
+                              cross_class_params, ...)
   if(missing) {
     temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), 
                                          missing_args))

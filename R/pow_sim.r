@@ -102,6 +102,9 @@
 #'  of variance.
 #' @param heterogeneity_var Variable name as a character string to use for 
 #'  heterogeneity of variance simulation.
+#' @param cross_class_params A list of named parameters when cross classified 
+#'  data structures are desired. Must include number of cross classified clusters 
+#'  and formula random effect structure (similar to random argument).
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -131,7 +134,7 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
                             unbal_design = list("level2" = NULL, "level3" = NULL),
                             lvl1_err_params = NULL, arima_mod = list(NULL), 
                             contrasts = NULL, homogeneity = TRUE,
-                            heterogeneity_var = NULL,
+                            heterogeneity_var = NULL, cross_class_params = NULL,
                             missing = FALSE, missing_args = list(NULL),
                             pow_param = NULL, alpha, pow_dist = c("z", "t"), 
                             pow_tail = c(1, 2), lme4_fit_mod = NULL, 
@@ -153,7 +156,8 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
                                with_err_gen, arima, data_str, cor_vars, 
                                fact_vars, unbal, unbal_design, 
                                lvl1_err_params, arima_mod, contrasts, 
-                               homogeneity, heterogeneity_var, ...)
+                               homogeneity, heterogeneity_var, 
+                               cross_class_params, ...)
   if(missing) {
     temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), 
                                          missing_args))
@@ -321,6 +325,9 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
 #'  of variance.
 #' @param heterogeneity_var Variable name as a character string to use for 
 #'  heterogeneity of variance simulation.
+#' @param cross_class_params A list of named parameters when cross classified 
+#'  data structures are desired. Must include number of cross classified clusters 
+#'  and formula random effect structure (similar to random argument).
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -346,6 +353,7 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
                         unbal = FALSE, unbal_design = NULL, lvl1_err_params = NULL,
                         arima_mod = list(NULL), contrasts = NULL, 
                         homogeneity = TRUE, heterogeneity_var = NULL, 
+                        cross_class_params = NULL,
                         missing = FALSE, 
                         missing_args = list(NULL), pow_param = NULL, alpha, 
                         pow_dist = c("z", "t"), pow_tail = c(1, 2), 
@@ -366,7 +374,8 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
                               cov_param, n, p, error_var, with_err_gen, arima,
                               data_str, cor_vars, fact_vars, unbal, unbal_design,
                               lvl1_err_params, arima_mod, contrasts, 
-                              homogeneity, heterogeneity_var, ...)
+                              homogeneity, heterogeneity_var, 
+                              cross_class_params, ...)
   if(missing) {
     temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), 
                                          missing_args))

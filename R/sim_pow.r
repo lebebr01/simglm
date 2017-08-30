@@ -101,6 +101,9 @@
 #'  of variance.
 #' @param heterogeneity_var Variable name as a character string to use for 
 #'  heterogeneity of variance simulation.
+#' @param cross_class_params A list of named parameters when cross classified 
+#'  data structures are desired. Must include number of cross classified clusters 
+#'  and formula random effect structure (similar to random argument).
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -230,7 +233,7 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                     unbal_design = list("level2" = NULL, "level3" = NULL),
                     lvl1_err_params = NULL, arima_mod = list(NULL),
                     contrasts = NULL, homogeneity = TRUE,
-                    heterogeneity_var = NULL,
+                    heterogeneity_var = NULL, cross_class_params = NULL,
                     missing = FALSE, missing_args = list(NULL),
                    pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                     replicates, terms_vary = NULL, raw_power = TRUE, 
@@ -248,7 +251,7 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                lvl1_err_params = lvl1_err_params,
                arima_mod = arima_mod, contrasts = contrasts,
                homogeneity = homogeneity, heterogeneity_var = heterogeneity_var,
-               missing = missing, 
+               cross_class_params = cross_class_params, missing = missing, 
                missing_args = missing_args, pow_param = pow_param, 
                alpha = alpha, pow_dist = pow_dist, pow_tail = pow_tail, 
                lm_fit_mod = lm_fit_mod, lme4_fit_mod = lme4_fit_mod, 
@@ -458,6 +461,9 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
 #' @param outcome_type A vector specifying the type of outcome, must be either
 #'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
 #'   be counts.
+#' @param cross_class_params A list of named parameters when cross classified 
+#'  data structures are desired. Must include number of cross classified clusters 
+#'  and formula random effect structure (similar to random argument).
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -518,7 +524,7 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                     data_str, cor_vars = NULL, fact_vars = list(NULL), 
                     unbal = list("level2" = FALSE, "level3" = FALSE), 
                     unbal_design = list("level2" = NULL, "level3" = NULL),
-                    outcome_type, 
+                    outcome_type, cross_class_params = NULL,
                     missing = FALSE, missing_args = list(NULL),
                   pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                     replicates, terms_vary = NULL, raw_power = TRUE, 
@@ -531,7 +537,7 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                cov_param = cov_param, k = k, n = n, p = p, 
                data_str = data_str, cor_vars = cor_vars, 
                fact_vars = fact_vars, unbal = unbal, unbal_design = unbal_design,
-               outcome_type = outcome_type, 
+               outcome_type = outcome_type, cross_class_params = cross_class_params,
                missing = missing, missing_args = missing_args,
                pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
                pow_tail = pow_tail, glm_fit_mod = glm_fit_mod, 

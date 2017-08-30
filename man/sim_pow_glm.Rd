@@ -9,8 +9,8 @@ sim_pow_glm(fixed, random = NULL, random3 = NULL, fixed_param,
   k = NULL, n, p = NULL, data_str, cor_vars = NULL,
   fact_vars = list(NULL), unbal = list(level2 = FALSE, level3 = FALSE),
   unbal_design = list(level2 = NULL, level3 = NULL), outcome_type,
-  missing = FALSE, missing_args = list(NULL), pow_param, alpha,
-  pow_dist = c("z", "t"), pow_tail = c(1, 2), replicates,
+  cross_class_params = NULL, missing = FALSE, missing_args = list(NULL),
+  pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), replicates,
   terms_vary = NULL, raw_power = TRUE, glm_fit_mod = NULL,
   lme4_fit_mod = NULL, glm_fit_family = NULL, lme4_fit_family = NULL, ...)
 }
@@ -108,6 +108,10 @@ controlled via "level3".}
 \item{outcome_type}{A vector specifying the type of outcome, must be either
 logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
 be counts.}
+
+\item{cross_class_params}{A list of named parameters when cross classified 
+data structures are desired. Must include number of cross classified clusters 
+and formula random effect structure (similar to random argument).}
 
 \item{missing}{TRUE/FALSE flag indicating whether missing data should be 
 simulated.}

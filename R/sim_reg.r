@@ -202,13 +202,15 @@ sim_reg <- function(fixed, random, random3, fixed_param,
   	  sim_reg_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 
   	                 error_var, with_err_gen, arima, data_str, cor_vars, 
   	                 fact_vars, unbal, unbal_design, lvl1_err_params, 
-  	                 arima_mod, contrasts, homogeneity, heterogeneity_var, ...)
+  	                 arima_mod, contrasts, homogeneity, heterogeneity_var, 
+  	                 cross_class_params, ...)
   } else {
     sim_reg_nested3(fixed, random, random3, fixed_param, random_param, 
                     random_param3, cov_param, k, n, p, error_var, with_err_gen, 
                     arima, data_str, cor_vars, fact_vars, unbal, 
                     unbal_design, lvl1_err_params, arima_mod, contrasts,
-                    homogeneity, heterogeneity_var, ...)
+                    homogeneity, heterogeneity_var, 
+                    cross_class_params, ...)
   }
  }
 }

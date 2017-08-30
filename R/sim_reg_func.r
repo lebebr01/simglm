@@ -342,10 +342,10 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
     cross_rand_eff$id <- 1:cross_class_params$num_ids
     
     cross_eff <- dplyr::left_join(cross_ids, cross_rand_eff, by = 'id')
-    names(cross_eff) <- c('clust2id_cross', 'cross_reff')
+    names(cross_eff) <- c('clust2id_cross', 'c1')
     
     Xmat <- dplyr::bind_cols(Xmat, cross_eff)
-    Xmat$sim_data <- Xmat$sim_data + Xmat$cross_reff
+    Xmat$sim_data <- Xmat$sim_data + Xmat$c1
   }
   
   Xmat <- Xmat[, !duplicated(colnames(Xmat))]
@@ -458,6 +458,9 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
 #'  of variance.
 #' @param heterogeneity_var Variable name as a character string to use for 
 #'  heterogeneity of variance simulation.
+#' @param cross_class_params A list of named parameters when cross classified 
+#'  data structures are desired. Must include number of cross classified clusters 
+#'  and formula random effect structure (similar to random argument).
 #' @param ... Not currently used.
 #' @importFrom tibble as_tibble
 #' @export 
@@ -614,6 +617,22 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
   Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
   Xmat$clustID <- rep(1:n, times = lvl1ss)
   Xmat$clust3ID <- rep(1:k, times = lvl3ss)
+  
+  if(!is.null(cross_class_params)) {
+    cross_ids <- data.frame(id = sample(1:cross_class_params$num_ids, sum(lvl1ss),
+                                        replace = TRUE))
+    
+    cross_rand_eff <- data.frame(do.call(sim_rand_eff, 
+                                         c(cross_class_params$random_param,
+                                           n = cross_class_params$num_ids)))
+    cross_rand_eff$id <- 1:cross_class_params$num_ids
+    
+    cross_eff <- dplyr::left_join(cross_ids, cross_rand_eff, by = 'id')
+    names(cross_eff) <- c('clust2id_cross', 'c1')
+    
+    Xmat <- dplyr::bind_cols(Xmat, cross_eff)
+    Xmat$sim_data <- Xmat$sim_data + Xmat$c1
+  }
   
   Xmat <- Xmat[, !duplicated(colnames(Xmat))]
  

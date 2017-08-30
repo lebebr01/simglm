@@ -300,27 +300,6 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
                           fixef = Xmat$Omat, heterogeneity_var = heterogeneity_var,
                           ...)
     
-    if(!is.null(cross_class_params)) {
-      cross_ids <- data.frame(id = sample(1:cross_class_params$num_ids, lvl1ss,
-                          replace = TRUE))
-      
-      cross_rand_eff <- do.call(sim_rand_eff, 
-                                c(cross_class_params$random_param,
-                                  n = cross_class_params$num_ids))
-      cross_rand_eff$id <- 1:cross_class_params$num_ids
-      
-      dplyr::left_join(cross_ids, cross_rand_eff, by = 'id')
-      
-      
-      cross_reff <- do.call("cbind", lapply(1:ncol(cross_rand_eff), function(xx)
-        rep(cross_rand_eff[,xx], times = lvl1ss)))
-      colnames(reff) <- c(unlist(lapply(1:ncol(cross_rand_eff), function(xx)
-        paste("b", xx-1, sep = ""))))
-      
-      cross_zmat <- model.matrix(cross_class_params$random, 
-                                 data.frame(Xmat$Xmat))
-    }
-    
     sim_data <- data_reg_nested(Xmat$Xmat, Zmat, fixed_param, rand_eff, n, 
                                 p = lvl1ss, err = err)
     
@@ -347,13 +326,29 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
     
     Xmat <- data.frame(Xmat, reff, sim_data)
   }
-
- Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
- Xmat$clustID <- rep(1:n, times = lvl1ss)
- 
- Xmat <- Xmat[, !duplicated(colnames(Xmat))]
- 
- tibble::as_tibble(Xmat)
+  
+  Xmat$withinID <- unlist(lapply(1:length(lvl1ss), function(xx) 1:lvl1ss[xx]))
+  Xmat$clustID <- rep(1:n, times = lvl1ss)
+  
+  if(!is.null(cross_class_params)) {
+    cross_ids <- data.frame(id = sample(1:cross_class_params$num_ids, sum(lvl1ss),
+                                        replace = TRUE))
+    
+    cross_rand_eff <- data.frame(do.call(sim_rand_eff, 
+                              c(cross_class_params$random_param,
+                                n = cross_class_params$num_ids)))
+    cross_rand_eff$id <- 1:cross_class_params$num_ids
+    
+    cross_eff <- dplyr::left_join(cross_ids, cross_rand_eff, by = 'id')
+    names(cross_eff) <- c('clust2id_cross', 'cross_reff')
+    
+    Xmat <- dplyr::bind_cols(Xmat, cross_eff)
+    Xmat$sim_data <- Xmat$sim_data + Xmat$cross_reff
+  }
+  
+  Xmat <- Xmat[, !duplicated(colnames(Xmat))]
+  
+  tibble::as_tibble(Xmat)
 }
 
 #' Function to simulate three level nested data

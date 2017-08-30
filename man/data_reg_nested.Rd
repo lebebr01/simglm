@@ -4,7 +4,7 @@
 \alias{data_reg_nested}
 \title{Simulates two level nested data}
 \usage{
-data_reg_nested(Xmat, Zmat, beta, rand_eff, n, p, err)
+data_reg_nested(Xmat, Zmat, beta, rand_eff, n, p, err, cross_class = NULL)
 }
 \arguments{
 \item{Xmat}{A matrix of covariates.}
@@ -20,6 +20,8 @@ data_reg_nested(Xmat, Zmat, beta, rand_eff, n, p, err)
 \item{p}{Number of units within each cluster.}
 
 \item{err}{A vector of within cluster errors.}
+
+\item{cross_class}{Currently not used}
 }
 \description{
 Takes simulation parameter arguments and 

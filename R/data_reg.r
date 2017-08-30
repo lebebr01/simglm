@@ -33,7 +33,7 @@ data_reg_single <- function(Xmat, beta, n, err) {
 #' @param n Number of clusters.
 #' @param p Number of units within each cluster.
 #' @param err A vector of within cluster errors.
-#' @param cross_class A list of cross classified parameters.
+#' @param cross_class Currently not used
 #' @importFrom Matrix bdiag
 #' @export 
 data_reg_nested <- function(Xmat, Zmat, beta, rand_eff, n, p, err,

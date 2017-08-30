@@ -8,7 +8,8 @@ sim_reg_nested(fixed, random, fixed_param, random_param = list(), cov_param,
   n, p, error_var, with_err_gen, arima = FALSE, data_str, cor_vars = NULL,
   fact_vars = list(NULL), unbal = FALSE, unbal_design = NULL,
   lvl1_err_params = NULL, arima_mod = list(NULL), contrasts = NULL,
-  homogeneity = TRUE, heterogeneity_var = NULL, ...)
+  homogeneity = TRUE, heterogeneity_var = NULL, cross_class_params = NULL,
+  ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -107,6 +108,10 @@ of variance.}
 
 \item{heterogeneity_var}{Variable name as a character string to use for 
 heterogeneity of variance simulation.}
+
+\item{cross_class_params}{A list of named parameters when cross classified 
+data structures are desired. Must include number of cross classified clusters 
+and formula random effect structure (similar to random argument).}
 
 \item{...}{Not currently used.}
 }

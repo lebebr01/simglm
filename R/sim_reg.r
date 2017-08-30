@@ -104,6 +104,9 @@
 #'  of variance.
 #' @param heterogeneity_var Variable name as a character string to use for 
 #'  heterogeneity of variance simulation.
+#' @param cross_class_params A list of named parameters when cross classified 
+#'  data structures are desired. Must include number of cross classified clusters 
+#'  and formula random effect structure (similar to random argument).
 #' @param ... Not currently used.
 #' @import stats
 #' @export 
@@ -187,7 +190,8 @@ sim_reg <- function(fixed, random, random3, fixed_param,
                     unbal_design = list("level2" = NULL, "level3" = NULL), 
                     lvl1_err_params = NULL, arima_mod = list(NULL), 
                     contrasts = NULL, homogeneity = TRUE,
-                    heterogeneity_var = NULL, ...) {
+                    heterogeneity_var = NULL, cross_class_params = NULL, 
+                    ...) {
   
   if(data_str == "single"){
     sim_reg_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen, 

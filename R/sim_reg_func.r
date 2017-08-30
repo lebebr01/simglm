@@ -225,6 +225,8 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var,
 #'  and formula random effect structure (similar to random argument).
 #' @param ... Not currently used.
 #' @importFrom tibble as_tibble
+#' @importFrom dplyr left_join
+#' @importFrom dplyr bind_cols
 #' @export 
 #' @examples 
 #' #' # Longitudinal linear mixed model example

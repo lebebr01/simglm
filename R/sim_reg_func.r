@@ -496,7 +496,8 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
                             unbal_design = list("level2" = NULL, "level3" = NULL),
                             lvl1_err_params = NULL, arima_mod = list(NULL),
                             contrasts = NULL, homogeneity = TRUE,
-                            heterogeneity_var = NULL, ...) {
+                            heterogeneity_var = NULL, 
+                            cross_class_params = NULL, ...) {
 
   fixed_vars <- attr(terms(fixed),"term.labels")   
   rand_vars <- attr(terms(random),"term.labels")   

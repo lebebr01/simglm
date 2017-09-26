@@ -102,8 +102,25 @@
 #' @param heterogeneity_var Variable name as a character string to use for 
 #'  heterogeneity of variance simulation.
 #' @param cross_class_params A list of named parameters when cross classified 
-#'  data structures are desired. Must include number of cross classified clusters 
-#'  and formula random effect structure (similar to random argument).
+#'  data structures are desired. Must include the following arguments:
+#'   \itemize{
+#'    \item num_ids: The number of cross classified clusters. These are in 
+#'         addition to the typical cluster ids
+#'    \item random_param: This argument is a list of arguments passed to 
+#'       \code{\link{sim_rand_eff}}. These must include:
+#'      \itemize{
+#'       \item random_var: The variance of the cross classified random effect
+#'       \item rand_gen: The random generating function used to generate the 
+#'          cross classified random effect.
+#'      }
+#'      Optional elements are:
+#'    \itemize{
+#'        \item ther: Theorectial mean and variance from rand_gen,
+#'        \item ther_sim: Simulate mean/variance for standardization purposes,
+#'        \item cor_vars: Correlation between random effects,
+#'        \item ...: Additional parameters needed for rand_gen function.
+#'    } 
+#'   }
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -462,8 +479,25 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
 #'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
 #'   be counts.
 #' @param cross_class_params A list of named parameters when cross classified 
-#'  data structures are desired. Must include number of cross classified clusters 
-#'  and formula random effect structure (similar to random argument).
+#'  data structures are desired. Must include the following arguments:
+#'   \itemize{
+#'    \item num_ids: The number of cross classified clusters. These are in 
+#'         addition to the typical cluster ids
+#'    \item random_param: This argument is a list of arguments passed to 
+#'       \code{\link{sim_rand_eff}}. These must include:
+#'      \itemize{
+#'       \item random_var: The variance of the cross classified random effect
+#'       \item rand_gen: The random generating function used to generate the 
+#'          cross classified random effect.
+#'      }
+#'      Optional elements are:
+#'    \itemize{
+#'        \item ther: Theorectial mean and variance from rand_gen,
+#'        \item ther_sim: Simulate mean/variance for standardization purposes,
+#'        \item cor_vars: Correlation between random effects,
+#'        \item ...: Additional parameters needed for rand_gen function.
+#'    } 
+#'   }
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 

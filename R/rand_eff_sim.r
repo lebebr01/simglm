@@ -51,3 +51,37 @@ sim_rand_eff <- function(random_var, n, rand_gen, ther = c(0, 1),
   
   reff
 }
+
+#' Cross Classified Generation
+#' 
+#' Input cross classified simulation parameters, output cross classified structure
+#' as a function of the original id variables. This function currently only supports
+#' a single (intercept) cross classified random effect.
+#'  
+#'  @param num_ids Number of cross classified ids to generate. 
+#'  @param samp_size Sample size to generate, this is used to pass to the 
+#'    \code{\link{sample}} function.
+#'  @param random_param A list of data generating characteristics used to generate
+#'     the cross classified random effect. This function needs to include:
+#'     \itemize{
+#'       \item random_var The variance of the cross classified random effect.
+#'       \item rand_gen The random generating function used.
+#'     }
+#'     See \code{\link{sim_rand_eff}} for additional parameters that can be passed.
+#'  @importFrom dplyr left_join
+#'  @export
+cross_class <- function(num_ids, samp_size, random_param) {
+  cross_ids <- data.frame(id = sample(1:num_ids, samp_size,
+                                      replace = TRUE))
+  
+  cross_rand_eff <- data.frame(do.call(sim_rand_eff, 
+                                       c(random_param,
+                                         n = num_ids)))
+  cross_rand_eff$id <- 1:num_ids
+  
+  cross_eff <- dplyr::left_join(cross_ids, cross_rand_eff, by = 'id')
+  names(cross_eff) <- c('clustid_cross', 'c1')
+  
+  cross_eff
+}
+

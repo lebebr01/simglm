@@ -59,6 +59,7 @@ Currently supports the following features:
 * Simulation of missing data
 * Include other distributions for covariate simulation.
 * Continuous, Logistic (dichotomous), and Poisson (count) outcome variables.
+* Cross classified simulation and power
 
 ## Bugs/Feature Requests
 

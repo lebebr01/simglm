@@ -575,7 +575,6 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
 #'             function defined by with_err_gen.
 #' @export 
 #' @importFrom broom tidy
-#' @importFrom dplyr filter
 sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var, 
                       with_err_gen, arima = FALSE, data_str, cor_vars = NULL, 
                       fact_vars = list(NULL), lvl1_err_params = NULL, 

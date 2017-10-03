@@ -139,6 +139,13 @@
 #' @param arima_fit_mod Valid nlme syntax for fitting serial correlation structures.
 #'   See \code{\link{corStruct}} for help. This must be specified to 
 #'   include serial correlation.
+#' @param general_mod Valid model syntax. This syntax can be from any R package. 
+#'   By default, broom is used to extract model result information. Note, 
+#'   package must be defined or loaded prior to running the sim_pow function.
+#' @param general_extract A valid function to extract model results if 
+#'   general_mod argument is used. This argument is primarily used if extracting model
+#'   results is not possibly using the broom package. If this is left NULL (default), 
+#'   broom is used to collect model results.
 #' @param ... Not currently used.
 #' @importFrom purrr is_formula
 #' @export 
@@ -155,7 +162,8 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
                             missing = FALSE, missing_args = list(NULL),
                             pow_param = NULL, alpha, pow_dist = c("z", "t"), 
                             pow_tail = c(1, 2), lme4_fit_mod = NULL, 
-                            nlme_fit_mod = NULL, arima_fit_mod = NULL, ...) {
+                            nlme_fit_mod = NULL, arima_fit_mod = NULL, 
+                            general_mod = NULL, general_extract = NULL, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")   
   rand_vars <- attr(terms(random),"term.labels")
@@ -168,7 +176,7 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
     stop('pow_param must be a subset of fixed')
   }
   
-  temp_nest <- sim_reg_nested3(fixed, random, random3, fixed_param, random_param, 
+  data <- sim_reg_nested3(fixed, random, random3, fixed_param, random_param, 
                                random_param3, cov_param, k, n, p, error_var, 
                                with_err_gen, arima, data_str, cor_vars, 
                                fact_vars, unbal, unbal_design, 
@@ -176,7 +184,7 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
                                homogeneity, heterogeneity_var, 
                                cross_class_params, ...)
   if(missing) {
-    temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), 
+    data <- do.call(missing_data, c(list(sim_data = data), 
                                          missing_args))
   }
   
@@ -184,75 +192,77 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
     if(!purrr::is_formula(lme4_fit_mod)) {
       stop('lme4_fit_mod must be a formula to pass to lmer')
     }
-    temp_mod <- lme4::lmer(lme4_fit_mod, data = temp_nest)
-    test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
+    temp_mod <- lme4::lmer(lme4_fit_mod, data = data)
   } else {
     if(!is.null(nlme_fit_mod)) {
       if(all(unlist(lapply(nlme_fit_mod, purrr::is_formula)))) {
-        temp_mod <- nlme::lme(fixed = nlme_fit_mod$fixed, data = temp_nest,
+        temp_mod <- nlme::lme(fixed = nlme_fit_mod$fixed, data = data,
                               random = nlme_fit_mod$random)
         test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
       } else {
         if(!purrr::is_formula(nlme_fit_mod$fixed)) {
           stop('nlme_fit_mod$fixed must be a formula to pass to lme')
         } 
-        temp_mod <- nlme::lme(fixed = nlme_fit_mod$fixed, data = temp_nest,
+        temp_mod <- nlme::lme(fixed = nlme_fit_mod$fixed, data = data,
                               random = eval(parse(text = nlme_fit_mod$random)), 
                               correlation = arima_fit_mod)
-        test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
       }
     } else {
-      if(arima) {
-        fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
-        if(missing) {
-          fix1 <- gsub('sim_data', 'sim_data2', fix1)
-        }
-        ran1 <- paste("list(clustID =~", paste(rand_vars, collapse = "+"), sep = "")
-        if(length(rand_vars3) == 0) {
-          ran2 <- 'clust3ID = ~ 1)'
-        } else {
-          ran2 <- paste('clust3ID = ~', paste(rand_vars3, collapse = "+"), ')',  
-                        sep = "")
-        }
-        ran <- paste(ran1, ran2, collapse = ', ')
-        
-        temp_mod <- nlme::lme(fixed = as.formula(fix1), data = temp_nest,
-                              random = eval(parse(text = ran)),
-                              correlation = arima_fit_mod)
-        test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
+      if(!is.null(general_mod)) {
+        temp_mod <- eval(parse(text = general_mod))
       } else {
-        fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
-        if(missing) {
-          fix1 <- gsub('sim_data', 'sim_data2', fix1)
-        }
-        ran1 <- paste("(", paste(rand_vars, collapse = "+"), "| clustID)", sep = "")
-        if(length(rand_vars3) == 0) {
-          ran2 <- '(1 | clust3ID)'
+        if(arima) {
+          fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
+          if(missing) {
+            fix1 <- gsub('sim_data', 'sim_data2', fix1)
+          }
+          ran1 <- paste("list(clustID =~", paste(rand_vars, collapse = "+"), sep = "")
+          if(length(rand_vars3) == 0) {
+            ran2 <- 'clust3ID = ~ 1)'
+          } else {
+            ran2 <- paste('clust3ID = ~', paste(rand_vars3, collapse = "+"), ')',  
+                          sep = "")
+          }
+          ran <- paste(ran1, ran2, collapse = ', ')
+          
+          temp_mod <- nlme::lme(fixed = as.formula(fix1), data = data,
+                                random = eval(parse(text = ran)),
+                                correlation = arima_fit_mod)
         } else {
-          ran2 <- paste('(', paste(rand_vars3, collapse = "+"), "| clust3ID)", 
-                        sep = "")
+          fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
+          if(missing) {
+            fix1 <- gsub('sim_data', 'sim_data2', fix1)
+          }
+          ran1 <- paste("(", paste(rand_vars, collapse = "+"), "| clustID)", sep = "")
+          if(length(rand_vars3) == 0) {
+            ran2 <- '(1 | clust3ID)'
+          } else {
+            ran2 <- paste('(', paste(rand_vars3, collapse = "+"), "| clust3ID)", 
+                          sep = "")
+          }
+          fm1 <- as.formula(paste(fix1, ran1, ran2, sep = "+ "))
+          
+          temp_mod <- lme4::lmer(fm1, data = data)
         }
-        fm1 <- as.formula(paste(fix1, ran1, ran2, sep = "+ "))
-        
-        temp_mod <- lme4::lmer(fm1, data = temp_nest)
-        test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
       }
     }
-  } 
+  }
+    
+  if(!is.null(general_extract)) {
+    test_stat <- do.call(general_extract, temp_mod)
+  } else{
+    test_stat <- broom::tidy(temp_mod)
+  }
   
   crit <- qnorm(alpha/pow_tail, lower.tail = FALSE)
   
-  if(is.null(pow_param)) {
-    pow_param <- rownames(test_stat)
-  } else {
+  if(!is.null(pow_param)) {
     test_stat <- test_stat[pow_param, ]
   }
   
-  reject <- data.frame(var = pow_param,
-                       test_stat = test_stat)
-  reject$reject <- ifelse(test_stat >= crit, 1, 0)
+  test_stat$reject <- ifelse(test_stat$estimate >= crit, 1, 0)
   
-  reject
+  test_stat
 }
 
 #' Power simulation for nested designs
@@ -379,6 +389,13 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
 #' @param arima_fit_mod Valid nlme syntax for fitting serial correlation structures.
 #'   See \code{\link{corStruct}} for help. This must be specified to 
 #'   include serial correlation.
+#' @param general_mod Valid model syntax. This syntax can be from any R package. 
+#'   By default, broom is used to extract model result information. Note, 
+#'   package must be defined or loaded prior to running the sim_pow function.
+#' @param general_extract A valid function to extract model results if 
+#'   general_mod argument is used. This argument is primarily used if extracting model
+#'   results is not possibly using the broom package. If this is left NULL (default), 
+#'   broom is used to collect model results.
 #' @param ... Not currently used.
 #' @export 
 sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(), 
@@ -392,7 +409,8 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
                         missing_args = list(NULL), pow_param = NULL, alpha, 
                         pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                         lme4_fit_mod = NULL, 
-                        nlme_fit_mod = NULL, arima_fit_mod = NULL, ...) {
+                        nlme_fit_mod = NULL, arima_fit_mod = NULL, 
+                        general_mod = NULL, general_extract = NULL, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")    
   rand_vars <- attr(terms(random),"term.labels")
@@ -404,14 +422,14 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
     stop('pow_param must be a subset of fixed')
   }
   
-  temp_nest <- sim_reg_nested(fixed, random, fixed_param, random_param, 
+  data <- sim_reg_nested(fixed, random, fixed_param, random_param, 
                               cov_param, n, p, error_var, with_err_gen, arima,
                               data_str, cor_vars, fact_vars, unbal, unbal_design,
                               lvl1_err_params, arima_mod, contrasts, 
                               homogeneity, heterogeneity_var, 
                               cross_class_params, ...)
   if(missing) {
-    temp_nest <- do.call(missing_data, c(list(sim_data = temp_nest), 
+    data <- do.call(missing_data, c(list(sim_data = data), 
                                          missing_args))
   }
   
@@ -419,62 +437,63 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
     if(!purrr::is_formula(lme4_fit_mod)) {
       stop('lme4_fit_mod must be a formula to pass to lmer')
     }
-    temp_mod <- lme4::lmer(lme4_fit_mod, data = temp_nest)
-    test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
+    temp_mod <- lme4::lmer(lme4_fit_mod, data = data)
   } else {
     if(!is.null(nlme_fit_mod)) {
       if(all(unlist(lapply(nlme_fit_mod, purrr::is_formula)))) {
-        temp_mod <- nlme::lme(fixed = nlme_fit_mod$fixed, data = temp_nest,
+        temp_mod <- nlme::lme(fixed = nlme_fit_mod$fixed, data = data,
                               random = nlme_fit_mod$random, 
                               correlation = arima_fit_mod)
-        test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
       } else {
         if(!purrr::is_formula(nlme_fit_mod$fixed)) {
           stop('nlme_fit_mod$fixed must be a formula to pass to lme')
         } 
-        temp_mod <- nlme::lme(fixed = nlme_fit_mod$fixed, data = temp_nest,
+        temp_mod <- nlme::lme(fixed = nlme_fit_mod$fixed, data = data,
                               random = eval(parse(text = nlme_fit_mod$random)), 
                               correlation = arima_fit_mod)
-        test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
       }
     } else {
-      if(arima) {
-        fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
-        if(missing) {
-          fix1 <- gsub('sim_data', 'sim_data2', fix1)
-        }
-        ran1 <- paste("~", paste(rand_vars, collapse = "+"), "|clustID", sep = "")
-        
-        temp_mod <- nlme::lme(fixed = as.formula(fix1), data = temp_nest,
-                              random = as.formula(ran1), 
-                              correlation = arima_fit_mod)
-        test_stat <- data.frame(abs(summary(temp_mod)$coefficients$fixed))
+      if(!is.null(general_mod)) {
+        temp_mod <- eval(parse(text = general_mod))
       } else {
-        fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
-        if(missing) {
-          fix1 <- gsub('sim_data', 'sim_data2', fix1)
+        if(arima) {
+          fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
+          if(missing) {
+            fix1 <- gsub('sim_data', 'sim_data2', fix1)
+          }
+          ran1 <- paste("~", paste(rand_vars, collapse = "+"), "|clustID", sep = "")
+          
+          temp_mod <- nlme::lme(fixed = as.formula(fix1), data = data,
+                                random = as.formula(ran1), 
+                                correlation = arima_fit_mod)
+        } else {
+          fix1 <- paste("sim_data ~", paste(fixed_vars, collapse = "+"))
+          if(missing) {
+            fix1 <- gsub('sim_data', 'sim_data2', fix1)
+          }
+          ran1 <- paste("(", paste(rand_vars, collapse = "+"), "|clustID)", sep = "")
+          fm1 <- as.formula(paste(fix1, ran1, sep = "+ "))
+          
+          temp_mod <- lme4::lmer(fm1, data = data)
         }
-        ran1 <- paste("(", paste(rand_vars, collapse = "+"), "|clustID)", sep = "")
-        fm1 <- as.formula(paste(fix1, ran1, sep = "+ "))
-        
-        temp_mod <- lme4::lmer(fm1, data = temp_nest)
-        test_stat <- data.frame(abs(summary(temp_mod)$coefficients[, 3]))
       }
     }
   }
+  if(!is.null(general_extract)) {
+    test_stat <- do.call(general_extract, temp_mod)
+  } else{
+    test_stat <- broom::tidy(temp_mod)
+  }
+  
   crit <- qnorm(alpha/pow_tail, lower.tail = FALSE)
   
-  if(is.null(pow_param)) {
-    pow_param <- rownames(test_stat)
-  } else {
+  if(!is.null(pow_param)) {
     test_stat <- test_stat[pow_param, ]
   }
   
-  reject <- data.frame(var = pow_param,
-                       test_stat = test_stat)
-  reject$reject <- ifelse(test_stat >= crit, 1, 0)
+  test_stat$reject <- ifelse(test_stat$estimate >= crit, 1, 0)
   
-  reject
+  test_stat
 }
   
 
@@ -555,6 +574,7 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
 #' @param ... Additional specification needed to pass to the random generating 
 #'             function defined by with_err_gen.
 #' @export 
+#' @importFrom broom tidy
 sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var, 
                       with_err_gen, arima = FALSE, data_str, cor_vars = NULL, 
                       fact_vars = list(NULL), lvl1_err_params = NULL, 
@@ -567,47 +587,42 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var,
   
   fixed_vars <- attr(terms(fixed),"term.labels")
   
-  # if(any(pow_param %ni% c(fixed_vars, '(Intercept)', 'Intercept'))) { 
-  #   stop('pow_param must be a subset of fixed')
-  # }
-  
-  temp_single <- sim_reg_single(fixed, fixed_param, cov_param, n, error_var, 
+  data <- sim_reg_single(fixed, fixed_param, cov_param, n, error_var, 
                                 with_err_gen, arima, data_str, 
                                 cor_vars, fact_vars, lvl1_err_params, arima_mod,
                                 contrasts, homogeneity, heterogeneity_var,
                                 ...)
+  
+  if(missing) {
+    data <- do.call(missing_data, c(list(sim_data = data), 
+                                    missing_args))
+  }
 
   if(!is.null(lm_fit_mod)) {
     if(!purrr::is_formula(lm_fit_mod)) {
       stop('lm_fit_mod must be a formula to pass to lm')
     }
-    temp_lm <- lm(lm_fit_mod, data = temp_single)
+    temp_lm <- lm(lm_fit_mod, data = data)
   } else {
     fm1 <- as.formula(paste("sim_data ~", paste(fixed_vars, collapse = "+")))
     if(missing) {
-      temp_single <- do.call(missing_data, c(list(sim_data = temp_single), 
-                                             missing_args))
       fm1 <- as.formula(paste("sim_data2 ~", paste(fixed_vars, collapse = "+")))
     }
     
-    temp_lm <- lm(fm1, data = temp_single)
+    temp_lm <- lm(fm1, data = data)
   }
     
   
   crit <- ifelse(pow_dist == "z", qnorm(alpha/pow_tail, lower.tail = FALSE), 
                 qt(alpha/pow_tail, df = nrow(temp_single) - length(fixed_param),
                    lower.tail = FALSE))
-  test_stat <- data.frame(abs(coefficients(summary(temp_lm))[, 3]))
+  test_stat <- broom::tidy(temp_lm)
 
-  if(is.null(pow_param)) {
-    pow_param <- rownames(test_stat)
-  } else {
+  if(!is.null(pow_param)) {
     test_stat <- test_stat[pow_param, ]
   }
   
-  reject <- data.frame(var = pow_param,
-                       test_stat = test_stat)
-  reject$reject <- ifelse(test_stat >= crit, 1, 0)
+  test_stat$reject <- ifelse(test_stat$estimate >= crit, 1, 0)
   
-  reject
+  test_stat
 }

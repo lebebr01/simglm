@@ -148,6 +148,13 @@
 #' @param arima_fit_mod Valid nlme syntax for fitting serial correlation structures.
 #'   See \code{\link{corStruct}} for help. This must be specified to 
 #'   include serial correlation.
+#' @param general_mod Valid model syntax. This syntax can be from any R package. 
+#'   By default, broom is used to extract model result information. Note, 
+#'   package must be defined or loaded prior to running the sim_pow function.
+#' @param general_extract A valid function to extract model results if 
+#'   general_mod argument is used. This argument is primarily used if extracting model
+#'   results is not possibly using the broom package. If this is left NULL (default), 
+#'   broom is used to collect model results.
 #' @param ... Currently not used.
 #' @importFrom dplyr group_by
 #' @importFrom dplyr summarise
@@ -255,7 +262,8 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                    pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                     replicates, terms_vary = NULL, raw_power = TRUE, 
                    lm_fit_mod = NULL, lme4_fit_mod = NULL, nlme_fit_mod = NULL,
-                   arima_fit_mod = NULL, ...) {
+                   arima_fit_mod = NULL, general_mod = NULL, general_extract = NULL, 
+                   ...) {
   
   args <- list(fixed = fixed, random = random, random3 = random3,
                fixed_param = fixed_param, random_param = random_param,
@@ -272,7 +280,8 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                missing_args = missing_args, pow_param = pow_param, 
                alpha = alpha, pow_dist = pow_dist, pow_tail = pow_tail, 
                lm_fit_mod = lm_fit_mod, lme4_fit_mod = lme4_fit_mod, 
-               nlme_fit_mod = nlme_fit_mod, arima_fit_mod = arima_fit_mod)
+               nlme_fit_mod = nlme_fit_mod, arima_fit_mod = arima_fit_mod,
+               general_mod = general_mod, general_extract = general_extract)
   
   if(!is.null(terms_vary)) {
     args[names(terms_vary)] <- NULL
@@ -370,12 +379,12 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
     }
   }
   
-  grp_by <- lapply(c('var', names(terms_vary)), as.symbol)
+  grp_by <- lapply(c('term', names(terms_vary)), as.symbol)
   
   power <- temp_pow %>%
     dplyr::group_by_(.dots = grp_by) %>%
-    dplyr::summarise(avg_test_stat = mean(test_stat),
-                     sd_test_stat = sd(test_stat),
+    dplyr::summarise(avg_test_stat = mean(estimate),
+                     sd_test_stat = sd(estimate),
                      power = mean(reject),
                      num_reject = sum(reject),
                      num_repl = replicates)
@@ -522,6 +531,13 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
 #' @param lme4_fit_mod Valid lme4 syntax to be used for model fitting.
 #' @param glm_fit_family Valid family syntax to pass to the glm function.
 #' @param lme4_fit_family Valid lme4 family specification passed to glmer.
+#' @param general_mod Valid model syntax. This syntax can be from any R package. 
+#'   By default, broom is used to extract model result information. Note, 
+#'   package must be defined or loaded prior to running the sim_pow function.
+#' @param general_extract A valid function to extract model results if 
+#'   general_mod argument is used. This argument is primarily used if extracting model
+#'   results is not possibly using the broom package. If this is left NULL (default), 
+#'   broom is used to collect model results.
 #' @param ... Current not used.
 #' @importFrom dplyr group_by
 #' @importFrom dplyr summarise
@@ -563,7 +579,8 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                   pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                     replicates, terms_vary = NULL, raw_power = TRUE, 
                   glm_fit_mod = NULL, lme4_fit_mod = NULL, 
-                  glm_fit_family = NULL, lme4_fit_family = NULL, ...) {
+                  glm_fit_family = NULL, lme4_fit_family = NULL, 
+                  general_mod = NULL, general_extract = NULL, ...) {
   
   args <- list(fixed = fixed, random = random, random3 = random3,
                fixed_param = fixed_param, random_param = random_param,
@@ -576,7 +593,8 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
                pow_tail = pow_tail, glm_fit_mod = glm_fit_mod, 
                lme4_fit_mod = lme4_fit_mod, glm_fit_family = glm_fit_family,
-               lme4_fit_family = lme4_fit_family)
+               lme4_fit_family = lme4_fit_family, 
+               general_mod = general_mod, general_extract = general_extract)
   
   if(!is.null(terms_vary)) {
     args[names(terms_vary)] <- NULL
@@ -674,12 +692,12 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
     }
   }
   
-  grp_by <- lapply(c('var', names(terms_vary)), as.symbol)
+  grp_by <- lapply(c('term', names(terms_vary)), as.symbol)
   
   power <- temp_pow %>%
     dplyr::group_by_(.dots = grp_by) %>%
-    dplyr::summarise(avg_test_stat = mean(test_stat),
-                     sd_test_stat = sd(test_stat),
+    dplyr::summarise(avg_test_stat = mean(estimate),
+                     sd_test_stat = sd(estimate),
                      power = mean(reject),
                      num_reject = sum(reject),
                      num_repl = replicates)

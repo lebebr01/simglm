@@ -10,7 +10,7 @@ sim_pow_glm_nested(fixed, random, fixed_param, random_param = list(),
   NULL, level3 = NULL), outcome_type, cross_class_params = NULL,
   missing = FALSE, missing_args = list(NULL), pow_param = NULL, alpha,
   pow_dist = c("z", "t"), pow_tail = c(1, 2), lme4_fit_mod = NULL,
-  lme4_fit_family, ...)
+  lme4_fit_family, general_mod = NULL, general_extract = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -130,6 +130,15 @@ test, z or t?}
 \item{lme4_fit_mod}{Valid lme4 formula syntax to be used for model fitting.}
 
 \item{lme4_fit_family}{Valid lme4 family specification passed to glmer.}
+
+\item{general_mod}{Valid model syntax. This syntax can be from any R package. 
+By default, broom is used to extract model result information. Note, 
+package must be defined or loaded prior to running the sim_pow function.}
+
+\item{general_extract}{A valid function to extract model results if 
+general_mod argument is used. This argument is primarily used if extracting model
+results is not possibly using the broom package. If this is left NULL (default), 
+broom is used to collect model results.}
 
 \item{...}{Not currently used.}
 }

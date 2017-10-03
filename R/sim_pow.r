@@ -160,7 +160,6 @@
 #' @importFrom dplyr summarise
 #' @importFrom dplyr '%>%'
 #' @importFrom dplyr left_join
-#' @importFrom tidyr nest
 #' 
 #' @examples 
 #' 

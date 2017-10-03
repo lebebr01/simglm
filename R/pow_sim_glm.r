@@ -202,10 +202,10 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
   crit <- qnorm(alpha/pow_tail, lower.tail = FALSE)
   
   if(!is.null(pow_param)) {
-    test_stat <- test_stat[pow_param, ]
+    test_stat <- dplyr::filter(test_stat, term %in% pow_param)
   }
   
-  test_stat$reject <- ifelse(test_stat$estimate >= crit, 1, 0)
+  test_stat$reject <- ifelse(test_stat['estimate'] >= crit, 1, 0)
   
   test_stat
 }
@@ -390,10 +390,10 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
   crit <- qnorm(alpha/pow_tail, lower.tail = FALSE)
   
   if(!is.null(pow_param)) {
-    test_stat <- test_stat[pow_param, ]
+    test_stat <- dplyr::filter(test_stat, term %in% pow_param)
   }
   
-  test_stat$reject <- ifelse(test_stat$estimate >= crit, 1, 0)
+  test_stat$reject <- ifelse(test_stat['estimate'] >= crit, 1, 0)
   
   test_stat
 }
@@ -510,10 +510,10 @@ sim_pow_glm_single <- function(fixed, fixed_param, cov_param, n, data_str,
   test_stat <- broom::tidy(temp_lm)
 
   if(!is.null(pow_param)) {
-    test_stat <- test_stat[pow_param, ]
+    test_stat <- dplyr::filter(test_stat, term %in% pow_param)
   }
   
-  test_stat$reject <- ifelse(test_stat$estimate >= crit, 1, 0)
+  test_stat$reject <- ifelse(test_stat['estimate'] >= crit, 1, 0)
   
   test_stat
 }

@@ -257,10 +257,10 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
   crit <- qnorm(alpha/pow_tail, lower.tail = FALSE)
   
   if(!is.null(pow_param)) {
-    test_stat <- test_stat[pow_param, ]
+    test_stat <- dplyr::filter(test_stat, term %in% pow_param)
   }
   
-  test_stat$reject <- ifelse(test_stat$estimate >= crit, 1, 0)
+  test_stat$reject <- ifelse(test_stat['estimate'] >= crit, 1, 0)
   
   test_stat
 }
@@ -488,10 +488,10 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
   crit <- qnorm(alpha/pow_tail, lower.tail = FALSE)
   
   if(!is.null(pow_param)) {
-    test_stat <- test_stat[pow_param, ]
+    test_stat <- dplyr::filter(test_stat, term %in% pow_param)
   }
   
-  test_stat$reject <- ifelse(test_stat$estimate >= crit, 1, 0)
+  test_stat$reject <- ifelse(test_stat['estimate'] >= crit, 1, 0)
   
   test_stat
 }
@@ -575,6 +575,7 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
 #'             function defined by with_err_gen.
 #' @export 
 #' @importFrom broom tidy
+#' @importFrom dplyr filter
 sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var, 
                       with_err_gen, arima = FALSE, data_str, cor_vars = NULL, 
                       fact_vars = list(NULL), lvl1_err_params = NULL, 
@@ -619,10 +620,10 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var,
   test_stat <- broom::tidy(temp_lm)
 
   if(!is.null(pow_param)) {
-    test_stat <- test_stat[pow_param, ]
+    test_stat <- dplyr::filter(test_stat, term %in% pow_param)
   }
   
-  test_stat$reject <- ifelse(test_stat$estimate >= crit, 1, 0)
+  test_stat$reject <- ifelse(test_stat['estimate'] >= crit, 1, 0)
   
   test_stat
 }

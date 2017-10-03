@@ -614,7 +614,7 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var,
     
   
   crit <- ifelse(pow_dist == "z", qnorm(alpha/pow_tail, lower.tail = FALSE), 
-                qt(alpha/pow_tail, df = nrow(temp_single) - length(fixed_param),
+                qt(alpha/pow_tail, df = nrow(data) - length(fixed_param),
                    lower.tail = FALSE))
   test_stat <- broom::tidy(temp_lm)
 

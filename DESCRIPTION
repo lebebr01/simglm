@@ -16,8 +16,8 @@ Depends:
     Matrix,
     dplyr,
     purrr,
-    tidyr,
-    tibble
+    tibble,
+    broom
 Suggests:
     knitr,
     lme4,
@@ -25,7 +25,8 @@ Suggests:
     testthat,
     shiny,
     e1071,
-    ggplot2
+    ggplot2,
+    tidyr
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Author: Brandon LeBeau [aut, cre]

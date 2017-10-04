@@ -517,7 +517,7 @@ sim_pow_glm_single <- function(fixed, fixed_param, cov_param, n, data_str,
   if(!is.null(general_extract)) {
     test_stat <- do.call(general_extract, temp_mod)
   } else{
-    test_stat <- broom::tidy(temp_mod)
+    test_stat <- broom::tidy(temp_lm)
   }
   
   crit <- ifelse(pow_dist == "z", qnorm(alpha/pow_tail, lower.tail = FALSE), 

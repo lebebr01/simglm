@@ -459,6 +459,13 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
 #' @param pow_tail One-tailed or two-tailed test?
 #' @param glm_fit_mod Valid glm syntax to be used for model fitting.
 #' @param glm_fit_family Valid family syntax to pass to the glm function.
+#' @param general_mod Valid model syntax. This syntax can be from any R package. 
+#'   By default, broom is used to extract model result information. Note, 
+#'   package must be defined or loaded prior to running the sim_pow function.
+#' @param general_extract A valid function to extract model results if 
+#'   general_mod argument is used. This argument is primarily used if extracting model
+#'   results is not possibly using the broom package. If this is left NULL (default), 
+#'   broom is used to collect model results.
 #' @param ... Additional specification needed to pass to the random generating 
 #'             function defined by with_err_gen.
 #' @export 
@@ -468,7 +475,8 @@ sim_pow_glm_single <- function(fixed, fixed_param, cov_param, n, data_str,
                            missing = FALSE, missing_args = list(NULL),
                            pow_param = NULL, alpha, pow_dist = c("z", "t"), 
                            pow_tail = c(1, 2), glm_fit_mod = NULL, 
-                           glm_fit_family, ...) {
+                           glm_fit_family, general_mod = NULL, 
+                           general_extract = NULL, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")
   
@@ -491,23 +499,30 @@ sim_pow_glm_single <- function(fixed, fixed_param, cov_param, n, data_str,
     temp_lm <- glm(glm_fit_mod, data = data, 
                    family = glm_fit_family)
   } else {
-    fm1 <- as.formula(paste("sim_data ~", paste(fixed_vars, collapse = "+")))
-    if(missing) {
-      fm1 <- as.formula(paste("sim_data2 ~", paste(fixed_vars, collapse = "+")))
-    }
-    
-    if(outcome_type == 'logistic') {
-      temp_lm <- glm(fm1, data = data, family = binomial)
+    if(!is.null(general_mod)) {
+      temp_lm <- eval(parse(text = general_mod))
     } else {
-      temp_lm <- glm(fm1, data = data, family = poisson)
+      fm1 <- as.formula(paste("sim_data ~", paste(fixed_vars, collapse = "+")))
+      if(missing) {
+        fm1 <- as.formula(paste("sim_data2 ~", paste(fixed_vars, collapse = "+")))
+      }
+      
+      if(outcome_type == 'logistic') {
+        temp_lm <- glm(fm1, data = data, family = binomial)
+      } else {
+        temp_lm <- glm(fm1, data = data, family = poisson)
+      }
     }
-    
+  }
+  if(!is.null(general_extract)) {
+    test_stat <- do.call(general_extract, temp_mod)
+  } else{
+    test_stat <- broom::tidy(temp_mod)
   }
   
   crit <- ifelse(pow_dist == "z", qnorm(alpha/pow_tail, lower.tail = FALSE), 
                 qt(alpha/pow_tail, df = nrow(data) - length(fixed_param),
                    lower.tail = FALSE))
-  test_stat <- broom::tidy(temp_lm)
 
   if(!is.null(pow_param)) {
     test_stat <- dplyr::filter(test_stat, term %in% pow_param)

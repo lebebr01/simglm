@@ -571,6 +571,13 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
 #'  test, z or t?
 #' @param pow_tail One-tailed or two-tailed test?
 #' @param lm_fit_mod Valid lm syntax to be used for model fitting.
+#' @param general_mod Valid model syntax. This syntax can be from any R package. 
+#'   By default, broom is used to extract model result information. Note, 
+#'   package must be defined or loaded prior to running the sim_pow function.
+#' @param general_extract A valid function to extract model results if 
+#'   general_mod argument is used. This argument is primarily used if extracting model
+#'   results is not possibly using the broom package. If this is left NULL (default), 
+#'   broom is used to collect model results.
 #' @param ... Additional specification needed to pass to the random generating 
 #'             function defined by with_err_gen.
 #' @export 
@@ -583,7 +590,8 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var,
                       missing = FALSE, 
                       missing_args = list(NULL), pow_param = NULL, alpha, 
                       pow_dist = c("z", "t"), pow_tail = c(1, 2), 
-                      lm_fit_mod = NULL, ...) {
+                      lm_fit_mod = NULL, general_mod = NULL, 
+                      general_extract = NULL, ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")
   
@@ -604,19 +612,26 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var,
     }
     temp_lm <- lm(lm_fit_mod, data = data)
   } else {
-    fm1 <- as.formula(paste("sim_data ~", paste(fixed_vars, collapse = "+")))
-    if(missing) {
-      fm1 <- as.formula(paste("sim_data2 ~", paste(fixed_vars, collapse = "+")))
+    if(!is.null(general_mod)) {
+      temp_lm <- eval(parse(text = general_mod))
+    } else {
+      fm1 <- as.formula(paste("sim_data ~", paste(fixed_vars, collapse = "+")))
+      if(missing) {
+        fm1 <- as.formula(paste("sim_data2 ~", paste(fixed_vars, collapse = "+")))
+      }
+      
+      temp_lm <- lm(fm1, data = data)
     }
-    
-    temp_lm <- lm(fm1, data = data)
   }
-    
+  if(!is.null(general_extract)) {
+    test_stat <- do.call(general_extract, temp_mod)
+  } else{
+    test_stat <- broom::tidy(temp_mod)
+  }
   
   crit <- ifelse(pow_dist == "z", qnorm(alpha/pow_tail, lower.tail = FALSE), 
                 qt(alpha/pow_tail, df = nrow(data) - length(fixed_param),
                    lower.tail = FALSE))
-  test_stat <- broom::tidy(temp_lm)
 
   if(!is.null(pow_param)) {
     test_stat <- dplyr::filter(test_stat, term %in% pow_param)

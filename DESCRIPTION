@@ -26,7 +26,8 @@ Suggests:
     shiny,
     e1071,
     ggplot2,
-    tidyr
+    tidyr,
+    geepack
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Author: Brandon LeBeau [aut, cre]

@@ -384,6 +384,8 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
     dplyr::group_by_(.dots = grp_by) %>%
     dplyr::summarise(avg_test_stat = mean(estimate),
                      sd_test_stat = sd(estimate),
+                     avg_std_err = mean(std.error),
+                     sd_std_err = sd(std.error),
                      power = mean(reject),
                      num_reject = sum(reject),
                      num_repl = replicates)
@@ -697,6 +699,8 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
     dplyr::group_by_(.dots = grp_by) %>%
     dplyr::summarise(avg_test_stat = mean(estimate),
                      sd_test_stat = sd(estimate),
+                     avg_std_err = mean(std.error),
+                     sd_std_err = sd(std.error),
                      power = mean(reject),
                      num_reject = sum(reject),
                      num_repl = replicates)

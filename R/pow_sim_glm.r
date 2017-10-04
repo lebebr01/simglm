@@ -196,7 +196,7 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
   if(!is.null(general_extract)) {
     test_stat <- do.call(general_extract, temp_mod)
   } else{
-    test_stat <- broom::tidy(temp_mod)
+    test_stat <- broom::tidy(temp_mod, effects = 'fixed')
   }
   
   crit <- qnorm(alpha/pow_tail, lower.tail = FALSE)
@@ -384,7 +384,7 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
   if(!is.null(general_extract)) {
     test_stat <- do.call(general_extract, temp_mod)
   } else{
-    test_stat <- broom::tidy(temp_mod)
+    test_stat <- broom::tidy(temp_mod, effects = 'fixed')
   }
   
   crit <- qnorm(alpha/pow_tail, lower.tail = FALSE)

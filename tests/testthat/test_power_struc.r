@@ -23,7 +23,7 @@ test_that('correct structure', {
                        replicates = replicates, raw_power = FALSE)
   
   expect_equal(nrow(power_out), 4)
-  expect_equal(ncol(power_out), 6)
+  expect_equal(ncol(power_out), 8)
   
   power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
                        n = n, error_var = error_var, with_err_gen = with_err_gen, 
@@ -32,7 +32,7 @@ test_that('correct structure', {
                        replicates = replicates, raw_power = TRUE)
   
   expect_equal(nrow(power_out), 4)
-  expect_equal(ncol(power_out), 7)
+  expect_equal(ncol(power_out), 9)
   
   fixed <- ~ 1 + act + diff + numCourse + act:numCourse
   fixed_param <- c(0.5, 1.1, 0.6, 0.9, 1.1)
@@ -108,7 +108,7 @@ test_that('sim_glm power', {
                            pow_dist = pow_dist, pow_tail = pow_tail, 
                            replicates = replicates, raw_power = FALSE)
   expect_equal(nrow(power_out), 3)
-  expect_equal(ncol(power_out), 6)
+  expect_equal(ncol(power_out), 8)
   
   power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, 
                            cov_param = cov_param, 
@@ -117,7 +117,7 @@ test_that('sim_glm power', {
                            pow_dist = pow_dist, pow_tail = pow_tail, 
                            replicates = replicates, raw_power = FALSE)
   expect_equal(nrow(power_out), 3)
-  expect_equal(ncol(power_out), 6)
+  expect_equal(ncol(power_out), 8)
   
   fixed <- ~ 1 + act + diff
   fixed_param <- c(0.1, 0.5, 0.3)
@@ -141,7 +141,7 @@ test_that('sim_glm power', {
                            replicates = replicates, terms_vary = terms_vary, 
                            raw_power = FALSE)
   expect_equal(nrow(power_out), 3*3)
-  expect_equal(ncol(power_out), 7)
+  expect_equal(ncol(power_out), 9)
 })
 
 test_that('two level power continuous', {

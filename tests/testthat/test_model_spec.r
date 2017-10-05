@@ -52,7 +52,7 @@ test_that("lm model specification", {
                        replicates = replicates, raw_power = FALSE, 
                        lm_fit_mod = lm_fit_mod)
   
-  expect_equal(length(dplyr::filter(power_out, term == 'diff')$power), 1)
+  expect_equal(length(dplyr::filter(power_out, term == 'diff')$power), 0)
   
 })
 
@@ -88,7 +88,7 @@ test_that('glm model specification', {
                            replicates = replicates, raw_power = FALSE, 
                            glm_fit_mod = glm_fit_mod, glm_fit_family = glm_fit_family)
   
-  expect_equal(length(dplyr::filter(power_out, var == 'numCourse')$power), 0)
+  expect_equal(length(dplyr::filter(power_out, term == 'numCourse')$power), 0)
   
 })
 

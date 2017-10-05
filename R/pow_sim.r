@@ -624,7 +624,7 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var,
     }
   }
   if(!is.null(general_extract)) {
-    test_stat <- do.call(general_extract, temp_mod)
+    test_stat <- do.call(general_extract, temp_lm)
   } else{
     test_stat <- broom::tidy(temp_lm)
   }

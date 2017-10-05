@@ -42,18 +42,6 @@ test_that("lm model specification", {
                        replicates = replicates, raw_power = FALSE, 
                        lm_fit_mod = lm_fit_mod)
   expect_equal(nrow(power_out), 2)
-  
-  pow_param <- c('(Intercept)', 'act', 'diff')
-  lm_fit_mod <- sim_data ~ 1 + act 
-  power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
-                       n = n, error_var = error_var, with_err_gen = with_err_gen, 
-                       data_str = "single", pow_param = pow_param, alpha = alpha,
-                       pow_dist = pow_dist, pow_tail = pow_tail, 
-                       replicates = replicates, raw_power = FALSE, 
-                       lm_fit_mod = lm_fit_mod)
-  
-  expect_equal(length(dplyr::filter(power_out, term == 'diff')$power), 0)
-  
 })
 
 test_that('glm model specification', {
@@ -77,19 +65,6 @@ test_that('glm model specification', {
                        replicates = replicates, raw_power = FALSE, 
                        glm_fit_mod = TRUE),   
                'glm_fit_mod must be a formula to pass to glm')
-  
-  glm_fit_mod <- sim_data ~ 1 + act + diff
-  glm_fit_family <- binomial
-  
-  power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param, cov_param = cov_param,
-                           n = n, data_str = "single", outcome_type = 'logistic', 
-                           pow_param = pow_param, alpha = alpha,
-                           pow_dist = pow_dist, pow_tail = pow_tail, 
-                           replicates = replicates, raw_power = FALSE, 
-                           glm_fit_mod = glm_fit_mod, glm_fit_family = glm_fit_family)
-  
-  expect_equal(length(dplyr::filter(power_out, term == 'numCourse')$power), 0)
-  
 })
 
 test_that('lme4 model specification', {

@@ -12,7 +12,8 @@ sim_pow_glm(fixed, random = NULL, random3 = NULL, fixed_param,
   cross_class_params = NULL, missing = FALSE, missing_args = list(NULL),
   pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), replicates,
   terms_vary = NULL, raw_power = TRUE, glm_fit_mod = NULL,
-  lme4_fit_mod = NULL, glm_fit_family = NULL, lme4_fit_family = NULL, ...)
+  lme4_fit_mod = NULL, glm_fit_family = NULL, lme4_fit_family = NULL,
+  general_mod = NULL, general_extract = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -166,6 +167,15 @@ raw data by variable(s) manipulated in power analysis.}
 \item{glm_fit_family}{Valid family syntax to pass to the glm function.}
 
 \item{lme4_fit_family}{Valid lme4 family specification passed to glmer.}
+
+\item{general_mod}{Valid model syntax. This syntax can be from any R package. 
+By default, broom is used to extract model result information. Note, 
+package must be defined or loaded prior to running the sim_pow function.}
+
+\item{general_extract}{A valid function to extract model results if 
+general_mod argument is used. This argument is primarily used if extracting model
+results is not possibly using the broom package. If this is left NULL (default), 
+broom is used to collect model results.}
 
 \item{...}{Current not used.}
 }

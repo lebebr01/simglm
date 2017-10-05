@@ -2,7 +2,7 @@ Package: simglm
 Type: Package
 Authors@R: person("Brandon", "LeBeau", email = "lebebr01+simglm@gmail.com",
      role = c("aut", "cre"))
-Version: 0.6.1
+Version: 0.6.2
 License: MIT + file LICENSE
 Title: Simulate Models Based on the Generalized Linear Model
 Description: Easily simulates regression models,
@@ -16,8 +16,8 @@ Depends:
     Matrix,
     dplyr,
     purrr,
-    tidyr,
-    tibble
+    tibble,
+    broom
 Suggests:
     knitr,
     lme4,
@@ -25,7 +25,9 @@ Suggests:
     testthat,
     shiny,
     e1071,
-    ggplot2
+    ggplot2,
+    tidyr,
+    geepack
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Author: Brandon LeBeau [aut, cre]

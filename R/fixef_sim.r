@@ -530,3 +530,24 @@ sim_continuous <- function(k = NULL, n, p, dist_fun,
   )
   contVar
 }
+
+#' Simulate knot locations
+#' 
+#' Function that generates knot locations. An example of usefulness of this funciton
+#' would be with generation of interrupted time series data. Another application may
+#' be with simulation of piecewise linear data structures.
+#' 
+#' @param var Variable used to create knots in the data. 
+#' @param knot_locations The locations to create knots. These need to be specified 
+#'   with the scale of the variable in mind. See examples.
+#' @export 
+#' @examples
+#' sim_knot(0:10, knot_locations = c(4, 9))
+#' sim_knot(rnorm(100), knot_locations = c(-1, 1.5))
+#' sim_knot(0:8, knot_locations = 5)   
+sim_knot <- function(var, knot_locations) {
+  
+  knot_locat <- c(min(var), knot_locations, (max(var) + 1))
+  
+  cut(var, knot_locat, labels = FALSE, right = FALSE) - 1
+}

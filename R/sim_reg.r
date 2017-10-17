@@ -124,6 +124,12 @@
 #'        \item ...: Additional parameters needed for rand_gen function.
 #'    } 
 #'   }
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @param ... Not currently used.
 #' @import stats
 #' @export 
@@ -208,26 +214,27 @@ sim_reg <- function(fixed, random, random3, fixed_param,
                     lvl1_err_params = NULL, arima_mod = list(NULL), 
                     contrasts = NULL, homogeneity = TRUE,
                     heterogeneity_var = NULL, cross_class_params = NULL, 
-                    ...) {
+                    knot_args = list(NULL), ...) {
   
   if(data_str == "single"){
     sim_reg_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen, 
                    arima, data_str, cor_vars, fact_vars, lvl1_err_params, 
-                   arima_mod, contrasts, homogeneity, heterogeneity_var, ...)
+                   arima_mod, contrasts, homogeneity, heterogeneity_var, 
+                   knot_args, ...)
   } else {
   	if (is.null(k)){
   	  sim_reg_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 
   	                 error_var, with_err_gen, arima, data_str, cor_vars, 
   	                 fact_vars, unbal, unbal_design, lvl1_err_params, 
   	                 arima_mod, contrasts, homogeneity, heterogeneity_var, 
-  	                 cross_class_params, ...)
+  	                 cross_class_params, knot_args, ...)
   } else {
     sim_reg_nested3(fixed, random, random3, fixed_param, random_param, 
                     random_param3, cov_param, k, n, p, error_var, with_err_gen, 
                     arima, data_str, cor_vars, fact_vars, unbal, 
                     unbal_design, lvl1_err_params, arima_mod, contrasts,
                     homogeneity, heterogeneity_var, 
-                    cross_class_params, ...)
+                    cross_class_params, knot_args, ...)
   }
  }
 }
@@ -345,6 +352,12 @@ sim_reg <- function(fixed, random, random3, fixed_param,
 #'        \item ...: Additional parameters needed for rand_gen function.
 #'    } 
 #'   }
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @param ... Not currently used.
 #' @export 
 #' 
@@ -417,21 +430,23 @@ sim_glm <- function(fixed, random, random3, fixed_param, random_param = list(),
                     unbal = list("level2" = FALSE, "level3" = FALSE), 
                     unbal_design = list("level2" = NULL, "level3" = NULL),
                     contrasts = NULL, outcome_type, 
-                    cross_class_params = NULL, ...) {
+                    cross_class_params = NULL, knot_args = list(NULL), ...) {
   
   if(data_str == "single"){
     sim_glm_single(fixed, fixed_param, cov_param, n, data_str, 
-                   cor_vars, fact_vars, contrasts, outcome_type, ...)
+                   cor_vars, fact_vars, contrasts, outcome_type, 
+                   knot_args, ...)
   } else {
     if (is.null(k)){
       sim_glm_nested(fixed, random, fixed_param, random_param, cov_param, n, p, 
                      data_str, cor_vars, fact_vars, unbal, unbal_design, 
-                     contrasts, outcome_type, cross_class_params, ...)
+                     contrasts, outcome_type, cross_class_params, 
+                     knot_args, ...)
     } else {
       sim_glm_nested3(fixed, random, random3, fixed_param, random_param, 
                       random_param3, cov_param, k, n, p, data_str, cor_vars, 
                       fact_vars, unbal, unbal_design, contrasts,
-                      outcome_type, cross_class_params, ...)
+                      outcome_type, cross_class_params, knot_args, ...)
     }
   }
 }

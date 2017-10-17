@@ -5,7 +5,8 @@
 \title{Simulation single level logistic regression model}
 \usage{
 sim_glm_single(fixed, fixed_param, cov_param, n, data_str, cor_vars = NULL,
-  fact_vars = list(NULL), contrasts = NULL, outcome_type, ...)
+  fact_vars = list(NULL), contrasts = NULL, outcome_type,
+  knot_args = list(NULL), ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.
@@ -54,6 +55,13 @@ See \code{\link{contrasts}} for more detail.}
 \item{outcome_type}{A vector specifying the type of outcome, must be either
 logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
 be counts.}
+
+\item{knot_args}{A nested list of named knot arguments. See \code{\link{sim_knot}} 
+for more details. Arguments must include:
+  \itemize{
+    \item var
+    \item knot_locations
+  }}
 
 \item{...}{Not currently used.}
 }

@@ -121,6 +121,12 @@
 #'        \item ...: Additional parameters needed for rand_gen function.
 #'    } 
 #'   }
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -257,6 +263,7 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                     lvl1_err_params = NULL, arima_mod = list(NULL),
                     contrasts = NULL, homogeneity = TRUE,
                     heterogeneity_var = NULL, cross_class_params = NULL,
+                    knot_args = list(NULL),
                     missing = FALSE, missing_args = list(NULL),
                    pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                     replicates, terms_vary = NULL, raw_power = TRUE, 
@@ -275,7 +282,8 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                lvl1_err_params = lvl1_err_params,
                arima_mod = arima_mod, contrasts = contrasts,
                homogeneity = homogeneity, heterogeneity_var = heterogeneity_var,
-               cross_class_params = cross_class_params, missing = missing, 
+               cross_class_params = cross_class_params, 
+               knot_args = knot_args, missing = missing, 
                missing_args = missing_args, pow_param = pow_param, 
                alpha = alpha, pow_dist = pow_dist, pow_tail = pow_tail, 
                lm_fit_mod = lm_fit_mod, lme4_fit_mod = lme4_fit_mod, 
@@ -508,6 +516,12 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
 #'        \item ...: Additional parameters needed for rand_gen function.
 #'    } 
 #'   }
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -570,18 +584,20 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
 #' 
 #' @export 
 sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param, 
-                    random_param = list(NULL), random_param3 = list(NULL), 
-                    cov_param, k = NULL, n, p = NULL, 
-                    data_str, cor_vars = NULL, fact_vars = list(NULL), 
-                    unbal = list("level2" = FALSE, "level3" = FALSE), 
-                    unbal_design = list("level2" = NULL, "level3" = NULL),
-                    outcome_type, cross_class_params = NULL,
-                    missing = FALSE, missing_args = list(NULL),
-                  pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
-                    replicates, terms_vary = NULL, raw_power = TRUE, 
-                  glm_fit_mod = NULL, lme4_fit_mod = NULL, 
-                  glm_fit_family = NULL, lme4_fit_family = NULL, 
-                  general_mod = NULL, general_extract = NULL, ...) {
+                        random_param = list(NULL), random_param3 = list(NULL), 
+                        cov_param, k = NULL, n, p = NULL, 
+                        data_str, cor_vars = NULL, fact_vars = list(NULL), 
+                        unbal = list("level2" = FALSE, "level3" = FALSE), 
+                        unbal_design = list("level2" = NULL, "level3" = NULL),
+                        outcome_type, cross_class_params = NULL,
+                        knot_args = list(NULL),
+                        missing = FALSE, missing_args = list(NULL),
+                        pow_param, alpha, pow_dist = c("z", "t"), 
+                        pow_tail = c(1, 2), 
+                        replicates, terms_vary = NULL, raw_power = TRUE, 
+                        glm_fit_mod = NULL, lme4_fit_mod = NULL, 
+                        glm_fit_family = NULL, lme4_fit_family = NULL, 
+                        general_mod = NULL, general_extract = NULL, ...) {
   
   args <- list(fixed = fixed, random = random, random3 = random3,
                fixed_param = fixed_param, random_param = random_param,
@@ -590,6 +606,7 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                data_str = data_str, cor_vars = cor_vars, 
                fact_vars = fact_vars, unbal = unbal, unbal_design = unbal_design,
                outcome_type = outcome_type, cross_class_params = cross_class_params,
+               knot_args = knot_args, 
                missing = missing, missing_args = missing_args,
                pow_param = pow_param, alpha = alpha, pow_dist = pow_dist, 
                pow_tail = pow_tail, glm_fit_mod = glm_fit_mod, 

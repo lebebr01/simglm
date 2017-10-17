@@ -107,6 +107,12 @@
 #'        \item ...: Additional parameters needed for rand_gen function.
 #'    } 
 #'   }
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -136,6 +142,7 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
                                 unbal = list("level2" = FALSE, "level3" = FALSE), 
                                 unbal_design = list("level2" = NULL, "level3" = NULL),
                                 outcome_type, cross_class_params = NULL,
+                                knot_args = list(NULL),
                                 missing = FALSE, missing_args = list(NULL),
                                 pow_param = NULL, alpha, pow_dist = c("z", "t"), 
                                 pow_tail = c(1, 2), 
@@ -157,7 +164,7 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
                                random_param3, cov_param, k, n, p, 
                                data_str, cor_vars, fact_vars, 
                                unbal, unbal_design, outcome_type = outcome_type, 
-                               cross_class_params, ...)
+                               cross_class_params, knot_args, ...)
   if(missing) {
     data <- do.call(missing_data, c(list(sim_data = data), 
                                          missing_args))
@@ -304,6 +311,12 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
 #'        \item ...: Additional parameters needed for rand_gen function.
 #'    } 
 #'   }
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -331,7 +344,8 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
                           cor_vars = NULL, fact_vars = list(NULL),
                           unbal = list("level2" = FALSE, "level3" = FALSE), 
                           unbal_design = list("level2" = NULL, "level3" = NULL),
-                          outcome_type, cross_class_params = NULL, missing = FALSE, 
+                          outcome_type, cross_class_params = NULL, 
+                          knot_args = list(NULL), missing = FALSE, 
                           missing_args = list(NULL), pow_param = NULL, 
                           alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                           lme4_fit_mod = NULL, lme4_fit_family, 
@@ -350,7 +364,7 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
   data <- sim_glm_nested(fixed, random, fixed_param, random_param, 
                               cov_param, n, p, data_str, cor_vars, fact_vars, 
                               unbal, unbal_design, outcome_type = outcome_type, 
-                              cross_class_params, ...)
+                              cross_class_params, knot_args, ...)
   if(missing) {
     data <- do.call(missing_data, c(list(sim_data = data), 
                                          missing_args))
@@ -446,6 +460,12 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
 #' @param outcome_type A vector specifying the type of outcome, must be either
 #'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
 #'   be counts.
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -471,7 +491,7 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
 #' @export 
 sim_pow_glm_single <- function(fixed, fixed_param, cov_param, n, data_str, 
                            cor_vars = NULL, fact_vars = list(NULL),
-                           outcome_type,
+                           outcome_type, knots_args = list(NULL),
                            missing = FALSE, missing_args = list(NULL),
                            pow_param = NULL, alpha, pow_dist = c("z", "t"), 
                            pow_tail = c(1, 2), glm_fit_mod = NULL, 
@@ -485,8 +505,8 @@ sim_pow_glm_single <- function(fixed, fixed_param, cov_param, n, data_str,
   }
   
   data <- sim_glm_single(fixed, fixed_param, cov_param, n, data_str, 
-                                cor_vars, fact_vars, outcome_type = outcome_type, 
-                                ...)
+                         cor_vars, fact_vars, outcome_type = outcome_type, 
+                         knot_args, ...)
   if(missing) {
     data <- do.call(missing_data, c(list(sim_data = data), 
                                     missing_args))

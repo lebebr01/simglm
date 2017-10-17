@@ -11,8 +11,8 @@ sim_pow(fixed, random = NULL, random3 = NULL, fixed_param,
   level3 = FALSE), unbal_design = list(level2 = NULL, level3 = NULL),
   lvl1_err_params = NULL, arima_mod = list(NULL), contrasts = NULL,
   homogeneity = TRUE, heterogeneity_var = NULL, cross_class_params = NULL,
-  missing = FALSE, missing_args = list(NULL), pow_param, alpha,
-  pow_dist = c("z", "t"), pow_tail = c(1, 2), replicates,
+  knot_args = list(NULL), missing = FALSE, missing_args = list(NULL),
+  pow_param, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2), replicates,
   terms_vary = NULL, raw_power = TRUE, lm_fit_mod = NULL,
   lme4_fit_mod = NULL, nlme_fit_mod = NULL, arima_fit_mod = NULL,
   general_mod = NULL, general_extract = NULL, ...)
@@ -155,6 +155,13 @@ data structures are desired. Must include the following arguments:
       \item ...: Additional parameters needed for rand_gen function.
   } 
  }}
+
+\item{knot_args}{A nested list of named knot arguments. See \code{\link{sim_knot}} 
+for more details. Arguments must include:
+  \itemize{
+    \item var
+    \item knot_locations
+  }}
 
 \item{missing}{TRUE/FALSE flag indicating whether missing data should be 
 simulated.}

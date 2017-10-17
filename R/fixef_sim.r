@@ -42,11 +42,17 @@
 #' @param contrasts An optional list that specifies the contrasts to be used 
 #'  for factor variables (i.e. those variables with .f or .c). 
 #'  See \code{\link{contrasts}} for more detail.
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @importFrom purrr pmap invoke_map
 #' @export 
 sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str, 
                              cor_vars = NULL, fact_vars = list(NULL), 
-                             contrasts = NULL){
+                             contrasts = NULL, knot_args = list(NULL)) {
   
   n.vars <- length(fixed_vars)
   n.int <- length(grep(":",fixed_vars))
@@ -59,6 +65,10 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
                    fixed_vars, ignore.case = TRUE) 
   w.var <- length(grep("level1", cov_param$var_type, ignore.case = TRUE))
   n.cont <- length(cov_param[[1]])
+  
+  knot_loc <- grep("\\.k$|_k$", fixed_vars, ignore.case = TRUE)
+  n_knot <- length(knot_loc[knot_loc != int.loc])
+  knot_var_loc <- grep(paste0(knot_args$var, '$'), fixed_vars)
   
   if(length(fact.loc) > 0){
     fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], 
@@ -136,6 +146,14 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
     )
   }
   
+  if(length(knot_loc) > 0) {
+    Xmat <- cbind(Xmat, do.call(cbind, 
+                      purrr::invoke_map(lapply(seq_len(n_knot), 
+                                function(xx) sim_knot),
+                                    knot_args$knot_locations,
+                                    var = Xmat[, knot_var_loc])))
+  }
+  
    if(n.int == 0){
      colnames(Xmat) <- fixed_vars
    } else {
@@ -198,11 +216,17 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 #' @param contrasts An optional list that specifies the contrasts to be used for factor
 #'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
 #'      more detail.
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @importFrom purrr pmap invoke_map
 #' @export 
 sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str, 
                              cor_vars = NULL, fact_vars = list(NULL),
-                             contrasts = NULL){
+                             contrasts = NULL, knot_args = list(NULL)) {
   
   n.vars <- length(fixed_vars)
   n.int <- length(grep(":",fixed_vars))
@@ -214,6 +238,10 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   fact.loc <- grep("\\.f$|\\.o$|\\.c$|_f$|_c$|_o$", 
                    fixed_vars, ignore.case = TRUE) 
   n.cont <- length(cov_param[[1]])
+  
+  knot_loc <- grep("\\.k$|_k$", fixed_vars, ignore.case = TRUE)
+  n_knot <- length(knot_loc[knot_loc != int.loc])
+  knot_var_loc <- grep(paste0(knot_args$var, '$'), fixed_vars)
   
   if(length(fact.loc) > 0){
     fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], 
@@ -279,13 +307,21 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     )
     
     Xmat <- cbind(Xmat, do.call(cbind, purrr::invoke_map(lapply(seq_len(n.fact), 
-                                                                function(xx) sim_factor),
+                                                  function(xx) sim_factor),
                                                          fact_vars_args, 
                                                          n = n,
                                                          k = k,
                                                          p = p
     ))
     )
+  }
+  
+  if(length(knot_loc) > 0) {
+    Xmat <- cbind(Xmat, do.call(cbind, 
+                                purrr::invoke_map(lapply(seq_len(n_knot), 
+                                               function(xx) sim_knot),
+                                                  knot_args$knot_locations,
+                                                  var = Xmat[, knot_var_loc])))
   }
   
   if(n.int == 0){
@@ -356,7 +392,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #' @export 
 sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL, 
                              fact_vars = list(NULL), contrasts = NULL,
-                             knot_args = list(NULL)){
+                             knot_args = list(NULL)) {
   
   n.vars <- length(fixed_vars)
   n.int <- length(grep(":",fixed_vars))
@@ -441,7 +477,7 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   }
   Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
   
-  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
     list(Xmat = Xmat, Omat = data.frame(Omat))
   } else {
     Xmat

@@ -122,6 +122,12 @@
 #'        \item ...: Additional parameters needed for rand_gen function.
 #'    } 
 #'   }
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -159,6 +165,7 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
                             lvl1_err_params = NULL, arima_mod = list(NULL), 
                             contrasts = NULL, homogeneity = TRUE,
                             heterogeneity_var = NULL, cross_class_params = NULL,
+                            knot_args = list(NULL),
                             missing = FALSE, missing_args = list(NULL),
                             pow_param = NULL, alpha, pow_dist = c("z", "t"), 
                             pow_tail = c(1, 2), lme4_fit_mod = NULL, 
@@ -182,7 +189,7 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
                                fact_vars, unbal, unbal_design, 
                                lvl1_err_params, arima_mod, contrasts, 
                                homogeneity, heterogeneity_var, 
-                               cross_class_params, ...)
+                               cross_class_params, knot_args, ...)
   if(missing) {
     data <- do.call(missing_data, c(list(sim_data = data), 
                                          missing_args))
@@ -372,6 +379,12 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
 #'        \item ...: Additional parameters needed for rand_gen function.
 #'    } 
 #'   }
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'  simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -404,7 +417,7 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
                         unbal = FALSE, unbal_design = NULL, lvl1_err_params = NULL,
                         arima_mod = list(NULL), contrasts = NULL, 
                         homogeneity = TRUE, heterogeneity_var = NULL, 
-                        cross_class_params = NULL,
+                        cross_class_params = NULL, knot_args = list(NULL),
                         missing = FALSE, 
                         missing_args = list(NULL), pow_param = NULL, alpha, 
                         pow_dist = c("z", "t"), pow_tail = c(1, 2), 
@@ -427,7 +440,7 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
                               data_str, cor_vars, fact_vars, unbal, unbal_design,
                               lvl1_err_params, arima_mod, contrasts, 
                               homogeneity, heterogeneity_var, 
-                              cross_class_params, ...)
+                              cross_class_params, knot_args, ...)
   if(missing) {
     data <- do.call(missing_data, c(list(sim_data = data), 
                                          missing_args))
@@ -559,6 +572,12 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
 #'  of variance.
 #' @param heterogeneity_var Variable name as a character string to use for 
 #'  heterogeneity of variance simulation.
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @param missing TRUE/FALSE flag indicating whether missing data should be 
 #'   simulated.
 #' @param missing_args Additional missing arguments to pass to the missing_data 
@@ -587,7 +606,7 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var,
                       fact_vars = list(NULL), lvl1_err_params = NULL, 
                       arima_mod = list(NULL), contrasts = NULL, 
                       homogeneity = TRUE, heterogeneity_var = NULL, 
-                      missing = FALSE, 
+                      knot_args = list(NULL), missing = FALSE, 
                       missing_args = list(NULL), pow_param = NULL, alpha, 
                       pow_dist = c("z", "t"), pow_tail = c(1, 2), 
                       lm_fit_mod = NULL, general_mod = NULL, 
@@ -596,10 +615,10 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var,
   fixed_vars <- attr(terms(fixed),"term.labels")
   
   data <- sim_reg_single(fixed, fixed_param, cov_param, n, error_var, 
-                                with_err_gen, arima, data_str, 
-                                cor_vars, fact_vars, lvl1_err_params, arima_mod,
-                                contrasts, homogeneity, heterogeneity_var,
-                                ...)
+                         with_err_gen, arima, data_str, 
+                         cor_vars, fact_vars, lvl1_err_params, arima_mod,
+                         contrasts, homogeneity, heterogeneity_var,
+                         knot_args, ...)
   
   if(missing) {
     data <- do.call(missing_data, c(list(sim_data = data), 

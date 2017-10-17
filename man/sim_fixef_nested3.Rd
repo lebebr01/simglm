@@ -5,7 +5,8 @@
 \title{Simulates design matrix.}
 \usage{
 sim_fixef_nested3(fixed, fixed_vars, cov_param, k, n, p, data_str,
-  cor_vars = NULL, fact_vars = list(NULL), contrasts = NULL)
+  cor_vars = NULL, fact_vars = list(NULL), contrasts = NULL,
+  knot_args = list(NULL))
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.}
@@ -50,6 +51,13 @@ Does not include intercept, time, factors, or interactions.}
 \item{contrasts}{An optional list that specifies the contrasts to be used for factor
 variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
 more detail.}
+
+\item{knot_args}{A nested list of named knot arguments. See \code{\link{sim_knot}} 
+for more details. Arguments must include:
+  \itemize{
+    \item var
+    \item knot_locations
+  }}
 }
 \description{
 Input fixed variables, sample size, and number of within variables, returns 

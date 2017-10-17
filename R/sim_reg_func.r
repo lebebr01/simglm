@@ -60,6 +60,12 @@
 #'  of variance.
 #' @param heterogeneity_var Variable name as a character string to use for 
 #'  heterogeneity of variance simulation.
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @param ... Not currently used.
 #' @importFrom dplyr bind_cols
 #' @importFrom tibble as_tibble
@@ -86,15 +92,17 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var,
                            cor_vars = NULL, fact_vars = list(NULL), 
                            lvl1_err_params = NULL, arima_mod = list(NULL), 
                            contrasts = NULL, homogeneity = TRUE,
-                           heterogeneity_var = NULL, ...) {
+                           heterogeneity_var = NULL, knot_args = list(NULL),
+                           ...) {
   
   fixed_vars <- attr(terms(fixed),"term.labels")   
 
   Xmat <- sim_fixef_single(fixed = fixed, fixed_vars = fixed_vars, n = n, 
                            cov_param = cov_param, cor_vars = cor_vars, 
-                           fact_vars = fact_vars, contrasts = contrasts)
+                           fact_vars = fact_vars, contrasts = contrasts,
+                           knot_args = knot_args)
   
-  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
     if(ncol(Xmat$Xmat) != length(fixed_param)) {
       stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
                  'variables in design matrix'))
@@ -240,6 +248,12 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var,
 #'        \item ...: Additional parameters needed for rand_gen function.
 #'    } 
 #'   }
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @param ... Not currently used.
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr bind_cols
@@ -270,7 +284,8 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
                            unbal_design = NULL, lvl1_err_params = NULL, 
                            arima_mod = list(NULL), contrasts = NULL, 
                            homogeneity = TRUE, heterogeneity_var = NULL, 
-                           cross_class_params = NULL, ...) {
+                           cross_class_params = NULL, knot_args = list(NULL),
+                           ...) {
 
   fixed_vars <- attr(terms(fixed),"term.labels")  
   rand_vars <- attr(terms(random),"term.labels")  
@@ -294,8 +309,8 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
   Xmat <- sim_fixef_nested(fixed = fixed, fixed_vars = fixed_vars, 
                            cov_param = cov_param, n = n, p = lvl1ss, 
                             data_str = data_str, cor_vars = cor_vars, 
-                           fact_vars = fact_vars, 
-                           contrasts = contrasts)
+                           fact_vars = fact_vars, contrasts = contrasts,
+                           knot_args = knot_args)
 
   rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
 
@@ -304,7 +319,7 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
   colnames(reff) <- c(unlist(lapply(1:ncol(rand_eff), function(xx)
     paste("b", xx-1, sep = ""))))
   
-  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
     if(ncol(Xmat$Xmat) != length(fixed_param)) {
       stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
                  'variables in design matrix'))
@@ -487,6 +502,12 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
 #'        \item ...: Additional parameters needed for rand_gen function.
 #'    } 
 #'   }
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @param ... Not currently used.
 #' @importFrom tibble as_tibble
 #' @export 
@@ -522,8 +543,8 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
                             unbal_design = list("level2" = NULL, "level3" = NULL),
                             lvl1_err_params = NULL, arima_mod = list(NULL),
                             contrasts = NULL, homogeneity = TRUE,
-                            heterogeneity_var = NULL, 
-                            cross_class_params = NULL, ...) {
+                            heterogeneity_var = NULL, cross_class_params = NULL,
+                            knot_args = list(NULL), ...) {
 
   fixed_vars <- attr(terms(fixed),"term.labels")   
   rand_vars <- attr(terms(random),"term.labels")   
@@ -581,7 +602,8 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
   Xmat <- sim_fixef_nested3(fixed, fixed_vars, cov_param, k, n = lvl2ss, 
                             p = lvl1ss, data_str = data_str, 
                             cor_vars = cor_vars, 
-                            fact_vars = fact_vars, contrasts = contrasts)
+                            fact_vars = fact_vars, contrasts = contrasts,
+                            knot_args = knot_args)
 
   rand_eff <- do.call(sim_rand_eff, c(random_param, n = n))
   rand_eff3 <- do.call(sim_rand_eff, c(random_param3, n = k))
@@ -596,7 +618,7 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
   colnames(reff3) <- c(unlist(lapply(1:ncol(rand_eff3), function(xx) 
     paste("b", xx-1, "_3", sep = ""))))
   
-  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
     if(ncol(Xmat$Xmat) != length(fixed_param)) {
       stop(paste(length(fixed_param), 'parameters specified for', ncol(Xmat), 
                  'variables in design matrix'))

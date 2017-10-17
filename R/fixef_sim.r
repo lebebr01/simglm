@@ -372,6 +372,7 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   
   knot_loc <- grep("\\.k$|_k$", fixed_vars, ignore.case = TRUE)
   n_knot <- length(knot_loc[knot_loc != int.loc])
+  knot_var_loc <- grep(paste0(knot_args$var, '$'), fixed_vars)
   
   if(length(fact.loc) > 0){
     fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], 
@@ -420,11 +421,12 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
     )
   }
   
-  if(length(knot_loc)> 0) {
+  if(length(knot_loc) > 0) {
     Xmat <- cbind(Xmat, do.call(cbind, 
                     purrr::invoke_map(lapply(seq_len(n_knot), 
                         function(xx) sim_knot),
-                        knot_args)))
+                        knot_args$knot_locations,
+                        var = Xmat[, knot_var_loc])))
   }
   
   if(n.int == 0){
@@ -433,8 +435,7 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
     int.loc <- grep(":", fixed_vars)
     colnames(Xmat) <- fixed_vars[-int.loc]
   } 
-  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, 
-               ignore.case = TRUE))) {
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
     fixed <- search_factors(fixed_vars)
     Omat <- Xmat
   }

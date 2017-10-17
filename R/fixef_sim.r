@@ -346,10 +346,17 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #' @param contrasts An optional list that specifies the contrasts to be used 
 #'  for factor variables (i.e. those variables with .f or .c). 
 #'  See \code{\link{contrasts}} for more detail.
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @importFrom purrr pmap invoke_map
 #' @export 
 sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL, 
-                             fact_vars = list(NULL), contrasts = NULL){
+                             fact_vars = list(NULL), contrasts = NULL,
+                             knot_args = list(NULL)){
   
   n.vars <- length(fixed_vars)
   n.int <- length(grep(":",fixed_vars))
@@ -362,6 +369,9 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
                    fixed_vars, ignore.case = TRUE)  
   n.fact <- length(fact.loc[fact.loc != int.loc])
   n.cont <- length(cov_param[[1]])
+  
+  knot_loc <- grep("\\.k$|_k$", fixed_vars, ignore.case = TRUE)
+  n_knot <- length(knot_loc[knot_loc != int.loc])
   
   if(length(fact.loc) > 0){
     fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], 
@@ -393,7 +403,7 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
     Xmat <- NULL
   }
 
-  if(length(fact.loc > 0)) {
+  if(length(fact.loc) > 0) {
     fact_vars_args <- lapply(seq_len(n.fact), function(xx)
        c(fact_vars$numlevels[[xx]], 
          fact_vars$var_type[[xx]],
@@ -410,13 +420,21 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
     )
   }
   
+  if(length(knot_loc)> 0) {
+    Xmat <- cbind(Xmat, do.call(cbind, 
+                    purrr::invoke_map(lapply(seq_len(n_knot), 
+                        function(xx) sim_knot),
+                        knot_args)))
+  }
+  
   if(n.int == 0){
     colnames(Xmat) <- fixed_vars
   } else {
     int.loc <- grep(":", fixed_vars)
     colnames(Xmat) <- fixed_vars[-int.loc]
   } 
-  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, 
+               ignore.case = TRUE))) {
     fixed <- search_factors(fixed_vars)
     Omat <- Xmat
   }
@@ -446,23 +464,6 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
 sim_factor <- function(k = NULL, n, p, numlevels, 
                        var_type = c('level1', 'level2', 'level3', 'single'),
                        ...) {
-
-  # if(var_type == 'single' | var_type == 'level2') {
-  #   if(replace == FALSE & numlevels < n) {
-  #     stop("If replace = FALSE, numlevels must be greater than n for level2 or single")
-  #   }
-  # }
-  # if(var_type == "level1") {
-  #   if(replace == FALSE & numlevels < sum(p)){
-  #     stop("If replace = FALSE, numlevels must be greater than sum(p) for level1")
-  #   }
-  # }
-  # if(var_type == "level3") {
-  #   if(replace == FALSE & numlevels < k) {
-  #     stop("If replace = FALSE, numlevels must be greater than k for level3")
-  #   }
-  # }
-  
   end <- cumsum(n)
   beg <- c(1, cumsum(n) + 1)
   beg <- beg[-length(beg)]
@@ -540,14 +541,22 @@ sim_continuous <- function(k = NULL, n, p, dist_fun,
 #' @param var Variable used to create knots in the data. 
 #' @param knot_locations The locations to create knots. These need to be specified 
 #'   with the scale of the variable in mind. See examples.
+#' @param right logical, indicating if the intervals should be closed on the right
+#'   (and open on the left) or vice versa. See \code{\link{cut}} for more details. 
+#'   Defaults to FALSE, which is likely most desirable behavior in this context.
 #' @export 
 #' @examples
 #' sim_knot(0:10, knot_locations = c(4, 9))
 #' sim_knot(rnorm(100), knot_locations = c(-1, 1.5))
 #' sim_knot(0:8, knot_locations = 5)   
-sim_knot <- function(var, knot_locations) {
+#' sim_knot(0:8, knot_locations = 5, right = TRUE)  
+sim_knot <- function(var, knot_locations, right = FALSE) {
   
-  knot_locat <- c(min(var), knot_locations, (max(var) + 1))
+  if(!right) {
+    knot_locat <- c(min(var), knot_locations, (max(var) + 1))
+  } else {
+    knot_locat <- c((min(var) - 1), knot_locations, (max(var)))
+  }
   
-  cut(var, knot_locat, labels = FALSE, right = FALSE) - 1
+  cut(var, knot_locat, labels = FALSE, right = right) - 1
 }

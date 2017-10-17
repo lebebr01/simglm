@@ -4,13 +4,17 @@
 \alias{sim_knot}
 \title{Simulate knot locations}
 \usage{
-sim_knot(var, knot_locations)
+sim_knot(var, knot_locations, right = FALSE)
 }
 \arguments{
 \item{var}{Variable used to create knots in the data.}
 
 \item{knot_locations}{The locations to create knots. These need to be specified 
 with the scale of the variable in mind. See examples.}
+
+\item{right}{logical, indicating if the intervals should be closed on the right
+(and open on the left) or vice versa. See \code{\link{cut}} for more details. 
+Defaults to FALSE, which is likely most desirable behavior in this context.}
 }
 \description{
 Function that generates knot locations. An example of usefulness of this funciton
@@ -21,4 +25,5 @@ be with simulation of piecewise linear data structures.
 sim_knot(0:10, knot_locations = c(4, 9))
 sim_knot(rnorm(100), knot_locations = c(-1, 1.5))
 sim_knot(0:8, knot_locations = 5)   
+sim_knot(0:8, knot_locations = 5, right = TRUE)  
 }

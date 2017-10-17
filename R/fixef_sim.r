@@ -67,16 +67,17 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   n.cont <- length(cov_param[[1]])
   
   knot_loc <- grep("\\.k$|_k$", fixed_vars, ignore.case = TRUE)
-  n_knot <- length(knot_loc[knot_loc != int.loc])
+  n_knot <- length(knot_loc[knot_loc %ni% int.loc])
   knot_var_loc <- grep(paste0(knot_args$var, '$'), fixed_vars)
-  
+
   if(length(fact.loc) > 0){
-    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], 
+    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc, knot_loc)], 
+                    fixed_vars[fact.loc[fact.loc %ni% int.loc]], fixed_vars[knot_loc],
                     fixed_vars[int.loc])
   }
   
   if(length(fact.loc) > 0){
-    n.fact <- ifelse(length(int.loc) > 0, length(fact.loc[fact.loc != int.loc]), 
+    n.fact <- ifelse(length(int.loc) > 0, length(fact.loc[fact.loc %ni% int.loc]), 
                      length(fact.loc))
     n.fact.lvl1 <- length(grep("level1", fact_vars$var_type, ignore.case = TRUE))
     n.fact.lvl2 <- length(grep("level2", fact_vars$var_type, ignore.case = TRUE))
@@ -160,13 +161,13 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
      int.loc <- grep(":", fixed_vars)
      colnames(Xmat) <- fixed_vars[-int.loc]
    } 
- if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+ if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
    fixed <- search_factors(fixed_vars)
    Omat <- Xmat
  }
  Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
  
- if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+ if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
    list(Xmat = Xmat, Omat = data.frame(Omat))
  } else {
    Xmat
@@ -240,16 +241,17 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   n.cont <- length(cov_param[[1]])
   
   knot_loc <- grep("\\.k$|_k$", fixed_vars, ignore.case = TRUE)
-  n_knot <- length(knot_loc[knot_loc != int.loc])
+  n_knot <- length(knot_loc[knot_loc %ni% int.loc])
   knot_var_loc <- grep(paste0(knot_args$var, '$'), fixed_vars)
   
   if(length(fact.loc) > 0){
-    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], 
+    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc, knot_loc)], 
+                    fixed_vars[fact.loc[fact.loc %ni% int.loc]], fixed_vars[knot_loc],
                     fixed_vars[int.loc])
   }
   
   if(length(fact.loc) > 0){
-    n.fact <- ifelse(length(int.loc) > 0, length(fact.loc[fact.loc != int.loc]), 
+    n.fact <- ifelse(length(int.loc) > 0, length(fact.loc[fact.loc %ni% int.loc]), 
                      length(fact.loc))
   } else {
     n.fact <- 0
@@ -330,13 +332,13 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     int.loc <- grep(":", fixed_vars)
     colnames(Xmat) <- fixed_vars[-int.loc]
   } 
-  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
     fixed <- search_factors(fixed_vars)
     Omat <- Xmat
   }
   Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
   
-  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
     list(Xmat = Xmat, Omat = data.frame(Omat))
   } else {
     Xmat
@@ -403,15 +405,16 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   }
   fact.loc <- grep("\\.f$|\\.o$|\\.c$|_f$|_c$|_o$", 
                    fixed_vars, ignore.case = TRUE)  
-  n.fact <- length(fact.loc[fact.loc != int.loc])
+  n.fact <- length(fact.loc[fact.loc %ni% int.loc])
   n.cont <- length(cov_param[[1]])
   
   knot_loc <- grep("\\.k$|_k$", fixed_vars, ignore.case = TRUE)
-  n_knot <- length(knot_loc[knot_loc != int.loc])
+  n_knot <- length(knot_loc[knot_loc %ni% int.loc])
   knot_var_loc <- grep(paste0(knot_args$var, '$'), fixed_vars)
   
   if(length(fact.loc) > 0){
-    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], 
+    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc, knot_loc)], 
+                    fixed_vars[fact.loc[fact.loc %ni% int.loc]], fixed_vars[knot_loc],
                     fixed_vars[int.loc])
   }
   
@@ -513,10 +516,10 @@ sim_factor <- function(k = NULL, n, p, numlevels,
   var_type <- match.arg(var_type)
   
   cat_var <- switch(var_type,
-         single = sample(x = numlevels, size = n, ...),
-         level3 = rep(sample(x = numlevels, size = k, ...), times = lvl3ss),
-         level2 = rep(sample(x = numlevels, size = length(p), ...), times = p),
-         level1 = sample(x = numlevels, size = sum(p), ...)
+         single = base::sample(x = numlevels, size = n, ...),
+         level3 = rep(base::sample(x = numlevels, size = k, ...), times = lvl3ss),
+         level2 = rep(base::sample(x = numlevels, size = length(p), ...), times = p),
+         level1 = base::sample(x = numlevels, size = sum(p), ...)
          )
   
   # if(!is.null(value_labels)) {

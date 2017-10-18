@@ -79,7 +79,7 @@ test_that('interupt TS', {
                                 list(mean = 0, sd = 4)))
   fact_vars <- list(numlevels = 2, var_type = 'level2', 
                     opts = list(list(replace = TRUE)))
-  n <- 15000
+  n <- 150
   p <- 8
   error_var <- 1
   with_err_gen <- 'rnorm'

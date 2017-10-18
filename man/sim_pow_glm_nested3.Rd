@@ -8,10 +8,10 @@ sim_pow_glm_nested3(fixed, random, random3, fixed_param,
   random_param = list(), random_param3 = list(), cov_param, k, n, p,
   data_str, cor_vars = NULL, fact_vars = list(NULL), unbal = list(level2 =
   FALSE, level3 = FALSE), unbal_design = list(level2 = NULL, level3 = NULL),
-  outcome_type, cross_class_params = NULL, missing = FALSE,
-  missing_args = list(NULL), pow_param = NULL, alpha, pow_dist = c("z",
-  "t"), pow_tail = c(1, 2), lme4_fit_mod = NULL, lme4_fit_family,
-  general_mod = NULL, general_extract = NULL, ...)
+  outcome_type, cross_class_params = NULL, knot_args = list(NULL),
+  missing = FALSE, missing_args = list(NULL), pow_param = NULL, alpha,
+  pow_dist = c("z", "t"), pow_tail = c(1, 2), lme4_fit_mod = NULL,
+  lme4_fit_family, general_mod = NULL, general_extract = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -128,6 +128,13 @@ data structures are desired. Must include the following arguments:
       \item ...: Additional parameters needed for rand_gen function.
   } 
  }}
+
+\item{knot_args}{A nested list of named knot arguments. See \code{\link{sim_knot}} 
+for more details. Arguments must include:
+  \itemize{
+    \item var
+    \item knot_locations
+  }}
 
 \item{missing}{TRUE/FALSE flag indicating whether missing data should be 
 simulated.}

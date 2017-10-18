@@ -42,11 +42,17 @@
 #' @param contrasts An optional list that specifies the contrasts to be used 
 #'  for factor variables (i.e. those variables with .f or .c). 
 #'  See \code{\link{contrasts}} for more detail.
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @importFrom purrr pmap invoke_map
 #' @export 
 sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str, 
                              cor_vars = NULL, fact_vars = list(NULL), 
-                             contrasts = NULL){
+                             contrasts = NULL, knot_args = list(NULL)) {
   
   n.vars <- length(fixed_vars)
   n.int <- length(grep(":",fixed_vars))
@@ -60,13 +66,24 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   w.var <- length(grep("level1", cov_param$var_type, ignore.case = TRUE))
   n.cont <- length(cov_param[[1]])
   
+  knot_loc <- grep("\\.k$|_k$", fixed_vars, ignore.case = TRUE)
+  n_knot <- length(knot_loc[knot_loc %ni% int.loc])
+  knot_var_loc <- grep(paste0(knot_args$var, '$'), fixed_vars)
+
   if(length(fact.loc) > 0){
-    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], 
-                    fixed_vars[int.loc])
+    if(length(knot_loc) > 0) {
+      fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc, knot_loc)], 
+                      fixed_vars[fact.loc[fact.loc %ni% int.loc]], fixed_vars[knot_loc],
+                      fixed_vars[int.loc])
+    } else {
+      fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], 
+                      fixed_vars[fact.loc[fact.loc %ni% int.loc]],
+                      fixed_vars[int.loc])
+    }
   }
   
   if(length(fact.loc) > 0){
-    n.fact <- ifelse(length(int.loc) > 0, length(fact.loc[fact.loc != int.loc]), 
+    n.fact <- ifelse(length(int.loc) > 0, length(fact.loc[fact.loc %ni% int.loc]), 
                      length(fact.loc))
     n.fact.lvl1 <- length(grep("level1", fact_vars$var_type, ignore.case = TRUE))
     n.fact.lvl2 <- length(grep("level2", fact_vars$var_type, ignore.case = TRUE))
@@ -136,23 +153,32 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
     )
   }
   
+  if(length(knot_loc) > 0) {
+    Xmat <- cbind(Xmat, do.call(cbind, 
+                      purrr::invoke_map(lapply(seq_len(n_knot), 
+                                function(xx) sim_knot),
+                                    knot_args$knot_locations,
+                                    var = Xmat[, knot_var_loc])))
+  }
+  
    if(n.int == 0){
      colnames(Xmat) <- fixed_vars
    } else {
      int.loc <- grep(":", fixed_vars)
      colnames(Xmat) <- fixed_vars[-int.loc]
    } 
- if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+ if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
    fixed <- search_factors(fixed_vars)
    Omat <- Xmat
  }
- Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
+  
+  Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
  
- if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
-   list(Xmat = Xmat, Omat = data.frame(Omat))
- } else {
-   Xmat
- }
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
+    list(Xmat = Xmat, Omat = data.frame(Omat))
+  } else {
+    Xmat
+  }
 }
 
 #' Simulates design matrix.
@@ -198,11 +224,17 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 #' @param contrasts An optional list that specifies the contrasts to be used for factor
 #'      variables (i.e. those variables with .f or .c). See \code{\link{contrasts}} for 
 #'      more detail.
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @importFrom purrr pmap invoke_map
 #' @export 
 sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str, 
                              cor_vars = NULL, fact_vars = list(NULL),
-                             contrasts = NULL){
+                             contrasts = NULL, knot_args = list(NULL)) {
   
   n.vars <- length(fixed_vars)
   n.int <- length(grep(":",fixed_vars))
@@ -215,13 +247,24 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
                    fixed_vars, ignore.case = TRUE) 
   n.cont <- length(cov_param[[1]])
   
+  knot_loc <- grep("\\.k$|_k$", fixed_vars, ignore.case = TRUE)
+  n_knot <- length(knot_loc[knot_loc %ni% int.loc])
+  knot_var_loc <- grep(paste0(knot_args$var, '$'), fixed_vars)
+  
   if(length(fact.loc) > 0){
-    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], 
-                    fixed_vars[int.loc])
+    if(length(knot_loc) > 0) {
+      fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc, knot_loc)], 
+                      fixed_vars[fact.loc[fact.loc %ni% int.loc]], fixed_vars[knot_loc],
+                      fixed_vars[int.loc])
+    } else {
+      fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], 
+                      fixed_vars[fact.loc[fact.loc %ni% int.loc]],
+                      fixed_vars[int.loc])
+    }
   }
   
   if(length(fact.loc) > 0){
-    n.fact <- ifelse(length(int.loc) > 0, length(fact.loc[fact.loc != int.loc]), 
+    n.fact <- ifelse(length(int.loc) > 0, length(fact.loc[fact.loc %ni% int.loc]), 
                      length(fact.loc))
   } else {
     n.fact <- 0
@@ -279,7 +322,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     )
     
     Xmat <- cbind(Xmat, do.call(cbind, purrr::invoke_map(lapply(seq_len(n.fact), 
-                                                                function(xx) sim_factor),
+                                                  function(xx) sim_factor),
                                                          fact_vars_args, 
                                                          n = n,
                                                          k = k,
@@ -288,19 +331,27 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
     )
   }
   
+  if(length(knot_loc) > 0) {
+    Xmat <- cbind(Xmat, do.call(cbind, 
+                                purrr::invoke_map(lapply(seq_len(n_knot), 
+                                               function(xx) sim_knot),
+                                                  knot_args$knot_locations,
+                                                  var = Xmat[, knot_var_loc])))
+  }
+  
   if(n.int == 0){
     colnames(Xmat) <- fixed_vars
   } else {
     int.loc <- grep(":", fixed_vars)
     colnames(Xmat) <- fixed_vars[-int.loc]
   } 
-  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
     fixed <- search_factors(fixed_vars)
     Omat <- Xmat
   }
   Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
   
-  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
     list(Xmat = Xmat, Omat = data.frame(Omat))
   } else {
     Xmat
@@ -346,10 +397,17 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #' @param contrasts An optional list that specifies the contrasts to be used 
 #'  for factor variables (i.e. those variables with .f or .c). 
 #'  See \code{\link{contrasts}} for more detail.
+#' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
+#'  for more details. Arguments must include:
+#'    \itemize{
+#'      \item var
+#'      \item knot_locations
+#'    }
 #' @importFrom purrr pmap invoke_map
 #' @export 
 sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL, 
-                             fact_vars = list(NULL), contrasts = NULL){
+                             fact_vars = list(NULL), contrasts = NULL,
+                             knot_args = list(NULL)) {
   
   n.vars <- length(fixed_vars)
   n.int <- length(grep(":",fixed_vars))
@@ -360,12 +418,23 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   }
   fact.loc <- grep("\\.f$|\\.o$|\\.c$|_f$|_c$|_o$", 
                    fixed_vars, ignore.case = TRUE)  
-  n.fact <- length(fact.loc[fact.loc != int.loc])
+  n.fact <- length(fact.loc[fact.loc %ni% int.loc])
   n.cont <- length(cov_param[[1]])
   
+  knot_loc <- grep("\\.k$|_k$", fixed_vars, ignore.case = TRUE)
+  n_knot <- length(knot_loc[knot_loc %ni% int.loc])
+  knot_var_loc <- grep(paste0(knot_args$var, '$'), fixed_vars)
+  
   if(length(fact.loc) > 0){
-    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], fixed_vars[fact.loc], 
-                    fixed_vars[int.loc])
+    if(length(knot_loc) > 0) {
+      fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc, knot_loc)], 
+                      fixed_vars[fact.loc[fact.loc %ni% int.loc]], fixed_vars[knot_loc],
+                      fixed_vars[int.loc])
+    } else {
+      fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], 
+                      fixed_vars[fact.loc[fact.loc %ni% int.loc]],
+                      fixed_vars[int.loc])
+    }
   }
   
   if(n.fact > 0){
@@ -393,7 +462,7 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
     Xmat <- NULL
   }
 
-  if(length(fact.loc > 0)) {
+  if(length(fact.loc) > 0) {
     fact_vars_args <- lapply(seq_len(n.fact), function(xx)
        c(fact_vars$numlevels[[xx]], 
          fact_vars$var_type[[xx]],
@@ -410,19 +479,27 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
     )
   }
   
+  if(length(knot_loc) > 0) {
+    Xmat <- cbind(Xmat, do.call(cbind, 
+                    purrr::invoke_map(lapply(seq_len(n_knot), 
+                        function(xx) sim_knot),
+                        knot_args$knot_locations,
+                        var = Xmat[, knot_var_loc])))
+  }
+  
   if(n.int == 0){
     colnames(Xmat) <- fixed_vars
   } else {
     int.loc <- grep(":", fixed_vars)
     colnames(Xmat) <- fixed_vars[-int.loc]
   } 
-  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
     fixed <- search_factors(fixed_vars)
     Omat <- Xmat
   }
   Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
   
-  if(any(grepl("\\.f$|\\.c$|_f$|_c$", fixed_vars, ignore.case = TRUE))) {
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
     list(Xmat = Xmat, Omat = data.frame(Omat))
   } else {
     Xmat
@@ -446,23 +523,6 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
 sim_factor <- function(k = NULL, n, p, numlevels, 
                        var_type = c('level1', 'level2', 'level3', 'single'),
                        ...) {
-
-  # if(var_type == 'single' | var_type == 'level2') {
-  #   if(replace == FALSE & numlevels < n) {
-  #     stop("If replace = FALSE, numlevels must be greater than n for level2 or single")
-  #   }
-  # }
-  # if(var_type == "level1") {
-  #   if(replace == FALSE & numlevels < sum(p)){
-  #     stop("If replace = FALSE, numlevels must be greater than sum(p) for level1")
-  #   }
-  # }
-  # if(var_type == "level3") {
-  #   if(replace == FALSE & numlevels < k) {
-  #     stop("If replace = FALSE, numlevels must be greater than k for level3")
-  #   }
-  # }
-  
   end <- cumsum(n)
   beg <- c(1, cumsum(n) + 1)
   beg <- beg[-length(beg)]
@@ -475,10 +535,10 @@ sim_factor <- function(k = NULL, n, p, numlevels,
   var_type <- match.arg(var_type)
   
   cat_var <- switch(var_type,
-         single = sample(x = numlevels, size = n, ...),
-         level3 = rep(sample(x = numlevels, size = k, ...), times = lvl3ss),
-         level2 = rep(sample(x = numlevels, size = length(p), ...), times = p),
-         level1 = sample(x = numlevels, size = sum(p), ...)
+         single = base::sample(x = numlevels, size = n, ...),
+         level3 = rep(base::sample(x = numlevels, size = k, ...), times = lvl3ss),
+         level2 = rep(base::sample(x = numlevels, size = length(p), ...), times = p),
+         level1 = base::sample(x = numlevels, size = sum(p), ...)
          )
   
   # if(!is.null(value_labels)) {
@@ -529,4 +589,33 @@ sim_continuous <- function(k = NULL, n, p, dist_fun,
                    level1 = unlist(lapply(sum(p), FUN = dist_fun, ...))
   )
   contVar
+}
+
+#' Simulate knot locations
+#' 
+#' Function that generates knot locations. An example of usefulness of this funciton
+#' would be with generation of interrupted time series data. Another application may
+#' be with simulation of piecewise linear data structures.
+#' 
+#' @param var Variable used to create knots in the data. 
+#' @param knot_locations The locations to create knots. These need to be specified 
+#'   with the scale of the variable in mind. See examples.
+#' @param right logical, indicating if the intervals should be closed on the right
+#'   (and open on the left) or vice versa. See \code{\link{cut}} for more details. 
+#'   Defaults to FALSE, which is likely most desirable behavior in this context.
+#' @export 
+#' @examples
+#' sim_knot(0:10, knot_locations = c(4, 9))
+#' sim_knot(rnorm(100), knot_locations = c(-1, 1.5))
+#' sim_knot(0:8, knot_locations = 5)   
+#' sim_knot(0:8, knot_locations = 5, right = TRUE)  
+sim_knot <- function(var, knot_locations, right = FALSE) {
+  
+  if(!right) {
+    knot_locat <- c(min(var), knot_locations, (max(var) + 1))
+  } else {
+    knot_locat <- c((min(var) - 1), knot_locations, (max(var)))
+  }
+  
+  cut(var, knot_locat, labels = FALSE, right = right) - 1
 }

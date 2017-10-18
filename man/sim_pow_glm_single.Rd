@@ -5,10 +5,11 @@
 \title{Function to simulate power.}
 \usage{
 sim_pow_glm_single(fixed, fixed_param, cov_param, n, data_str,
-  cor_vars = NULL, fact_vars = list(NULL), outcome_type, missing = FALSE,
-  missing_args = list(NULL), pow_param = NULL, alpha, pow_dist = c("z",
-  "t"), pow_tail = c(1, 2), glm_fit_mod = NULL, glm_fit_family,
-  general_mod = NULL, general_extract = NULL, ...)
+  cor_vars = NULL, fact_vars = list(NULL), outcome_type,
+  knots_args = list(NULL), missing = FALSE, missing_args = list(NULL),
+  pow_param = NULL, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2),
+  glm_fit_mod = NULL, glm_fit_family, general_mod = NULL,
+  general_extract = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -86,6 +87,13 @@ broom is used to collect model results.}
 
 \item{...}{Additional specification needed to pass to the random generating 
 function defined by with_err_gen.}
+
+\item{knot_args}{A nested list of named knot arguments. See \code{\link{sim_knot}} 
+for more details. Arguments must include:
+  \itemize{
+    \item var
+    \item knot_locations
+  }}
 }
 \description{
 Input simulation conditions and which term to compute power for, export 

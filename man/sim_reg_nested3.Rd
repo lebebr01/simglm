@@ -10,7 +10,7 @@ sim_reg_nested3(fixed, random, random3, fixed_param, random_param = list(),
   unbal = list(level2 = FALSE, level3 = FALSE), unbal_design = list(level2 =
   NULL, level3 = NULL), lvl1_err_params = NULL, arima_mod = list(NULL),
   contrasts = NULL, homogeneity = TRUE, heterogeneity_var = NULL,
-  cross_class_params = NULL, ...)
+  cross_class_params = NULL, knot_args = list(NULL), ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -150,6 +150,13 @@ data structures are desired. Must include the following arguments:
       \item ...: Additional parameters needed for rand_gen function.
   } 
  }}
+
+\item{knot_args}{A nested list of named knot arguments. See \code{\link{sim_knot}} 
+for more details. Arguments must include:
+  \itemize{
+    \item var
+    \item knot_locations
+  }}
 
 \item{...}{Not currently used.}
 }

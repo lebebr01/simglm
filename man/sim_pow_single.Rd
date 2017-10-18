@@ -7,10 +7,10 @@
 sim_pow_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen,
   arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL),
   lvl1_err_params = NULL, arima_mod = list(NULL), contrasts = NULL,
-  homogeneity = TRUE, heterogeneity_var = NULL, missing = FALSE,
-  missing_args = list(NULL), pow_param = NULL, alpha, pow_dist = c("z",
-  "t"), pow_tail = c(1, 2), lm_fit_mod = NULL, general_mod = NULL,
-  general_extract = NULL, ...)
+  homogeneity = TRUE, heterogeneity_var = NULL, knot_args = list(NULL),
+  missing = FALSE, missing_args = list(NULL), pow_param = NULL, alpha,
+  pow_dist = c("z", "t"), pow_tail = c(1, 2), lm_fit_mod = NULL,
+  general_mod = NULL, general_extract = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 
@@ -78,6 +78,13 @@ of variance.}
 
 \item{heterogeneity_var}{Variable name as a character string to use for 
 heterogeneity of variance simulation.}
+
+\item{knot_args}{A nested list of named knot arguments. See \code{\link{sim_knot}} 
+for more details. Arguments must include:
+  \itemize{
+    \item var
+    \item knot_locations
+  }}
 
 \item{missing}{TRUE/FALSE flag indicating whether missing data should be 
 simulated.}

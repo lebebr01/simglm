@@ -165,13 +165,14 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
    fixed <- search_factors(fixed_vars)
    Omat <- Xmat
  }
- Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
+  
+  Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
  
- if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
-   list(Xmat = Xmat, Omat = data.frame(Omat))
- } else {
-   Xmat
- }
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
+    list(Xmat = Xmat, Omat = data.frame(Omat))
+  } else {
+    Xmat
+  }
 }
 
 #' Simulates design matrix.

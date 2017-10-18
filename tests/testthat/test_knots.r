@@ -45,9 +45,9 @@ test_that('fixef knots', {
 })
 
 test_that('interupt TS', {
-  fixed <- ~1 + time + diff + act + time:act + time_k
+  fixed <- ~1 + time + diff + act + time_k + time:act 
   random <- ~1 + time + diff
-  fixed_param <- c(4, 2, 6, 2.3, 7, 1)
+  fixed_param <- c(4, 2, 6, 2.3, 1, 7)
   random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'), 
                     var_type = c("level1", "level2"),
@@ -69,19 +69,19 @@ test_that('interupt TS', {
   expect_equal(table(temp_long$time_k), table(temp_long$time >= 3), 
                check.attributes = FALSE)
   
-  fixed <- ~1 + time + diff + act + time_k + trt_f + time:act + trt_f:time_k
+  fixed <- ~1 + time + diff + act + trt_f + time_k + time:act + trt_f:time_k
   random <- ~1 + time + diff
   fixed_param <- c(4, 2, 6, 2.3, 1, 0, 1, 0.5)
-  random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
+  random_param <- list(random_var = c(1, 1, 1), rand_gen = 'rnorm')
   cov_param <- list(dist_fun = c('rnorm', 'rnorm'), 
                     var_type = c("level1", "level2"),
                     opts = list(list(mean = 0, sd = 1.5), 
                                 list(mean = 0, sd = 4)))
   fact_vars <- list(numlevels = 2, var_type = 'level2', 
                     opts = list(list(replace = TRUE)))
-  n <- 150
+  n <- 15000
   p <- 8
-  error_var <- 4
+  error_var <- 1
   with_err_gen <- 'rnorm'
   data_str <- "long"
   

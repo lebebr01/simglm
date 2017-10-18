@@ -71,9 +71,15 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   knot_var_loc <- grep(paste0(knot_args$var, '$'), fixed_vars)
 
   if(length(fact.loc) > 0){
-    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc, knot_loc)], 
-                    fixed_vars[fact.loc[fact.loc %ni% int.loc]], fixed_vars[knot_loc],
-                    fixed_vars[int.loc])
+    if(length(knot_loc) > 0) {
+      fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc, knot_loc)], 
+                      fixed_vars[fact.loc[fact.loc %ni% int.loc]], fixed_vars[knot_loc],
+                      fixed_vars[int.loc])
+    } else {
+      fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], 
+                      fixed_vars[fact.loc[fact.loc %ni% int.loc]],
+                      fixed_vars[int.loc])
+    }
   }
   
   if(length(fact.loc) > 0){
@@ -246,9 +252,15 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   knot_var_loc <- grep(paste0(knot_args$var, '$'), fixed_vars)
   
   if(length(fact.loc) > 0){
-    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc, knot_loc)], 
-                    fixed_vars[fact.loc[fact.loc %ni% int.loc]], fixed_vars[knot_loc],
-                    fixed_vars[int.loc])
+    if(length(knot_loc) > 0) {
+      fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc, knot_loc)], 
+                      fixed_vars[fact.loc[fact.loc %ni% int.loc]], fixed_vars[knot_loc],
+                      fixed_vars[int.loc])
+    } else {
+      fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], 
+                      fixed_vars[fact.loc[fact.loc %ni% int.loc]],
+                      fixed_vars[int.loc])
+    }
   }
   
   if(length(fact.loc) > 0){
@@ -414,9 +426,15 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   knot_var_loc <- grep(paste0(knot_args$var, '$'), fixed_vars)
   
   if(length(fact.loc) > 0){
-    fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc, knot_loc)], 
-                    fixed_vars[fact.loc[fact.loc %ni% int.loc]], fixed_vars[knot_loc],
-                    fixed_vars[int.loc])
+    if(length(knot_loc) > 0) {
+      fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc, knot_loc)], 
+                      fixed_vars[fact.loc[fact.loc %ni% int.loc]], fixed_vars[knot_loc],
+                      fixed_vars[int.loc])
+    } else {
+      fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc)], 
+                      fixed_vars[fact.loc[fact.loc %ni% int.loc]],
+                      fixed_vars[int.loc])
+    }
   }
   
   if(n.fact > 0){

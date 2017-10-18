@@ -267,7 +267,7 @@ sim_pow_nested3 <- function(fixed, random, random3, fixed_param,
     test_stat <- dplyr::filter(test_stat, term %in% pow_param)
   }
   
-  test_stat$reject <- ifelse(test_stat['estimate'] >= crit, 1, 0)
+  test_stat['reject'] <- c(ifelse(test_stat['estimate'] >= crit, 1, 0))
   
   test_stat
 }
@@ -436,11 +436,11 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
   }
   
   data <- sim_reg_nested(fixed, random, fixed_param, random_param, 
-                              cov_param, n, p, error_var, with_err_gen, arima,
-                              data_str, cor_vars, fact_vars, unbal, unbal_design,
-                              lvl1_err_params, arima_mod, contrasts, 
-                              homogeneity, heterogeneity_var, 
-                              cross_class_params, knot_args, ...)
+                         cov_param, n, p, error_var, with_err_gen, arima,
+                         data_str, cor_vars, fact_vars, unbal, unbal_design,
+                         lvl1_err_params, arima_mod, contrasts, 
+                         homogeneity, heterogeneity_var, 
+                         cross_class_params, knot_args, ...)
   if(missing) {
     data <- do.call(missing_data, c(list(sim_data = data), 
                                          missing_args))
@@ -504,7 +504,7 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
     test_stat <- dplyr::filter(test_stat, term %in% pow_param)
   }
   
-  test_stat$reject <- ifelse(test_stat['estimate'] >= crit, 1, 0)
+  test_stat['reject'] <- c(ifelse(test_stat['estimate'] >= crit, 1, 0))
   
   test_stat
 }
@@ -656,7 +656,7 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var,
     test_stat <- dplyr::filter(test_stat, term %in% pow_param)
   }
   
-  test_stat$reject <- ifelse(test_stat['estimate'] >= crit, 1, 0)
+  test_stat['reject'] <- c(ifelse(test_stat['estimate'] >= crit, 1, 0))
   
   test_stat
 }

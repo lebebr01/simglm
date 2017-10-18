@@ -206,13 +206,14 @@ pow_param <- c('time', 'diff', 'act')
 alpha <- .01
 pow_dist <- "z"
 pow_tail <- 2
-replicates <- 10
+replicates <- 5
 power_out <- sim_pow(fixed = fixed, random = random, 
                      fixed_param = fixed_param, 
                      random_param = random_param, cov_param = cov_param, 
                      k = NULL, n = n, p = p,
                      error_var = error_var, with_err_gen = "rnorm",
-                     data_str = data_str, unbal = list(level2 = FALSE, level3 = FALSE),
+                     lvl1_err_params = NULL,
+                     data_str = data_str,
                      pow_param = pow_param, 
                      alpha = alpha, pow_dist = pow_dist, pow_tail = pow_tail,
                      replicates = replicates)

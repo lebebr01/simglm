@@ -619,3 +619,37 @@ sim_knot <- function(var, knot_locations, right = FALSE) {
   
   cut(var, knot_locat, labels = FALSE, right = right) - 1
 }
+
+#' Tidy fixed effect formula simulation
+#' 
+#' This function simulates the fixed portion of the model using a formula syntax.
+#' 
+#' @param formula A named list with special model formula syntax. See details and examples
+#'   for more information. The named list may contain the following:
+#'   \itemize{
+#'     \item fixed: This is the fixed portion of the model (i.e. covariates)
+#'     \item random: This is the random portion of the model (i.e. random effects)
+#'     \item error: This is the error (i.e. residual term).
+#'   }
+#' @param n Sample size
+#' @examples 
+#' 
+#' @export 
+simulate_fixed <- function(formula, n) {
+  
+  fixed_eff_params <- parse_formula_fixed(formula)
+  
+  fixed_vars <- attr(terms(fixed_eff_params$fixed_formula),"term.labels")  
+  
+  fixed_gen_type <- lapply(seq_along(fixed_eff_params$fixed_parameters), function(xx) 
+    parse_fixed_type(fixed_eff_params$fixed_parameters[xx])
+    )
+  fixed_gen_params <- lapply(seq_along(fixed_eff_params$fixed_parameters), function(xx) 
+    parse(text = strsplit(gsub("^\\[|\\]$", "", fixed_eff_params$fixed_parameters[xx])))
+  )
+  
+  purrr::invoke_map(fixed_gen_type)
+  
+}
+
+purrr::invoke_map(list('sim_continuous', 'sim_factor'), parse(text = fixed_gen_params), n = 20, p = NULL)

@@ -68,6 +68,8 @@ parse_formula_error <- function(formula) {
   error_parameters <- unlist(regmatches(error_formula, 
                                         gregexpr("\\[(.*?)\\]", error_formula)))
   
+  error_parameters
+  
 }
 
 #' Parses type of variable generation fixed effects

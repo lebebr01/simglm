@@ -394,8 +394,8 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #'        \item value.labels
 #'    }
 #'     See also \code{\link{sample}} for use of these optional arguments.
-#' @param contrasts An optional list that specifies the contrasts to be used 
-#'  for factor variables (i.e. those variables with .f or .c). 
+#' @param contrasts Specification of the contrasts to be used 
+#'  for factor variables (i.e. those variables with .f/_f or .c/_c). 
 #'  See \code{\link{contrasts}} for more detail.
 #' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
 #'  for more details. Arguments must include:
@@ -632,10 +632,13 @@ sim_knot <- function(var, knot_locations, right = FALSE) {
 #'     \item error: This is the error (i.e. residual term).
 #'   }
 #' @param n Sample size
+#' @param contrasts Specification of the contrasts to be used 
+#'  for factor variables (i.e. those variables with .f/_f or .c/_c). 
+#'  See \code{\link{contrasts}} for more detail.
 #' @examples 
 #' 
 #' @export 
-simulate_fixed <- function(formula, n) {
+simulate_fixed <- function(formula, n, contrasts = NULL) {
   
   fixed_eff_params <- parse_formula_fixed(formula)
   
@@ -645,11 +648,37 @@ simulate_fixed <- function(formula, n) {
     parse_fixed_type(fixed_eff_params$fixed_parameters[xx])
     )
   fixed_gen_params <- lapply(seq_along(fixed_eff_params$fixed_parameters), function(xx) 
-    parse(text = strsplit(gsub("^\\[|\\]$", "", fixed_eff_params$fixed_parameters[xx])))
+    gsub("^\\s+|\\s+$", "", 
+         gsub("^\\[|\\]$", "", fixed_eff_params$fixed_parameters[xx]))
   )
+  fixed_gen_func <- lapply(seq_along(fixed_gen_type), function(xx) 
+    paste0(fixed_gen_type[[xx]], "(n = ", n, ", ", fixed_gen_params[[xx]],
+           ")")
+    )
+  Xmat <- do.call('cbind', lapply(seq_along(fixed_gen_func), function(xx) 
+    eval(parse(text = fixed_gen_func[[xx]]))
+    ))
   
-  purrr::invoke_map(fixed_gen_type)
+  if(any(grepl(":", fixed_vars))) {
+    int.loc <- grep(":", fixed_vars)
+    colnames(Xmat) <- fixed_vars[-int.loc]
+  } else {
+    colnames(Xmat) <- fixed_vars
+  } 
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
+    fixed <- search_factors(fixed_vars)
+    Omat <- Xmat
+  }
+  Xmat <- model.matrix(fixed_eff_params$fixed_formula, data.frame(Xmat), contrasts.arg = contrasts)
+  
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
+    dplyr::bind_cols(data.frame(Xmat), data.frame(Omat))
+  } else {
+    Xmat
+  }
+  
+  # purrr::invoke_map(fixed_gen_type)
   
 }
 
-purrr::invoke_map(list('sim_continuous', 'sim_factor'), parse(text = fixed_gen_params), n = 20, p = NULL)
+# purrr::invoke_map(list('sim_continuous', 'sim_factor'), parse(text = fixed_gen_params), n = 20, p = NULL)

@@ -41,8 +41,8 @@ Does not include intercept, time, factors, or interactions.}
  }
   See also \code{\link{sample}} for use of these optional arguments.}
 
-\item{contrasts}{An optional list that specifies the contrasts to be used 
-for factor variables (i.e. those variables with .f or .c). 
+\item{contrasts}{Specification of the contrasts to be used 
+for factor variables (i.e. those variables with .f/_f or .c/_c). 
 See \code{\link{contrasts}} for more detail.}
 
 \item{knot_args}{A nested list of named knot arguments. See \code{\link{sim_knot}} 

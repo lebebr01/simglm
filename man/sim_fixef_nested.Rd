@@ -17,7 +17,7 @@ sim_fixef_nested(fixed, fixed_vars, cov_param, n, p, data_str,
  function. Required arguments include:
  \itemize{
    \item dist_fun: This is a quoted R distribution function.
-   \item var_type: This is the level of variable to generate. Must be 
+   \item var_level: This is the level of variable to generate. Must be 
      either 'level1' or 'level2'. 
      Must be same order as fixed formula 
      above.
@@ -38,7 +38,7 @@ Does not include intercept, time, factors, or interactions.}
    specification, each list must include:
 \itemize{
      \item numlevels: Number of levels for ordinal or factor variables.
-     \item var_type: Must be 'level1' or 'level2'.
+     \item var_level: Must be 'level1' or 'level2'.
  }
  Optional arguments passed on to sample in a nested list. These include:
  \itemize{

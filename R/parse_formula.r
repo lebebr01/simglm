@@ -2,7 +2,7 @@
 #' 
 #' A function that parses the formula simulation syntax in order to simulate data.
 #' 
-#' @param formula A named list with special model formula syntax. See details and examples
+#' @param sim_args A named list with special model formula syntax. See details and examples
 #'   for more information. The named list may contain the following:
 #'   \itemize{
 #'     \item fixed: This is the fixed portion of the model (i.e. covariates)
@@ -15,14 +15,29 @@
 #' formula <- list(fixed = "resp_data ~ (4) * 1 + (0.5) * var1[mean = 2, sd = 5, var_type = 'single', dist_fun = 'rnorm'] + (0.75) * var2_f[numlevels = 2, var_type = 'single', replace = TRUE]", error = "~ 1[error_var = 1, err_gen = 'rnorm']")
 #' parse_formula_fixed(formula)
 #' 
-parse_formula <- function(formula) {
+parse_formula <- function(sim_args) {
   
-  formula_elements <- names(formula)
+  outcome <- sim_args$formula %>%
+    as.character() %>%
+    .[2]
   
-  lapply(seq_along(formula_elements), function(xx) 
-    tmp
-    )
+  fixed <- sim_args$formula %>%
+    as.character() %>%
+    .[3] %>%
+    gsub("^\\s+|\\s+$", "", .) %>%
+    gsub("\\(.*?\\)", "", .) %>%
+    paste0("~", .) %>%
+    as.formula()
   
+  random <- sim_args$formula %>%
+    as.character() %>%
+    .[3] %>%
+    gsub("^\\s+|\\s+$", "", .) %>%
+    regmatches(gregexpr("\\(.*?\\)", .))
+  
+  list(outcome = outcome, 
+       fixed = fixed,
+       random = random)
 }
 
 

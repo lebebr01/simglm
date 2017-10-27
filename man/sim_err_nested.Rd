@@ -4,19 +4,18 @@
 \alias{sim_err_nested}
 \title{Function that simulates errors.}
 \usage{
-sim_err_nested(error_var, n, p, with_err_gen, arima = FALSE,
-  lvl1_err_params = NULL, arima_mod = list(NULL), ther = c(0, 1),
-  ther_sim = FALSE, homogeneity = TRUE, fixef = NULL,
-  heterogeneity_var = NULL, ...)
+sim_err_nested(variance, n, p, dist, arima = FALSE, lvl1_err_params = NULL,
+  arima_mod = list(NULL), ther = c(0, 1), ther_sim = FALSE,
+  homogeneity = TRUE, fixef = NULL, heterogeneity_var = NULL, ...)
 }
 \arguments{
-\item{error_var}{Scalar of error variance}
+\item{variance}{Scalar of error variance}
 
 \item{n}{Cluster sample size.}
 
 \item{p}{Within cluster sample size.}
 
-\item{with_err_gen}{The generating function used as a character, 
+\item{dist}{The generating function used as a character, 
 (e.g. 'rnorm').}
 
 \item{arima}{TRUE/FALSE flag indicating whether residuals should 
@@ -25,16 +24,16 @@ arima.sim via the arima_mod argument.
 See \code{\link{arima.sim}} for examples.}
 
 \item{lvl1_err_params}{Additional values that need to be passed to the 
-function called from with_err_gen.}
+function called from dist.}
 
 \item{arima_mod}{A list indicating the ARIMA model to pass to arima.sim. 
 See \code{\link{arima.sim}} for examples.}
 
 \item{ther}{A vector of length two that specifies the theoretical mean and 
-standard deviation of the with_err_gen. This would commonly be 
+standard deviation of the dist. This would commonly be 
 used to standardize the generating variable to have a mean of 0 and
 standard deviation of 1 to meet model assumptions. The variable
-is then rescaled to have the variance specified by error_var.}
+is then rescaled to have the variance specified by variance.}
 
 \item{ther_sim}{A TRUE/FALSE flag indicating whether the error simulation 
 function should be simulated, that is should the mean and standard deviation

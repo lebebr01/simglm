@@ -4,10 +4,10 @@
 \alias{parse_formula}
 \title{Parses tidy formula simulation syntax}
 \usage{
-parse_formula(formula)
+parse_formula(sim_args)
 }
 \arguments{
-\item{formula}{A named list with special model formula syntax. See details and examples
+\item{sim_args}{A named list with special model formula syntax. See details and examples
 for more information. The named list may contain the following:
 \itemize{
   \item fixed: This is the fixed portion of the model (i.e. covariates)

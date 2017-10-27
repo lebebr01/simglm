@@ -18,7 +18,7 @@ sim_fixef_single(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
  function. Required arguments include:
  \itemize{
    \item dist_fun: This is a quoted R distribution function.
-   \item var_type: This is the level of variable to generate. Must be 
+   \item var_level: This is the level of variable to generate. Must be 
      'single'. Must be same order as fixed formula above.
  }
  Optional arguments to the distribution functions are in a nested list,
@@ -31,7 +31,7 @@ Does not include intercept, time, factors, or interactions.}
    specification, each list must include:
 \itemize{
      \item numlevels = Number of levels for ordinal or factor variables.
-     \item var_type = Must be 'single'.
+     \item var_level = Must be 'single'.
  }
  Optional arguments passed on to sample in a nested list. These include:
  \itemize{

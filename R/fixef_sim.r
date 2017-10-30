@@ -652,7 +652,7 @@ simulate_fixed <- function(sim_args, ...) {
   fixed_vars <- attr(terms(fixed_formula),"term.labels")  
   
   if(any(grepl('^factor\\(', fixed_vars))) {
-    fixed_vars <- gsub("^factor\\(|\\)$", "", fixed_vars)
+    fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
   }
   
   Xmat <- purrr::invoke_map("sim_variable", 
@@ -667,15 +667,9 @@ simulate_fixed <- function(sim_args, ...) {
   } else {
     colnames(Xmat) <- fixed_vars
   } 
-  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
-    fixed <- search_factors(fixed_vars)
-    Omat <- Xmat
-  }
+
   Xmat <- model.matrix(fixed_formula, data.frame(Xmat), contrasts.arg = contrasts)
+  colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars
   
-  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
-    dplyr::bind_cols(data.frame(Xmat), data.frame(Omat))
-  } else {
-    Xmat
-  }
+  Xmat
 }

@@ -199,6 +199,7 @@ sim_error <- function(var_type = c('nested', 'single'), ...) {
 
 #' Tidy error simulation
 #' 
+#' @param data Data simulated from other functions to pass to this function.
 #' @param sim_args A named list with special model formula syntax. See details and examples
 #'   for more information. The named list may contain the following:
 #'   \itemize{
@@ -206,11 +207,10 @@ sim_error <- function(var_type = c('nested', 'single'), ...) {
 #'     \item random: This is the random portion of the model (i.e. random effects)
 #'     \item error: This is the error (i.e. residual term).
 #'   }
-#' @param fixed_data Fixed data simulated with \code{\link{simulate_fixed}}.
 #' @param ... Other arguments to pass to error simulation functions.
 #' 
 #' @export 
-simulate_error <- function(fixed_data, sim_args, ...) {
+simulate_error <- function(data, sim_args, ...) {
   
   if(length(sim_args$sample_size) == 1) {
     error_type = 'single'
@@ -225,6 +225,6 @@ simulate_error <- function(fixed_data, sim_args, ...) {
   ) %>% 
     unlist()
   
-  data.frame(fixed_data, error = error)
+  data.frame(data, error = error)
 }
 

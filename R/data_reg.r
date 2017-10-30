@@ -105,3 +105,47 @@ data_reg_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3,
   
   sim_data
 }
+
+#' Simulate response variable
+#' 
+#' @param data Data simulated from other functions to pass to this function.
+#' @param sim_args A named list with special model formula syntax. See details and examples
+#'   for more information. The named list may contain the following:
+#'   \itemize{
+#'     \item fixed: This is the fixed portion of the model (i.e. covariates)
+#'     \item random: This is the random portion of the model (i.e. random effects)
+#'     \item error: This is the error (i.e. residual term).
+#'   }
+#' @param keep_intermediate TRUE/FALSE flag indicating whether intermediate steps
+#'   should be kept. This would include fixed effects times regression weights,
+#'   random effect summations, etc. Default is TRUE.
+#' @param ... Other arguments to pass to error simulation functions.
+#' 
+#' @export 
+simulate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
+  
+  outcome_name <- parse_formula(sim_args)$outcome
+  fixed_formula <- parse_formula(sim_args)$fixed
+  
+  Xmat <- model.matrix(fixed_formula, data.frame(data), contrasts.arg = contrasts)
+  
+  fixed_outcome <- Xmat %*% sim_args$reg_weights
+  
+  if(length(parse_formula(sim_args)$random[[1]]) != 0) {
+    
+  } else {
+    random_effects <- 0
+  }
+  
+  if(keep_intermediate) {
+    response_outcomes <- data.frame(
+      fixed_outcome = fixed_outcome,
+      random_effects = random_effects
+    )
+    data <- cbind(data, response_outcomes)
+  }
+  
+  data[outcome_name] <- fixed_outcome + random_effects + data['error']
+  
+  data
+}

@@ -33,7 +33,7 @@ parse_formula <- function(sim_args) {
     as.character() %>%
     .[3] %>%
     gsub("^\\s+|\\s+$", "", .) %>%
-    regmatches(gregexpr("\\(.*?\\)", .))
+    regmatches(gregexpr("(\\+|\\s+)\\(.*?\\)", .))
   
   list(outcome = outcome, 
        fixed = fixed,

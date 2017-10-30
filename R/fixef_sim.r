@@ -544,12 +544,6 @@ sim_factor <- function(k = NULL, n, p, numlevels,
                       times = lvl3ss)
     }
   }
-  # if(!is.null(value_labels)) {
-  #   if(length(value_labels) != numlevels) { 
-  #     stop("value_labels must be same length as numlevels") 
-  #     }
-  #   cat_var <- factor(cat_var, labels = value_labels)
-  # }
   
   cat_var
 }
@@ -657,9 +651,9 @@ simulate_fixed <- function(sim_args, ...) {
   
   fixed_vars <- attr(terms(fixed_formula),"term.labels")  
   
-  # Xmat <- do.call('cbind', lapply(seq_along(formula$fixed), function(xx) 
-  #   
-  #   ))
+  if(any(grepl('^factor\\(', fixed_vars))) {
+    fixed_vars <- gsub("^factor\\(|\\)$", "", fixed_vars)
+  }
   
   Xmat <- purrr::invoke_map("sim_variable", 
                         sim_args$fixed,

@@ -120,6 +120,7 @@ data_reg_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3,
 #'   should be kept. This would include fixed effects times regression weights,
 #'   random effect summations, etc. Default is TRUE.
 #' @param ... Other arguments to pass to error simulation functions.
+#' @importFrom rlang .data
 #' 
 #' @export 
 simulate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
@@ -127,9 +128,10 @@ simulate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   outcome_name <- parse_formula(sim_args)$outcome
   fixed_formula <- parse_formula(sim_args)$fixed
   
-  Xmat <- model.matrix(fixed_formula, data.frame(data), contrasts.arg = contrasts)
+  # Xmat <- model.matrix(fixed_formula, data.frame(data), contrasts.arg = contrasts)
+  Xmat <- dplyr::select(data, -.data$error)
   
-  fixed_outcome <- Xmat %*% sim_args$reg_weights
+  fixed_outcome <- as.matrix(Xmat) %*% sim_args$reg_weights
   
   if(length(parse_formula(sim_args)$random[[1]]) != 0) {
     

@@ -111,5 +111,11 @@ cross_class <- function(num_ids, samp_size, random_param) {
 #' @export 
 simulate_randomeffect <- function(data, sim_args, ...) {
   
+  random_formula <- parse_formula(sim_args)$random
+  
+  random_formula_parsed <- parse_random(random_formula)
+  
+  random_effects_names <- names(sim_args$random)
+  
 }
 

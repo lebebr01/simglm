@@ -24,16 +24,16 @@ parse_formula <- function(sim_args) {
   fixed <- sim_args$formula %>%
     as.character() %>%
     .[3] %>%
+    gsub("\\+\\s*(\\s+|\\++)\\(.*?\\)", "", .) %>%
     gsub("^\\s+|\\s+$", "", .) %>%
-    gsub("(\\s+|\\++)\\(.*?\\)", "", .) %>%
     paste0("~", .) %>%
     as.formula()
   
   random <- sim_args$formula %>%
     as.character() %>%
     .[3] %>%
-    gsub("^\\s+|\\s+$", "", .) %>%
-    regmatches(gregexpr("(\\+|\\s+)\\(.*?\\)", .))
+    regmatches(gregexpr("(\\+|\\s+)\\(.*?\\)", .)) %>%
+    gsub("^\\s+|\\s+$", "", .)
   
   list(outcome = outcome, 
        fixed = fixed,

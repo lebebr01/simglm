@@ -634,6 +634,8 @@ sim_variable <- function(var_type = c("continuous", "factor", "ordinal", "knot")
 #' 
 #' This function simulates the fixed portion of the model using a formula syntax.
 #' 
+#' @param data Data simulated from other functions to pass to this function. Can pass
+#'  NULL if first in simulation string.
 #' @param sim_args A named list with special model formula syntax. See details and examples
 #'   for more information. The named list may contain the following:
 #'   \itemize{
@@ -645,7 +647,7 @@ sim_variable <- function(var_type = c("continuous", "factor", "ordinal", "knot")
 #' @examples 
 #' 
 #' @export 
-simulate_fixed <- function(sim_args, ...) {
+simulate_fixed <- function(data, sim_args, ...) {
   
   fixed_formula <- parse_formula(sim_args)$fixed
   

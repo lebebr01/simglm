@@ -4,9 +4,12 @@
 \alias{simulate_fixed}
 \title{Tidy fixed effect formula simulation}
 \usage{
-simulate_fixed(sim_args, ...)
+simulate_fixed(data, sim_args, ...)
 }
 \arguments{
+\item{data}{Data simulated from other functions to pass to this function. Can pass
+NULL if first in simulation string.}
+
 \item{sim_args}{A named list with special model formula syntax. See details and examples
 for more information. The named list may contain the following:
 \itemize{

@@ -92,3 +92,24 @@ cross_class <- function(num_ids, samp_size, random_param) {
   cross_eff
 }
 
+#' Tidy random effect formula simulation
+#' 
+#' This function simulates the random portion of the model using a formula syntax.
+#' 
+#' @param data Data simulated from other functions to pass to this function. Can pass
+#'  NULL if first in simulation string.
+#' @param sim_args A named list with special model formula syntax. See details and examples
+#'   for more information. The named list may contain the following:
+#'   \itemize{
+#'     \item fixed: This is the fixed portion of the model (i.e. covariates)
+#'     \item random: This is the random portion of the model (i.e. random effects)
+#'     \item error: This is the error (i.e. residual term).
+#'   }
+#' @param ... Other arguments to pass to error simulation functions.
+#' @examples 
+#' 
+#' @export 
+simulate_randomeffect <- function(data, sim_args, ...) {
+  
+}
+

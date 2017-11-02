@@ -12,8 +12,7 @@
 #' 
 #' @export
 #' @examples 
-#' formula <- list(fixed = "resp_data ~ (4) * 1 + (0.5) * var1[mean = 2, sd = 5, var_type = 'single', dist_fun = 'rnorm'] + (0.75) * var2_f[numlevels = 2, var_type = 'single', replace = TRUE]", error = "~ 1[error_var = 1, err_gen = 'rnorm']")
-#' parse_formula_fixed(formula)
+#' 
 #' 
 parse_formula <- function(sim_args) {
   
@@ -33,6 +32,7 @@ parse_formula <- function(sim_args) {
     as.character() %>%
     .[3] %>%
     regmatches(gregexpr("(\\+|\\s+)\\(.*?\\)", .)) %>%
+    unlist() %>%
     gsub("^\\s+|\\s+$", "", .)
   
   list(outcome = outcome, 
@@ -40,65 +40,26 @@ parse_formula <- function(sim_args) {
        random = random)
 }
 
+#' Parses random effect specification
+#' 
+#' @param formula Random effect formula already parsed by \code{\link{parse_formula}}
+#' 
+#' @export 
+parse_random <- function(formula) {
+  
+  cluster_id_vars <- lapply(seq_along(formula), function(xx) strsplit(formula, "\\|")[[xx]][2]) %>%
+    unlist() %>%
+    gsub("\\)", "", .) %>%
+    gsub("^\\s+|\\s+$", "", .)
+  
+  random_effects <- lapply(seq_along(formula), function(xx) strsplit(formula, "\\|")[[xx]][1]) %>%
+    unlist() %>%
+    gsub("\\(", "", .) %>%
+    gsub("^\\s+|\\s+$", "", .)
+  
+  list(
+    cluster_id_vars = cluster_id_vars,
+    random_effects = random_effects
+  )
 
-#' Parses fixed formula syntax
-parse_formula_fixed <- function(formula) {
-  
-  fixed_formula <- formula$fixed
-  
-  fixed_input <- gsub("^\\s+|\\s+$", "", 
-                      unlist(strsplit(fixed_formula, split = '~'))[2])
-  
-  fixed_parameters <- unlist(regmatches(fixed_input, 
-                                        gregexpr("\\[(.*?)\\]", fixed_input)))
-  
-  fixed_input_noparam <- gsub("\\[(.*?)\\]", "", fixed_input)
-  
-  fixed_beta <- unlist(regmatches(fixed_input, 
-                                  gregexpr("\\([0-9]*\\.?[0-9]*\\)", fixed_input)))
-  fixed_beta <- as.numeric(gsub("\\(|\\)", "", fixed_beta))
-  
-  fixed_formula <- gsub("\\[(.*?)\\]|\\([0-9]*\\.?[0-9]*\\)|\\*", "", fixed_input)
-  fixed_formula <- as.formula(paste0("~ ", gsub("^\\s+|\\s+$", "", fixed_formula)))
-  
-  list(fixed_formula = fixed_formula, 
-       fixed_parameters = fixed_parameters, 
-       fixed_beta = fixed_beta)
-  
 }
-
-#' Parses outcome from formula syntax
-parse_formula_outcome <- function(formula) {
-  
-  gsub("^\\s+|\\s+$", "", 
-       unlist(strsplit(formula$formula, split = '~'))[1])
-  
-}
-
-#' Parses error formula syntax
-parse_formula_error <- function(formula) {
-  
-  error_formula <- formula$error
-  
-  error_parameters <- unlist(regmatches(error_formula, 
-                                        gregexpr("\\[(.*?)\\]", error_formula)))
-  
-  error_parameters
-  
-}
-
-#' Parses type of variable generation fixed effects
-parse_fixed_type <- function(fixed_parameters) {
-  
-  if(grepl("dist_fun", fixed_parameters)) {
-    'sim_continuous'
-  } else {
-    if(grepl('numlevels', fixed_parameters)) {
-      'sim_factor'
-    } else {
-      'sim_knot'
-    }
-  }
-  
-}
-

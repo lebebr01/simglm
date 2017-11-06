@@ -133,7 +133,7 @@ simulate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   
   fixed_outcome <- as.matrix(Xmat) %*% sim_args$reg_weights
   
-  if(length(parse_formula(sim_args)$random[[1]]) != 0) {
+  if(length(parse_formula(sim_args)$random) != 0) {
     
   } else {
     random_effects <- 0

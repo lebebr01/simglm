@@ -37,7 +37,7 @@ Does not include intercept, time, factors, or interactions.}
 \item{fact_vars}{A nested list of factor, categorical, or ordinal variable 
    specification, each list must include:
 \itemize{
-     \item numlevels: Number of levels for ordinal or factor variables.
+     \item levels: Number of levels for ordinal or factor variables.
      \item var_level: Must be 'level1' or 'level2'.
  }
  Optional arguments passed on to sample in a nested list. These include:

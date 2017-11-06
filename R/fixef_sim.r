@@ -29,7 +29,7 @@
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable 
 #'      specification, each list must include:
 #'   \itemize{
-#'        \item numlevels: Number of levels for ordinal or factor variables.
+#'        \item levels: Number of levels for ordinal or factor variables.
 #'        \item var_level: Must be 'level1' or 'level2'.
 #'    }
 #'    Optional arguments passed on to sample in a nested list. These include:
@@ -138,7 +138,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 
   if(length(fact.loc) > 0) {
     fact_vars_args <- lapply(seq_len(n.fact), function(xx)
-      c(fact_vars$numlevels[[xx]], 
+      c(fact_vars$levels[[xx]], 
         fact_vars$var_level[[xx]],
         fact_vars$opts[[xx]])
     )
@@ -211,7 +211,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable 
 #'      specification, each list must include:
 #'   \itemize{
-#'        \item numlevels = Number of levels for ordinal or factor variables.
+#'        \item levels = Number of levels for ordinal or factor variables.
 #'        \item var_level = Must be 'level1', 'level2', or 'level3'.
 #'    }
 #'    Optional arguments passed on to sample in a nested list. These include:
@@ -316,7 +316,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   
   if(length(fact.loc) > 0) {
     fact_vars_args <- lapply(seq_len(n.fact), function(xx)
-      c(fact_vars$numlevels[[xx]], 
+      c(fact_vars$levels[[xx]], 
         fact_vars$var_level[[xx]],
         fact_vars$opts[[xx]])
     )
@@ -384,7 +384,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable 
 #'      specification, each list must include:
 #'   \itemize{
-#'        \item numlevels = Number of levels for ordinal or factor variables.
+#'        \item levels = Number of levels for ordinal or factor variables.
 #'        \item var_level = Must be 'single'.
 #'    }
 #'    Optional arguments passed on to sample in a nested list. These include:
@@ -464,7 +464,7 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
 
   if(length(fact.loc) > 0) {
     fact_vars_args <- lapply(seq_len(n.fact), function(xx)
-       c(fact_vars$numlevels[[xx]], 
+       c(fact_vars$levels[[xx]], 
          fact_vars$var_level[[xx]],
          fact_vars$opts[[xx]])
       )
@@ -514,15 +514,17 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
 #' @param k Number of third level clusters.
 #' @param n Number of clusters or number of observations for single level
 #' @param p Number of within cluster observations for multilevel
-#' @param numlevels Scalar indicating the number of levels for categorical, 
-#'   factor, or discrete variable
+#' @param levels Scalar indicating the number of levels for categorical, 
+#'   factor, or discrete variable. Can also specify levels as a character vector.
 #' @param var_level The level the variable should be simulated at. This can either 
 #'      be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable 
 #'      respectively.
+#' @param replace TRUE/FALSE indicating whether levels should be sampled with 
+#'   replacement. Default is TRUE.
 #' @param ... Additional parameters passed to the sample function.
 #' @export 
-sim_factor <- function(k = NULL, n, p, numlevels, 
-                       var_level = c(1, 2, 3),
+sim_factor <- function(k = NULL, n, p, levels, 
+                       var_level = 1, replace = TRUE,
                        ...) {
   end <- cumsum(n)
   beg <- c(1, cumsum(n) + 1)
@@ -534,13 +536,13 @@ sim_factor <- function(k = NULL, n, p, numlevels,
   }
   
   if(var_level == 1) {
-    cat_var <- base::sample(x = numlevels, size = n, ...)
+    cat_var <- base::sample(x = levels, size = n, replace = replace, ...)
   } else {
     if(var_level == 2) {
-      cat_var <- rep(base::sample(x = numlevels, size = length(p), ...), 
+      cat_var <- rep(base::sample(x = levels, size = length(p), replace = replace, ...), 
                       times = p)
     } else {
-      cat_var <- rep(base::sample(x = numlevels, size = k, ...), 
+      cat_var <- rep(base::sample(x = levels, size = k, replace = replace, ...), 
                       times = lvl3ss)
     }
   }
@@ -564,7 +566,7 @@ sim_factor <- function(k = NULL, n, p, numlevels,
 #' @param ... Additional parameters to pass to the dist_fun argument.
 #' @export 
 sim_continuous <- function(k = NULL, n, p, dist,
-                           var_level = c(1, 2, 3),
+                           var_level = 1,
                            ...) {
   
   end <- cumsum(n)

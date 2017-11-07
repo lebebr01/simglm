@@ -591,6 +591,22 @@ sim_continuous <- function(k = NULL, n, p, dist,
   cont_var
 }
 
+#' Simulate continuous variables
+#' 
+#' Function that simulates continuous variables. Any distribution function in 
+#' R is supported.
+#' 
+#' @param n Number of clusters or number of observations for single level
+#' @param dist A distribution function. This argument takes a quoted
+#'      R distribution function (e.g. 'rnorm').
+#' @param ... Additional parameters to pass to the dist_fun argument.
+#' @export 
+sim_continuous2 <- function(n, dist, ...) {
+  
+  unlist(lapply(n, FUN = dist, ...))
+
+}
+
 #' Simulate knot locations
 #' 
 #' Function that generates knot locations. An example of usefulness of this funciton
@@ -663,7 +679,7 @@ simulate_fixed <- function(data, sim_args, ...) {
                         sim_args$fixed,
                         n = sim_args$sample_size
                         ) %>% 
-    do.call("cbind", .)
+    data.frame()
   
   if(any(grepl(":", fixed_vars))) {
     int.loc <- grep(":", fixed_vars)
@@ -671,9 +687,15 @@ simulate_fixed <- function(data, sim_args, ...) {
   } else {
     colnames(Xmat) <- fixed_vars
   } 
-
-  Xmat <- model.matrix(fixed_formula, data.frame(Xmat), contrasts.arg = contrasts)
-  colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars
-  
+  if(any(unlist(lapply(seq_along(sim_args$fixed), function(xx) 
+    sim_args$fixed[[xx]]$var_type)) == 'factor')) {
+    Omat <- Xmat
+    Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))
+    colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars
+    Xmat <- dplyr::bind_cols(Xmat, Omat)
+  } else {
+    Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))
+    colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars
+  }
   Xmat
 }

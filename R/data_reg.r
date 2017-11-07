@@ -128,8 +128,17 @@ simulate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   outcome_name <- parse_formula(sim_args)$outcome
   fixed_formula <- parse_formula(sim_args)$fixed
   
+  fixed_vars <- attr(terms(fixed_formula),"term.labels")
+  
+  if(any(grepl('^factor\\(', fixed_vars))) {
+    fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
+  }
+  
   # Xmat <- model.matrix(fixed_formula, data.frame(data), contrasts.arg = contrasts)
-  Xmat <- dplyr::select(data, -.data$error)
+  Xmat <- dplyr::select(data, fixed_vars)
+  if(any(grepl('Intercept', names(data)))) {
+    Xmat <- cbind(data[, 1], Xmat)
+  }
   
   fixed_outcome <- as.matrix(Xmat) %*% sim_args$reg_weights
   

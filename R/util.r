@@ -33,6 +33,61 @@ search_factors <- function(x) {
   x
 }
 
+sample_sizes <- function(sim_args) {
+  
+  if(is.null(sim_args$unbalanced)) {
+    if(length(sim_args$sample_size) == 1) {
+      
+    }
+  } else {
+    
+  }
+  
+  if(unbal$level3 == FALSE) {
+    lvl2ss <- rep(n, k)
+    n <- sum(lvl2ss)
+  } else {
+    if(is.null(unbal_design$level3)) {
+      stop("Must specify unbal_design$level3 when unbal$level3 = TRUE")
+    }
+    if(is.null(names(unbal_design$level3))) {
+      if(length(unbal_design$level3) != k) {
+        stop('unbal_design$level3 must be same length as k')
+      }
+      lvl2ss <- unbal_design$level3
+    } else {
+      lvl2ss <- round(runif(n = k, min = unbal_design$level3$min, 
+                            max = unbal_design$level3$max), 0)
+    }
+    n <- sum(lvl2ss)
+  }
+  
+  if(unbal$level2 == FALSE) {
+    lvl1ss <- rep(p, n)
+    if(is.null(lvl1ss)) stop("lvl1ss is NULL")
+  } else {
+    if(is.null(unbal_design$level2)) {
+      stop("Must specify unbal_design$level2 when unbal$level2 = TRUE")
+    }
+    if(is.null(names(unbal_design$level2))) {
+      if(length(unbal_design$level2) != n) {
+        stop('unbal_design$level2 must be same length as n')
+      }
+      lvl1ss <- unbal_design$level2
+    } else {
+      lvl1ss <- round(runif(n = n, min = unbal_design$level2$min, 
+                            max = unbal_design$level2$max), 0)
+    }
+  }
+  
+  end <- cumsum(lvl2ss)
+  beg <- c(1, cumsum(lvl2ss) + 1)
+  beg <- beg[-length(beg)]
+  
+  lvl3ss <- sapply(lapply(1:length(beg), function(xx) 
+    lvl1ss[beg[xx]:end[xx]]), sum)
+}
+
 # Horrible hack to keep CRAN happy and suppress NOTES about
 # parts of the code that use non-standard evaluation.
 # See:

@@ -4,13 +4,19 @@
 \alias{sim_continuous2}
 \title{Simulate continuous variables}
 \usage{
-sim_continuous2(n, dist, ...)
+sim_continuous2(n, dist, var_level = 1, variance = NULL, ...)
 }
 \arguments{
-\item{n}{Number of clusters or number of observations for single level}
+\item{n}{A list of sample sizes.}
 
 \item{dist}{A distribution function. This argument takes a quoted
 R distribution function (e.g. 'rnorm').}
+
+\item{var_level}{The level the variable should be simulated at. This can either 
+be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable 
+respectively.}
+
+\item{variance}{The variance for random effect simulation.}
 
 \item{...}{Additional parameters to pass to the dist_fun argument.}
 }

@@ -596,15 +596,38 @@ sim_continuous <- function(k = NULL, n, p, dist,
 #' Function that simulates continuous variables. Any distribution function in 
 #' R is supported.
 #' 
-#' @param n Number of clusters or number of observations for single level
+#' @param n A list of sample sizes.
 #' @param dist A distribution function. This argument takes a quoted
 #'      R distribution function (e.g. 'rnorm').
+#' @param var_level The level the variable should be simulated at. This can either 
+#'      be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable 
+#'      respectively.
+#' @param variance The variance for random effect simulation.
 #' @param ... Additional parameters to pass to the dist_fun argument.
 #' @export 
-sim_continuous2 <- function(n, dist, ...) {
+sim_continuous2 <- function(n, dist, var_level = 1, variance = NULL, ...) {
   
-  unlist(lapply(n, FUN = dist, ...))
-
+  if(length(n) == 1) {
+    n <- list(level1 = n)
+  }
+  
+  if(var_level == 1) {
+    cont_var <- unlist(lapply(n['level1'], FUN = dist, ...))
+  } else {
+    if(var_level == 2) {
+      cont_var <- rep(unlist(lapply(n['level2'], FUN = dist, ...)),
+                      times = n['level1'])
+    } else {
+      cont_var <- rep(unlist(lapply(n['level3'], FUN = dist, ...)),
+                      times = n['level1'] * n['level2'])
+    }
+  }
+  
+  if(!is.null(variance)) {
+    cont_var <- cont_var * chol(variance)
+  }
+  
+  cont_var
 }
 
 #' Simulate knot locations
@@ -641,7 +664,7 @@ sim_variable <- function(var_type = c("continuous", "factor", "ordinal", "knot")
   var_type <- match.arg(var_type)
   
   switch(var_type,
-    continuous = sim_continuous(...),
+    continuous = sim_continuous2(...),
     factor = sim_factor(...),
     ordinal = sim_factor(...),
     knot = sim_knot(...)

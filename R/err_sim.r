@@ -225,6 +225,10 @@ simulate_error <- function(data, sim_args, ...) {
   ) %>% 
     unlist()
   
-  data.frame(data, error = error)
+  if(is.null(data)) {
+    data.frame(error = error)
+  } else {
+    data.frame(data, error = error)
+  }
 }
 

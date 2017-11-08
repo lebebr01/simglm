@@ -720,5 +720,10 @@ simulate_fixed <- function(data, sim_args, ...) {
     Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))
     colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars
   }
-  Xmat
+  
+  if(is.null(data)) {
+    Xmat
+  } else {
+    data.frame(data, Xmat)
+  }
 }

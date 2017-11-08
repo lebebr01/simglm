@@ -137,7 +137,7 @@ simulate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   # Xmat <- model.matrix(fixed_formula, data.frame(data), contrasts.arg = contrasts)
   Xmat <- dplyr::select(data, fixed_vars)
   if(any(grepl('Intercept', names(data)))) {
-    Xmat <- cbind(data[, 1], Xmat)
+    Xmat <- cbind(data['X.Intercept.'], Xmat)
   }
   
   fixed_outcome <- as.matrix(Xmat) %*% sim_args$reg_weights

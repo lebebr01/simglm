@@ -220,9 +220,9 @@ simulate_error <- function(data, sim_args, ...) {
   
   if(is.null(data)) {
     n <- sample_sizes(sim_args$sample_size)
-    ids <- create_ids(n, parse_random(parse_formula(sim_args)$random)$cluster_id_vars)
+    ids <- create_ids(n, c('level1_id', parse_random(parse_formula(sim_args)$random)$cluster_id_vars))
   } else {
-    n <- samplesize_from_ids(data)
+    n <- samplesize_from_ids(data, c('level1_id', parse_random(parse_formula(sim_args)$random)$cluster_id_vars))
   }
   
   error <- purrr::invoke(sim_error, 

@@ -37,33 +37,38 @@ sample_sizes <- function(sample_size) {
   
   min_max_loc <- grep('min', lapply(sample_size, names))
   
-  if(2 %in% min_max_loc) {
-    level2 <- runif(n = sample_size[['level3']], 
-                    min = sample_size[['level2']]$min,
-                    max = sample_size[['level2']]$max) %>%
-      round(0)
+  if(length(sample_size) == 1) {
+    sample_size <- list(level1 = sample_size)
   } else {
-    if(length(sample_size) == 3) {
-      level2 <- rep(sample_size[['level2']], sample_size[['level3']])
+    if(2 %in% min_max_loc) {
+      level2 <- runif(n = sample_size[['level3']], 
+                      min = sample_size[['level2']]$min,
+                      max = sample_size[['level2']]$max) %>%
+        round(0)
     } else {
-      level2 <- sample_size[['level2']]
+      if(length(sample_size) == 3) {
+        level2 <- rep(sample_size[['level2']], sample_size[['level3']])
+      } else {
+        level2 <- sample_size[['level2']]
+      }
+    }
+    total_level2_samplesize <- sum(level2)
+    sample_size['level2'] <- list(level2)
+    
+    if(1 %in% min_max_loc) {
+      level1 <- runif(n = total_level2_samplesize,
+                      min = sample_size[['level1']]$min,
+                      max = sample_size[['level1']]$max) %>%
+        round(0)
+    } else {
+      level1 <- rep(sample_size[['level1']], total_level2_samplesize)
+    }
+    sample_size['level1'] <- list(level1)
+    
+    if(length(sample_size) == 3) {
+      sample_size['level3_total'] <- list(sample_size_level3(sample_size)) 
     }
   }
-  total_level2_samplesize <- sum(level2)
-  sample_size['level2'] <- list(level2)
-  
-  if(1 %in% min_max_loc) {
-    level1 <- runif(n = total_level2_samplesize,
-                    min = sample_size[['level1']]$min,
-                    max = sample_size[['level1']]$max) %>%
-      round(0)
-  } else {
-    level1 <- rep(sample_size[['level1']], total_level2_samplesize)
-  }
-  sample_size['level1'] <- list(level1)
-  
-  sample_size['level3_total'] <- list(sample_size_level3(sample_size))
-
   sample_size
 }
 
@@ -81,13 +86,23 @@ sample_size_level3 <- function(sample_size) {
 
 create_ids <- function(sample_size, id_names) {
   
-  id_names <- c('level1_id', id_names)
+  if(length(id_names) == 3) {
+    id_vars <- data.frame(unlist(lapply(1:length(sample_size[['level1']]), 
+                                        function(xx) 1:sample_size[['level1']][xx])),
+                          rep(1:sum(sample_size[['level2']]), times = sample_size[['level1']]),
+                          rep(1:sample_size[['level3']], times = sample_size[['level3_total']])
+    )
+  } else {
+    if(length(id_names) == 2) {
+      id_vars <- data.frame(unlist(lapply(1:length(sample_size[['level1']]), 
+                                          function(xx) 1:sample_size[['level1']])),
+                            rep(1:sum(sample_size[['level2']]), times = sample_size[['level1']])
+      )
+    } else {
+      id_vars <- data.frame(1:sample_size[['level1']])
+    }
+  }
   
-  id_vars <- data.frame(unlist(lapply(1:length(sample_size[['level1']]), 
-                           function(xx) 1:sample_size[['level1']])),
-             rep(1:sum(sample_size[['level2']]), times = sample_size[['level1']]),
-             rep(1:k, times = lvl3ss)
-  )
   names(id_vars) <- id_names
   id_vars
   
@@ -95,6 +110,22 @@ create_ids <- function(sample_size, id_names) {
 
 samplesize_from_ids <- function(data, id_names) {
   
+  id_vars <- dplyr::select(data, id_names)
+  
+  level1 <- id_vars %>%
+    group_by_(id_names[2]) %>%
+    summarise(n())
+  
+  if(length(id_names) > 1) {
+    level2 <- id_vars %>%
+      group_by_(id_names[3]) %>%
+      summarise_(.dots = length(unique(id_names[2])))
+  }
+  
+  if(length(id_names) > 2) {
+    level3 <- summarise(id_vars, length(unique(cluster3)))
+    level3_total <- tmp
+  }
   
   
 }

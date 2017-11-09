@@ -568,10 +568,6 @@ sim_factor <- function(k = NULL, n, p, levels,
 #' @export 
 sim_factor2 <- function(n, levels, var_level = 1, replace = TRUE,
                        ...) {
-  if(length(n) == 1) {
-    n <- list(level1 = n)
-  }
-  
   if(var_level == 1) {
     cat_var <- base::sample(x = levels, size = n[['level1']], 
                             replace = replace, ...)
@@ -647,10 +643,6 @@ sim_continuous <- function(k = NULL, n, p, dist,
 #' @param ... Additional parameters to pass to the dist_fun argument.
 #' @export 
 sim_continuous2 <- function(n, dist, var_level = 1, variance = NULL, ...) {
-  
-  if(length(n) == 1) {
-    n <- list(level1 = n)
-  }
   
   if(var_level == 1) {
     cont_var <- unlist(lapply(n[['level1']], FUN = dist, ...))
@@ -741,9 +733,9 @@ simulate_fixed <- function(data, sim_args, ...) {
   
   if(is.null(data)) {
     n <- sample_sizes(sim_args$sample_size)
-    ids <- create_ids(n, parse_random(parse_formula(sim_args)$random)$cluster_id_vars)
+    ids <- create_ids(n, c('level1_id', parse_random(parse_formula(sim_args)$random)$cluster_id_vars))
   } else {
-    n <- samplesize_from_ids(data)
+    n <- samplesize_from_ids(data, c('level1_id', parse_random(parse_formula(sim_args)$random)$cluster_id_vars))
   }
   
   Xmat <- purrr::invoke_map("sim_variable", 

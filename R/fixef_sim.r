@@ -665,7 +665,7 @@ sim_continuous2 <- function(n, dist, var_level = 1, variance = NULL, ...) {
   }
   
   if(!is.null(variance)) {
-    cont_var <- cont_var * chol(variance)
+    cont_var <- cont_var %*% chol(c(variance))
   }
   
   cont_var
@@ -739,7 +739,12 @@ simulate_fixed <- function(data, sim_args, ...) {
     fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
   }
   
-  n <- sample_sizes(sim_args$sample_size)
+  if(is.null(data)) {
+    n <- sample_sizes(sim_args$sample_size)
+    ids <- create_ids(n, parse_random(parse_formula(sim_args)$random)$cluster_id_vars)
+  } else {
+    n <- samplesize_from_ids(data)
+  }
   
   Xmat <- purrr::invoke_map("sim_variable", 
                         sim_args$fixed,
@@ -765,7 +770,7 @@ simulate_fixed <- function(data, sim_args, ...) {
   }
   
   if(is.null(data)) {
-    Xmat
+    data.frame(Xmat, ids)
   } else {
     data.frame(data, Xmat)
   }

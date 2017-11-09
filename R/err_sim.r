@@ -218,15 +218,22 @@ simulate_error <- function(data, sim_args, ...) {
     error_type = 'nested'
   }
   
+  if(is.null(data)) {
+    n <- sample_sizes(sim_args$sample_size)
+    ids <- create_ids(n, parse_random(parse_formula(sim_args)$random)$cluster_id_vars)
+  } else {
+    n <- samplesize_from_ids(data)
+  }
+  
   error <- purrr::invoke(sim_error, 
                          sim_args$error,
-                         n = sim_args$sample_size,
+                         n = n,
                          var_type = error_type
   ) %>% 
     unlist()
   
   if(is.null(data)) {
-    data.frame(error = error)
+    data.frame(error = error, ids)
   } else {
     data.frame(data, error = error)
   }

@@ -79,6 +79,26 @@ sample_size_level3 <- function(sample_size) {
   lvl3ss
 }
 
+create_ids <- function(sample_size, id_names) {
+  
+  id_names <- c('level1_id', id_names)
+  
+  id_vars <- data.frame(unlist(lapply(1:length(sample_size[['level1']]), 
+                           function(xx) 1:sample_size[['level1']])),
+             rep(1:sum(sample_size[['level2']]), times = sample_size[['level1']]),
+             rep(1:k, times = lvl3ss)
+  )
+  names(id_vars) <- id_names
+  id_vars
+  
+}
+
+samplesize_from_ids <- function(data, id_names) {
+  
+  
+  
+}
+
 # Horrible hack to keep CRAN happy and suppress NOTES about
 # parts of the code that use non-standard evaluation.
 # See:

@@ -133,6 +133,9 @@ simulate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   if(any(grepl('^factor\\(', fixed_vars))) {
     fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
   }
+  if(any(grepl(':', fixed_vars))) {
+    fixed_vars <- gsub(":", "\\.", fixed_vars)
+  }
   
   # Xmat <- model.matrix(fixed_formula, data.frame(data), contrasts.arg = contrasts)
   Xmat <- dplyr::select(data, fixed_vars)

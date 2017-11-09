@@ -577,7 +577,7 @@ sim_factor2 <- function(n, levels, var_level = 1, replace = TRUE,
                             replace = replace, ...)
   } else {
     if(var_level == 2) {
-      cat_var <- rep(base::sample(x = levels, size = n[['level2']], 
+      cat_var <- rep(base::sample(x = levels, size = sum(n[['level2']]), 
                                   replace = replace, ...),
                       times = n[['level1']])
     } else {

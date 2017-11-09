@@ -36,31 +36,47 @@ search_factors <- function(x) {
 sample_sizes <- function(sample_size) {
   
   min_max_loc <- grep('min', lapply(sample_size, names))
-  if(length(min_max_loc) == 1) {
-    gen_sample_size <- purrr::invoke_map('runif', 
-                                         sample_size[min_max_loc],
-                                         n = sample_size[[min_max_loc + 1]]
-    ) %>%
-      unlist() %>%
-      round(0) %>%
-      list()
-    sample_size[min_max_loc] <- gen_sample_size
+  
+  if(2 %in% min_max_loc) {
+    level2 <- runif(n = sample_size[['level3']], 
+                    min = sample_size[['level2']]$min,
+                    max = sample_size[['level2']]$max) %>%
+      round(0)
   } else {
-    level2 <- runif(n = sample_size[[3]], 
-                    min = sample_size[[2]]$min,
-                    max = sample_size[[2]]$max) %>%
-      round(0) %>%
-      list()
-    level1 <- runif(n = sum(unlist(level2)),
-                    min = sample_size[[1]]$min,
-                    max = sample_size[[1]]$max) %>%
-      round(0) %>%
-      list()
-    
-    sample_size[2] <- level2
-    sample_size[1] <- level1
+    if(length(sample_size) == 3) {
+      level2 <- rep(sample_size[['level2']], sample_size[['level3']])
+    } else {
+      level2 <- sample_size[['level2']]
+    }
   }
+  total_level2_samplesize <- sum(level2)
+  sample_size['level2'] <- list(level2)
+  
+  if(1 %in% min_max_loc) {
+    level1 <- runif(n = total_level2_samplesize,
+                    min = sample_size[['level1']]$min,
+                    max = sample_size[['level1']]$max) %>%
+      round(0)
+  } else {
+    level1 <- rep(sample_size[['level1']], total_level2_samplesize)
+  }
+  sample_size['level1'] <- list(level1)
+  
+  sample_size['level3_total'] <- list(sample_size_level3(sample_size))
+
   sample_size
+}
+
+sample_size_level3 <- function(sample_size) {
+  
+  end <- cumsum(sample_size[['level2']])
+  beg <- c(1, cumsum(sample_size[['level2']]) + 1)
+  beg <- beg[-length(beg)]
+  
+  lvl3ss <- unlist(lapply(lapply(1:length(beg), function(xx) 
+    sample_size[['level1']][beg[xx]:end[xx]]), sum))
+  
+  lvl3ss
 }
 
 # Horrible hack to keep CRAN happy and suppress NOTES about

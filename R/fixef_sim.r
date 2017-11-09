@@ -568,46 +568,22 @@ sim_factor <- function(k = NULL, n, p, levels,
 #' @export 
 sim_factor2 <- function(n, levels, var_level = 1, replace = TRUE,
                        ...) {
-
+  if(length(n) == 1) {
+    n <- list(level1 = n)
+  }
+  
   if(var_level == 1) {
-    if(length(n) == 1) {
-      n <- list(level1 = n)
-      cat_var <- base::sample(x = levels, size = n[['level1']], replace = replace, ...)
-    } else {
-      if(length(n[['level1']]) == 1 && length(n[['level2']]) == 1) {
-        cat_var <- base::sample(x = levels, size = n[['level1']] * n[['level2']], 
-                                replace = replace, ...)
-      } else {
-        if(length(n[['level1']]) > 1) {
-          cat_var <- base::sample(x = levels, size = sum(n[['level1']]), 
-                                  replace = replace, ...)
-        } else {
-          cat_var <- base::sample(x = levels, size = n[['level1']] * length(n[['level2']]), 
-                                  replace = replace, ...)
-        }
-      }
-    }
+    cat_var <- base::sample(x = levels, size = n[['level1']], 
+                            replace = replace, ...)
   } else {
     if(var_level == 2) {
-      if(length(n[['level1']]) == 1) {
-        cat_var <- rep(base::sample(x = levels, size = sum(n[['level2']]), 
-                                    replace = replace, ...), 
-                       each = n[['level1']])
-      } else {
-        cat_var <- rep(base::sample(x = levels, size = sum(n[['level2']]), 
-                                    replace = replace, ...), 
-                       times = n[['level1']])
-      }
+      cat_var <- rep(base::sample(x = levels, size = n[['level2']], 
+                                  replace = replace, ...),
+                      times = n[['level1']])
     } else {
-      if(length(n[['level1']] * n[['level2']]) == 1) {
-        cat_var <- rep(base::sample(x = levels, size = n[['level3']], 
-                                    replace = replace, ...), 
-                       each = n[['level1']] * n[['level2']])
-      } else {
-        cat_var <- rep(base::sample(x = levels, size = n[['level3']], 
-                                    replace = replace, ...), 
-                       times = n[['level1']] * n[['level2']])
-      }
+      cat_var <- rep(base::sample(x = levels, size = n[['level3']], 
+                                  replace = replace, ...),
+                      times = n[['level3_total']])
     }
   }
   
@@ -672,38 +648,19 @@ sim_continuous <- function(k = NULL, n, p, dist,
 #' @export 
 sim_continuous2 <- function(n, dist, var_level = 1, variance = NULL, ...) {
   
+  if(length(n) == 1) {
+    n <- list(level1 = n)
+  }
+  
   if(var_level == 1) {
-    if(length(n) == 1) {
-      n <- list(level1 = n)
-      cont_var <- unlist(lapply(n[['level1']], FUN = dist, ...))
-    } else {
-      if(length(n[['level1']]) == 1 && length(n[['level2']]) == 1) {
-        cont_var <- unlist(lapply(n[['level1']] * n[['level2']], FUN = dist, ...))
-      } else {
-        if(length(n[['level1']]) > 1) {
-          cont_var <- unlist(lapply(sum(n[['level1']]), FUN = dist, ...))
-        } else {
-          cont_var <- unlist(lapply(n[['level1']] * length(n[['level2']]), FUN = dist, ...))
-        }
-      }
-    }
+    cont_var <- unlist(lapply(n[['level1']], FUN = dist, ...))
   } else {
     if(var_level == 2) {
-      if(length(n[['level1']]) == 1) {
-        cont_var <- rep(unlist(lapply(sum(n[['level2']]), FUN = dist, ...)),
-                        each = n[['level1']])
-      } else {
-        cont_var <- rep(unlist(lapply(sum(n[['level2']]), FUN = dist, ...)),
-                        times = n[['level1']])
-      }
+      cont_var <- rep(unlist(lapply(sum(n[['level2']]), FUN = dist, ...)),
+                      times = n[['level1']])
     } else {
-      if(length(n[['level1']] * n[['level2']]) == 1) {
-        cont_var <- rep(unlist(lapply(n[['level3']], FUN = dist, ...)),
-                        each = n[['level1']] * n[['level2']])
-      } else {
-        cont_var <- rep(unlist(lapply(n[['level3']], FUN = dist, ...)),
-                        times = n[['level1']] * n[['level2']])
-      }
+      cont_var <- rep(unlist(lapply(n[['level3']], FUN = dist, ...)),
+                      times = n[['level3_total']])
     }
   }
   
@@ -782,11 +739,7 @@ simulate_fixed <- function(data, sim_args, ...) {
     fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
   }
   
-  if(any(grepl('min', names(sim_args$sample_size)))) {
-    n <- sample_sizes(sim_args$sample_size)
-  } else {
-    n <- sim_args$sample_size
-  }
+  n <- sample_sizes(sim_args$sample_size)
   
   Xmat <- purrr::invoke_map("sim_variable", 
                         sim_args$fixed,

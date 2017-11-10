@@ -635,14 +635,15 @@ sim_continuous <- function(k = NULL, n, p, dist,
 #' 
 #' @param n A list of sample sizes.
 #' @param dist A distribution function. This argument takes a quoted
-#'      R distribution function (e.g. 'rnorm').
+#'      R distribution function (e.g. 'rnorm'). Default is 'rnorm'.
 #' @param var_level The level the variable should be simulated at. This can either 
 #'      be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable 
 #'      respectively.
 #' @param variance The variance for random effect simulation.
 #' @param ... Additional parameters to pass to the dist_fun argument.
 #' @export 
-sim_continuous2 <- function(n, dist, var_level = 1, variance = NULL, ...) {
+sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1, 
+                            variance = NULL, ...) {
   
   if(var_level == 1) {
     cont_var <- unlist(lapply(n[['level1']], FUN = dist, ...))
@@ -732,16 +733,24 @@ simulate_fixed <- function(data, sim_args, ...) {
   }
   
   if(is.null(data)) {
-    sim_args['gen_sample_sizes'] <<- list(sample_sizes(sim_args[['sample_size']]))
-    ids <- create_ids(sim_args[['gen_sample_sizes']], 
+    n <- sample_sizes(sim_args[['sample_size']])
+    ids <- create_ids(n, 
                       c('level1_id', parse_random(parse_formula(sim_args)$random)$cluster_id_vars))
+    sim_args['gen_sample_sizes'] <<- list(n)
+    Xmat <- purrr::invoke_map("sim_variable", 
+                              sim_args$fixed,
+                              n = n
+    ) %>% 
+      data.frame()
+  } else {
+    Xmat <- purrr::invoke_map("sim_variable", 
+                              sim_args$fixed,
+                              n = sim_args[['gen_sample_sizes']]
+    ) %>% 
+      data.frame()
   }
   
-  Xmat <- purrr::invoke_map("sim_variable", 
-                        sim_args$fixed,
-                        n = sim_args[['gen_sample_sizes']]
-                        ) %>% 
-    data.frame()
+  
   
   if(any(grepl(":", fixed_vars))) {
     int.loc <- grep(":", fixed_vars)

@@ -55,7 +55,8 @@ parse_random <- function(formula) {
   random_effects <- lapply(seq_along(formula), function(xx) strsplit(formula, "\\|")[[xx]][1]) %>%
     unlist() %>%
     gsub("\\(", "", .) %>%
-    gsub("^\\s+|\\s+$", "", .)
+    gsub("^\\s+|\\s+$", "", .) %>%
+    paste0('~', .)
   
   list(
     cluster_id_vars = cluster_id_vars,

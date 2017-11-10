@@ -84,28 +84,27 @@ sample_size_level3 <- function(sample_size) {
   lvl3ss
 }
 
-create_ids <- function(sample_size, id_names) {
+create_ids <- function(sample_size_list, id_names) {
   
   if(length(id_names) == 3) {
-    id_vars <- data.frame(unlist(lapply(1:length(sample_size[['level1']]), 
-                                        function(xx) 1:sample_size[['level1']][xx])),
-                          rep(1:sum(sample_size[['level2']]), times = sample_size[['level1']]),
-                          rep(1:sample_size[['level3']], times = sample_size[['level3_total']])
+    id_vars <- data.frame(unlist(lapply(1:length(sample_size_list[['level1']]), 
+                                        function(xx) 1:sample_size_list[['level1']][xx])),
+                          rep(1:sum(sample_size_list[['level2']]), times = sample_size_list[['level1']]),
+                          rep(1:sample_size_list[['level3']], times = sample_size_list[['level3_total']])
     )
   } else {
     if(length(id_names) == 2) {
-      id_vars <- data.frame(unlist(lapply(1:length(sample_size[['level1']]), 
-                                          function(xx) 1:sample_size[['level1']])),
-                            rep(1:sum(sample_size[['level2']]), times = sample_size[['level1']])
+      id_vars <- data.frame(unlist(lapply(1:length(sample_size_list[['level1']]), 
+                                          function(xx) 1:sample_size_list[['level1']])),
+                            rep(1:sum(sample_size_list[['level2']]), times = sample_size_list[['level1']])
       )
     } else {
-      id_vars <- data.frame(1:sample_size[['level1']])
+      id_vars <- data.frame(1:sample_size_list[['level1']])
     }
   }
   
   names(id_vars) <- id_names
   id_vars
-  
 }
 
 # Horrible hack to keep CRAN happy and suppress NOTES about

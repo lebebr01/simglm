@@ -108,28 +108,6 @@ create_ids <- function(sample_size, id_names) {
   
 }
 
-samplesize_from_ids <- function(data, id_names) {
-  
-  id_vars <- dplyr::select(data, id_names)
-  
-  level1 <- id_vars %>%
-    group_by_(id_names[2]) %>%
-    summarise(n())
-  
-  if(length(id_names) > 1) {
-    level2 <- id_vars %>%
-      group_by_(id_names[3]) %>%
-      summarise_(.dots = length(unique(id_names[2])))
-  }
-  
-  if(length(id_names) > 2) {
-    level3 <- summarise(id_vars, length(unique(cluster3)))
-    level3_total <- tmp
-  }
-  
-  
-}
-
 # Horrible hack to keep CRAN happy and suppress NOTES about
 # parts of the code that use non-standard evaluation.
 # See:

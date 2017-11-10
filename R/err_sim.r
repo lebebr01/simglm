@@ -188,13 +188,10 @@ heterogeneity <- function(variance, fixef, variable, err) {
   dat['err']
 }
 
-sim_error <- function(var_type = c('nested', 'single'), ...) {
-  var_type <- match.arg(var_type)
+sim_error <- function(...) {
   
-  switch(var_type,
-         single = sim_err_single(...),
-         nested = sim_err_nested(...)
-  )
+  sim_continuous2(...)
+  
 }
 
 #' Tidy error simulation
@@ -212,23 +209,15 @@ sim_error <- function(var_type = c('nested', 'single'), ...) {
 #' @export 
 simulate_error <- function(data, sim_args, ...) {
   
-  if(length(sim_args$sample_size) == 1) {
-    error_type = 'single'
-  } else {
-    error_type = 'nested'
-  }
-  
   if(is.null(data)) {
-    n <- sample_sizes(sim_args$sample_size)
-    ids <- create_ids(n, c('level1_id', parse_random(parse_formula(sim_args)$random)$cluster_id_vars))
-  } else {
-    n <- samplesize_from_ids(data, c('level1_id', parse_random(parse_formula(sim_args)$random)$cluster_id_vars))
+    sim_args['gen_sample_sizes'] <- list(sample_sizes(sim_args[['sample_size']]))
+    ids <- create_ids(sim_args[['gen_sample_sizes']], 
+                      c('level1_id', parse_random(parse_formula(sim_args)$random)$cluster_id_vars))
   }
   
   error <- purrr::invoke(sim_error, 
                          sim_args$error,
-                         n = n,
-                         var_type = error_type
+                         n = sim_args[['gen_sample_sizes']]
   ) %>% 
     unlist()
   

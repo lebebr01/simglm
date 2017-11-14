@@ -123,7 +123,7 @@ data_reg_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3,
 #' @importFrom rlang .data
 #' 
 #' @export 
-simulate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
+generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   
   outcome_name <- parse_formula(sim_args)$outcome
   fixed_formula <- parse_formula(sim_args)$fixed
@@ -146,9 +146,24 @@ simulate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   fixed_outcome <- as.matrix(Xmat) %*% sim_args$reg_weights
   
   if(length(parse_formula(sim_args)$random) != 0) {
+    random_formula <- parse_formula(sim_args)$random
+    random_formula_parsed <- parse_random(random_formula)
+    random_effects_names <- names(sim_args$random)
     
+    random_formula <- lapply(seq_along(random_formula_parsed[['random_effects']]), function(xx) 
+      as.formula(random_formula_parsed[['random_effects']][xx]))
+    
+    Zmat <- lapply(random_formula, model.matrix, data = data) %>%
+      lapply(., data.frame) %>%
+      dplyr::bind_cols()
+    
+    rand_effects <- dplyr::select(data, random_effects_names)
+    
+    random_effects <- rand_effects * Zmat
+    random_effects['random_effect_total'] <- rowSums(random_effects)
   } else {
-    random_effects <- 0
+    random_effects <- NULL
+    random_effects['random_effect_total'] <- 0
   }
   
   if(keep_intermediate) {
@@ -156,10 +171,12 @@ simulate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
       fixed_outcome = fixed_outcome,
       random_effects = random_effects
     )
-    data <- cbind(data, response_outcomes)
+    data <- cbind(data, response_outcomes, row.names = NULL)
   }
   
-  data[outcome_name] <- fixed_outcome + random_effects + data['error']
+  data[outcome_name] <- fixed_outcome + 
+    random_effects['random_effect_total'] + 
+    data['error']
   
   data
 }

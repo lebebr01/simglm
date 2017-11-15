@@ -145,7 +145,7 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   
   fixed_outcome <- as.matrix(Xmat) %*% sim_args$reg_weights
   
-  if(length(parse_formula(sim_args)$random) != 0) {
+  if(length(parse_formula(sim_args)$randomeffect) != 0) {
     random_formula <- parse_formula(sim_args)$randomeffect
     random_formula_parsed <- parse_randomeffect(random_formula)
     random_effects_names <- names(sim_args$randomeffect)

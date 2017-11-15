@@ -28,7 +28,7 @@ parse_formula <- function(sim_args) {
     paste0("~", .) %>%
     as.formula()
   
-  random <- sim_args$formula %>%
+  randomeffect <- sim_args$formula %>%
     as.character() %>%
     .[3] %>%
     regmatches(gregexpr("(\\+|\\s+)\\(.*?\\)", .)) %>%
@@ -37,7 +37,7 @@ parse_formula <- function(sim_args) {
   
   list(outcome = outcome, 
        fixed = fixed,
-       random = random)
+       randomeffect = randomeffect)
 }
 
 #' Parses random effect specification
@@ -45,7 +45,7 @@ parse_formula <- function(sim_args) {
 #' @param formula Random effect formula already parsed by \code{\link{parse_formula}}
 #' 
 #' @export 
-parse_random <- function(formula) {
+parse_randomeffect <- function(formula) {
   
   cluster_id_vars <- lapply(seq_along(formula), function(xx) strsplit(formula, "\\|")[[xx]][2]) %>%
     unlist() %>%

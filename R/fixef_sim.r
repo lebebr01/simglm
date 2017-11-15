@@ -735,7 +735,7 @@ simulate_fixed <- function(data, sim_args, ...) {
   if(is.null(data)) {
     n <- sample_sizes(sim_args[['sample_size']])
     ids <- create_ids(n, 
-                      c('level1_id', parse_random(parse_formula(sim_args)$random)$cluster_id_vars))
+                      c('level1_id', parse_randomeffect(parse_formula(sim_args)$randomeffect)$cluster_id_vars))
     sim_args['gen_sample_sizes'] <<- list(n)
     Xmat <- purrr::invoke_map("sim_variable", 
                               sim_args$fixed,
@@ -749,8 +749,6 @@ simulate_fixed <- function(data, sim_args, ...) {
     ) %>% 
       data.frame()
   }
-  
-  
   
   if(any(grepl(":", fixed_vars))) {
     int.loc <- grep(":", fixed_vars)

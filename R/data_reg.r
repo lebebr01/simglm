@@ -159,7 +159,7 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     
     rand_effects <- dplyr::select(data, random_effects_names)
     
-    random_effects <- rowSumas(rand_effects * Zmat)
+    random_effects <- rowSums(rand_effects * Zmat)
   } else {
     random_effects <- NULL
     random_effects <- 0

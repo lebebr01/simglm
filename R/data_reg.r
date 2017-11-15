@@ -159,11 +159,10 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     
     rand_effects <- dplyr::select(data, random_effects_names)
     
-    random_effects <- rand_effects * Zmat
-    random_effects['random_effect_total'] <- rowSums(random_effects)
+    random_effects <- rowSumas(rand_effects * Zmat)
   } else {
     random_effects <- NULL
-    random_effects['random_effect_total'] <- 0
+    random_effects <- 0
   }
   
   if(keep_intermediate) {
@@ -174,9 +173,7 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     data <- cbind(data, response_outcomes, row.names = NULL)
   }
   
-  data[outcome_name] <- fixed_outcome + 
-    random_effects['random_effect_total'] + 
-    data['error']
+  data[outcome_name] <- fixed_outcome + random_effects + data['error']
   
   data
 }

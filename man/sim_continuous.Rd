@@ -4,7 +4,8 @@
 \alias{sim_continuous}
 \title{Simulate continuous variables}
 \usage{
-sim_continuous(k = NULL, n, p, dist, var_level = 1, ...)
+sim_continuous(k = NULL, n, p, dist_fun, var_type = c("level1", "level2",
+  "level3", "single"), ...)
 }
 \arguments{
 \item{k}{Number of third level clusters.}
@@ -13,14 +14,14 @@ sim_continuous(k = NULL, n, p, dist, var_level = 1, ...)
 
 \item{p}{Number of within cluster observations for multilevel}
 
+\item{...}{Additional parameters to pass to the dist_fun argument.}
+
 \item{dist}{A distribution function. This argument takes a quoted
 R distribution function (e.g. 'rnorm').}
 
 \item{var_level}{The level the variable should be simulated at. This can either 
 be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable 
 respectively.}
-
-\item{...}{Additional parameters to pass to the dist_fun argument.}
 }
 \description{
 Function that simulates continuous variables. Any distribution function in 

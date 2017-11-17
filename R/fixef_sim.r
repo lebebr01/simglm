@@ -14,7 +14,7 @@
 #'   function. Required arguments include:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
-#'     \item var_level: This is the level of variable to generate. Must be 
+#'     \item var_type: This is the level of variable to generate. Must be 
 #'       either 'level1' or 'level2'. 
 #'       Must be same order as fixed formula 
 #'       above.
@@ -30,7 +30,7 @@
 #'      specification, each list must include:
 #'   \itemize{
 #'        \item levels: Number of levels for ordinal or factor variables.
-#'        \item var_level: Must be 'level1' or 'level2'.
+#'        \item var_type: Must be 'level1' or 'level2'.
 #'    }
 #'    Optional arguments passed on to sample in a nested list. These include:
 #'    \itemize{
@@ -63,7 +63,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   }
   fact.loc <- grep("\\.f$|\\.o$|\\.c$|_f$|_c$|_o$", 
                    fixed_vars, ignore.case = TRUE) 
-  w.var <- length(grep("level1", cov_param$var_level, ignore.case = TRUE))
+  w.var <- length(grep("level1", cov_param$var_type, ignore.case = TRUE))
   n.cont <- length(cov_param[[1]])
   
   knot_loc <- grep("\\.k$|_k$", fixed_vars, ignore.case = TRUE)
@@ -85,21 +85,21 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   if(length(fact.loc) > 0){
     n.fact <- ifelse(length(int.loc) > 0, length(fact.loc[fact.loc %ni% int.loc]), 
                      length(fact.loc))
-    n.fact.lvl1 <- length(grep("level1", fact_vars$var_level, ignore.case = TRUE))
-    n.fact.lvl2 <- length(grep("level2", fact_vars$var_level, ignore.case = TRUE))
+    n.fact.lvl1 <- length(grep("level1", fact_vars$var_type, ignore.case = TRUE))
+    n.fact.lvl2 <- length(grep("level2", fact_vars$var_type, ignore.case = TRUE))
   } else {
     n.fact <- 0
   } 
 
   if(n.fact > 0){
-    if(any(grepl("single", fact_vars$var_level))){
-      stop("All variables must have var_level != 'single' for multilevel models")
+    if(any(grepl("single", fact_vars$var_type))){
+      stop("All variables must have var_type != 'single' for multilevel models")
     }
   }
   if(!is.null(cov_param)) {
 
     cov_param_args <- lapply(seq_len(n.cont), function(xx) 
-      c(cov_param$dist_fun[[xx]], cov_param$var_level[[xx]], 
+      c(cov_param$dist_fun[[xx]], cov_param$var_type[[xx]], 
         cov_param$opts[[xx]]))
     
     Xmat <- do.call(cbind, purrr::invoke_map(lapply(seq_len(n.cont), 
@@ -139,7 +139,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   if(length(fact.loc) > 0) {
     fact_vars_args <- lapply(seq_len(n.fact), function(xx)
       c(fact_vars$levels[[xx]], 
-        fact_vars$var_level[[xx]],
+        fact_vars$var_type[[xx]],
         fact_vars$opts[[xx]])
     )
     
@@ -196,7 +196,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 #' @param cov_param List of arguments. Required arguments are:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
-#'     \item var_level: This is the level of variable to generate. Must be 
+#'     \item var_type: This is the level of variable to generate. Must be 
 #'       either 'level1', 'level2', or 'level3'. Must be same order as fixed formula 
 #'       above.
 #'   }
@@ -212,7 +212,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 #'      specification, each list must include:
 #'   \itemize{
 #'        \item levels = Number of levels for ordinal or factor variables.
-#'        \item var_level = Must be 'level1', 'level2', or 'level3'.
+#'        \item var_type = Must be 'level1', 'level2', or 'level3'.
 #'    }
 #'    Optional arguments passed on to sample in a nested list. These include:
 #'    \itemize{
@@ -271,13 +271,13 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   } 
   
   if(n.fact > 0){
-    if(any(grepl("single", fact_vars$var_level))){
-      stop("All variables must have var_level != 'single' for multilevel models")
+    if(any(grepl("single", fact_vars$var_type))){
+      stop("All variables must have var_type != 'single' for multilevel models")
     }
   }
   if(!is.null(cov_param)) {
     cov_param_args <- lapply(seq_len(n.cont), function(xx) 
-      c(cov_param$dist_fun[[xx]], cov_param$var_level[[xx]], 
+      c(cov_param$dist_fun[[xx]], cov_param$var_type[[xx]], 
         cov_param$opts[[xx]]))
     
     Xmat <- do.call(cbind, purrr::invoke_map(lapply(seq_len(n.cont), 
@@ -317,7 +317,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   if(length(fact.loc) > 0) {
     fact_vars_args <- lapply(seq_len(n.fact), function(xx)
       c(fact_vars$levels[[xx]], 
-        fact_vars$var_level[[xx]],
+        fact_vars$var_type[[xx]],
         fact_vars$opts[[xx]])
     )
     
@@ -374,7 +374,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #'   function. Required arguments include:
 #'   \itemize{
 #'     \item dist_fun: This is a quoted R distribution function.
-#'     \item var_level: This is the level of variable to generate. Must be 
+#'     \item var_type: This is the level of variable to generate. Must be 
 #'       'single'. Must be same order as fixed formula above.
 #'   }
 #'   Optional arguments to the distribution functions are in a nested list,
@@ -385,7 +385,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #'      specification, each list must include:
 #'   \itemize{
 #'        \item levels = Number of levels for ordinal or factor variables.
-#'        \item var_level = Must be 'single'.
+#'        \item var_type = Must be 'single'.
 #'    }
 #'    Optional arguments passed on to sample in a nested list. These include:
 #'    \itemize{
@@ -438,13 +438,13 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   }
   
   if(n.fact > 0){
-    if(!any(grepl("single", fact_vars$var_level))){
-      stop("All variables must have var_level = 'single'")
+    if(!any(grepl("single", fact_vars$var_type))){
+      stop("All variables must have var_type = 'single'")
     }
   }
   if(!is.null(cov_param)) {
     cov_param_args <- lapply(seq_len(n.cont), function(xx) 
-      c(cov_param$dist_fun[[xx]], cov_param$var_level[[xx]], 
+      c(cov_param$dist_fun[[xx]], cov_param$var_type[[xx]], 
         cov_param$opts[[xx]]))
     
     Xmat <- do.call(cbind, purrr::invoke_map(lapply(seq_len(n.cont), 
@@ -465,7 +465,7 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   if(length(fact.loc) > 0) {
     fact_vars_args <- lapply(seq_len(n.fact), function(xx)
        c(fact_vars$levels[[xx]], 
-         fact_vars$var_level[[xx]],
+         fact_vars$var_type[[xx]],
          fact_vars$opts[[xx]])
       )
     
@@ -523,8 +523,8 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
 #'   replacement. Default is TRUE.
 #' @param ... Additional parameters passed to the sample function.
 #' @export 
-sim_factor <- function(k = NULL, n, p, levels, 
-                       var_level = 1, replace = TRUE,
+sim_factor <- function(k = NULL, n, p, numlevels, 
+                       var_type = c('level1', 'level2', 'level3', 'single'),
                        ...) {
   end <- cumsum(n)
   beg <- c(1, cumsum(n) + 1)
@@ -535,18 +535,14 @@ sim_factor <- function(k = NULL, n, p, levels,
       p[beg[xx]:end[xx]]), sum)
   }
   
-  if(var_level == 1) {
-    cat_var <- base::sample(x = levels, size = n, replace = replace, ...)
-  } else {
-    if(var_level == 2) {
-      cat_var <- rep(base::sample(x = levels, size = length(p), replace = replace, ...), 
-                      times = p)
-    } else {
-      cat_var <- rep(base::sample(x = levels, size = k, replace = replace, ...), 
-                      times = lvl3ss)
-    }
-  }
+  var_type <- match.arg(var_type)
   
+  cat_var <- switch(var_type,
+                    single = base::sample(x = numlevels, size = n, ...),
+                    level3 = rep(base::sample(x = numlevels, size = k, ...), times = lvl3ss),
+                    level2 = rep(base::sample(x = numlevels, size = length(p), ...), times = p),
+                    level1 = base::sample(x = numlevels, size = sum(p), ...)
+  )
   cat_var
 }
 
@@ -602,8 +598,8 @@ sim_factor2 <- function(n, levels, var_level = 1, replace = TRUE,
 #'      respectively.
 #' @param ... Additional parameters to pass to the dist_fun argument.
 #' @export 
-sim_continuous <- function(k = NULL, n, p, dist,
-                           var_level = 1,
+sim_continuous <- function(k = NULL, n, p, dist_fun,
+                           var_type = c('level1', 'level2', 'level3', 'single'),
                            ...) {
   
   end <- cumsum(n)
@@ -614,18 +610,18 @@ sim_continuous <- function(k = NULL, n, p, dist,
     lvl3ss <- sapply(lapply(seq_along(beg), function(xx) 		
       p[beg[xx]:end[xx]]), sum)
   }
-  if(var_level == 1) {
-    cont_var <- unlist(lapply(n, FUN = dist, ...))
-  } else {
-    if(var_level == 2) {
-      cont_var <- rep(unlist(lapply(length(p), FUN = dist, ...)), 
-                      times = p)
-    } else {
-      cont_var <- rep(unlist(lapply(k, FUN = dist, ...)), 
-                      times = lvl3ss)
-    }
-  }
-  cont_var
+  
+  var_type <- match.arg(var_type)
+  
+  contVar <- switch(var_type,
+                    single = unlist(lapply(n, FUN = dist_fun, ...)),
+                    level3 = rep(unlist(lapply(k, FUN = dist_fun, ...)), 
+                                 times = lvl3ss),
+                    level2 = rep(unlist(lapply(length(p), FUN = dist_fun, ...)), 
+                                 times = p),
+                    level1 = unlist(lapply(sum(p), FUN = dist_fun, ...))
+  )
+  contVar
 }
 
 #' Simulate continuous variables

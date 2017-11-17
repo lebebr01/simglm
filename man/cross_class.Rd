@@ -15,7 +15,7 @@ cross_class(num_ids, samp_size, random_param)
 \item{random_param}{A list of data generating characteristics used to generate
  the cross classified random effect. This function needs to include:
  \itemize{
-   \item variance The variance of the cross classified random effect.
+   \item random_var The variance of the cross classified random effect.
    \item rand_gen The random generating function used.
  }
  Optional elements are:

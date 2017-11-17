@@ -2,7 +2,7 @@
 #' 
 #' Input error simulation parameters and outputs simulated errors.
 #' 
-#' @param variance Scalar of error variance
+#' @param error_var Scalar of error variance
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
 #' @param dist The generating function used as a character, 
@@ -19,7 +19,7 @@
 #'          standard deviation of the dist. This would commonly be 
 #'          used to standardize the generating variable to have a mean of 0 and
 #'          standard deviation of 1 to meet model assumptions. The variable
-#'          is then rescaled to have the variance specified by variance.
+#'          is then rescaled to have the variance specified by error_var.
 #' @param ther_sim A TRUE/FALSE flag indicating whether the error simulation 
 #'  function should be simulated, that is should the mean and standard deviation
 #'  used for standardization be simulated.
@@ -32,7 +32,7 @@
 #'  heterogeneity of variance simulation.
 #' @param ... Not currently used.
 #' @export 
-sim_err_nested <- function(variance, n, p, dist, arima = FALSE,
+sim_err_nested <- function(error_var, n, p, dist, arima = FALSE,
                            lvl1_err_params = NULL, arima_mod = list(NULL),
                            ther = c(0, 1), ther_sim = FALSE, 
                            homogeneity = TRUE, fixef = NULL, 
@@ -51,11 +51,11 @@ sim_err_nested <- function(variance, n, p, dist, arima = FALSE,
       err <- unlist(lapply(mapply(arima.sim, n = p,
                                   MoreArgs = args, SIMPLIFY = FALSE), 
                            standardize, mean = ther[1], sd = ther[2])) * 
-        sqrt(variance)
+        sqrt(error_var)
     } else {
       err <- unlist(lapply(mapply(dist, n = p, 
                                   MoreArgs = lvl1_err_params, SIMPLIFY = FALSE), 
-                           standardize, mean = ther[1], sd = ther[2])) * sqrt(variance)
+                           standardize, mean = ther[1], sd = ther[2])) * sqrt(error_var)
     }
   } else {
     if(arima) {
@@ -65,7 +65,7 @@ sim_err_nested <- function(variance, n, p, dist, arima = FALSE,
       err <- unlist(lapply(mapply(arima.sim, n = p,
                                   MoreArgs = args, SIMPLIFY = FALSE), 
                            standardize, mean = ther[1], sd = ther[2]))
-      err <- heterogeneity(variance, fixef = fixef,
+      err <- heterogeneity(error_var, fixef = fixef,
                            heterogeneity_var,
                            err)
     } else {
@@ -73,7 +73,7 @@ sim_err_nested <- function(variance, n, p, dist, arima = FALSE,
       err <- unlist(lapply(mapply(dist, n = p, 
                                   MoreArgs = lvl1_err_params, SIMPLIFY = FALSE), 
                            standardize, mean = ther[1], sd = ther[2]))
-      err <- heterogeneity(variance, fixef = fixef,
+      err <- heterogeneity(error_var, fixef = fixef,
                            heterogeneity_var,
                            err)
     }
@@ -88,7 +88,7 @@ sim_err_nested <- function(variance, n, p, dist, arima = FALSE,
 #' 
 #' Simulates error term for single level regression models.
 #' 
-#' @param variance Numeric scalar of error variance or vector used when 
+#' @param error_var Numeric scalar of error variance or vector used when 
 #'   simulating heterogeneity of variance.
 #' @param n Cluster sample size.
 #' @param dist The generating function used.
@@ -104,7 +104,7 @@ sim_err_nested <- function(variance, n, p, dist, arima = FALSE,
 #'          standard deviation of the dist. This would commonly be used
 #'          to standardize the generating variable to have a mean of 0 and
 #'          standard deviation of 1 to meet model assumptions. The variable
-#'          is then rescaled to have the variance specified by variance.
+#'          is then rescaled to have the variance specified by error_var.
 #' @param ther_sim A TRUE/FALSE flag indicating whether the error simulation 
 #'  function should be simulated, that is should the mean and standard deviation
 #'  used for standardization be simulated.
@@ -117,7 +117,7 @@ sim_err_nested <- function(variance, n, p, dist, arima = FALSE,
 #'  heterogeneity of variance simulation.
 #' @param ... Not currently used.
 #' @export 
-sim_err_single <- function(variance, n, dist, arima = FALSE, 
+sim_err_single <- function(error_var, n, dist, arima = FALSE, 
                            lvl1_err_params = NULL, arima_mod = list(NULL),
                            ther = c(0, 1), ther_sim = FALSE, 
                            homogeneity = TRUE, fixef = NULL,
@@ -135,11 +135,11 @@ sim_err_single <- function(variance, n, dist, arima = FALSE,
                      rand.gen = eval(parse(text = dist))), 
                 lvl1_err_params)
       err <- standardize(do.call(arima.sim, args), 
-                         mean = ther[1], sd = ther[2]) * sqrt(variance)
+                         mean = ther[1], sd = ther[2]) * sqrt(error_var)
     } else {
       args <- c(list(n = n), lvl1_err_params)
       err <- standardize(do.call(dist, args), 
-                         mean = ther[1], sd = ther[2]) * sqrt(variance)
+                         mean = ther[1], sd = ther[2]) * sqrt(error_var)
     }
   } else {
     if(arima) {
@@ -148,7 +148,7 @@ sim_err_single <- function(variance, n, dist, arima = FALSE,
                 lvl1_err_params)
       err <- standardize(do.call(arima.sim, args),
                          mean = ther[1], sd = ther[2])
-      err <- heterogeneity(variance, fixef = fixef,
+      err <- heterogeneity(error_var, fixef = fixef,
                            heterogeneity_var,
                            err)
       
@@ -156,7 +156,7 @@ sim_err_single <- function(variance, n, dist, arima = FALSE,
       args <- c(list(n = n), lvl1_err_params)
       err <- standardize(do.call(dist, args),
                          mean = ther[1], sd = ther[2])
-      err <- heterogeneity(variance, fixef = fixef,
+      err <- heterogeneity(error_var, fixef = fixef,
                            heterogeneity_var,
                            err)
     }

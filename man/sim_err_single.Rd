@@ -4,12 +4,12 @@
 \alias{sim_err_single}
 \title{Function that simulates errors.}
 \usage{
-sim_err_single(variance, n, dist, arima = FALSE, lvl1_err_params = NULL,
+sim_err_single(error_var, n, dist, arima = FALSE, lvl1_err_params = NULL,
   arima_mod = list(NULL), ther = c(0, 1), ther_sim = FALSE,
   homogeneity = TRUE, fixef = NULL, heterogeneity_var = NULL, ...)
 }
 \arguments{
-\item{variance}{Numeric scalar of error variance or vector used when 
+\item{error_var}{Numeric scalar of error variance or vector used when 
 simulating heterogeneity of variance.}
 
 \item{n}{Cluster sample size.}
@@ -31,7 +31,7 @@ See \code{\link{arima.sim}} for examples.}
 standard deviation of the dist. This would commonly be used
 to standardize the generating variable to have a mean of 0 and
 standard deviation of 1 to meet model assumptions. The variable
-is then rescaled to have the variance specified by variance.}
+is then rescaled to have the variance specified by error_var.}
 
 \item{ther_sim}{A TRUE/FALSE flag indicating whether the error simulation 
 function should be simulated, that is should the mean and standard deviation

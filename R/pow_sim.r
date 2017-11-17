@@ -660,3 +660,77 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var,
   
   test_stat
 }
+
+#' Tidy Model Fitting Function
+#' 
+#' @param data A data object, most likely generated from within simglm
+#' @param sim_args A named list with special model formula syntax. See details and examples
+#'   for more information. The named list may contain the following:
+#'   \itemize{
+#'     \item fixed: This is the fixed portion of the model (i.e. covariates)
+#'     \item random: This is the random portion of the model (i.e. random effects)
+#'     \item error: This is the error (i.e. residual term).
+#'   }
+#' @param formula A formula for model fitting. If NULL, the default, the 
+#'   same formula for data simulation in used for model fitting.
+#' @param model_function A model function. By default is 'lm' with no random 
+#'   effect and is 'lmer' with random effects. Able to specify any model
+#'   fitting function.
+#' @param ... Additional arguments needed to pass on to model fitting 
+#'   functions. See specific model fitting functions for specific details.
+#' @examples 
+#' 
+#' @export 
+model_fit <- function(data, sim_args, formula = NULL, 
+                      model_function = NULL, ...) {
+  
+  if(is.null(model_function) && length(parse_formula(sim_args)$randomeffect) == 0) {
+    model_function = 'lm'
+  }
+  if(is.null(model_function) && length(parse_formula(sim_args)$randomeffect) != 0) {
+    model_function = 'lme4::lmer'
+  }
+  
+  if(is.null(formula)) {
+    formula <- sim_args$formula
+  }
+  
+  purrr::invoke(model_function, 
+                list(formula = formula, data = data, ...))
+  
+}
+
+#' Extract Coefficients
+#' 
+#' @param model A returned model object from a fitted model.
+#' @param extract_function A function that extracts model results. The 
+#'   function must take the model object as the only argument.
+#' @export 
+extract_coefficients <- function(model, extract_function = NULL) {
+  
+  if(is.null(extract_function)) {
+    broom::tidy(model)
+  } else {
+    purrr::invoke(extract_function, model)
+  }
+}
+
+
+
+#' Tidy Power Simulation
+#' 
+#' @param sim_args A named list with special model formula syntax. See details and examples
+#'   for more information. The named list may contain the following:
+#'   \itemize{
+#'     \item fixed: This is the fixed portion of the model (i.e. covariates)
+#'     \item random: This is the random portion of the model (i.e. random effects)
+#'     \item error: This is the error (i.e. residual term).
+#'   }
+#' @param ... Other arguments to pass to error simulation functions.
+#' @examples 
+#' 
+#' @export 
+compute_power <- function(sim_args) {
+  
+}
+

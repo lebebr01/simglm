@@ -5,8 +5,8 @@
 \title{Function to simulate power.}
 \usage{
 sim_pow_glm_single(fixed, fixed_param, cov_param, n, data_str,
-  cor_vars = NULL, fact_vars = list(NULL), outcome_type,
-  knots_args = list(NULL), missing = FALSE, missing_args = list(NULL),
+  cor_vars = NULL, fact_vars = list(NULL), contrasts = NULL, outcome_type,
+  knot_args = list(NULL), missing = FALSE, missing_args = list(NULL),
   pow_param = NULL, alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2),
   glm_fit_mod = NULL, glm_fit_family, general_mod = NULL,
   general_extract = NULL, ...)
@@ -51,9 +51,20 @@ Optional arguments to the distribution functions are in a nested list,
  }
   See also \code{\link{sample}} for use of these optional arguments.}
 
+\item{contrasts}{An optional list that specifies the contrasts to be used 
+for factor variables (i.e. those variables with .f or .c). 
+See \code{\link{contrasts}} for more detail.}
+
 \item{outcome_type}{A vector specifying the type of outcome, must be either
 logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
 be counts.}
+
+\item{knot_args}{A nested list of named knot arguments. See \code{\link{sim_knot}} 
+for more details. Arguments must include:
+  \itemize{
+    \item var
+    \item knot_locations
+  }}
 
 \item{missing}{TRUE/FALSE flag indicating whether missing data should be 
 simulated.}
@@ -87,13 +98,6 @@ broom is used to collect model results.}
 
 \item{...}{Additional specification needed to pass to the random generating 
 function defined by with_err_gen.}
-
-\item{knot_args}{A nested list of named knot arguments. See \code{\link{sim_knot}} 
-for more details. Arguments must include:
-  \itemize{
-    \item var
-    \item knot_locations
-  }}
 }
 \description{
 Input simulation conditions and which term to compute power for, export 

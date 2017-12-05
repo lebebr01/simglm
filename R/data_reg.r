@@ -120,7 +120,6 @@ data_reg_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3,
 #'   should be kept. This would include fixed effects times regression weights,
 #'   random effect summations, etc. Default is TRUE.
 #' @param ... Other arguments to pass to error simulation functions.
-#' @importFrom rlang .data
 #' 
 #' @export 
 generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {

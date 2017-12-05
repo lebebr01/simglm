@@ -5,18 +5,18 @@
 #' @param error_var Scalar of error variance
 #' @param n Cluster sample size.
 #' @param p Within cluster sample size.
-#' @param dist The generating function used as a character, 
+#' @param with_err_gen The generating function used as a character, 
 #'             (e.g. 'rnorm').
 #' @param arima TRUE/FALSE flag indicating whether residuals should 
 #'             be correlated. If TRUE, must specify a valid model to pass to 
 #'             arima.sim via the arima_mod argument. 
 #'             See \code{\link{arima.sim}} for examples.
 #' @param lvl1_err_params Additional values that need to be passed to the 
-#'  function called from dist.
+#'  function called from with_err_gen.
 #' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
 #'             See \code{\link{arima.sim}} for examples.
 #' @param ther A vector of length two that specifies the theoretical mean and 
-#'          standard deviation of the dist. This would commonly be 
+#'          standard deviation of the with_err_gen. This would commonly be 
 #'          used to standardize the generating variable to have a mean of 0 and
 #'          standard deviation of 1 to meet model assumptions. The variable
 #'          is then rescaled to have the variance specified by error_var.
@@ -32,35 +32,35 @@
 #'  heterogeneity of variance simulation.
 #' @param ... Not currently used.
 #' @export 
-sim_err_nested <- function(error_var, n, p, dist, arima = FALSE,
+sim_err_nested <- function(error_var, n, p, with_err_gen, arima = FALSE,
                            lvl1_err_params = NULL, arima_mod = list(NULL),
                            ther = c(0, 1), ther_sim = FALSE, 
                            homogeneity = TRUE, fixef = NULL, 
                            heterogeneity_var = NULL, ...){
   
   if(ther_sim) {
-    ther_val <- do.call(dist, c(list(n = 10000000), lvl1_err_params))
+    ther_val <- do.call(with_err_gen, c(list(n = 10000000), lvl1_err_params))
     ther <- c(mean(ther_val), sd(ther_val))
   }
   
   if(homogeneity) {
     if(arima) {
       args <- c(list(model = arima_mod, 
-                     rand.gen = eval(parse(text = dist))), 
+                     rand.gen = eval(parse(text = with_err_gen))), 
                 lvl1_err_params)
       err <- unlist(lapply(mapply(arima.sim, n = p,
                                   MoreArgs = args, SIMPLIFY = FALSE), 
                            standardize, mean = ther[1], sd = ther[2])) * 
         sqrt(error_var)
     } else {
-      err <- unlist(lapply(mapply(dist, n = p, 
+      err <- unlist(lapply(mapply(with_err_gen, n = p, 
                                   MoreArgs = lvl1_err_params, SIMPLIFY = FALSE), 
                            standardize, mean = ther[1], sd = ther[2])) * sqrt(error_var)
     }
   } else {
     if(arima) {
       args <- c(list(model = arima_mod, 
-                     rand.gen = eval(parse(text = dist))), 
+                     rand.gen = eval(parse(text = with_err_gen))), 
                 lvl1_err_params)
       err <- unlist(lapply(mapply(arima.sim, n = p,
                                   MoreArgs = args, SIMPLIFY = FALSE), 
@@ -70,7 +70,7 @@ sim_err_nested <- function(error_var, n, p, dist, arima = FALSE,
                            err)
     } else {
       args <- c(list(n = p), lvl1_err_params)
-      err <- unlist(lapply(mapply(dist, n = p, 
+      err <- unlist(lapply(mapply(with_err_gen, n = p, 
                                   MoreArgs = lvl1_err_params, SIMPLIFY = FALSE), 
                            standardize, mean = ther[1], sd = ther[2]))
       err <- heterogeneity(error_var, fixef = fixef,
@@ -91,17 +91,17 @@ sim_err_nested <- function(error_var, n, p, dist, arima = FALSE,
 #' @param error_var Numeric scalar of error variance or vector used when 
 #'   simulating heterogeneity of variance.
 #' @param n Cluster sample size.
-#' @param dist The generating function used.
+#' @param with_err_gen The generating function used.
 #' @param arima TRUE/FALSE flag indicating whether residuals should 
 #'             be correlated. If TRUE, must specify a valid model to pass to 
 #'             arima.sim via the arima_mod argument. 
 #'             See \code{\link{arima.sim}} for examples.
 #' @param lvl1_err_params Additional values that need to be passed to the 
-#'  function called from dist.
+#'  function called from with_err_gen.
 #' @param arima_mod A list indicating the ARIMA model to pass to arima.sim. 
 #'             See \code{\link{arima.sim}} for examples.
 #' @param ther A vector of length two that specifies the theoretical mean and 
-#'          standard deviation of the dist. This would commonly be used
+#'          standard deviation of the with_err_gen. This would commonly be used
 #'          to standardize the generating variable to have a mean of 0 and
 #'          standard deviation of 1 to meet model assumptions. The variable
 #'          is then rescaled to have the variance specified by error_var.
@@ -117,7 +117,7 @@ sim_err_nested <- function(error_var, n, p, dist, arima = FALSE,
 #'  heterogeneity of variance simulation.
 #' @param ... Not currently used.
 #' @export 
-sim_err_single <- function(error_var, n, dist, arima = FALSE, 
+sim_err_single <- function(error_var, n, with_err_gen, arima = FALSE, 
                            lvl1_err_params = NULL, arima_mod = list(NULL),
                            ther = c(0, 1), ther_sim = FALSE, 
                            homogeneity = TRUE, fixef = NULL,
@@ -125,26 +125,26 @@ sim_err_single <- function(error_var, n, dist, arima = FALSE,
                            ...){
   
   if(ther_sim) {
-    ther_val <- do.call(dist, c(list(n = 10000000), lvl1_err_params))
+    ther_val <- do.call(with_err_gen, c(list(n = 10000000), lvl1_err_params))
     ther <- c(mean(ther_val), sd(ther_val))
   }
-
+  
   if(homogeneity) {
     if(arima) {
       args <- c(list(model = arima_mod, n = n, 
-                     rand.gen = eval(parse(text = dist))), 
+                     rand.gen = eval(parse(text = with_err_gen))), 
                 lvl1_err_params)
       err <- standardize(do.call(arima.sim, args), 
                          mean = ther[1], sd = ther[2]) * sqrt(error_var)
     } else {
       args <- c(list(n = n), lvl1_err_params)
-      err <- standardize(do.call(dist, args), 
+      err <- standardize(do.call(with_err_gen, args), 
                          mean = ther[1], sd = ther[2]) * sqrt(error_var)
     }
   } else {
     if(arima) {
       args <- c(list(model = arima_mod, n = n,
-                     rand.gen = eval(parse(text = dist))),
+                     rand.gen = eval(parse(text = with_err_gen))),
                 lvl1_err_params)
       err <- standardize(do.call(arima.sim, args),
                          mean = ther[1], sd = ther[2])
@@ -154,7 +154,7 @@ sim_err_single <- function(error_var, n, dist, arima = FALSE,
       
     } else {
       args <- c(list(n = n), lvl1_err_params)
-      err <- standardize(do.call(dist, args),
+      err <- standardize(do.call(with_err_gen, args),
                          mean = ther[1], sd = ther[2])
       err <- heterogeneity(error_var, fixef = fixef,
                            heterogeneity_var,

@@ -29,7 +29,7 @@
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable 
 #'      specification, each list must include:
 #'   \itemize{
-#'        \item levels: Number of levels for ordinal or factor variables.
+#'        \item numlevels: Number of levels for ordinal or factor variables.
 #'        \item var_type: Must be 'level1' or 'level2'.
 #'    }
 #'    Optional arguments passed on to sample in a nested list. These include:
@@ -69,7 +69,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   knot_loc <- grep("\\.k$|_k$", fixed_vars, ignore.case = TRUE)
   n_knot <- length(knot_loc[knot_loc %ni% int.loc])
   knot_var_loc <- grep(paste0(knot_args$var, '$'), fixed_vars)
-
+  
   if(length(fact.loc) > 0){
     if(length(knot_loc) > 0) {
       fixed_vars <- c(fixed_vars[-c(fact.loc, int.loc, knot_loc)], 
@@ -90,20 +90,20 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   } else {
     n.fact <- 0
   } 
-
+  
   if(n.fact > 0){
     if(any(grepl("single", fact_vars$var_type))){
       stop("All variables must have var_type != 'single' for multilevel models")
     }
   }
   if(!is.null(cov_param)) {
-
+    
     cov_param_args <- lapply(seq_len(n.cont), function(xx) 
       c(cov_param$dist_fun[[xx]], cov_param$var_type[[xx]], 
         cov_param$opts[[xx]]))
     
     Xmat <- do.call(cbind, purrr::invoke_map(lapply(seq_len(n.cont), 
-                                                   function(xx) sim_continuous),
+                                                    function(xx) sim_continuous),
                                              cov_param_args, 
                                              n = n,
                                              k = NULL,
@@ -120,7 +120,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
       } else {
         Xmat <- cbind(unlist(lapply(seq_along(p), function(xx) 
           cov_param$time_var[1:p[xx]])), 
-                      Xmat)
+          Xmat)
       }
     }
   } else {
@@ -135,10 +135,10 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
       Xmat <- NULL
     }
   }
-
+  
   if(length(fact.loc) > 0) {
     fact_vars_args <- lapply(seq_len(n.fact), function(xx)
-      c(fact_vars$levels[[xx]], 
+      c(fact_vars$numlevels[[xx]], 
         fact_vars$var_type[[xx]],
         fact_vars$opts[[xx]])
     )
@@ -155,25 +155,25 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
   
   if(length(knot_loc) > 0) {
     Xmat <- cbind(Xmat, do.call(cbind, 
-                      purrr::invoke_map(lapply(seq_len(n_knot), 
-                                function(xx) sim_knot),
-                                    knot_args$knot_locations,
-                                    var = Xmat[, knot_var_loc])))
+                                purrr::invoke_map(lapply(seq_len(n_knot), 
+                                                         function(xx) sim_knot),
+                                                  knot_args$knot_locations,
+                                                  var = Xmat[, knot_var_loc])))
   }
   
-   if(n.int == 0){
-     colnames(Xmat) <- fixed_vars
-   } else {
-     int.loc <- grep(":", fixed_vars)
-     colnames(Xmat) <- fixed_vars[-int.loc]
-   } 
- if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
-   fixed <- search_factors(fixed_vars)
-   Omat <- Xmat
- }
+  if(n.int == 0){
+    colnames(Xmat) <- fixed_vars
+  } else {
+    int.loc <- grep(":", fixed_vars)
+    colnames(Xmat) <- fixed_vars[-int.loc]
+  } 
+  if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
+    fixed <- search_factors(fixed_vars)
+    Omat <- Xmat
+  }
   
   Xmat <- model.matrix(fixed, data.frame(Xmat), contrasts.arg = contrasts)
- 
+  
   if(any(grepl("\\.f$|\\.c$|_f$|_c$|\\.k$|_k$", fixed_vars, ignore.case = TRUE))) {
     list(Xmat = Xmat, Omat = data.frame(Omat))
   } else {
@@ -211,7 +211,7 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable 
 #'      specification, each list must include:
 #'   \itemize{
-#'        \item levels = Number of levels for ordinal or factor variables.
+#'        \item numlevels = Number of levels for ordinal or factor variables.
 #'        \item var_type = Must be 'level1', 'level2', or 'level3'.
 #'    }
 #'    Optional arguments passed on to sample in a nested list. These include:
@@ -233,8 +233,8 @@ sim_fixef_nested <- function(fixed, fixed_vars, cov_param, n, p, data_str,
 #' @importFrom purrr pmap invoke_map
 #' @export 
 sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str, 
-                             cor_vars = NULL, fact_vars = list(NULL),
-                             contrasts = NULL, knot_args = list(NULL)) {
+                              cor_vars = NULL, fact_vars = list(NULL),
+                              contrasts = NULL, knot_args = list(NULL)) {
   
   n.vars <- length(fixed_vars)
   n.int <- length(grep(":",fixed_vars))
@@ -281,7 +281,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
         cov_param$opts[[xx]]))
     
     Xmat <- do.call(cbind, purrr::invoke_map(lapply(seq_len(n.cont), 
-                                                  function(xx) sim_continuous),
+                                                    function(xx) sim_continuous),
                                              cov_param_args, 
                                              n = n,
                                              k = k,
@@ -298,7 +298,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
       } else {
         Xmat <- cbind(unlist(lapply(seq_along(p), function(xx) 
           cov_param$time_var[1:p[xx]])), 
-                      Xmat)
+          Xmat)
       }
     }
   } else {
@@ -316,13 +316,13 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   
   if(length(fact.loc) > 0) {
     fact_vars_args <- lapply(seq_len(n.fact), function(xx)
-      c(fact_vars$levels[[xx]], 
+      c(fact_vars$numlevels[[xx]], 
         fact_vars$var_type[[xx]],
         fact_vars$opts[[xx]])
     )
     
     Xmat <- cbind(Xmat, do.call(cbind, purrr::invoke_map(lapply(seq_len(n.fact), 
-                                                  function(xx) sim_factor),
+                                                                function(xx) sim_factor),
                                                          fact_vars_args, 
                                                          n = n,
                                                          k = k,
@@ -334,7 +334,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
   if(length(knot_loc) > 0) {
     Xmat <- cbind(Xmat, do.call(cbind, 
                                 purrr::invoke_map(lapply(seq_len(n_knot), 
-                                               function(xx) sim_knot),
+                                                         function(xx) sim_knot),
                                                   knot_args$knot_locations,
                                                   var = Xmat[, knot_var_loc])))
   }
@@ -384,7 +384,7 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #' @param fact_vars A nested list of factor, categorical, or ordinal variable 
 #'      specification, each list must include:
 #'   \itemize{
-#'        \item levels = Number of levels for ordinal or factor variables.
+#'        \item numlevels = Number of levels for ordinal or factor variables.
 #'        \item var_type = Must be 'single'.
 #'    }
 #'    Optional arguments passed on to sample in a nested list. These include:
@@ -394,8 +394,8 @@ sim_fixef_nested3 <- function(fixed, fixed_vars, cov_param, k, n, p, data_str,
 #'        \item value.labels
 #'    }
 #'     See also \code{\link{sample}} for use of these optional arguments.
-#' @param contrasts Specification of the contrasts to be used 
-#'  for factor variables (i.e. those variables with .f/_f or .c/_c). 
+#' @param contrasts An optional list that specifies the contrasts to be used 
+#'  for factor variables (i.e. those variables with .f or .c). 
 #'  See \code{\link{contrasts}} for more detail.
 #' @param knot_args A nested list of named knot arguments. See \code{\link{sim_knot}} 
 #'  for more details. Arguments must include:
@@ -448,12 +448,12 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
         cov_param$opts[[xx]]))
     
     Xmat <- do.call(cbind, purrr::invoke_map(lapply(seq_len(n.cont), 
-                                                  function(xx) sim_continuous),
+                                                    function(xx) sim_continuous),
                                              cov_param_args, 
                                              n = n,
                                              k = NULL,
                                              p = NULL
-                                             ))
+    ))
     
     if(!is.null(cor_vars)) {
       Xmat <- corr_variables(Xmat, cor_vars, cov_param, standardize = TRUE)
@@ -461,30 +461,30 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
   } else {
     Xmat <- NULL
   }
-
+  
   if(length(fact.loc) > 0) {
     fact_vars_args <- lapply(seq_len(n.fact), function(xx)
-       c(fact_vars$levels[[xx]], 
-         fact_vars$var_type[[xx]],
-         fact_vars$opts[[xx]])
-      )
+      c(fact_vars$numlevels[[xx]], 
+        fact_vars$var_type[[xx]],
+        fact_vars$opts[[xx]])
+    )
     
     Xmat <- cbind(Xmat, do.call(cbind, purrr::invoke_map(lapply(seq_len(n.fact), 
-                                                    function(xx) sim_factor),
-                                             fact_vars_args, 
-                                             n = n,
-                                             k = NULL,
-                                             p = NULL
+                                                                function(xx) sim_factor),
+                                                         fact_vars_args, 
+                                                         n = n,
+                                                         k = NULL,
+                                                         p = NULL
     ))
     )
   }
   
   if(length(knot_loc) > 0) {
     Xmat <- cbind(Xmat, do.call(cbind, 
-                    purrr::invoke_map(lapply(seq_len(n_knot), 
-                        function(xx) sim_knot),
-                        knot_args$knot_locations,
-                        var = Xmat[, knot_var_loc])))
+                                purrr::invoke_map(lapply(seq_len(n_knot), 
+                                                         function(xx) sim_knot),
+                                                  knot_args$knot_locations,
+                                                  var = Xmat[, knot_var_loc])))
   }
   
   if(n.int == 0){
@@ -514,13 +514,10 @@ sim_fixef_single <- function(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
 #' @param k Number of third level clusters.
 #' @param n Number of clusters or number of observations for single level
 #' @param p Number of within cluster observations for multilevel
-#' @param levels Scalar indicating the number of levels for categorical, 
-#'   factor, or discrete variable. Can also specify levels as a character vector.
-#' @param var_level The level the variable should be simulated at. This can either 
-#'      be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable 
-#'      respectively.
-#' @param replace TRUE/FALSE indicating whether levels should be sampled with 
-#'   replacement. Default is TRUE.
+#' @param numlevels Scalar indicating the number of levels for categorical, 
+#'   factor, or discrete variable
+#' @param var_type Variable type for the variable, must be either 
+#'   "level1", "level2", "level3", or "single"
 #' @param ... Additional parameters passed to the sample function.
 #' @export 
 sim_factor <- function(k = NULL, n, p, numlevels, 
@@ -591,11 +588,10 @@ sim_factor2 <- function(n, levels, var_level = 1, replace = TRUE,
 #' @param k Number of third level clusters.
 #' @param n Number of clusters or number of observations for single level
 #' @param p Number of within cluster observations for multilevel
-#' @param dist A distribution function. This argument takes a quoted
+#' @param dist_fun A distribution function. This argument takes a quoted
 #'      R distribution function (e.g. 'rnorm').
-#' @param var_level The level the variable should be simulated at. This can either 
-#'      be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable 
-#'      respectively.
+#' @param var_type Variable type for the variable, must be either "level1", 
+#'      "level2", "level3", or "single"
 #' @param ... Additional parameters to pass to the dist_fun argument.
 #' @export 
 sim_continuous <- function(k = NULL, n, p, dist_fun,

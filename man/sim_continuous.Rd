@@ -14,14 +14,13 @@ sim_continuous(k = NULL, n, p, dist_fun, var_type = c("level1", "level2",
 
 \item{p}{Number of within cluster observations for multilevel}
 
-\item{...}{Additional parameters to pass to the dist_fun argument.}
-
-\item{dist}{A distribution function. This argument takes a quoted
+\item{dist_fun}{A distribution function. This argument takes a quoted
 R distribution function (e.g. 'rnorm').}
 
-\item{var_level}{The level the variable should be simulated at. This can either 
-be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable 
-respectively.}
+\item{var_type}{Variable type for the variable, must be either "level1", 
+"level2", "level3", or "single"}
+
+\item{...}{Additional parameters to pass to the dist_fun argument.}
 }
 \description{
 Function that simulates continuous variables. Any distribution function in 

@@ -188,45 +188,8 @@ power_out
 
 
 ## Nested Data
-Extending the power analysis to two level models is a straightforward addition. 
-```{r longsim}
-fixed <- ~1 + time + diff + act + time:act
-random <- ~1 + time
-fixed_param <- c(0, 0.2, 0.1, 0.3, 0.05)
-random_param <- list(random_var = c(7, 4), rand_gen = "rnorm")
-cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                  var_type = c("level1", "level2"),
-                  opts = list(list(mean = 0, sd = 1),
-                              list(mean = 0, sd = 1)))
-n <- 150
-p <- 30
-error_var <- 1
-data_str <- "long"
-pow_param <- c('time', 'diff', 'act')
-alpha <- .01
-pow_dist <- "z"
-pow_tail <- 2
-replicates <- 5
-power_out <- sim_pow(fixed = fixed, random = random, 
-                     fixed_param = fixed_param, 
-                     random_param = random_param, cov_param = cov_param, 
-                     k = NULL, n = n, p = p,
-                     error_var = error_var, with_err_gen = "rnorm",
-                     lvl1_err_params = NULL,
-                     data_str = data_str,
-                     pow_param = pow_param, 
-                     alpha = alpha, pow_dist = pow_dist, pow_tail = pow_tail,
-                     replicates = replicates)
-```
+Extending the power analysis to nested data is fairly straightforward. Below is a three level example
 
-A few notes about the `sim_pow` function in relation to nested data. First, the `lmer` function from the `lme4` package is used to fit the models. When `arima = TRUE`, then the nlme package is used, but this is currently not supported. One note, the power simulation takes more computational time compared to the single level example.
-
-The power output is identical to the single level model above:
-```{r longdata}
-power_out
-```
-
-### Three Level Designs
 ```{r three}
 fixed <- ~1 + time + diff + act + actClust + time:act
 random <- ~1 + time
@@ -252,11 +215,13 @@ pow_tail <- 2
 replicates <- 3
 power_out <- sim_pow(fixed = fixed, random = random, random3 = random3,
                      fixed_param = fixed_param,
-                     random_param = random_param, random_param3 = random_param3,
+                     random_param = random_param, 
+                     random_param3 = random_param3,
                      cov_param = cov_param,
                      k = k, n = n, p = p,
                      error_var = error_var, with_err_gen = "rnorm",
-                     data_str = data_str, unbal = list(level2 = FALSE, level3 = FALSE),
+                     data_str = data_str, 
+                     unbal = list(level2 = FALSE, level3 = FALSE),
                      pow_param = pow_param, alpha = alpha,
                      pow_dist = pow_dist, pow_tail = pow_tail, 
                      replicates = replicates)

@@ -14,17 +14,13 @@ sim_factor(k = NULL, n, p, numlevels, var_type = c("level1", "level2",
 
 \item{p}{Number of within cluster observations for multilevel}
 
+\item{numlevels}{Scalar indicating the number of levels for categorical, 
+factor, or discrete variable}
+
+\item{var_type}{Variable type for the variable, must be either 
+"level1", "level2", "level3", or "single"}
+
 \item{...}{Additional parameters passed to the sample function.}
-
-\item{levels}{Scalar indicating the number of levels for categorical, 
-factor, or discrete variable. Can also specify levels as a character vector.}
-
-\item{var_level}{The level the variable should be simulated at. This can either 
-be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable 
-respectively.}
-
-\item{replace}{TRUE/FALSE indicating whether levels should be sampled with 
-replacement. Default is TRUE.}
 }
 \description{
 Function that simulates discrete, factor, or categorical variables.  

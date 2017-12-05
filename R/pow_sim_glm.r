@@ -84,6 +84,9 @@
 #'  as the level two or three sample size. These are specified as a named list in which
 #'  level two sample size is controlled via "level2" and level three sample size is 
 #'  controlled via "level3".
+#' @param contrasts An optional list that specifies the contrasts to be used 
+#'  for factor variables (i.e. those variables with .f or .c). 
+#'  See \code{\link{contrasts}} for more detail.
 #' @param outcome_type A vector specifying the type of outcome, must be either
 #'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
 #'   be counts.
@@ -141,6 +144,7 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
                                 fact_vars = list(NULL), 
                                 unbal = list("level2" = FALSE, "level3" = FALSE), 
                                 unbal_design = list("level2" = NULL, "level3" = NULL),
+                                contrasts = NULL,
                                 outcome_type, cross_class_params = NULL,
                                 knot_args = list(NULL),
                                 missing = FALSE, missing_args = list(NULL),
@@ -163,7 +167,7 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
   data <- sim_glm_nested3(fixed, random, random3, fixed_param, random_param, 
                                random_param3, cov_param, k, n, p, 
                                data_str, cor_vars, fact_vars, 
-                               unbal, unbal_design, outcome_type = outcome_type, 
+                               unbal, unbal_design, contrasts, outcome_type, 
                                cross_class_params, knot_args, ...)
   if(missing) {
     data <- do.call(missing_data, c(list(sim_data = data), 
@@ -288,6 +292,9 @@ sim_pow_glm_nested3 <- function(fixed, random, random3, fixed_param,
 #'  as the level two or three sample size. These are specified as a named list in which
 #'  level two sample size is controlled via "level2" and level three sample size is 
 #'  controlled via "level3".
+#' @param contrasts An optional list that specifies the contrasts to be used 
+#'  for factor variables (i.e. those variables with .f or .c). 
+#'  See \code{\link{contrasts}} for more detail.
 #' @param outcome_type A vector specifying the type of outcome, must be either
 #'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
 #'   be counts.
@@ -344,6 +351,7 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
                           cor_vars = NULL, fact_vars = list(NULL),
                           unbal = list("level2" = FALSE, "level3" = FALSE), 
                           unbal_design = list("level2" = NULL, "level3" = NULL),
+                          contrasts = NULL,
                           outcome_type, cross_class_params = NULL, 
                           knot_args = list(NULL), missing = FALSE, 
                           missing_args = list(NULL), pow_param = NULL, 
@@ -363,7 +371,7 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
 
   data <- sim_glm_nested(fixed, random, fixed_param, random_param, 
                               cov_param, n, p, data_str, cor_vars, fact_vars, 
-                              unbal, unbal_design, outcome_type = outcome_type, 
+                              unbal, unbal_design, contrasts, outcome_type = outcome_type, 
                               cross_class_params, knot_args, ...)
   if(missing) {
     data <- do.call(missing_data, c(list(sim_data = data), 
@@ -457,6 +465,9 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
 #'        \item value.labels
 #'    }
 #'     See also \code{\link{sample}} for use of these optional arguments.
+#' @param contrasts An optional list that specifies the contrasts to be used 
+#'  for factor variables (i.e. those variables with .f or .c). 
+#'  See \code{\link{contrasts}} for more detail.
 #' @param outcome_type A vector specifying the type of outcome, must be either
 #'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
 #'   be counts.
@@ -491,7 +502,8 @@ sim_pow_glm_nested <- function(fixed, random, fixed_param,
 #' @export 
 sim_pow_glm_single <- function(fixed, fixed_param, cov_param, n, data_str, 
                            cor_vars = NULL, fact_vars = list(NULL),
-                           outcome_type, knots_args = list(NULL),
+                           contrasts = NULL,
+                           outcome_type, knot_args = list(NULL),
                            missing = FALSE, missing_args = list(NULL),
                            pow_param = NULL, alpha, pow_dist = c("z", "t"), 
                            pow_tail = c(1, 2), glm_fit_mod = NULL, 
@@ -505,7 +517,7 @@ sim_pow_glm_single <- function(fixed, fixed_param, cov_param, n, data_str,
   }
   
   data <- sim_glm_single(fixed, fixed_param, cov_param, n, data_str, 
-                         cor_vars, fact_vars, outcome_type = outcome_type, 
+                         cor_vars, fact_vars, contrasts, outcome_type, 
                          knot_args, ...)
   if(missing) {
     data <- do.call(missing_data, c(list(sim_data = data), 

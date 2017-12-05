@@ -30,7 +30,7 @@ Does not include intercept, time, factors, or interactions.}
 \item{fact_vars}{A nested list of factor, categorical, or ordinal variable 
    specification, each list must include:
 \itemize{
-     \item levels = Number of levels for ordinal or factor variables.
+     \item numlevels = Number of levels for ordinal or factor variables.
      \item var_type = Must be 'single'.
  }
  Optional arguments passed on to sample in a nested list. These include:
@@ -41,8 +41,8 @@ Does not include intercept, time, factors, or interactions.}
  }
   See also \code{\link{sample}} for use of these optional arguments.}
 
-\item{contrasts}{Specification of the contrasts to be used 
-for factor variables (i.e. those variables with .f/_f or .c/_c). 
+\item{contrasts}{An optional list that specifies the contrasts to be used 
+for factor variables (i.e. those variables with .f or .c). 
 See \code{\link{contrasts}} for more detail.}
 
 \item{knot_args}{A nested list of named knot arguments. See \code{\link{sim_knot}} 

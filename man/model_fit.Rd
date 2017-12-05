@@ -4,7 +4,7 @@
 \alias{model_fit}
 \title{Tidy Model Fitting Function}
 \usage{
-model_fit(data, sim_args, formula = NULL, model_function = NULL, ...)
+model_fit(data, sim_args, ...)
 }
 \arguments{
 \item{data}{A data object, most likely generated from within simglm}
@@ -15,14 +15,9 @@ for more information. The named list may contain the following:
   \item fixed: This is the fixed portion of the model (i.e. covariates)
   \item random: This is the random portion of the model (i.e. random effects)
   \item error: This is the error (i.e. residual term).
+  \item model_fit: These are arguments passed to the \code{\link{model_fit}}
+    function. 
 }}
-
-\item{formula}{A formula for model fitting. If NULL, the default, the 
-same formula for data simulation in used for model fitting.}
-
-\item{model_function}{A model function. By default is 'lm' with no random 
-effect and is 'lmer' with random effects. Able to specify any model
-fitting function.}
 
 \item{...}{Additional arguments needed to pass on to model fitting 
 functions. See specific model fitting functions for specific details.}

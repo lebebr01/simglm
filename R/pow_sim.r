@@ -729,12 +729,13 @@ extract_coefficients <- function(model, extract_function = NULL) {
 #'   expressions for a single replication.
 #' @param ... Other arguments to pass to error simulation functions.
 #' @importFrom purrr rerun
+#' @importFrom dplyr enquo
 #' @examples 
 #' 
 #' @export 
 replicate_simulation <- function(sim_args, expression, ...) {
   
-  expression_quo <- enquo(expression)
+  expression_quo <- dplyr::enquo(expression)
   
   rerun(sim_args$replications, !!expression_quo, ...)
   
@@ -757,6 +758,7 @@ replicate_simulation <- function(sim_args, expression, ...) {
 #'  should be computed. Defaults to TRUE.
 #' @param precision TRUE/FALSE flag indicating whether precision should be 
 #'  computed. Defaults to TRUE.
+#' @importFrom rlang syms
 #' @export
 compute_statistics <- function(data,  sim_args, power = TRUE, 
                                type_1_error = TRUE, precision = TRUE) {
@@ -766,20 +768,29 @@ compute_statistics <- function(data,  sim_args, power = TRUE,
     purrr::map(compute_t1e, sim_args) %>%
     dplyr::bind_rows()
   
+  if(is.null(sim_args$vary_arguments)) {
+    group_vars <- list('term')
+  } else {
+    
+  }
+  
   if(power) {
-    power_computation <- aggregate_power(data_df)
+    power_computation <- aggregate_power(data_df, 
+                                         rlang::syms(group_vars))
   } else {
     power_computation <- NULL
   }
   
   if(type_1_error) {
-    type_1_error_computation <- aggregate_t1e(data_df)
+    type_1_error_computation <- aggregate_t1e(data_df, 
+                                              rlang::syms(group_vars))
   } else {
     type_1_error_computation <- NULL
   }
   
   if(precision) {
-    precision_computation <- aggregate_precision(data_df)
+    precision_computation <- aggregate_precision(data_df, 
+                                                 rlang::syms(group_vars))
   } else {
     precision_computation <- NULL
   }
@@ -803,35 +814,33 @@ compute_t1e <- function(data, sim_args) {
 
 }
 
-aggregate_power <- function(data, group_var = NULL) {
+aggregate_power <- function(data, group_var) {
   
-  if(is.null(group_var)) {
-    data %>%
-      group_by(term) %>%
-      summarise(power = mean(reject))
-  }
+  group_by_var <- dplyr::quos(!!! group_var)
   
+  data %>%
+    group_by(!!! group_by_var) %>%
+    summarise(power = mean(reject))
 }
 
-aggregate_t1e <- function(data, group_var = NULL) {
+aggregate_t1e <- function(data, group_var) {
   
-  if(is.null(group_var)) {
-    data %>%
-      group_by(term) %>%
-      summarise(type_1_error = mean(t1e))
-  }
+  group_by_var <- dplyr::quos(!!! group_var)
   
+  data %>%
+    group_by(!!! group_by_var) %>%
+    summarise(type_1_error = mean(t1e))
+
 }
 
 
-aggregate_precision <- function(data, group_var = NULL) {
+aggregate_precision <- function(data, group_var) {
   
-  if(is.null(group_var)) {
-    data %>%
-      group_by(term) %>%
-      summarise(sd_estimate = sd(estimate),
-                avg_se = mean(std.error),
-                precision_ratio = sd_estimate / avg_se)
-  }
+  group_by_var <- dplyr::quos(!!! group_var)
   
+  data %>%
+    group_by(!!! group_by_var) %>%
+    summarise(sd_estimate = sd(estimate),
+              avg_se = mean(std.error),
+              precision_ratio = sd_estimate / avg_se)
 }

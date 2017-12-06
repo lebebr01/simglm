@@ -758,7 +758,6 @@ replicate_simulation <- function(sim_args, expression, ...) {
 #'  should be computed. Defaults to TRUE.
 #' @param precision TRUE/FALSE flag indicating whether precision should be 
 #'  computed. Defaults to TRUE.
-#' @importFrom rlang syms
 #' @export
 compute_statistics <- function(data,  sim_args, power = TRUE, 
                                type_1_error = TRUE, precision = TRUE) {
@@ -802,15 +801,20 @@ compute_statistics <- function(data,  sim_args, power = TRUE,
 
 compute_power <- function(data, sim_args) {
   
+  power_args <- parse_power(sim_args)
+  
   data %>%
-    mutate(reject = ifelse(abs(statistic) >= 1.96, 1, 0))
+    mutate(!!! power_args$power_ifelse)
   
 }
 
 compute_t1e <- function(data, sim_args) {
   
+  t1e_args <- parse_power(sim_args)
+  
   data %>%
-    mutate(t1e = ifelse(abs((estimate - sim_args$reg_weights) / std.error) >= 1.96, 1, 0))
+    mutate(adjusted_teststat = (estimate - sim_args$reg_weights) / std.error) %>%
+    mutate(!!! t1e_args$t1e_ifelse)
 
 }
 
@@ -828,7 +832,7 @@ aggregate_t1e <- function(data, group_var) {
   group_by_var <- dplyr::quos(!!! group_var)
   
   data %>%
-    group_by(!!! group_by_var) %>%
+    group_by(!!! group_by_var) %>% 
     summarise(type_1_error = mean(t1e))
 
 }
@@ -836,10 +840,10 @@ aggregate_t1e <- function(data, group_var) {
 
 aggregate_precision <- function(data, group_var) {
   
-  group_by_var <- dplyr::quos(!!! group_var)
+  group_by_var <- dplyr::quos(!!! group_var) 
   
   data %>%
-    group_by(!!! group_by_var) %>%
+    group_by(!!! group_by_var) %>% 
     summarise(sd_estimate = sd(estimate),
               avg_se = mean(std.error),
               precision_ratio = sd_estimate / avg_se)

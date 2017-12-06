@@ -74,6 +74,7 @@ parse_randomeffect <- function(formula) {
 #'     \item random: This is the random portion of the model (i.e. random effects)
 #'     \item error: This is the error (i.e. residual term).
 #'   }
+#' @importFrom dplyr quo
 #' @export 
 parse_power <- function(sim_args) {
   

@@ -126,4 +126,7 @@ create_function_calls <- function(sim_args) {
 # See:
 # http://stackoverflow.com/questions/9439256/how-can-i-handle-r-cmd-check-no-visible-binding-for-global-variable-notes-when
 # https://github.com/smbache/magrittr/issues/29
-utils::globalVariables(c('test_stat', 'reject', 'estimate', 'term', 'std.error', '.'))
+utils::globalVariables(c('test_stat', 'reject', 'estimate', 'term', 
+                         'std.error', '.', 'sd_estimate', 'avg_se',
+                         't1e', 'power_args', 'adjusted_teststat',
+                         't1e_args'))

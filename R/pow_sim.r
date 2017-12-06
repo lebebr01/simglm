@@ -734,7 +734,9 @@ extract_coefficients <- function(model, extract_function = NULL) {
 #' @export 
 replicate_simulation <- function(sim_args, expression, ...) {
   
-  rerun(sim_args$replications, expression, ...)
+  expression_quo <- enquo(expression)
+  
+  rerun(sim_args$replications, !!expression_quo, ...)
   
 }
 
@@ -759,20 +761,25 @@ replicate_simulation <- function(sim_args, expression, ...) {
 compute_statistics <- function(data,  sim_args, power = TRUE, 
                                type_1_error = TRUE, precision = TRUE) {
   
+  data_df <- data %>%
+    purrr::map(compute_power, sim_args) %>% 
+    purrr::map(compute_t1e, sim_args) %>%
+    dplyr::bind_rows()
+  
   if(power) {
-    power_computation <- compute_power(data, sim_args)
+    power_computation <- aggregate_power(data_df)
   } else {
     power_computation <- NULL
   }
   
   if(type_1_error) {
-    type_1_error_computation <- compute_t1e(data, sim_args)
+    type_1_error_computation <- aggregate_t1e(data_df)
   } else {
     type_1_error_computation <- NULL
   }
   
   if(precision) {
-    precision_computation <- compute_precision(data, sim_args)
+    precision_computation <- aggregate_precision(data_df)
   } else {
     precision_computation <- NULL
   }
@@ -782,22 +789,49 @@ compute_statistics <- function(data,  sim_args, power = TRUE,
   
 }
 
-compute_power <- function(data, sim_args, group_var = NULL) {
+compute_power <- function(data, sim_args) {
   
-  if(is.null(group_var)) {
-    data %>%
-      summarise(power = )
-  }
+  data %>%
+    mutate(reject = ifelse(abs(statistic) >= 1.96, 1, 0))
   
 }
 
-compute_t1e <- function(data, sim_args, group_var = NULL) {
+compute_t1e <- function(data, sim_args) {
+  
+  data %>%
+    mutate(t1e = ifelse(abs((estimate - sim_args$reg_weights) / std.error) >= 1.96, 1, 0))
+
+}
+
+aggregate_power <- function(data, group_var = NULL) {
   
   if(is.null(group_var)) {
     data %>%
       group_by(term) %>%
-      mutate(t1e = ifelse(abs(statistic) >= 1.96, 1, 0)) %>%
-      summarise(type_1_error = mean(t1e))
+      summarise(power = mean(reject))
   }
+  
 }
 
+aggregate_t1e <- function(data, group_var = NULL) {
+  
+  if(is.null(group_var)) {
+    data %>%
+      group_by(term) %>%
+      summarise(type_1_error = mean(t1e))
+  }
+  
+}
+
+
+aggregate_precision <- function(data, group_var = NULL) {
+  
+  if(is.null(group_var)) {
+    data %>%
+      group_by(term) %>%
+      summarise(sd_estimate = sd(estimate),
+                avg_se = mean(std.error),
+                precision_ratio = sd_estimate / avg_se)
+  }
+  
+}

@@ -108,40 +108,12 @@ parse_power <- function(sim_args) {
                                   p = alpha, 
                                   lower.tail = lower_tail,
                                   sim_args$power$opts)
-  
-  if(sim_args$power$direction == 'lower') {
-    power_ifelse_statement <- list(reject = 
-          quo(ifelse(estimate <= power_args['test_statistic'], 
-                     yes = 1, no = 0)))
-    t1e_ifelse_statement <- list(t1e = 
-         quo(ifelse(adjusted_teststat <= t1e_args['test_statistic'], 
-                     yes = 1, no = 0)))
-  } else {
-    if(sim_args$power$direction == 'upper') {
-      power_ifelse_statement <- list(reject = 
-          quo(ifelse(estimate >= power_args['test_statistic'], 
-                     yes = 1, no = 0)))
-      t1e_ifelse_statement <- list(t1e = 
-          quo(ifelse(adjusted_teststat >= t1e_args['test_statistic'], 
-                     yes = 1, no = 0)))
-    } else {
-      power_ifelse_statement <- list(reject = 
-          quo(ifelse(abs(estimate) >= power_args['test_statistic'], 
-                     yes = 1, no = 0)))
-      t1e_ifelse_statement <- list(t1e = 
-          quo(ifelse(abs(adjusted_teststat) <= t1e_args['test_statistic'], 
-                     yes = 1, no = 0)))
-    }
-  }
-  
-  
+
   list(test_statistic = test_statistic,
        alpha = sim_args$power$alpha, 
        number_tails = number_tails,
        direction = sim_args$power$direction,
-       distribution = sim_args$power$dist,
-       power_ifelse = power_ifelse_statement,
-       t1e_ifelse = t1e_ifelse_statement
+       distribution = sim_args$power$dist
   )
   
 }

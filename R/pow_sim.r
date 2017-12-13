@@ -758,7 +758,6 @@ replicate_simulation <- function(sim_args, expression, ...) {
 #'  should be computed. Defaults to TRUE.
 #' @param precision TRUE/FALSE flag indicating whether precision should be 
 #'  computed. Defaults to TRUE.
-#' @importFrom rlang syms
 #' @importFrom dplyr mutate
 #' @export
 compute_statistics <- function(data,  sim_args, power = TRUE, 
@@ -805,19 +804,42 @@ compute_power <- function(data, sim_args) {
   
   power_args <- parse_power(sim_args)
   
-  data %>%
-    mutate(!!! power_args$power_ifelse)
-  
+  if(power_args$direction == 'lower') {
+    data %>%
+      mutate(reject = ifelse(estimate <= power_args['test_statistic'], 1, 0))
+  } else {
+    if(power_args$direction == 'upper') {
+      data %>%
+        mutate(reject = ifelse(estimate >= power_args['test_statistic'], 1, 0))
+    } else {
+      data %>%
+        mutate(reject = ifelse(abs(estimate) >= power_args['test_statistic'], 1, 0))
+    }
+  }
 }
 
 compute_t1e <- function(data, sim_args) {
   
   t1e_args <- parse_power(sim_args)
   
-  data %>%
-    mutate(adjusted_teststat = (estimate - sim_args$reg_weights) / std.error) %>%
-    mutate(!!! t1e_args$t1e_ifelse)
-
+  if(t1e_args$direction == 'lower') {
+    data %>%
+      mutate(adjusted_teststat = (estimate - sim_args$reg_weights) / std.error,
+             t1e = ifelse(adjusted_teststat <= t1e_args['test_statistic'], 
+                          1, 0))
+  } else {
+    if(t1e_args$direction == 'upper') {
+      data %>%
+        mutate(adjusted_teststat = (estimate - sim_args$reg_weights) / std.error,
+               t1e = ifelse(adjusted_teststat >= t1e_args['test_statistic'], 
+                            1, 0))
+    } else {
+      data %>%
+        mutate(adjusted_teststat = (estimate - sim_args$reg_weights) / std.error,
+               t1e = ifelse(abs(adjusted_teststat) >= t1e_args['test_statistic'], 
+                            1, 0))
+    }
+  }
 }
 
 aggregate_power <- function(data, group_var) {

@@ -877,7 +877,7 @@ aggregate_precision <- function(data, group_var) {
   
   data %>%
     group_by(!!! group_by_var) %>% 
-    summarise(sd_estimate = sd(estimate),
-              avg_se = mean(std.error),
+    summarise(param_estimate_sd = sd(estimate),
+              avg_standard_error = mean(std.error),
               precision_ratio = sd_estimate / avg_se)
 }

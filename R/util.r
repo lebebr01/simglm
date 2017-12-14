@@ -107,19 +107,9 @@ create_ids <- function(sample_size_list, id_names) {
   id_vars
 }
 
-
-create_function_calls <- function(sim_args) {
-  
-  sim_args_names <- names(sim_args)
-  
-  simulate_functions <- paste('simulate', 
-      sim_args_names[sim_args_names %in% c('fixed', 'randomeffect', 'error')],
-      sep = '_')
-  
-  
+remove_duplicate_columns <- function(x) {
   
 }
-
 
 # Horrible hack to keep CRAN happy and suppress NOTES about
 # parts of the code that use non-standard evaluation.

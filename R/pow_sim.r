@@ -795,8 +795,17 @@ compute_statistics <- function(data,  sim_args, power = TRUE,
     precision_computation <- NULL
   }
   
-  dplyr::bind_cols(power_computation, type_1_error_computation, 
-                   precision_computation)
+  statistics <- dplyr::bind_cols(power_computation, 
+                                 type_1_error_computation, 
+                                 precision_computation) 
+  
+  select_columns <- rlang::syms(names(statistics)[names(statistics) %ni%
+                       regmatches(names(statistics), regexpr("^term[0-9]+", 
+                                            names(statistics)))])
+  
+  statistics <- dplyr::select(statistics, !!! select_columns)
+  
+  statistics
   
 }
 

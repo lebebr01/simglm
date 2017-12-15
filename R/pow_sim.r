@@ -837,7 +837,7 @@ compute_t1e <- function(data, sim_args) {
     reg_weights <- sim_args$model_fit$reg_weights
   }
   
-  if(nrow(data) != reg_weights) {
+  if(nrow(data) != length(reg_weights)) {
     stop("Check reg_weights in model_fit simulation arguments, must specify 
          reg_weights if specifying model")
   }

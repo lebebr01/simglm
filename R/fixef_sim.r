@@ -718,7 +718,7 @@ simulate_fixed <- function(data, sim_args, ...) {
   
   fixed_formula <- parse_formula(sim_args)$fixed
   
-  fixed_vars <- attr(terms(fixed_formula),"term.labels")  
+  fixed_vars <- attr(terms(fixed_formula), "term.labels")  
   
   if(any(grepl('^factor\\(', fixed_vars))) {
     fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)

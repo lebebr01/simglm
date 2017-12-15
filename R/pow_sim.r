@@ -831,20 +831,31 @@ compute_t1e <- function(data, sim_args) {
   
   t1e_args <- parse_power(sim_args)
   
+  if(nrow(data) == length(sim_args$reg_weights)) {
+    reg_weights <- sim_args$reg_weights
+  } else {
+    reg_weights <- sim_args$model_fit$reg_weights
+  }
+  
+  if(nrow(data) != reg_weights) {
+    stop("Check reg_weights in model_fit simulation arguments, must specify 
+         reg_weights if specifying model")
+  }
+  
   if(t1e_args$direction == 'lower') {
     data %>%
-      mutate(adjusted_teststat = (estimate - sim_args$reg_weights) / std.error,
+      mutate(adjusted_teststat = (estimate - reg_weights) / std.error,
              t1e = ifelse(adjusted_teststat <= t1e_args['test_statistic'], 
                           1, 0))
   } else {
     if(t1e_args$direction == 'upper') {
       data %>%
-        mutate(adjusted_teststat = (estimate - sim_args$reg_weights) / std.error,
+        mutate(adjusted_teststat = (estimate - reg_weights) / std.error,
                t1e = ifelse(adjusted_teststat >= t1e_args['test_statistic'], 
                             1, 0))
     } else {
       data %>%
-        mutate(adjusted_teststat = (estimate - sim_args$reg_weights) / std.error,
+        mutate(adjusted_teststat = (estimate - reg_weights) / std.error,
                t1e = ifelse(abs(adjusted_teststat) >= t1e_args['test_statistic'], 
                             1, 0))
     }
@@ -879,5 +890,5 @@ aggregate_precision <- function(data, group_var) {
     group_by(!!! group_by_var) %>% 
     summarise(param_estimate_sd = sd(estimate),
               avg_standard_error = mean(std.error),
-              precision_ratio = sd_estimate / avg_se)
+              precision_ratio = param_estimate_sd / avg_standard_error)
 }

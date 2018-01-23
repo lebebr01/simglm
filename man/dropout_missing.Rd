@@ -4,13 +4,16 @@
 \alias{dropout_missing}
 \title{Dropout Missing Data}
 \usage{
-dropout_missing(sim_data, resp_var = "sim_data", clust_var = "clustID",
-  within_id = "withinID", miss_prop)
+dropout_missing(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
+  clust_var = "clustID", within_id = "withinID", miss_prop)
 }
 \arguments{
 \item{sim_data}{Simulated data frame}
 
-\item{resp_var}{Response variable to add missing data to}
+\item{resp_var}{Character string of response variable with complete data.}
+
+\item{new_outcome}{Character string of new outcome variable name that includes
+the missing data.}
 
 \item{clust_var}{Cluster variable used for the grouping.}
 

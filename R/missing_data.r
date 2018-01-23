@@ -4,7 +4,9 @@
 #' missing data mechanisms.
 #' 
 #' @param sim_data Simulated data frame
-#' @param resp_var Response variable to add missing data to
+#' @param resp_var Character string of response variable with complete data.
+#' @param new_outcome Character string of new outcome variable name that includes
+#'   the missing data.
 #' @param clust_var Cluster variable used for the grouping, set to 
 #'           NULL by default which means no clustering.
 #' @param within_id ID variable within each cluster.
@@ -16,16 +18,34 @@
 #' @param miss_cov Covariate that the missing values are based on.
 #' @export 
 missing_data <- function(sim_data, resp_var = 'sim_data',
+                         new_outcome = 'sim_data2',
                          clust_var = NULL, within_id = NULL, miss_prop,
                          type = c('dropout', 'random', 'mar'),
                          miss_cov) {
   switch(type,
-         dropout = dropout_missing(sim_data, resp_var, clust_var, 
+         dropout = dropout_missing(sim_data, resp_var, new_outcome, clust_var, 
                                    within_id, miss_prop),
-         random = random_missing(sim_data, resp_var, miss_prop, 
+         random = random_missing(sim_data, resp_var, new_outcome, miss_prop, 
                                  clust_var, within_id),
-         mar = mar_missing(sim_data, resp_var, miss_cov, miss_prop)
+         mar = mar_missing(sim_data, resp_var, new_outcome, miss_cov, miss_prop)
          )
+}
+
+#' Tidy Missing Data Function
+#' 
+#' @param data Data simulated from other functions to pass to this function.
+#' @param sim_args A named list with special model formula syntax. See details and examples
+#'   for more information. The named list may contain the following:
+#'   \itemize{
+#'     \item fixed: This is the fixed portion of the model (i.e. covariates)
+#'     \item random: This is the random portion of the model (i.e. random effects)
+#'     \item error: This is the error (i.e. residual term).
+#'   }
+#' @export 
+generate_missing <- function(data, sim_args) {
+  purrr::invoke("missing_data",
+                    sim_args$missing_data,
+                    sim_data = data)
 }
 
 #' Dropout Missing Data
@@ -42,7 +62,9 @@ missing_data <- function(sim_data, resp_var = 'sim_data',
 #' NA named 'sim_data2'.
 #' 
 #' @param sim_data Simulated data frame
-#' @param resp_var Response variable to add missing data to
+#' @param resp_var Character string of response variable with complete data.
+#' @param new_outcome Character string of new outcome variable name that includes
+#'   the missing data.
 #' @param clust_var Cluster variable used for the grouping.
 #' @param within_id ID variable within each cluster.
 #' @param miss_prop Proportion of missing data overall or a vector
@@ -50,6 +72,7 @@ missing_data <- function(sim_data, resp_var = 'sim_data',
 #'           percentage of missing data for each cluster
 #' @export 
 dropout_missing <- function(sim_data, resp_var = 'sim_data', 
+                            new_outcome = 'sim_data2', 
                         clust_var = 'clustID', within_id = "withinID", 
                         miss_prop) {
   
@@ -93,13 +116,13 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
   
   data_split <- split(sim_data, sim_data[, clust_var])
   
-  sim_data$missing <- do.call("c", lapply(1:length(missing_obs), function(xx)
+  sim_data['missing'] <- do.call("c", lapply(1:length(missing_obs), function(xx)
     ifelse(data_split[[xx]][, within_id] %in% missing_obs[[xx]], 1, 0)))
   
-  sim_data$sim_data2 <- with(sim_data, ifelse(missing == 1, NA, 
-                                              eval(parse(text = resp_var))))
+  sim_data[new_outcome] <- sim_data[resp_var]
+  sim_data[sim_data['missing'] == 1, new_outcome] <- NA
   
-  tibble::as_tibble(sim_data)
+  sim_data
 }
 
 
@@ -117,14 +140,17 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
 #' NA named 'sim_data2'.
 #' 
 #' @param sim_data Simulated data frame
-#' @param resp_var Response variable to add missing data to
+#' @param resp_var Character string of response variable with complete data.
+#' @param new_outcome Character string of new outcome variable name that includes
+#'   the missing data.
 #' @param miss_prop Proportion of missing data overall or a vector
 #'           the same length as the number of clusters representing the
 #'           percentage of missing data for each cluster
 #' @param clust_var Cluster variable used for the grouping.
 #' @param within_id ID variable within each cluster.
 #' @export 
-random_missing <- function(sim_data, resp_var = 'sim_data', miss_prop,
+random_missing <- function(sim_data, resp_var = 'sim_data', 
+                           new_outcome = 'sim_data2', miss_prop,
                            clust_var = NULL, within_id = "withinID") {
   
   if(resp_var %ni% names(sim_data)) {
@@ -134,10 +160,10 @@ random_missing <- function(sim_data, resp_var = 'sim_data', miss_prop,
   sim_data <- data.frame(sim_data)
 
   if(is.null(clust_var)){
-    sim_data$miss_prob <- round(runif(nrow(sim_data)), 3)
-    sim_data$missing <- with(sim_data, ifelse(miss_prob < miss_prop, 1, 0))
-    sim_data$sim_data2 <- with(sim_data, ifelse(missing == 1, NA, 
-                                                eval(parse(text = resp_var))))
+    sim_data['miss_prob'] <- round(runif(nrow(sim_data)), 3)
+    sim_data['missing'] <- ifelse(sim_data['miss_prob'] < miss_prop, 1, 0)
+    sim_data[new_outcome] <- sim_data[resp_var]
+    sim_data[sim_data['missing'] == 1, new_outcome] <- NA
   } else {
     if(clust_var %ni% names(sim_data)) {
       stop(paste(clust_var, 'not found in variables of data supplied'))
@@ -174,14 +200,14 @@ random_missing <- function(sim_data, resp_var = 'sim_data', miss_prop,
     
     data_split <- split(sim_data, sim_data[, clust_var])
     
-    sim_data$missing <- do.call("c", lapply(1:length(missing_obs), function(xx)
+    sim_data['missing'] <- do.call("c", lapply(1:length(missing_obs), function(xx)
       ifelse(data_split[[xx]][, within_id] %in% missing_obs[[xx]], 1, 0)))
     
-    sim_data$sim_data2 <- with(sim_data, ifelse(missing == 1, NA, 
-                                                eval(parse(text = resp_var))))
+    sim_data[new_outcome] <- sim_data[resp_var]
+    sim_data[sim_data['missing'] == 1, new_outcome] <- NA
   }
 
-  tibble::as_tibble(sim_data)
+  sim_data
 }
 
 #' Missing at Random
@@ -193,13 +219,16 @@ random_missing <- function(sim_data, resp_var = 'sim_data', miss_prop,
 #' due to another covariate.
 #' 
 #' @param sim_data Simulated data frame
-#' @param resp_var Response variable to add missing data to
+#' @param resp_var Character string of response variable with complete data.
+#' @param new_outcome Character string of new outcome variable name that includes
+#'   the missing data.
 #' @param miss_cov Covariate that the missing values are based on.
 #' @param miss_prop A vector the same length as the number of unique values 
 #'           from miss_cov variable.
 #' @importFrom dplyr arrange
 #' @export 
-mar_missing <- function(sim_data, resp_var, miss_cov, miss_prop) {
+mar_missing <- function(sim_data, resp_var = 'sim_data', 
+                        new_outcome = 'sim_data2', miss_cov, miss_prop) {
   
   if(as.character(resp_var) %ni% names(sim_data)) {
     stop(paste(resp_var, 'not found in variables of data supplied'))
@@ -225,5 +254,5 @@ mar_missing <- function(sim_data, resp_var, miss_cov, miss_prop) {
                        with(sim_data2, ifelse(miss_prob < miss_prop, NA, 
                                               eval(parse(text = resp_var)))))
   
-  tibble::as_tibble(sim_data2)
+  sim_data2
 }

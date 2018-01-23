@@ -119,4 +119,4 @@ remove_duplicate_columns <- function(x) {
 utils::globalVariables(c('test_stat', 'reject', 'estimate', 'term', 
                          'std.error', '.', 'sd_estimate', 'avg_se',
                          't1e', 'power_args', 'adjusted_teststat',
-                         't1e_args'))
+                         't1e_args', 'param_estimate_sd', 'avg_standard_error'))

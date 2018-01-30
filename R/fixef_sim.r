@@ -685,15 +685,39 @@ sim_knot <- function(var, knot_locations, right = FALSE) {
   cut(var, knot_locat, labels = FALSE, right = right) - 1
 }
 
-sim_variable <- function(var_type = c("continuous", "factor", "ordinal", "knot"), 
-                         ...) {
+#' Simulate Time
+#' 
+#' This function simulates data for the time variable of longitudinal data.
+#' 
+#' @param n Sample size of the levels.
+#' @param time_levels The values the time variable should take. If NULL (default),
+#'   the time values are discrete integers starting at 0 and going to n - 1.
+#' 
+#' @export 
+sim_time <- function(n, time_levels = NULL, ...) {
+  
+  if(is.null(time_levels)) {
+    do.call('c', 
+            lapply(seq_along(n[['level1']]), function(xx) 
+              0:(n[['level1']][xx] - 1)))
+  } else {
+    do.call('c', 
+            lapply(seq_along(n[['level1']]), function(xx)
+              time_levels[1:n[['level1']][xx]]))
+  }
+  
+}
+
+sim_variable <- function(var_type = c("continuous", "factor", "ordinal", 
+                                      "knot", 'time'), ...) {
   var_type <- match.arg(var_type)
   
   switch(var_type,
     continuous = sim_continuous2(...),
     factor = sim_factor2(...),
     ordinal = sim_factor2(...),
-    knot = sim_knot(...)
+    knot = sim_knot(...),
+    time = sim_time(...)
   )
 }
 

@@ -87,15 +87,15 @@ sample_size_level3 <- function(sample_size) {
 create_ids <- function(sample_size_list, id_names) {
   
   if(length(id_names) == 3) {
-    id_vars <- data.frame(unlist(lapply(1:length(sample_size_list[['level1']]), 
+    id_vars <- data.frame(unlist(lapply(seq_along(sample_size_list[['level1']]), 
                                         function(xx) 1:sample_size_list[['level1']][xx])),
                           rep(1:sum(sample_size_list[['level2']]), times = sample_size_list[['level1']]),
                           rep(1:sample_size_list[['level3']], times = sample_size_list[['level3_total']])
     )
   } else {
     if(length(id_names) == 2) {
-      id_vars <- data.frame(unlist(lapply(1:length(sample_size_list[['level1']]), 
-                                          function(xx) 1:sample_size_list[['level1']])),
+      id_vars <- data.frame(unlist(lapply(seq_along(sample_size_list[['level1']]), 
+                                          function(xx) 1:sample_size_list[['level1']][xx])),
                             rep(1:sum(sample_size_list[['level2']]), times = sample_size_list[['level1']])
       )
     } else {

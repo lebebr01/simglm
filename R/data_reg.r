@@ -124,8 +124,8 @@ data_reg_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3,
 #' @export 
 generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   
-  outcome_name <- parse_formula(sim_args)$outcome
-  fixed_formula <- parse_formula(sim_args)$fixed
+  outcome_name <- parse_formula(sim_args)[['outcome']]
+  fixed_formula <- parse_formula(sim_args)[['fixed']]
   
   fixed_vars <- attr(terms(fixed_formula),"term.labels")
   
@@ -142,12 +142,12 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     Xmat <- cbind(data['X.Intercept.'], Xmat)
   }
   
-  fixed_outcome <- as.matrix(Xmat) %*% sim_args$reg_weights
+  fixed_outcome <- as.matrix(Xmat) %*% sim_args[['reg_weights']]
   
-  if(length(parse_formula(sim_args)$randomeffect) != 0) {
-    random_formula <- parse_formula(sim_args)$randomeffect
+  if(length(parse_formula(sim_args)[['randomeffect']]) != 0) {
+    random_formula <- parse_formula(sim_args)[['randomeffect']]
     random_formula_parsed <- parse_randomeffect(random_formula)
-    random_effects_names <- names(sim_args$randomeffect)
+    random_effects_names <- names(sim_args[['randomeffect']])
     
     random_formula <- lapply(seq_along(random_formula_parsed[['random_effects']]), function(xx) 
       as.formula(random_formula_parsed[['random_effects']][xx]))

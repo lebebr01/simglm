@@ -212,16 +212,16 @@ simulate_error <- function(data, sim_args, ...) {
   if(is.null(data)) {
     n <- sample_sizes(sim_args[['sample_size']])
     ids <- create_ids(n, 
-                      c('level1_id', parse_randomeffect(parse_formula(sim_args)$randomeffect)$cluster_id_vars))
+                      c('level1_id', parse_randomeffect(parse_formula(sim_args)[['randomeffect']])[['cluster_id_vars']]))
     sim_args['gen_sample_sizes'] <<- list(n)
     error <- purrr::invoke(sim_error, 
-                           sim_args$error,
+                           sim_args[['error']],
                            n = n
     ) %>% 
       unlist()
   } else {
     error <- purrr::invoke(sim_error, 
-                           sim_args$error,
+                           sim_args[['error']],
                            n = sim_args[['gen_sample_sizes']]
     ) %>% 
       unlist()

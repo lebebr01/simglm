@@ -737,7 +737,14 @@ replicate_simulation <- function(sim_args, expression, ...) {
   
   expression_quo <- dplyr::enquo(expression)
   
-  rerun(sim_args$replications, !!expression_quo, ...)
+  if(!is.null(sim_args[['vary_arguments']])) {
+    sim_args <- parse_varyarguments(sim_args)
+    
+    lapply(sim_args, rerun(sim_args['replications'], !!expression_quo, ...)
+      )
+  } else {
+    rerun(sim_args['replications'], !!expression_quo, ...)
+  }
   
 }
 

@@ -650,7 +650,7 @@ sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1,
   }
   
   if(!is.null(variance)) {
-    cont_var <- cont_var %*% chol(c(variance))
+    cont_var <- cont_var %*% chol(c(sqrt(variance)))
   }
   
   cont_var

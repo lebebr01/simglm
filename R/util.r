@@ -107,10 +107,6 @@ create_ids <- function(sample_size_list, id_names) {
   id_vars
 }
 
-remove_duplicate_columns <- function(x) {
-  
-}
-
 # Horrible hack to keep CRAN happy and suppress NOTES about
 # parts of the code that use non-standard evaluation.
 # See:

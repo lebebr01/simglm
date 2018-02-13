@@ -806,6 +806,8 @@ compute_statistics <- function(data,  sim_args, power = TRUE,
   
   statistics <- dplyr::select(statistics, !!! select_columns)
   
+  statistics['replications'] <- sim_args['replications']
+  
   statistics
   
 }
@@ -816,14 +818,14 @@ compute_power <- function(data, sim_args) {
   
   if(power_args$direction == 'lower') {
     data %>%
-      mutate(reject = ifelse(estimate <= power_args['test_statistic'], 1, 0))
+      mutate(reject = ifelse(statistic <= power_args['test_statistic'], 1, 0))
   } else {
     if(power_args$direction == 'upper') {
       data %>%
-        mutate(reject = ifelse(estimate >= power_args['test_statistic'], 1, 0))
+        mutate(reject = ifelse(statistic >= power_args['test_statistic'], 1, 0))
     } else {
       data %>%
-        mutate(reject = ifelse(abs(estimate) >= power_args['test_statistic'], 1, 0))
+        mutate(reject = ifelse(abs(statistic) >= power_args['test_statistic'], 1, 0))
     }
   }
 }
@@ -869,7 +871,8 @@ aggregate_power <- function(data, group_var) {
   
   data %>%
     group_by(!!! group_by_var) %>%
-    summarise(power = mean(reject))
+    summarise(power = mean(reject),
+              avg_test_stat = mean(statistic))
 }
 
 aggregate_t1e <- function(data, group_var) {
@@ -878,7 +881,8 @@ aggregate_t1e <- function(data, group_var) {
   
   data %>%
     group_by(!!! group_by_var) %>% 
-    summarise(type_1_error = mean(t1e))
+    summarise(type_1_error = mean(t1e),
+              avg_adjtest_stat = mean(adjusted_teststat))
 
 }
 

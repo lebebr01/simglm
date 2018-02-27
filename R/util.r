@@ -107,6 +107,34 @@ create_ids <- function(sample_size_list, id_names) {
   id_vars
 }
 
+compute_samplesize <- function(data, sim_args) {
+  
+  id_vars <- parse_randomeffect(parse_formula(sim_args)[['randomeffect']])[['cluster_id_vars']]
+  
+  samp_size <- lapply(seq_along(id_vars), function(xx) as.numeric(table(data[id_vars[xx]])))
+  
+  if(length(id_vars) == 2) {
+    level2_ss <- aggregate(as.formula(paste0(id_vars[1], "~", id_vars[2])),
+                           data = data, 
+                           FUN = length_unique)[[2]]
+    
+    list(level1 = samp_size[[1]],
+         level2 = level2_ss,
+         level3 = sim_args[['sample_size']][['level3']],
+         level3_total = samp_size[[2]])
+  } else {
+    if(length(id_vars) == 1) {
+      list(level1 = samp_size[[1]],
+           level2 = sim_args[['sample_size']][['level2']])
+    } else {
+      list(level1 = sim_args[['sample_size']])
+    }
+  }
+}
+
+length_unique <- function(x) length(unique(x))
+
+
 # Horrible hack to keep CRAN happy and suppress NOTES about
 # parts of the code that use non-standard evaluation.
 # See:

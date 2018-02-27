@@ -632,10 +632,15 @@ sim_continuous <- function(k = NULL, n, p, dist_fun,
 #'      be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable 
 #'      respectively.
 #' @param variance The variance for random effect simulation.
+#' @param ther_sim A TRUE/FALSE flag indicating whether the error simulation 
+#'  function should be simulated, that is should the mean and standard deviation
+#'  used for standardization be simulated. Can optionally be a vector of length
+#'  two that directly specifies the theoretical mean/variance of the generated 
+#'  distribution.
 #' @param ... Additional parameters to pass to the dist_fun argument.
 #' @export 
 sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1, 
-                            variance = NULL, ...) {
+                            variance = NULL, ther_sim = FALSE, ...) {
   
   if(var_level == 1) {
     cont_var <- unlist(lapply(n[['level1']], FUN = dist, ...))
@@ -650,6 +655,16 @@ sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1,
   }
   
   if(!is.null(variance)) {
+    if(ther_sim) {
+      ther_val <- do.call(dist, c(list(n = 10000000), ...))
+      ther <- c(mean(ther_val), sd(ther_val))
+      
+      cont_var <- standardize(cont_var, ther[1], ther[2])
+    }
+    if(length(ther_sim) == 2) {
+      cont_var <- standardize(cont_var, ther_sim[1], ther_sim[2])
+    }
+    
     cont_var <- cont_var %*% chol(c(sqrt(variance)))
   }
   
@@ -740,7 +755,7 @@ sim_variable <- function(var_type = c("continuous", "factor", "ordinal",
 #' @export 
 simulate_fixed <- function(data, sim_args, ...) {
   
-  fixed_formula <- parse_formula(sim_args)$fixed
+  fixed_formula <- parse_formula(sim_args)[['fixed']]
   
   fixed_vars <- attr(terms(fixed_formula), "term.labels")  
   
@@ -751,17 +766,17 @@ simulate_fixed <- function(data, sim_args, ...) {
   if(is.null(data)) {
     n <- sample_sizes(sim_args[['sample_size']])
     ids <- create_ids(n, 
-                      c('level1_id', parse_randomeffect(parse_formula(sim_args)$randomeffect)$cluster_id_vars))
-    sim_args['gen_sample_sizes'] <<- list(n)
+                      c('level1_id', parse_randomeffect(parse_formula(sim_args)[['randomeffect']])[['cluster_id_vars']]))
     Xmat <- purrr::invoke_map("sim_variable", 
-                              sim_args$fixed,
+                              sim_args[['fixed']],
                               n = n
     ) %>% 
       data.frame()
   } else {
+    n <- compute_samplesize(data, sim_args)
     Xmat <- purrr::invoke_map("sim_variable", 
-                              sim_args$fixed,
-                              n = sim_args[['gen_sample_sizes']]
+                              sim_args[['fixed']],
+                              n = n
     ) %>% 
       data.frame()
   }
@@ -772,8 +787,8 @@ simulate_fixed <- function(data, sim_args, ...) {
   } else {
     colnames(Xmat) <- fixed_vars
   } 
-  if(any(unlist(lapply(seq_along(sim_args$fixed), function(xx) 
-    sim_args$fixed[[xx]]$var_type)) == 'factor')) {
+  if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
+    sim_args[['fixed']][[xx]]$var_type)) == 'factor')) {
     Omat <- Xmat
     Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))
     colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars

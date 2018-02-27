@@ -4,7 +4,8 @@
 \alias{sim_continuous2}
 \title{Simulate continuous variables}
 \usage{
-sim_continuous2(n, dist = "rnorm", var_level = 1, variance = NULL, ...)
+sim_continuous2(n, dist = "rnorm", var_level = 1, variance = NULL,
+  ther_sim = FALSE, ...)
 }
 \arguments{
 \item{n}{A list of sample sizes.}
@@ -17,6 +18,12 @@ be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable
 respectively.}
 
 \item{variance}{The variance for random effect simulation.}
+
+\item{ther_sim}{A TRUE/FALSE flag indicating whether the error simulation 
+function should be simulated, that is should the mean and standard deviation
+used for standardization be simulated. Can optionally be a vector of length
+two that directly specifies the theoretical mean/variance of the generated 
+distribution.}
 
 \item{...}{Additional parameters to pass to the dist_fun argument.}
 }

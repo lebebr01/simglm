@@ -121,7 +121,6 @@ simulate_randomeffect <- function(data, sim_args, ...) {
     n <- sample_sizes(sim_args[['sample_size']])
     ids <- create_ids(n, 
                       c('level1_id', random_formula_parsed$cluster_id_vars))
-    sim_args['gen_sample_sizes'] <- list(n)
     Zmat <- purrr::invoke_map("sim_variable", 
                               sim_args$random,
                               n = n,
@@ -129,9 +128,10 @@ simulate_randomeffect <- function(data, sim_args, ...) {
     ) %>% 
       data.frame()
   } else {
+    n <- compute_samplesize(data, sim_args)
     Zmat <- purrr::invoke_map("sim_variable", 
                               sim_args$random,
-                              n = sim_args[['gen_sample_sizes']],
+                              n = n,
                               var_type = 'continuous'
     ) %>% 
       data.frame()

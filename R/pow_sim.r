@@ -738,12 +738,19 @@ replicate_simulation <- function(sim_args, expression, ...) {
   expression_quo <- dplyr::enquo(expression)
   
   if(!is.null(sim_args[['vary_arguments']])) {
-    sim_args <- parse_varyarguments(sim_args)
+    sim_args2 <- parse_varyarguments(sim_args)
     
-    lapply(sim_args, rerun(sim_args['replications'], !!expression_quo, ...)
-      )
+    power_output <- vector("list", length = length(sim_args2))
+    for(i in seq_along(sim_args2)) {
+      sim_args <- sim_args2[[i]]
+      
+     power_output[[i]] <- rerun(sim_args[['replications']], !!expression_quo, ...)
+    }
+    
+    power_output
+      
   } else {
-    rerun(sim_args['replications'], !!expression_quo, ...)
+    rerun(sim_args[['replications']], !!expression_quo, ...)
   }
   
 }

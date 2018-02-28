@@ -16,11 +16,11 @@
 #' 
 parse_formula <- function(sim_args) {
   
-  outcome <- sim_args$formula %>%
+  outcome <- sim_args[['formula']] %>%
     as.character() %>%
     .[2]
   
-  fixed <- sim_args$formula %>%
+  fixed <- sim_args[['formula']] %>%
     as.character() %>%
     .[3] %>%
     gsub("\\+\\s*(\\s+|\\++)\\(.*?\\)", "", .) %>%
@@ -28,7 +28,7 @@ parse_formula <- function(sim_args) {
     paste0("~", .) %>%
     as.formula()
   
-  randomeffect <- sim_args$formula %>%
+  randomeffect <- sim_args[['formula']] %>%
     as.character() %>%
     .[3] %>%
     regmatches(gregexpr("(\\+|\\s+)\\(.*?\\)", .)) %>%

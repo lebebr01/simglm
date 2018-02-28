@@ -730,27 +730,36 @@ extract_coefficients <- function(model, extract_function = NULL) {
 #' @param ... Other arguments to pass to error simulation functions.
 #' @importFrom purrr rerun
 #' @importFrom dplyr enquo
+#' @importFrom tibble data_frame
 #' @examples 
 #' 
 #' @export 
 replicate_simulation <- function(sim_args, expression, ...) {
   
-  expression_quo <- dplyr::enquo(expression)
-  
   if(!is.null(sim_args[['vary_arguments']])) {
+    conditions <- data.frame(sapply(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE),
+                         as.character))
     sim_args2 <- parse_varyarguments(sim_args)
     
     power_output <- vector("list", length = length(sim_args2))
     for(i in seq_along(sim_args2)) {
-      sim_args <- sim_args2[[i]]
+      sim_args <<- sim_args2[[i]]
+      expression_quo <- dplyr::enquo(expression)
       
-     power_output[[i]] <- rerun(sim_args[['replications']], !!expression_quo, ...)
+     power_output[[i]] <- purrr::rerun(sim_args[['replications']], 
+                                       !!expression_quo, ...)
     }
     
-    power_output
+    power_list <- lapply(seq_along(power_output), function(xx) 
+      data.frame(conditions[xx, ], 
+                 dplyr::bind_rows(power_output[[xx]]),
+                 row.names = NULL))
+    
+    power_list
       
   } else {
-    rerun(sim_args[['replications']], !!expression_quo, ...)
+    expression_quo <- dplyr::enquo(expression)
+    purrr::rerun(sim_args[['replications']], !!expression_quo, ...)
   }
   
 }
@@ -783,10 +792,11 @@ compute_statistics <- function(data,  sim_args, power = TRUE,
     purrr::map(compute_t1e, sim_args) %>%
     dplyr::bind_rows()
   
-  if(is.null(sim_args$vary_arguments)) {
-    group_vars <- list('term')
+  if(is.null(sim_args['vary_arguments'])) {
+    group_vars <- c('term')
   } else {
-    
+    group_vars <- c(names(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE)),
+                       'term')
   }
   
   if(power) {
@@ -815,7 +825,11 @@ compute_statistics <- function(data,  sim_args, power = TRUE,
                                  precision_computation) 
   
   select_columns <- rlang::syms(names(statistics)[names(statistics) %ni%
-                       regmatches(names(statistics), regexpr("^term[0-9]+", 
+                       regmatches(names(statistics), 
+                              regexpr(paste(paste0("^", 
+                                                   group_vars, 
+                                                   "[0-9]+"), 
+                                            collapse = "|"), 
                                             names(statistics)))])
   
   statistics <- dplyr::select(statistics, !!! select_columns)
@@ -848,13 +862,15 @@ compute_t1e <- function(data, sim_args) {
   
   t1e_args <- parse_power(sim_args)
   
-  if(nrow(data) == length(sim_args$reg_weights)) {
+  fixed_vars <- strsplit(as.character(parse_formula(sim_args)[['fixed']]), "\\+")[[2]]
+  
+  if(length(fixed_vars) == length(sim_args$reg_weights)) {
     reg_weights <- sim_args$reg_weights
   } else {
     reg_weights <- sim_args$model_fit$reg_weights
   }
   
-  if(nrow(data) != length(reg_weights)) {
+  if(length(fixed_vars) != length(reg_weights)) {
     stop("Check reg_weights in model_fit simulation arguments, must specify 
          reg_weights if specifying model")
   }

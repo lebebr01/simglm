@@ -144,3 +144,26 @@ data_glm_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3,
   
   sim_data
 }
+
+#' Transform response variable
+#' 
+#' @param outcome The outcome variable to transform.
+#' @param type Type of transformation to apply.
+#' @param ... Additional arguments passed to distribution functions.
+#' 
+#' @export
+transform_outcome <- function(outcome, type, ...) {
+  
+  if(type == 'logistic') {
+    rbinom(length(outcome), size = 1, 
+           prob = (exp(outcome) / (1 + exp(outcome))))
+  }
+  if(type == 'count') {
+    rpois(length(outcome), lambda = exp(outcome))
+  }
+  if(type %ni% c('logistic', 'count')) {
+    purrr::map()
+  }
+  
+}
+

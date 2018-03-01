@@ -125,6 +125,7 @@ data_reg_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3,
 generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   
   outcome_name <- parse_formula(sim_args)[['outcome']]
+  outcome_type <- sim_args[['outcome_type']]
   fixed_formula <- parse_formula(sim_args)[['fixed']]
   
   fixed_vars <- attr(terms(fixed_formula),"term.labels")
@@ -170,6 +171,10 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
       random_effects = random_effects
     )
     data <- cbind(data, response_outcomes, row.names = NULL)
+  }
+  
+  if(is.null(outcome_type)){
+    
   }
   
   data[outcome_name] <- fixed_outcome + random_effects + data['error']

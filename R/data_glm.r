@@ -155,15 +155,15 @@ data_glm_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3,
 transform_outcome <- function(outcome, type, ...) {
   
   if(type == 'logistic') {
+    probability <- exp(outcome) / (1 + exp(outcome))
     rbinom(length(outcome), size = 1, 
-           prob = (exp(outcome) / (1 + exp(outcome))))
-  }
-  if(type == 'count') {
-    rpois(length(outcome), lambda = exp(outcome))
-  }
-  if(type %ni% c('logistic', 'count')) {
-    purrr::map()
-  }
-  
+           prob = probability)
+  } else {
+    if(type == 'count') {
+      rpois(length(outcome), lambda = exp(outcome))
+    } else {
+      purrr::map()
+    }
+  } 
 }
 

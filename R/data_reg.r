@@ -173,11 +173,19 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     data <- cbind(data, response_outcomes, row.names = NULL)
   }
   
-  if(is.null(outcome_type)){
-    
+  if(is.null(sim_args[['error']])) {
+    data['error'] <- 0
   }
   
-  data[outcome_name] <- fixed_outcome + random_effects + data['error']
+  outcome <- as.numeric(unlist(fixed_outcome + random_effects + data['error']))
+  
+  if(!is.null(sim_args[['outcome_type']])){
+    trans_outcome <- transform_outcome(outcome, type = sim_args[['outcome_type']])
+    data <- cbind(data, untransformed_outcome = outcome)
+    data[outcome_name] <- trans_outcome
+  } else {
+    data[outcome_name] <- outcome
+  }
   
   data
 }

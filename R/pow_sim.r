@@ -684,7 +684,7 @@ model_fit <- function(data, sim_args, ...) {
     if(length(parse_formula(sim_args)$randomeffect) == 0) {
       model_function <- 'lm'
     } else {
-      model_function <- 'lme4::lmer'
+      model_function <- 'lmer'
     }
   } else {
     model_function <- sim_args$model_fit$model_function
@@ -751,7 +751,7 @@ replicate_simulation <- function(sim_args, expression, ...) {
     }
     
     power_list <- lapply(seq_along(power_output), function(xx) 
-      data.frame(conditions[xx, ], 
+      data.frame(conditions[xx, , drop = FALSE], 
                  dplyr::bind_rows(power_output[[xx]]),
                  row.names = NULL))
     

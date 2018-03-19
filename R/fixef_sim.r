@@ -763,11 +763,6 @@ simulate_fixed <- function(data, sim_args, ...) {
     fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
   }
   
-  if(any(lapply(seq_along(sim_args[['fixed']]), function(xx) 
-    sim_args[['fixed']][[xx]][['levels']]) > 2)) {
-    fixed_vars_fact <- factor_names(sim_args, fixed_vars)
-  }
-  
   if(is.null(data)) {
     n <- sample_sizes(sim_args[['sample_size']])
     ids <- create_ids(n, 
@@ -794,9 +789,15 @@ simulate_fixed <- function(data, sim_args, ...) {
   } 
   if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
     sim_args[['fixed']][[xx]]$var_type)) == 'factor')) {
+    
+    if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
+      sim_args[['fixed']][[xx]][['levels']])) > 2)) {
+      fixed_vars <- factor_names(sim_args, fixed_vars)
+    }
+    
     Omat <- Xmat
     Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))
-    colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars_fact
+    colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars
     Xmat <- dplyr::bind_cols(Xmat, Omat)
   } else {
     Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))

@@ -137,8 +137,8 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     fixed_vars <- gsub(":", "\\.", fixed_vars)
   }
   
-  if(any(lapply(seq_along(sim_args[['fixed']]), function(xx) 
-    sim_args[['fixed']][[xx]][['levels']]) > 2)) {
+  if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
+    sim_args[['fixed']][[xx]][['levels']])) > 2)) {
     fixed_vars <- factor_names(sim_args, fixed_vars)
   }
   

@@ -137,6 +137,11 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     fixed_vars <- gsub(":", "\\.", fixed_vars)
   }
   
+  if(any(lapply(seq_along(sim_args[['fixed']]), function(xx) 
+    sim_args[['fixed']][[xx]][['levels']]) > 2)) {
+    fixed_vars <- factor_names(sim_args, fixed_vars)
+  }
+  
   # Xmat <- model.matrix(fixed_formula, data.frame(data), contrasts.arg = contrasts)
   Xmat <- dplyr::select(data, fixed_vars)
   if(any(grepl('Intercept', names(data)))) {

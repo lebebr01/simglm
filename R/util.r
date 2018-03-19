@@ -134,6 +134,19 @@ compute_samplesize <- function(data, sim_args) {
 
 length_unique <- function(x) length(unique(x))
 
+factor_names <- function(sim_args, fixed_vars) {
+  num_levels <- lapply(seq_along(sim_args[['fixed']]), function(xx) 
+    sim_args[['fixed']][[xx]][['levels']])
+  loc <- num_levels > 2
+  fixed_levels_gt2 <- fixed_vars[loc]
+  num_levels_gt2 <- num_levels[loc]
+  
+  fixed_levels_gt2_names <- lapply(seq_along(fixed_levels_gt2), function(xx) 
+    paste0(fixed_levels_gt2[xx], '_', 1:(num_levels_gt2[[xx]] - 1)))
+  fixed_vars[loc] <- fixed_levels_gt2_names
+  unlist(fixed_vars)
+}
+
 
 # Horrible hack to keep CRAN happy and suppress NOTES about
 # parts of the code that use non-standard evaluation.

@@ -750,6 +750,7 @@ sim_variable <- function(var_type = c("continuous", "factor", "ordinal",
 #'     \item error: This is the error (i.e. residual term).
 #'   }
 #' @param ... Other arguments to pass to error simulation functions.
+#' @importFrom purrr modify_if
 #' @examples 
 #' 
 #' @export 
@@ -790,8 +791,14 @@ simulate_fixed <- function(data, sim_args, ...) {
   if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
     sim_args[['fixed']][[xx]]$var_type)) == 'factor')) {
     
+    num_levels <- lapply(seq_along(sim_args[['fixed']]), function(xx) 
+      sim_args[['fixed']][[xx]][['levels']])
+    num_levels <- purrr::modify_if(num_levels, is.character, length)
+    
     if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
-      sim_args[['fixed']][[xx]][['levels']])) > 2)) {
+      num_levels[[xx]] > 2 & 
+      sim_args[['fixed']][[xx]][['var_type']] == 'factor'))
+      )) {
       fixed_vars <- factor_names(sim_args, fixed_vars)
     }
     

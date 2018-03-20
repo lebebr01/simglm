@@ -138,8 +138,18 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   }
   
   if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
-    sim_args[['fixed']][[xx]][['levels']])) > 2)) {
-    fixed_vars <- factor_names(sim_args, fixed_vars)
+    sim_args[['fixed']][[xx]]$var_type)) == 'factor')) {
+    
+    num_levels <- lapply(seq_along(sim_args[['fixed']]), function(xx) 
+      sim_args[['fixed']][[xx]][['levels']])
+    num_levels <- purrr::modify_if(num_levels, is.character, length)
+    
+    if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
+      num_levels[[xx]] > 2 & 
+      sim_args[['fixed']][[xx]][['var_type']] == 'factor'))
+    )) {
+      fixed_vars <- factor_names(sim_args, fixed_vars)
+    }
   }
   
   # Xmat <- model.matrix(fixed_formula, data.frame(data), contrasts.arg = contrasts)

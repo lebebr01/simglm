@@ -7,4 +7,4 @@ README.Rmd
 ^packrat/
 ^\.Rprofile$
 ^docs$
-cran-comments.md
+^cran-comments\.md$

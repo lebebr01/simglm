@@ -137,6 +137,8 @@ length_unique <- function(x) length(unique(x))
 factor_names <- function(sim_args, fixed_vars) {
   num_levels <- lapply(seq_along(sim_args[['fixed']]), function(xx) 
     sim_args[['fixed']][[xx]][['levels']])
+  num_levels <- purrr::modify_if(num_levels, is.character, length)
+    
   loc <- num_levels > 2
   fixed_levels_gt2 <- fixed_vars[loc]
   num_levels_gt2 <- num_levels[loc]

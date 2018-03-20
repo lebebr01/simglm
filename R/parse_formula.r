@@ -78,42 +78,42 @@ parse_randomeffect <- function(formula) {
 #' @export 
 parse_power <- function(sim_args) {
   
-  if(is.null(sim_args$power$direction) || sim_args$power$direction %ni% c('lower', 'upper')) {
+  if(is.null(sim_args[['power']][['direction']]) || sim_args[['power']][['direction']] %ni% c('lower', 'upper')) {
     number_tails <- 2
   } else {
     number_tails <- 1
   }
   
-  if(is.null(sim_args$power$direction)) {
-    sim_args$power$direction <- 'two-tailed'
+  if(is.null(sim_args[['power']][['direction']])) {
+    sim_args[['power']][['direction']] <- 'two-tailed'
   }
   
-  if(is.null(sim_args$power$dist)) {
-    sim_args$power$dist <- 'qnorm'
+  if(is.null(sim_args[['power']][['dist']])) {
+    sim_args[['power']][['dist']] <- 'qnorm'
   }
   
-  if(is.null(sim_args$power$alpha)) {
-    sim_args$power$alpha <- 0.05
+  if(is.null(sim_args[['power']][['alpha']])) {
+    sim_args[['power']][['alpha']] <- 0.05
   }
   
-  if(sim_args$power$direction == 'lower') {
+  if(sim_args[['power']][['direction']] == 'lower') {
     lower_tail <- TRUE
   } else {
     lower_tail <- FALSE
   }
   
-  alpha <- sim_args$power$alpha / number_tails
+  alpha <- sim_args[['power']][['alpha']] / number_tails
   
-  test_statistic <- purrr::invoke(sim_args$power$dist, 
+  test_statistic <- purrr::invoke(sim_args[['power']][['dist']], 
                                   p = alpha, 
                                   lower.tail = lower_tail,
-                                  sim_args$power$opts)
+                                  sim_args[['power']][['opts']])
 
   list(test_statistic = test_statistic,
-       alpha = sim_args$power$alpha, 
+       alpha = sim_args[['power']][['alpha']], 
        number_tails = number_tails,
-       direction = sim_args$power$direction,
-       distribution = sim_args$power$dist
+       direction = sim_args[['power']][['direction']],
+       distribution = sim_args[['power']][['dist']]
   )
   
 }

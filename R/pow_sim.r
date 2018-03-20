@@ -680,19 +680,19 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var,
 #' @export 
 model_fit <- function(data, sim_args, ...) {
   
-  if(is.null(sim_args$model_fit$model_function)) {
-    if(length(parse_formula(sim_args)$randomeffect) == 0) {
+  if(is.null(sim_args[['model_fit']][['model_function']])) {
+    if(length(parse_formula(sim_args)[['randomeffect']]) == 0) {
       model_function <- 'lm'
     } else {
       model_function <- 'lmer'
     }
   } else {
-    model_function <- sim_args$model_fit$model_function
+    model_function <- sim_args[['model_fit']][['model_function']]
   }
-  if(is.null(sim_args$model_fit$formula)) {
-    formula <- sim_args$formula
+  if(is.null(sim_args[['model_fit']][['formula']])) {
+    formula <- sim_args[['formula']]
   } else {
-    formula <- sim_args$model_fit$formula
+    formula <- sim_args[['model_fit']][['formula']]
   }
   
   purrr::invoke(model_function, 
@@ -759,16 +759,20 @@ replicate_simulation_vary <- function(sim_args) {
   conditions <- data.frame(sapply(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE),
                                   as.character))
   
-  power_out <- lapply(seq_along(sim_args), function(xx) 
-      data.frame(conditions[xx, , drop = FALSE], 
-            dplyr::bind_rows(
-              purrr::rerun(sim_args[[xx]][['replications']], simglm(sim_args[[xx]]))
-            ),
-            row.names = NULL
-      )
-    )
+  sim_arguments <- parse_varyarguments(sim_args)
   
-  power_out
+  power_out <- lapply(seq_along(sim_arguments), function(xx) 
+          purrr::rerun(sim_arguments[[xx]][['replications']], simglm(sim_arguments[[xx]]))
+            )
+  
+  power_list <- lapply(seq_along(sim_arguments), function(xx) 
+    data.frame(conditions[xx, , drop = FALSE],
+               dplyr::bind_rows(power_out[[xx]]),
+               row.names = NULL
+    )
+  )
+  
+  power_list
   
 }
 
@@ -790,7 +794,7 @@ replicate_simulation_vary <- function(sim_args) {
 #' @param precision TRUE/FALSE flag indicating whether precision should be 
 #'  computed. Defaults to TRUE.
 #' @importFrom dplyr mutate
-#' @import rlang
+#' @importFrom rlang syms
 #' @export
 compute_statistics <- function(data,  sim_args, power = TRUE, 
                                type_1_error = TRUE, precision = TRUE) {
@@ -872,16 +876,16 @@ compute_t1e <- function(data, sim_args) {
   
   fixed_vars <- strsplit(as.character(parse_formula(sim_args)[['fixed']]), "\\+")[[2]]
   
-  if(length(fixed_vars) == length(sim_args$reg_weights)) {
-    reg_weights <- sim_args$reg_weights
+  if(!is.null(sim_args[['model_fit']][['reg_weights']])) {
+    reg_weights <- sim_args[['reg_weights']]
   } else {
-    reg_weights <- sim_args$model_fit$reg_weights
+    reg_weights <- sim_args[['model_fit']][['reg_weights']]
   }
   
-  if(length(fixed_vars) != length(reg_weights)) {
-    stop("Check reg_weights in model_fit simulation arguments, must specify 
-         reg_weights if specifying model")
-  }
+  # if(length(fixed_vars) != length(reg_weights)) {
+  #   stop("Check reg_weights in model_fit simulation arguments, must specify 
+  #        reg_weights if specifying model")
+  # }
   
   if(t1e_args$direction == 'lower') {
     data %>%

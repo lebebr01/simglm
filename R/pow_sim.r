@@ -727,40 +727,48 @@ extract_coefficients <- function(model, extract_function = NULL) {
 #'   }
 #' @param expression Simulation, model fitting, and coefficient extraction
 #'   expressions for a single replication.
-#' @param ... Other arguments to pass to error simulation functions.
+#' @param ... Currently not used.
 #' @importFrom purrr rerun
 #' @importFrom dplyr enquo
-#' @importFrom tibble data_frame
+#' @importFrom dplyr quo
 #' @examples 
 #' 
 #' @export 
 replicate_simulation <- function(sim_args, expression, ...) {
   
-  if(!is.null(sim_args[['vary_arguments']])) {
-    conditions <- data.frame(sapply(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE),
-                         as.character))
-    sim_args2 <- parse_varyarguments(sim_args)
-    
-    power_output <- vector("list", length = length(sim_args2))
-    for(i in seq_along(sim_args2)) {
-      sim_args <<- sim_args2[[i]]
-      expression_quo <- dplyr::enquo(expression)
-      
-     power_output[[i]] <- purrr::rerun(sim_args[['replications']], 
-                                       !!expression_quo, ...)
-    }
-    
-    power_list <- lapply(seq_along(power_output), function(xx) 
+  expression_quo <- dplyr::enquo(expression)
+  purrr::rerun(sim_args[['replications']], !!expression_quo)
+  
+}
+
+#' Function to replication simulation with varying arguments
+#' 
+#' This is a wrapper around \code{\link{simglm}} master function.
+#' 
+#' @param sim_args A nested named list with special model formula syntax. See details and examples
+#'   for more information. The named list may contain the following:
+#'   \itemize{
+#'     \item fixed: This is the fixed portion of the model (i.e. covariates)
+#'     \item random: This is the random portion of the model (i.e. random effects)
+#'     \item error: This is the error (i.e. residual term).
+#'   }
+#'   
+#' @export
+replicate_simulation_vary <- function(sim_args) {
+  
+  conditions <- data.frame(sapply(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE),
+                                  as.character))
+  
+  power_out <- lapply(seq_along(sim_args), function(xx) 
       data.frame(conditions[xx, , drop = FALSE], 
-                 dplyr::bind_rows(power_output[[xx]]),
-                 row.names = NULL))
-    
-    power_list
-      
-  } else {
-    expression_quo <- dplyr::enquo(expression)
-    purrr::rerun(sim_args[['replications']], !!expression_quo, ...)
-  }
+            dplyr::bind_rows(
+              purrr::rerun(sim_args[[xx]][['replications']], simglm(sim_args[[xx]]))
+            ),
+            row.names = NULL
+      )
+    )
+  
+  power_out
   
 }
 

@@ -4,7 +4,7 @@
 \alias{replicate_simulation}
 \title{Replicate Simulation}
 \usage{
-replicate_simulation(sim_args, expression, ...)
+replicate_simulation(sim_args, expression = NULL, ...)
 }
 \arguments{
 \item{sim_args}{A named list with special model formula syntax. See details and examples

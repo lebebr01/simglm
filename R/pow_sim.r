@@ -707,11 +707,30 @@ model_fit <- function(data, sim_args, ...) {
 #' @export 
 extract_coefficients <- function(model, extract_function = NULL) {
   
-  if(is.null(extract_function)) {
-    broom::tidy(model)
+  if(class(model) %in% c('glmerMod', 'lmerMod')) {
+    tidy_mixed(model)
   } else {
-    purrr::invoke(extract_function, model)
+    if(is.null(extract_function)) {
+      broom::tidy(model)
+    } else {
+      purrr::invoke(extract_function, model)
+    }
   }
+  
+}
+
+tidy_mixed <- function(model) {
+  
+  sum_fun <- selectMethod("summary", class(model))
+  ss <- sum_fun(model)
+  mod_results <- stats::coef(ss) %>% data.frame(check.names=FALSE)
+  mod_results <- data.frame(term = rownames(mod_results), mod_results,
+                            row.names = NULL)
+  
+  names(mod_results) <- c('term', 'estimate', 'std.error', 'statistic')
+  
+  mod_results
+  
 }
 
 

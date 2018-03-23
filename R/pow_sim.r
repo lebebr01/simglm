@@ -734,26 +734,17 @@ extract_coefficients <- function(model, extract_function = NULL) {
 #' @examples 
 #' 
 #' @export 
-replicate_simulation <- function(sim_args, expression, ...) {
+replicate_simulation <- function(sim_args, expression = NULL, ...) {
   
-  expression_quo <- dplyr::enquo(expression)
-  purrr::rerun(sim_args[['replications']], !!expression_quo)
+  if(is.null(sim_args[['vary_arguments']])) {
+    expression_quo <- dplyr::enquo(expression)
+    purrr::rerun(sim_args[['replications']], !!expression_quo)
+  } else {
+    replicate_simulation_vary(sim_args)
+  }
   
 }
 
-#' Function to replication simulation with varying arguments
-#' 
-#' This is a wrapper around \code{\link{simglm}} master function.
-#' 
-#' @param sim_args A nested named list with special model formula syntax. See details and examples
-#'   for more information. The named list may contain the following:
-#'   \itemize{
-#'     \item fixed: This is the fixed portion of the model (i.e. covariates)
-#'     \item random: This is the random portion of the model (i.e. random effects)
-#'     \item error: This is the error (i.e. residual term).
-#'   }
-#'   
-#' @export
 replicate_simulation_vary <- function(sim_args) {
   
   conditions <- data.frame(sapply(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE),

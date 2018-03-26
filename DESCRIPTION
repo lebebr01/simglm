@@ -17,7 +17,8 @@ Depends:
     dplyr,
     purrr,
     tibble,
-    broom
+    broom,
+    rlang
 Suggests:
     knitr,
     lme4,

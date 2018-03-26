@@ -804,6 +804,7 @@ replicate_simulation_vary <- function(sim_args) {
 #' @param precision TRUE/FALSE flag indicating whether precision should be 
 #'  computed. Defaults to TRUE.
 #' @importFrom dplyr mutate
+#' @importFrom rlang syms
 #' @export
 compute_statistics <- function(data,  sim_args, power = TRUE, 
                                type_1_error = TRUE, precision = TRUE) {

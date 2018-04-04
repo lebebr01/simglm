@@ -120,7 +120,7 @@ simulate_error(data = NULL, sim_arguments)
 
 The `simulate_error` function only needs to know how many data values to simulate. By default, the `rnorm` function is used to generate random error and this function assumes a mean of 0 and standard deviation of 1 by default. I personally prefer the slightly more verbose code however.
 
-```{r simulate_error}
+```{r simulate_error_verbose}
 set.seed(321)
 
 sim_arguments <- list(
@@ -133,7 +133,7 @@ simulate_error(data = NULL, sim_arguments)
 
 This code makes it clearer when the variance of the errors is wished to be specified as some other value. For example:
 
-```{r simulate_error}
+```{r simulate_error_var25}
 set.seed(321)
 
 sim_arguments <- list(

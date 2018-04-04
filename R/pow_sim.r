@@ -886,7 +886,7 @@ compute_t1e <- function(data, sim_args) {
   
   fixed_vars <- strsplit(as.character(parse_formula(sim_args)[['fixed']]), "\\+")[[2]]
   
-  if(!is.null(sim_args[['model_fit']][['reg_weights']])) {
+  if(is.null(sim_args[['model_fit']][['reg_weights']])) {
     reg_weights <- sim_args[['reg_weights']]
   } else {
     reg_weights <- sim_args[['model_fit']][['reg_weights']]

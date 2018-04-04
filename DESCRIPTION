@@ -14,11 +14,11 @@ Depends:
     R (>= 3.3.0),
     stats,
     Matrix,
+    rlang,
     dplyr,
     purrr,
     tibble,
-    broom,
-    rlang
+    broom
 Suggests:
     knitr,
     lme4,

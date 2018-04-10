@@ -258,3 +258,35 @@ As can be seen from the output, the default behavior is to return statistics for
 
 To generate this output, only the number of replications is needed. Here only 10 replications were done, in practice many more replications would be done to ensure there are accurate results. 
 
+The default power parameter values used are: Normal distribution, two-tailed alternative hypotheses, and alpha of 0.05. Additional power parameters can be passed directly to override default values by including a power argument within the simulation arguments. For example, if a t-distribution with one degree of freedom an alpha of 0.02 is desired, these can be added as follows:
+
+```{r replicate_simulation_power_values}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + age + sex,
+  fixed = list(weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60),
+               sex = list(var_type = 'factor', levels = c('male', 'female'))),
+  error = list(variance = 25),
+  sample_size = 10,
+  reg_weights = c(2, 0.3, -0.1, 0.5),
+  model_fit = list(formula = y ~ 1 + age + sex,
+                   model_function = 'lm',
+                   reg_weights = c(2, -0.1, 0.5)),
+  replications = 10,
+  power = list(
+    dist = 'qt',
+    alpha = .02,
+    opts = list(df = 1)
+  )
+)
+
+replicate_simulation(sim_arguments, simulate_fixed(data = NULL, sim_arguments) %>%
+                       simulate_error(sim_arguments) %>%
+                       generate_response(sim_arguments) %>% 
+                       model_fit(sim_arguments) %>%
+                       extract_coefficients()) %>%
+  compute_statistics(sim_arguments)
+```
+

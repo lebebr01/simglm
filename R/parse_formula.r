@@ -85,35 +85,47 @@ parse_power <- function(sim_args) {
   }
   
   if(is.null(sim_args[['power']][['direction']])) {
-    sim_args[['power']][['direction']] <- 'two-tailed'
+    tail_direction <- 'two-tailed'
+  } else {
+    tail_direction <- sim_args[['power']][['direction']]
   }
   
   if(is.null(sim_args[['power']][['dist']])) {
-    sim_args[['power']][['dist']] <- 'qnorm'
+    stat_dist <- 'qnorm'
+  } else {
+    stat_dist <- sim_args[['power']][['dist']]
   }
   
   if(is.null(sim_args[['power']][['alpha']])) {
-    sim_args[['power']][['alpha']] <- 0.05
+    alpha <- 0.05
+  } else {
+    alpha <- sim_args[['power']][['alpha']]
   }
   
-  if(sim_args[['power']][['direction']] == 'lower') {
+  if(tail_direction == 'lower') {
     lower_tail <- TRUE
   } else {
     lower_tail <- FALSE
   }
   
-  alpha <- sim_args[['power']][['alpha']] / number_tails
+  if(is.null(sim_args[['power']][['opts']])) {
+    opts <- NULL
+  } else {
+    opts <- sim_args[['power']][['opts']]
+  }
   
-  test_statistic <- purrr::invoke(sim_args[['power']][['dist']], 
+  alpha <- alpha / number_tails
+  
+  test_statistic <- purrr::invoke(stat_dist, 
                                   p = alpha, 
                                   lower.tail = lower_tail,
-                                  sim_args[['power']][['opts']])
+                                  opts)
 
   list(test_statistic = test_statistic,
-       alpha = sim_args[['power']][['alpha']], 
+       alpha = alpha, 
        number_tails = number_tails,
-       direction = sim_args[['power']][['direction']],
-       distribution = sim_args[['power']][['dist']]
+       direction = tail_direction,
+       distribution = stat_dist
   )
   
 }

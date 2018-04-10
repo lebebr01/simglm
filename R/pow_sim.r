@@ -809,9 +809,11 @@ replicate_simulation_vary <- function(sim_args) {
 compute_statistics <- function(data,  sim_args, power = TRUE, 
                                type_1_error = TRUE, precision = TRUE) {
   
+  power_args <- parse_power(sim_args)
+  
   data_df <- data %>%
-    purrr::map(compute_power, sim_args) %>% 
-    purrr::map(compute_t1e, sim_args) %>%
+    purrr::map(compute_power, power_args) %>% 
+    purrr::map(compute_t1e, sim_args = sim_args, t1e_args = power_args) %>%
     dplyr::bind_rows()
   
   if(is.null(sim_args['vary_arguments'])) {
@@ -862,9 +864,9 @@ compute_statistics <- function(data,  sim_args, power = TRUE,
   
 }
 
-compute_power <- function(data, sim_args) {
+compute_power <- function(data, power_args) {
   
-  power_args <- parse_power(sim_args)
+  # power_args <- parse_power(sim_args)
   
   if(power_args$direction == 'lower') {
     data %>%
@@ -880,9 +882,9 @@ compute_power <- function(data, sim_args) {
   }
 }
 
-compute_t1e <- function(data, sim_args) {
+compute_t1e <- function(data, sim_args, t1e_args) {
   
-  t1e_args <- parse_power(sim_args)
+  # t1e_args <- parse_power(sim_args)
   
   fixed_vars <- strsplit(as.character(parse_formula(sim_args)[['fixed']]), "\\+")[[2]]
   

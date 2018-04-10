@@ -243,9 +243,7 @@ sim_arguments <- list(
   model_fit = list(formula = y ~ 1 + age + sex,
                    model_function = 'lm',
                    reg_weights = c(2, -0.1, 0.5)),
-  replications = 10,
-    power = list(dist = 'qnorm',
-               direction = 'two')
+  replications = 10
 )
 
 replicate_simulation(sim_arguments, simulate_fixed(data = NULL, sim_arguments) %>%
@@ -256,5 +254,7 @@ replicate_simulation(sim_arguments, simulate_fixed(data = NULL, sim_arguments) %
   compute_statistics(sim_arguments)
 ```
 
+As can be seen from the output, the default behavior is to return statistics for power, average test statistic, type I error rate, adjusted average test statistic, standard deviation of parameter estimate, average standard error, precision ration (standard deviation of parameter estimate divided by average standard error), and the number of replications for each term. 
 
+To generate this output, only the number of replications is needed. Here only 10 replications were done, in practice many more replications would be done to ensure there are accurate results. 
 

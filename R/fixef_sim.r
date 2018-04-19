@@ -707,6 +707,7 @@ sim_knot <- function(var, knot_locations, right = FALSE) {
 #' @param n Sample size of the levels.
 #' @param time_levels The values the time variable should take. If NULL (default),
 #'   the time values are discrete integers starting at 0 and going to n - 1.
+#' @param ... Currently not used.
 #' 
 #' @export 
 sim_time <- function(n, time_levels = NULL, ...) {

@@ -290,3 +290,6 @@ replicate_simulation(sim_arguments, simulate_fixed(data = NULL, sim_arguments) %
   compute_statistics(sim_arguments)
 ```
 
+# Nested Designs
+
+

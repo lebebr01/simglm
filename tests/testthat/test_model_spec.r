@@ -85,6 +85,11 @@ test_that('lme4 model specification', {
   error_var <- 4
   with_err_gen <- 'rnorm'
   data_str <- "long"
+  pow_param <- c('(Intercept)', 'act', 'diff')
+  alpha <- .01
+  pow_dist <- "t"
+  pow_tail <- 2
+  replicates <- 2
   expect_error(sim_pow(fixed, random, random3, fixed_param, random_param, 
                         random_param3, cov_param, k,n, p, error_var, with_err_gen, 
                         data_str = data_str, pow_param = pow_param, alpha = alpha,

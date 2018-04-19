@@ -50,7 +50,7 @@ Much of the output here is the same from the `sim_reg` function. The additional 
 
 Finally, looking at the output from the above call:
 ```{r printsinglelevel}
-power_out
+head(power_out)
 ```
 
 The output contains the variable name, the average test statistic, the standard deviation of the test statistic, the power rate, the number of null hypotheses rejects, and the total number of replications. Increasing the number of replications would increase the precision of the power analysis, however may significantly increase the computational time.
@@ -79,7 +79,7 @@ power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param,
                      pow_param = pow_param, alpha = alpha,
                      pow_dist = pow_dist, pow_tail = pow_tail, 
                      replicates = replicates)
-power_out
+head(power_out)
 ```
 
 ### Varying Arguments
@@ -148,7 +148,7 @@ power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param,
                      pow_param = pow_param, alpha = alpha,
                      pow_dist = pow_dist, pow_tail = pow_tail, 
                      replicates = replicates, lm_fit_mod = lm_fit_mod)
-power_out
+head(power_out)
 ```
 
 You'll notice, compared to above, the power is somewhat reduced for the other three fixed effects when not modeling the `numCourse` variable. You can also build in the `lm_fit_mod` argument into the design via the `terms_vary` argument.
@@ -183,7 +183,7 @@ power_out <- sim_pow(fixed = fixed, fixed_param = fixed_param,
                      pow_param = pow_param, alpha = alpha,
                      pow_dist = pow_dist, pow_tail = pow_tail, 
                      replicates = replicates, terms_vary = terms_vary)
-power_out
+head(power_out)
 ```
 
 
@@ -225,7 +225,7 @@ power_out <- sim_pow(fixed = fixed, random = random, random3 = random3,
                      pow_param = pow_param, alpha = alpha,
                      pow_dist = pow_dist, pow_tail = pow_tail, 
                      replicates = replicates)
-power_out
+head(power_out)
 ```
 
 ## Generalized Power Analysis
@@ -250,7 +250,7 @@ power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param,
                          pow_param = pow_param, alpha = alpha,
                          pow_dist = pow_dist, pow_tail = pow_tail, 
                          replicates = replicates)
-power_out
+head(power_out)
 ```
 
 ### Vary Arguments
@@ -278,6 +278,6 @@ power_out <- sim_pow_glm(fixed = fixed, fixed_param = fixed_param,
                          pow_param = pow_param, alpha = alpha,
                          pow_dist = pow_dist, pow_tail = pow_tail, 
                          replicates = replicates, terms_vary = terms_vary)
-power_out
+head(power_out)
 ```
 

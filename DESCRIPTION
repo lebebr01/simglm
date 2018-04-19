@@ -18,7 +18,6 @@ Depends:
     rlang,
     dplyr,
     purrr,
-    tibble,
     broom
 Suggests:
     knitr,

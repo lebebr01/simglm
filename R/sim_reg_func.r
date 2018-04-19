@@ -68,7 +68,6 @@
 #'    }
 #' @param ... Not currently used.
 #' @importFrom dplyr bind_cols
-#' @importFrom tibble as_tibble
 #' @export 
 #' @examples 
 #' #' # generating parameters for single level regression
@@ -136,7 +135,7 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var,
   
   Xmat <- Xmat[, !duplicated(colnames(Xmat))]
   
-  tibble::as_tibble(Xmat)
+  Xmat
 }
 
 
@@ -255,7 +254,6 @@ sim_reg_single <- function(fixed, fixed_param, cov_param, n, error_var,
 #'      \item knot_locations
 #'    }
 #' @param ... Not currently used.
-#' @importFrom tibble as_tibble
 #' @importFrom dplyr bind_cols
 #' @export 
 #' @examples 
@@ -374,7 +372,7 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
   
   Xmat <- Xmat[, !duplicated(colnames(Xmat))]
   
-  tibble::as_tibble(Xmat)
+  Xmat
 }
 
 #' Function to simulate three level nested data
@@ -509,7 +507,6 @@ sim_reg_nested <- function(fixed, random, fixed_param, random_param = list(),
 #'      \item knot_locations
 #'    }
 #' @param ... Not currently used.
-#' @importFrom tibble as_tibble
 #' @export 
 #' @examples 
 #' #' # Three level example
@@ -678,5 +675,5 @@ sim_reg_nested3 <- function(fixed, random, random3, fixed_param,
   
   Xmat <- Xmat[, !duplicated(colnames(Xmat))]
  
-  tibble::as_tibble(Xmat)
+  Xmat
 }

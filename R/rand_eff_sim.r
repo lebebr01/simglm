@@ -92,3 +92,58 @@ cross_class <- function(num_ids, samp_size, random_param) {
   cross_eff
 }
 
+#' Tidy random effect formula simulation
+#' 
+#' This function simulates the random portion of the model using a formula syntax.
+#' 
+#' @param data Data simulated from other functions to pass to this function. Can pass
+#'  NULL if first in simulation string.
+#' @param sim_args A named list with special model formula syntax. See details and examples
+#'   for more information. The named list may contain the following:
+#'   \itemize{
+#'     \item fixed: This is the fixed portion of the model (i.e. covariates)
+#'     \item random: This is the random portion of the model (i.e. random effects)
+#'     \item error: This is the error (i.e. residual term).
+#'   }
+#' @param ... Other arguments to pass to error simulation functions.
+#' @examples 
+#' 
+#' @export 
+simulate_randomeffect <- function(data, sim_args, ...) {
+  
+  random_formula <- parse_formula(sim_args)$randomeffect
+
+  random_formula_parsed <- parse_randomeffect(random_formula)
+  
+  random_effects_names <- names(sim_args$randomeffect)
+  
+  if(is.null(data)) {
+    n <- sample_sizes(sim_args[['sample_size']])
+    ids <- create_ids(n, 
+                      c('level1_id', random_formula_parsed$cluster_id_vars))
+    Zmat <- purrr::invoke_map("sim_variable", 
+                              sim_args$random,
+                              n = n,
+                              var_type = 'continuous'
+    ) %>% 
+      data.frame()
+  } else {
+    n <- compute_samplesize(data, sim_args)
+    Zmat <- purrr::invoke_map("sim_variable", 
+                              sim_args$random,
+                              n = n,
+                              var_type = 'continuous'
+    ) %>% 
+      data.frame()
+  }
+  
+  names(Zmat) <- random_effects_names
+  
+  if(is.null(data)) {
+    data.frame(Zmat, ids)
+  } else {
+    data.frame(data, Zmat)
+  }
+  
+}
+

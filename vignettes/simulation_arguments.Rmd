@@ -1,0 +1,107 @@
+---
+title: "Simulation Arguments for `simglm`"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tidy Simulation with `simglm`}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+```{r setup, include=FALSE}
+library(knitr)
+library(simglm)
+knit_print.data.frame = function(x, ...) {
+  res = paste(c('', '', kable(x, output = FALSE)), collapse = '\n')
+  asis_output(res)
+}
+```
+
+The tidy simulation framework uses simulation arguments as the basis for specifying the models to be simulated. The goal of this vignette is to document more thoroughly the various arguments that are possible within each function. It is recommended that new users start with the "Tidy Simulation with `simglm`" vignette prior to working through this vignette.
+
+# Fixed Arguments
+Arguments associated with the fixed portion of the model are needed for each fixed variable that needs to be simulated. The fixed variables specified come from the formula argument. Interactions or the intercept are not included in the fixed arguments as these are generated automatically. Let's start with an example.
+
+```{r fixed_sim}
+library(simglm)
+
+set.seed(321) 
+
+# To-DO: Add knot variable and debug
+
+sim_arguments <- list(
+  formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+  fixed = list(time = list(var_type = 'time'),
+               weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment', 'Control'),
+                            var_level = 2)),
+  sample_size = list(level1 = 10, level2 = 20)
+)
+
+fixed_data <- simulate_fixed(data = NULL, sim_arguments)
+head(fixed_data, n = 20)
+```
+
+The following example shows the five types of variables that can be generated. These types are specified with the `var_type` argument and can be one of the following five types: 
+
+* 'time': This type of variable is used for a time metric variable
+* 'continuous': This is a continuous distribution, default is to use the `rnorm` distribution function for generation.
+* 'ordinal': This generates ordinal data and is generated using the `sample` function.
+* 'factor': This is a categorical or factor variable specification representing groups or categories.
+* 'knot': This type of variable is generated based on another variable and represents a knot category variable.
+
+Each variable type will be explored in more detail.
+
+## Time Variable
+For time variables used in longitudinal or repeated measures designs, the default metric is 0 to level1 sample size minus 1. This can be seen above in the output. To change the time variable metric the `time_levels` argument can be used. A vector of values to specify for the time variable can be given directly. For example, the following could be passed to alter the metric of the time variable: `time_levels = c(0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6)` where now the time variable would increment in 0.5 units for the first 7 measurements and 1 unit increments for the last three measurements. This could represent a case when the measurements are collected every 6 months for the first 7 measurements and yearly after that.
+
+Below is the output including the manual time variable specification. The only requirement is that the length of the `time_levels` argument must match the level1 sample size.
+
+```{r}
+set.seed(321) 
+
+# To-DO: Add knot variable and debug
+
+sim_arguments <- list(
+  formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+  fixed = list(time = list(var_type = 'time',
+                           time_levels = c(0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6)),
+               weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment', 'Control'),
+                            var_level = 2)),
+  sample_size = list(level1 = 10, level2 = 20)
+)
+
+fixed_data <- simulate_fixed(data = NULL, sim_arguments)
+head(fixed_data, n = 20)
+```
+
+## Continuous Variable
+
+
+## Ordinal Variable
+
+
+## Factor Variable
+
+
+## Knot Variable
+
+
+# Random Error Arguments
+
+
+# Random Effect Arguments
+
+
+# Model Fit Arguments
+
+
+# Missing Data Arguments
+
+
+# Power Arguments
+

@@ -51,7 +51,6 @@
 #'      \item knot_locations
 #'    }
 #' @param ... Not currently used.
-#' @importFrom tibble as_tibble
 #' @examples 
 #' # generating parameters for single level regression
 #' set.seed(2)
@@ -90,7 +89,7 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
   
   Xmat <- Xmat[, !duplicated(colnames(Xmat))]
   
-  tibble::as_tibble(Xmat)
+  Xmat
 }
 
 #' Simulate two level logistic regression model
@@ -192,7 +191,6 @@ sim_glm_single <- function(fixed, fixed_param, cov_param, n,
 #'      \item knot_locations
 #'    }
 #' @param ... Not currently used.
-#' @importFrom tibble as_tibble
 #'      
 #' @examples
 #' # Longitudinal linear mixed model example
@@ -293,7 +291,7 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(),
   
   Xmat <- Xmat[, !duplicated(colnames(Xmat))]
   
-  tibble::as_tibble(Xmat)
+  Xmat
 }
 
 #' Function to simulate three level nested data
@@ -415,7 +413,6 @@ sim_glm_nested <- function(fixed, random, fixed_param, random_param = list(),
 #'      \item knot_locations
 #'    }
 #' @param ... Not currently used.
-#' @importFrom tibble as_tibble
 #' 
 #' @examples 
 #' # Three level example
@@ -569,5 +566,5 @@ sim_glm_nested3 <- function(fixed, random, random3, fixed_param,
   
   Xmat <- Xmat[, !duplicated(colnames(Xmat))]
   
-  tibble::as_tibble(Xmat)
+  Xmat
 }

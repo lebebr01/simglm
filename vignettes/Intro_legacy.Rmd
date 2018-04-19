@@ -1,9 +1,9 @@
 ---
-title: "Introduction to simglm"
+title: "Introduction to simglm - Legacy Code"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to simglm}
+  %\VignetteIndexEntry{Introduction to simglm - Legacy Code}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---

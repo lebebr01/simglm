@@ -143,38 +143,6 @@ test_that('sim_glm power', {
   expect_equal(nrow(power_out), 3*3)
   expect_equal(ncol(power_out), 9)
 })
-
-test_that('two level power continuous', {
-  fixed <- ~1 + time + diff + act + time:act
-  random <- ~1 + time
-  fixed_param <- c(0, 0.2, 0.1, 0.3, 0.05)
-  random_param <- list(random_var = c(7, 4), rand_gen = "rnorm")
-  cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-                    var_type = c("level1", "level2"), 
-                    opts = list(list(mean = 0, sd = 1),
-                                list(mean = 0, sd = 1)))
-  n <- 15
-  p <- 3
-  error_var <- 1
-  data_str <- "long"
-  pow_param <- c('time', 'diff', 'act')
-  alpha <- .01
-  pow_dist <- "z"
-  pow_tail <- 2
-  replicates <- 2
-  power_out <- sim_pow(fixed = fixed, random = random, 
-                       fixed_param = fixed_param, 
-                       random_param = random_param, cov_param = cov_param, 
-                       k = NULL, n = n, p = p,
-                       error_var = error_var, with_err_gen = "rnorm",
-                       data_str = data_str, unbal = list(level2 = FALSE), 
-                       pow_param = pow_param, alpha = alpha,
-                       pow_dist = pow_dist, pow_tail = pow_tail, 
-                       replicates = replicates, raw_power = FALSE)
-  
-  expect_equal(nrow(power_out), 3)
-})
-
 test_that("three level power continuous", {
   fixed <- ~1 + time + diff + act + actClust + time:act
   random <- ~1 + time 

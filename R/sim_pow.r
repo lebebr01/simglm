@@ -493,6 +493,9 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
 #'  as the level two or three sample size. These are specified as a named list in which
 #'  level two sample size is controlled via "level2" and level three sample size is 
 #'  controlled via "level3".
+#' @param contrasts An optional list that specifies the contrasts to be used 
+#'   for factor variables (i.e. those variables with .f or .c). 
+#'   See \code{\link{contrasts}} for more detail.
 #' @param outcome_type A vector specifying the type of outcome, must be either
 #'   logistic or poisson. Logitstic outcome will be 0/1 and poisson outcome will
 #'   be counts.
@@ -589,6 +592,7 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                         data_str, cor_vars = NULL, fact_vars = list(NULL), 
                         unbal = list("level2" = FALSE, "level3" = FALSE), 
                         unbal_design = list("level2" = NULL, "level3" = NULL),
+                        contrasts = NULL,
                         outcome_type, cross_class_params = NULL,
                         knot_args = list(NULL),
                         missing = FALSE, missing_args = list(NULL),
@@ -605,6 +609,7 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                cov_param = cov_param, k = k, n = n, p = p, 
                data_str = data_str, cor_vars = cor_vars, 
                fact_vars = fact_vars, unbal = unbal, unbal_design = unbal_design,
+               contrasts = contrasts,
                outcome_type = outcome_type, cross_class_params = cross_class_params,
                knot_args = knot_args, 
                missing = missing, missing_args = missing_args,

@@ -4,12 +4,16 @@
 \alias{mar_missing}
 \title{Missing at Random}
 \usage{
-mar_missing(sim_data, resp_var, miss_cov, miss_prop)
+mar_missing(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
+  miss_cov, miss_prop)
 }
 \arguments{
 \item{sim_data}{Simulated data frame}
 
-\item{resp_var}{Response variable to add missing data to}
+\item{resp_var}{Character string of response variable with complete data.}
+
+\item{new_outcome}{Character string of new outcome variable name that includes
+the missing data.}
 
 \item{miss_cov}{Covariate that the missing values are based on.}
 

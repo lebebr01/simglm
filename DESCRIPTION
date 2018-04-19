@@ -13,10 +13,11 @@ Description: Easily simulates regression models,
 Depends:
     R (>= 3.3.0),
     stats,
+    methods,
     Matrix,
+    rlang,
     dplyr,
     purrr,
-    tibble,
     broom
 Suggests:
     knitr,

@@ -4,14 +4,17 @@
 \alias{missing_data}
 \title{Master Missing Data Function}
 \usage{
-missing_data(sim_data, resp_var = "sim_data", clust_var = NULL,
-  within_id = NULL, miss_prop, type = c("dropout", "random", "mar"),
-  miss_cov)
+missing_data(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
+  clust_var = NULL, within_id = NULL, miss_prop, type = c("dropout",
+  "random", "mar"), miss_cov)
 }
 \arguments{
 \item{sim_data}{Simulated data frame}
 
-\item{resp_var}{Response variable to add missing data to}
+\item{resp_var}{Character string of response variable with complete data.}
+
+\item{new_outcome}{Character string of new outcome variable name that includes
+the missing data.}
 
 \item{clust_var}{Cluster variable used for the grouping, set to 
 NULL by default which means no clustering.}

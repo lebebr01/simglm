@@ -1,0 +1,295 @@
+---
+title: "Tidy Simulation with `simglm`"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tidy Simulation with `simglm`}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+```{r setup, include=FALSE}
+library(knitr)
+library(simglm)
+knit_print.data.frame = function(x, ...) {
+  res = paste(c('', '', kable(x, output = FALSE)), collapse = '\n')
+  asis_output(res)
+}
+```
+
+# Tidy Simulation with `simglm`
+
+Introducing a new framework for simulation and power analysis with the `simglm` package, tidy simulation. The package now has helper functions in which the first argument is always the data and the second argument is always the simulation arguments. A second vignette is written that contains a more exhuastive list of simluation arguments that are allowed. This vignette will give the basics needed to specify simulation arguments to generate simulated data.
+
+# Functions for Basic Simulation
+There are four primary functions to be used for basic simulation functionality. These include:
+
++ `simulate_fixed`: simulate fixed effects
++ `simulate_error`: simulate random error
++ `simulate_randomeffects`: simulate random effects or cluster residuals
++ `generate_response`: based on fixed, error, and random effects, generate outcome variable $Y_{j}$ given the following $Y_{j} = g(X_{j} \beta + Z_{j} b_{j} + e_{j})$. 
+
+We will dive into what each of these component represent in a second, but first let's start with an example that simulates a linear regression model. 
+
+## First Linear Regression Example
+Let us assume for this first example that our outcome of interest is continuous and that the data is not clustered. In this example, our model would look like: $Y_{j} = X_{j} \beta + e_{j}$. In this equation, $Y_{j}$ represents the continuous outcome, $X_{j} \beta$ represents the fixed portion of the model comprised of regression coefficients ($\beta$) and a design matrix ($X_{j}$), and $e_{j}$ represents random error. 
+
+### Fixed Portion of Model
+The fixed portion of the model represents variables that are treated as fixed. This means that the values observed in the data are the only values we are interested in, will generalize to, or that we consider values of interest in our population. Let us consider the following formula: `y ~ 1 + x1 + x2`. In this formula there are a total of two varaibles that are assumed to be fixed, `x1` and `x2`. These variables together with an intercept would make up the design matrix $X_{j}$. Let's generate some example data using the `simglm` package and the `simulate_fixed` function.
+
+```{r simulate_fixed}
+library(simglm)
+
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + x1 + x2,
+  fixed = list(x1 = list(var_type = 'continuous', mean = 180, sd = 30),
+               x2 = list(var_type = 'continuous', mean = 40, sd = 5)),
+  sample_size = 10
+)
+
+simulate_fixed(data = NULL, sim_arguments)
+```
+
+The first three columns of the resulting data frame is the design matrix described above, $X_{j}$. You may have noticed that the `simulate_fixed` function needs three elements defined in the simulation arguments (called `sim_arguments`) above. These elements are:
+
++ `formula`: this argument represents a R formula that is used to represent the model that is wished to be simulated. For the `simulate_fixed` argument, only the right hand side is used.
++ `fixed`: these represent the specific details for generating the variables (other than the intercept) in the right hand side of the `formula` simulation argument. Each variable is specified as its own list by name in the `formula` argument and the `var_type` specifies the type of variable to generate. The `vary_type` argument is required for each fixed variable to simulate. Optional arguments, for example `mean = ` and `sd = ` above, will be discussed in more detail later.
++ `sample_size`: this argument tells the function how many responses to generate.
+
+The columns `x1` and `x2` would represent variables that we would gather if these data were real. To reflect a real life scenario, consider the following fixed simuation.
+
+```{r simulate_fixed_real}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + age,
+  fixed = list(weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'continuous', mean = 40, sd = 5)),
+  sample_size = 10
+)
+
+simulate_fixed(data = NULL, sim_arguments)
+```
+
+Now instead of the variables being called `x1` and `x2`, they now reflect variables weight (measured in lbs) and age (measured continuously, not rounded to whole digits). If we wished to change the `'age'` variable to be rounded to a whole integer, we could change the variable type to `'ordinal'` as such.
+
+```{r simulate_fixed_ordinal}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + age,
+  fixed = list(weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60)),
+  sample_size = 10
+)
+
+simulate_fixed(data = NULL, sim_arguments)
+```
+
+When specifying a `var_type` as `'ordinal'`, an additional `levels` argument is needed to determine which values are possible for the simulation. The last type of variable that is useful to discuss now would be factor or categorical variables. These variables can be generated by setting the `var_type = 'factor'`.
+
+```{r simulate_fixed_factor}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + age + sex,
+  fixed = list(weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60),
+               sex = list(var_type = 'factor', levels = c('male', 'female'))),
+  sample_size = 10
+)
+
+simulate_fixed(data = NULL, sim_arguments)
+```
+
+The required arguments when a factor variable are identical to an ordinal variable, however for factor variables the `levels` argument can either be an integer or can be a character vector where the character labels are specified directly. As you can see from the output, when a character vector is used, two variables are returned, one that contains the variable represented numerically and another that is the variable represented as a character vector. More details on this behavior to follow.
+
+## Simulate Random Error
+The simulation of random error ($e_{j}$ from the equation above) is a bit simpler than generating the fixed effects. Suppose for example, we want to simply simulate random errors that are normally distributed with a mean of 0 and a variance of 1. This can be done with the `simulate_error` function.
+
+```{r simulate_error}
+set.seed(321)
+
+sim_arguments <- list(
+  sample_size = 10
+)
+
+simulate_error(data = NULL, sim_arguments)
+```
+
+The `simulate_error` function only needs to know how many data values to simulate. By default, the `rnorm` function is used to generate random error and this function assumes a mean of 0 and standard deviation of 1 by default. I personally prefer the slightly more verbose code however.
+
+```{r simulate_error_verbose}
+set.seed(321)
+
+sim_arguments <- list(
+  error = list(variance = 1),
+  sample_size = 10
+)
+
+simulate_error(data = NULL, sim_arguments)
+```
+
+This code makes it clearer when the variance of the errors is wished to be specified as some other value. For example:
+
+```{r simulate_error_var25}
+set.seed(321)
+
+sim_arguments <- list(
+  error = list(variance = 25),
+  sample_size = 10
+)
+
+simulate_error(data = NULL, sim_arguments)
+```
+
+## Generate Response Variable
+Now that we have seen the basics of simulating fixed variables (covariates) and random error, we can now generate the response by combining the previous two steps and then using the `generate_response` function. What makes this a tidy simulation is that the pipe from magrittr, `%>%` can be used to combine steps into a simulation pipeline.
+
+```{r generate_response}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + age + sex,
+  fixed = list(weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60),
+               sex = list(var_type = 'factor', levels = c('male', 'female'))),
+  error = list(variance = 25),
+  sample_size = 10,
+  reg_weights = c(2, 0.3, -0.1, 0.5)
+)
+
+simulate_fixed(data = NULL, sim_arguments) %>%
+  simulate_error(sim_arguments) %>%
+  generate_response(sim_arguments)
+```
+
+The only additional argument that is needed for the `generate_response` function is the `reg_weights` argument. This argument represents the regression coeficients associated with $\beta$ in the equation $Y_{j} = X_{j} \beta + e_{j}$. The regression coefficients are multiplied by the design matrix to generate the column labeled "fixed_outcome" in the output. The output also contains the column, "random_effects" which are all 0 here indicating there are no random effects and the response variable, "y".
+
+
+# Functions for Power Analysis
+Now that the basics of tidy simulation have been shown in the context of a linear regression model, let's explore an example in which the power for this model is to be evaluated. In particular, suppose we are interested in estimating empirical power for the three fixed effects based on the following formula: `y ~ 1 + weight + age + sex`. More specifically, we are interested in estimating power for "weight", "age", and "sex" variables. A few additional functions are needed for this step including:
+
++ `model_fit`: this function will fit a model to the data.
++ `extract_coefficients`: this function will extract the fixed coefficients based on the model fitted.
+
+To fit a model and extract coefficients, we could do the following building off the example from the previous section:
+
+```{r model_extract_coefficients}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + age + sex,
+  fixed = list(weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60),
+               sex = list(var_type = 'factor', levels = c('male', 'female'))),
+  error = list(variance = 25),
+  sample_size = 10,
+  reg_weights = c(2, 0.3, -0.1, 0.5)
+)
+
+simulate_fixed(data = NULL, sim_arguments) %>%
+  simulate_error(sim_arguments) %>%
+  generate_response(sim_arguments) %>% 
+  model_fit(sim_arguments) %>%
+  extract_coefficients()
+```
+
+This output contains the model output for a single data simulation, more specifically we can see the parameter name, parameter estimate, the standard error for the parameter estimate, the test statistics, and the p-value. These were estimated using the `lm` function based on the same formula defined in `sim_arguments`. It is possible to specify your own formula, model fitting function, and regression weights to the `model_fit` function. For example, suppose we knew that weight was an important predictor, but are unable to collect it in real life. We could then specify an alternative model when evaluating power, but include the variable in the data generation step. 
+
+```{r model_fit_manual}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + age + sex,
+  fixed = list(weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60),
+               sex = list(var_type = 'factor', levels = c('male', 'female'))),
+  error = list(variance = 25),
+  sample_size = 10,
+  reg_weights = c(2, 0.3, -0.1, 0.5),
+  model_fit = list(formula = y ~ 1 + age + sex,
+                   model_function = 'lm',
+                   reg_weights = c(2, -0.1, 0.5))
+)
+
+simulate_fixed(data = NULL, sim_arguments) %>%
+  simulate_error(sim_arguments) %>%
+  generate_response(sim_arguments) %>% 
+  model_fit(sim_arguments) %>%
+  extract_coefficients()
+```
+
+Notice that we now get very different parameter estimates for this single data generation process which reflects the contribution of the variable "weight" that is not taken into account in the model fitting.
+
+## Replicate Analysis
+When evaluating empirical power, it is essential to replicate the analysis just like a Monte Carlo study to avoid extreme simulation conditions. The simglm package offers functions to aid in the replication given the simulation conditions and the desired simulation framework. To do this, two additional functions are used:
+
++ `replicate_simulation`: this function replicates the simulation
++ `compute_statistics`: this function compute desired statistics across the replications.
+
+```{r replicate_simulation}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + age + sex,
+  fixed = list(weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60),
+               sex = list(var_type = 'factor', levels = c('male', 'female'))),
+  error = list(variance = 25),
+  sample_size = 10,
+  reg_weights = c(2, 0.3, -0.1, 0.5),
+  model_fit = list(formula = y ~ 1 + age + sex,
+                   model_function = 'lm',
+                   reg_weights = c(2, -0.1, 0.5)),
+  replications = 10
+)
+
+replicate_simulation(sim_arguments, simulate_fixed(data = NULL, sim_arguments) %>%
+                       simulate_error(sim_arguments) %>%
+                       generate_response(sim_arguments) %>% 
+                       model_fit(sim_arguments) %>%
+                       extract_coefficients()) %>%
+  compute_statistics(sim_arguments)
+```
+
+As can be seen from the output, the default behavior is to return statistics for power, average test statistic, type I error rate, adjusted average test statistic, standard deviation of parameter estimate, average standard error, precision ration (standard deviation of parameter estimate divided by average standard error), and the number of replications for each term. 
+
+To generate this output, only the number of replications is needed. Here only 10 replications were done, in practice many more replications would be done to ensure there are accurate results. 
+
+The default power parameter values used are: Normal distribution, two-tailed alternative hypotheses, and alpha of 0.05. Additional power parameters can be passed directly to override default values by including a power argument within the simulation arguments. For example, if a t-distribution with one degree of freedom an alpha of 0.02 is desired, these can be added as follows:
+
+```{r replicate_simulation_power_values}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + age + sex,
+  fixed = list(weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60),
+               sex = list(var_type = 'factor', levels = c('male', 'female'))),
+  error = list(variance = 25),
+  sample_size = 10,
+  reg_weights = c(2, 0.3, -0.1, 0.5),
+  model_fit = list(formula = y ~ 1 + age + sex,
+                   model_function = 'lm',
+                   reg_weights = c(2, -0.1, 0.5)),
+  replications = 10,
+  power = list(
+    dist = 'qt',
+    alpha = .02,
+    opts = list(df = 1)
+  )
+)
+
+replicate_simulation(sim_arguments, simulate_fixed(data = NULL, sim_arguments) %>%
+                       simulate_error(sim_arguments) %>%
+                       generate_response(sim_arguments) %>% 
+                       model_fit(sim_arguments) %>%
+                       extract_coefficients()) %>%
+  compute_statistics(sim_arguments)
+```
+
+# Nested Designs
+
+

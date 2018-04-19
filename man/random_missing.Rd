@@ -4,13 +4,16 @@
 \alias{random_missing}
 \title{Random Missing Data}
 \usage{
-random_missing(sim_data, resp_var = "sim_data", miss_prop, clust_var = NULL,
-  within_id = "withinID")
+random_missing(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
+  miss_prop, clust_var = NULL, within_id = "withinID")
 }
 \arguments{
 \item{sim_data}{Simulated data frame}
 
-\item{resp_var}{Response variable to add missing data to}
+\item{resp_var}{Character string of response variable with complete data.}
+
+\item{new_outcome}{Character string of new outcome variable name that includes
+the missing data.}
 
 \item{miss_prop}{Proportion of missing data overall or a vector
 the same length as the number of clusters representing the

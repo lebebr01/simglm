@@ -11,6 +11,8 @@ sim_time(n, time_levels = NULL, ...)
 
 \item{time_levels}{The values the time variable should take. If NULL (default),
 the time values are discrete integers starting at 0 and going to n - 1.}
+
+\item{...}{Currently not used.}
 }
 \description{
 This function simulates data for the time variable of longitudinal data.

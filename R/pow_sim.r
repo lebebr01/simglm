@@ -719,9 +719,10 @@ extract_coefficients <- function(model, extract_function = NULL) {
   
 }
 
+#' @importFrom methods selectMethod
 tidy_mixed <- function(model) {
   
-  sum_fun <- selectMethod("summary", class(model))
+  sum_fun <- methods::selectMethod("summary", class(model))
   ss <- sum_fun(model)
   mod_results <- stats::coef(ss) %>% data.frame(check.names=FALSE)
   mod_results <- data.frame(term = rownames(mod_results), mod_results,

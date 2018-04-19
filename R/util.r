@@ -158,4 +158,5 @@ factor_names <- function(sim_args, fixed_vars) {
 utils::globalVariables(c('test_stat', 'reject', 'estimate', 'term', 
                          'std.error', '.', 'sd_estimate', 'avg_se',
                          't1e', 'power_args', 'adjusted_teststat',
-                         't1e_args', 'param_estimate_sd', 'avg_standard_error'))
+                         't1e_args', 'param_estimate_sd', 'avg_standard_error',
+                         'statistic'))

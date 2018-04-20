@@ -53,12 +53,14 @@ The following example shows the five types of variables that can be generated. T
 
 Each variable type will be explored in more detail.
 
+Finally, another common argument for all fixed variable types is the argument `var_level`. This defaults to `var_level = 1` which would be a variable defined at the level 1 of the model (i.e. unique value for each row in the data). These can be changed to reflect the data level that is desired. For example, `var_level = 2` would repeat values for each level 2 cluster found in the data and `var_level = 3` would do the same for each level 3 cluster. Therefore for variables that are at level 2 or level 3, there will be fewer unique values in the data compared to level 1 variables.
+
 ## Time Variable
 For time variables used in longitudinal or repeated measures designs, the default metric is 0 to level1 sample size minus 1. This can be seen above in the output. To change the time variable metric the `time_levels` argument can be used. A vector of values to specify for the time variable can be given directly. For example, the following could be passed to alter the metric of the time variable: `time_levels = c(0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6)` where now the time variable would increment in 0.5 units for the first 7 measurements and 1 unit increments for the last three measurements. This could represent a case when the measurements are collected every 6 months for the first 7 measurements and yearly after that.
 
 Below is the output including the manual time variable specification. The only requirement is that the length of the `time_levels` argument must match the level1 sample size.
 
-```{r}
+```{r time_var}
 set.seed(321) 
 
 # To-DO: Add knot variable and debug
@@ -80,16 +82,55 @@ head(fixed_data, n = 20)
 ```
 
 ## Continuous Variable
+Continuous variables are generating using distribution functions (i.e. `rnorm`). Any distribution function found within R, or user written distribution functions can be used, however the default used in `rnorm`. To change the distribution function used, the argument `dist` can be specified. For example, if the Gamma distribution is desired for the weight variable, the following code would achieve this:
+
+```{r rbeta}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+  fixed = list(time = list(var_type = 'time',
+                           time_levels = c(0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6)),
+               weight = list(var_type = 'continuous', dist = 'rgamma', 
+                             shape = 3),
+               age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment', 'Control'),
+                            var_level = 2)),
+  sample_size = list(level1 = 10, level2 = 20)
+)
+
+fixed_data <- simulate_fixed(data = NULL, sim_arguments)
+head(fixed_data, n = 20)
+```
+
+This would be the resulting distribution of the weight variable generated.
+
+```{r dist_beta}
+library(ggplot2)
+
+ggplot(fixed_data, aes(x = weight)) + 
+  geom_density() + 
+  theme_bw()
+```
 
 
 ## Ordinal Variable
+Ordinal variable specification uses the `sample` function within R to generate ordinal variables that are whole integers. The required argument for these types of variables is `levels`. The `levels` argument takes a range or vector of integer values to be passed to the `sample` function within R. For example, these three specifications for the `levels` argument are valid: `3:60`, `seq(4, 60, 2)`, `c(3, 10, 18, 24, 54, 60)`.
 
+An additional optional argument is `replace`. The `replace` argument specified whether the sampling is done with or without replacement. The default behavior is to do sampling with replacement. If sampling without replacement is desired set `replace = FALSE`. See `sample` for more details on this argument.
+
+Finally, the probability of selecting each value specified to the `levels` argument is also able to be specified through the `prob` argument. If `prob` is specified, it takes a vector of probabilities that must be the same length as the levels argument. The default behavior is for each value specified with `levels` to be equally likely to be sampled.
 
 ## Factor Variable
+Factor variables are generated similarly to ordinal variables with the `sample` function, however factor variables allow the generation of text or categorical variables in addition to numeric grouping variables. Therefore the only needed argument for factor variables is a vector of numeric or text strings representing the different groups to be generated. For example, both of these specifications are equivalent: `c(1, 2, 3, 4)` and `c('Freshman', 'Sophomore', 'Junior', 'Senior')`. Both of these specifications would generate data for these four groups, the difference is that the text labels will be used when text strings are specified. 
 
+An additional optional argument is `replace`. The `replace` argument specified whether the sampling is done with or without replacement. The default behavior is to do sampling with replacement. If sampling without replacement is desired set `replace = FALSE`. See `sample` for more details on this argument.
+
+Finally, the probability of selecting each value specified to the `levels` argument is also able to be specified through the `prob` argument. If `prob` is specified, it takes a vector of probabilities that must be the same length as the levels argument. The default behavior is for each value specified with `levels` to be equally likely to be sampled.
 
 ## Knot Variable
-
+To come...
 
 # Random Error Arguments
 

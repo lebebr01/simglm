@@ -133,9 +133,82 @@ Finally, the probability of selecting each value specified to the `levels` argum
 To come...
 
 # Random Error Arguments
+By default, the random error is generated as random normal with a mean of 0 and standard deviation of 1. If this is the desired behavior, no additional simulation arguments need to be specified in the simulation arguments. For example, the code below generates random error using the fixed arguments already shown above.
+
+```{r random_error}
+library(simglm)
+
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+  fixed = list(time = list(var_type = 'time'),
+               weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment', 'Control'),
+                            var_level = 2)),
+  sample_size = list(level1 = 10, level2 = 20)
+)
+
+error_data <- simulate_error(data = NULL, sim_arguments)
+head(error_data, n = 20)
+```
+
+## Alternative Arguments to Random Error
 
 
 # Random Effect Arguments
+
+```{r random_args}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+  fixed = list(time = list(var_type = 'time'),
+               weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment', 'Control'),
+                            var_level = 2)),
+  randomeffect = list(int_id = list(variance = 8, var_level = 2),
+                time_id = list(variance = 3, var_level = 2)),
+  sample_size = list(level1 = 10, level2 = 20)
+)
+
+random_data <- simulate_randomeffect(data = NULL, sim_arguments)
+head(random_data, n = 20)
+```
+
+## Cross-Classified Random Effects
+If cross-classified random effects are desired, these can be specified directly within the formula syntax as you would with lme4. For example, `y ~ 1 + time + weight + age + treat + (1 + time| id) + (1 | neighborhood_id)`. When documenting the simulation arguments for the additional cross-classified random effect (i.e. `(1 | neighborhood_id)`), specifying `cross_class = TRUE` with that random effect to identify that this is indeed a cross-classified random effect.
+
+```{r cross-class}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + time + weight + age + treat + (1 + time| id) +
+    (1 | neighborhood_id),
+  fixed = list(time = list(var_type = 'time'),
+               weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment', 'Control'),
+                            var_level = 2)),
+  randomeffect = list(int_id = list(variance = 8, var_level = 2),
+                time_id = list(variance = 3, var_level = 2),
+                int_nid = list(variance = 5, var_level = 2,
+                               cross_class = TRUE,
+                               num_ids = 12)),
+  sample_size = list(level1 = 10, level2 = 20)
+)
+
+random_data <- simulate_randomeffect(data = NULL, sim_arguments)
+head(random_data, n = 20)
+```
+
+
+
 
 
 # Model Fit Arguments

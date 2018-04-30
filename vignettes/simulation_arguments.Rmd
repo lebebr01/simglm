@@ -136,8 +136,6 @@ To come...
 By default, the random error is generated as random normal with a mean of 0 and standard deviation of 1. If this is the desired behavior, no additional simulation arguments need to be specified in the simulation arguments. For example, the code below generates random error using the fixed arguments already shown above.
 
 ```{r random_error}
-library(simglm)
-
 set.seed(321) 
 
 sim_arguments <- list(
@@ -181,7 +179,7 @@ head(random_data, n = 20)
 ```
 
 ## Cross-Classified Random Effects
-If cross-classified random effects are desired, these can be specified directly within the formula syntax as you would with lme4. For example, `y ~ 1 + time + weight + age + treat + (1 + time| id) + (1 | neighborhood_id)`. When documenting the simulation arguments for the additional cross-classified random effect (i.e. `(1 | neighborhood_id)`), specifying `cross_class = TRUE` with that random effect to identify that this is indeed a cross-classified random effect.
+If cross-classified random effects are desired, these can be specified directly within the formula syntax as you would with lme4. For example, `y ~ 1 + time + weight + age + treat + (1 + time| id) + (1 | neighborhood_id)`. When documenting the simulation arguments for the additional cross-classified random effect (i.e. `(1 | neighborhood_id)`), specifying `cross_class = TRUE` with that random effect to identify that this is indeed a cross-classified random effect. Secondly, you can also specify directly the number of clusters that are associated with this cross-classified factor, this can be different than those specified in the `sample_size` argument. This can be done with the `num_ids` argument. Below is an example with a single cross-classified random effect representing neighborhoods individuals belong in
 
 ```{r cross-class}
 set.seed(321) 

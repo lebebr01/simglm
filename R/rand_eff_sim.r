@@ -117,18 +117,31 @@ simulate_randomeffect <- function(data, sim_args, ...) {
   
   random_effects_names <- names(sim_args$randomeffect)
   
-  cross_class_re <- lapply(seq_along(sim_arguments[['randomeffect']]), 
+  cross_class_re <- lapply(seq_along(sim_args[['randomeffect']]), 
                            function(xx) 
-                    sim_arguments[['randomeffect']][[xx]][['cross_class']])
-  num_res <- lapply(lapply(seq_along(random_formula_parsed$random_effects), 
+                    sim_args[['randomeffect']][[xx]][['cross_class']])
+  cross_class_re <- unlist(lapply(seq_along(cross_class_re), function(xx)  
+    !is.null(cross_class_re[[xx]])))
+  num_res <- lapply(lapply(seq_along(random_formula_parsed[['random_effects']]), 
                            function(xx) 
         unlist(strsplit(random_formula_parsed[['random_effects']][xx], '\\+'))), 
         length)
+  num_res <- unlist(lapply(seq_along(num_res), function(xx) 
+    rep(random_formula_parsed[['cluster_id_vars']][xx], num_res[[xx]])))
+  
+  cross_class_idvars <- num_res[cross_class_re]
+  
+  cross_loc <- grepl(cross_class_idvars, 
+                     random_formula_parsed[['cluster_id_vars']])
+  
+  cross_vars <- lapply(random_formula_parsed, '[', cross_loc)
+  
+  not_cross_vars <- lapply(random_formula_parsed, '[', !cross_loc)
   
   if(is.null(data)) {
     n <- sample_sizes(sim_args[['sample_size']])
     ids <- create_ids(n, 
-                      c('level1_id', random_formula_parsed[['cluster_id_vars']]))
+                      c('level1_id', not_cross_vars[['cluster_id_vars']]))
     Zmat <- purrr::invoke_map("sim_variable", 
                               sim_args[['randomeffect']],
                               n = n,

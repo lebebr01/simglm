@@ -665,7 +665,7 @@ sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1,
       cont_var <- standardize(cont_var, ther_sim[1], ther_sim[2])
     }
     
-    cont_var <- cont_var %*% chol(c(sqrt(variance)))
+    cont_var <- cont_var %*% chol(c(variance))
   }
   
   cont_var

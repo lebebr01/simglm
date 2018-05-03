@@ -242,7 +242,11 @@ var(error_data$error)
 It is also possible to generate heterogeneity of variance for the random error. 
 
 # Random Effect Arguments
-The random effect arguments are passed through a named element of the list to the simulation arguments called 'randomeffect'. Within this element, each random effect specified in the formula must be specified as a named list. 
+The random effect arguments are passed through a named element of the list to the simulation arguments called 'randomeffect'. Within this element, each random effect specified in the formula must be specified as a named list. The named list allows the user to specify the names that will be used in the data simulation for the random effects. The default behavior of these random effects is to be simulated from a random normal distribution with mean 0 and variance of 1.
+
+Many of the same arguments that have been discussed with the error simulation are possible for the random effect simulation arguments. These include: `dist`, `variance`, `ther_sim`, `ther_val` and other arguments that are needed to pass on the data generating function. In addition, the argument `var_level` first introduced with the fixed effects are present here indicating which level of the data structure the random effect should be generated at. These arguments will not be discussed in more detail here, but readers can see examples of these arguments within the fixed effects and random error sections above.
+
+Below is an example that simulated two random effects in a two-level nested model and specifies the variance of 8 and 3 for the two random effects respectively. Finally, you will notice in the final output, the names of the random effect columns are specified by the names included in the list associated with the "randomeffect" portion of the simulation arguments.
 
 ```{r random_args}
 set.seed(321) 
@@ -263,6 +267,7 @@ sim_arguments <- list(
 random_data <- simulate_randomeffect(data = NULL, sim_arguments)
 head(random_data, n = 20)
 ```
+
 
 ## Cross-Classified Random Effects
 If cross-classified random effects are desired, these can be specified directly within the formula syntax as you would with lme4. For example, `y ~ 1 + time + weight + age + treat + (1 + time| id) + (1 | neighborhood_id)`. When documenting the simulation arguments for the additional cross-classified random effect (i.e. `(1 | neighborhood_id)`), specifying `cross_class = TRUE` with that random effect to identify that this is indeed a cross-classified random effect. Secondly, you can also specify directly the number of clusters that are associated with this cross-classified factor, this can be different than those specified in the `sample_size` argument. This can be done with the `num_ids` argument. Below is an example with a single cross-classified random effect representing neighborhoods individuals belong in
@@ -290,10 +295,6 @@ sim_arguments <- list(
 random_data <- simulate_randomeffect(data = NULL, sim_arguments)
 head(random_data, n = 20)
 ```
-
-
-
-
 
 # Model Fit Arguments
 

@@ -640,7 +640,8 @@ sim_continuous <- function(k = NULL, n, p, dist_fun,
 #' @param ... Additional parameters to pass to the dist_fun argument.
 #' @export 
 sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1, 
-                            variance = NULL, ther_sim = FALSE, ...) {
+                            variance = NULL, ther_sim = FALSE, ther_val = NULL, 
+                            ...) {
   
   if(var_level == 1) {
     cont_var <- unlist(lapply(n[['level1']], FUN = dist, ...))
@@ -661,8 +662,8 @@ sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1,
       
       cont_var <- standardize(cont_var, ther[1], ther[2])
     }
-    if(length(ther_sim) == 2) {
-      cont_var <- standardize(cont_var, ther_sim[1], ther_sim[2])
+    if(!is.null(ther_val)) {
+      cont_var <- standardize(cont_var, ther_val[1], ther_val[2])
     }
     
     cont_var <- cont_var %*% chol(c(variance))

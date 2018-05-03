@@ -153,8 +153,93 @@ error_data <- simulate_error(data = NULL, sim_arguments)
 head(error_data, n = 20)
 ```
 
-## Alternative Arguments to Random Error
+## Optional Arguments for Random Error
+The two main optional arguments for the random error component include a `dist` and `variance` that represent the error generating function and variance of the random error respectively. For example, if a t-distribution is desired for simulation of random error, `dist = 'rt'` can be used to specify the t-distribution as the generating distribution. When distributions other than random normal are specified, it is common that additional arguments will need to be specified for the generating distribution function (i.e. `rt`). In the `rt` example, the `df` argument is needed to specify the degrees of freedom for the t-distribution. Below is an example using a t-distribution.
 
+```{r random_error_t}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+  fixed = list(time = list(var_type = 'time'),
+               weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment', 'Control'),
+                            var_level = 2)),
+  error = list(dist = 'rt', df = 4),
+  sample_size = list(level1 = 10, level2 = 20)
+)
+
+error_data <- simulate_error(data = NULL, sim_arguments)
+head(error_data, n = 20)
+```
+
+Finally, the variance of the random error can also be specified to be something other than the default 1. For example, if the variance is desired to be 10, then the argument `variance = 10` will set this variance. This variance works with any distribution function. For example, the following will generate data as a t-distribution with a variance of 10.
+
+```{r re_10}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+  fixed = list(time = list(var_type = 'time'),
+               weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment', 'Control'),
+                            var_level = 2)),
+  error = list(dist = 'rt', df = 4, variance = 10),
+  sample_size = list(level1 = 10, level2 = 20)
+)
+
+error_data <- simulate_error(data = NULL, sim_arguments)
+var(error_data$error)
+```
+
+Note that the variance does not actually equal 10 here. This is due to the generating distribution specified (i.e. t-distribution with 4 degrees of freedom) has a theoretical variance of 2. In cases when the random error has a variance other than 1, the variable needs to be standardized prior to converting to the desired variance value. The standardization can be done in two ways. One, an empirical mean and standard deviation of the generating distribution can be obtained by setting the argument `ther_sim = TRUE`. For example:
+
+```{r re_10_ts}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+  fixed = list(time = list(var_type = 'time'),
+               weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment', 'Control'),
+                            var_level = 2)),
+  error = list(dist = 'rt', df = 4, variance = 10, ther_sim = TRUE),
+  sample_size = list(level1 = 10, level2 = 20)
+)
+
+error_data <- simulate_error(data = NULL, sim_arguments)
+var(error_data$error)
+```
+
+This simulation takes longer to run as the generated empirical mean and standard deviation for the standardization draws a large number of random values from the specified distribution. To speed up this process, the theoretical values can be specified directly within the `ther_val` argument as a vector with the mean specified first followed by the standard deviation. This is shown below:
+
+```{r re_10_specify}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+  fixed = list(time = list(var_type = 'time'),
+               weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment', 'Control'),
+                            var_level = 2)),
+  error = list(dist = 'rt', df = 4, variance = 10, ther_val = c(0, sqrt(2))),
+  sample_size = list(level1 = 10, level2 = 20)
+)
+
+error_data <- simulate_error(data = NULL, sim_arguments)
+var(error_data$error)
+```
+
+## Heterogeneity of Variance
+It is also possible to generate heterogeneity of variance for the random error. 
 
 # Random Effect Arguments
 

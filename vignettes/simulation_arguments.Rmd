@@ -242,6 +242,7 @@ var(error_data$error)
 It is also possible to generate heterogeneity of variance for the random error. 
 
 # Random Effect Arguments
+The random effect arguments are passed through a named element of the list to the simulation arguments called 'randomeffect'. Within this element, each random effect specified in the formula must be specified as a named list. 
 
 ```{r random_args}
 set.seed(321) 

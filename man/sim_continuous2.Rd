@@ -21,9 +21,10 @@ respectively.}
 
 \item{ther_sim}{A TRUE/FALSE flag indicating whether the error simulation 
 function should be simulated, that is should the mean and standard deviation
-used for standardization be simulated. Can optionally be a vector of length
-two that directly specifies the theoretical mean/variance of the generated 
-distribution.}
+used for standardization be simulated.}
+
+\item{ther_val}{A vector of 2 that should include the theoretical mean and 
+standard deviation of the generating function.}
 
 \item{...}{Additional parameters to pass to the dist_fun argument.}
 }

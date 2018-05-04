@@ -634,9 +634,9 @@ sim_continuous <- function(k = NULL, n, p, dist_fun,
 #' @param variance The variance for random effect simulation.
 #' @param ther_sim A TRUE/FALSE flag indicating whether the error simulation 
 #'  function should be simulated, that is should the mean and standard deviation
-#'  used for standardization be simulated. Can optionally be a vector of length
-#'  two that directly specifies the theoretical mean/variance of the generated 
-#'  distribution.
+#'  used for standardization be simulated. 
+#' @param ther_val A vector of 2 that should include the theoretical mean and 
+#'  standard deviation of the generating function.
 #' @param ... Additional parameters to pass to the dist_fun argument.
 #' @export 
 sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1, 

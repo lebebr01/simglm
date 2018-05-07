@@ -296,11 +296,58 @@ random_data <- simulate_randomeffect(data = NULL, sim_arguments)
 head(random_data, n = 20)
 ```
 
-# Model Fit Arguments
-
-
 # Missing Data Arguments
+Missing data is the standard rather than the exception in real world data. Therefore, generating data that include missing is important for generating data that are representative of real world data. In the power analysis context, most power analyses do not include missing data in the power computations (particularly if these are closed form solutions), but power can be negatively affected by missing data. 
 
+Fortunatly, the simglm package contains many useful frameworks for generating missing data. To generate missing data, the `generate_missing` function can be used for this. This function is called after the complete data are generated. This means that the complete data and missing data will be generated. Currently three types of missing data are supported, dropout, random, and mar (missing at random). The specification of missing data arguments is done using a named element to the simulation argument list called "missing_data".
+
+## Random Missing Data
+First, lets explore random missing data. This structure is equivalent to the missing completely at random framework if you are familiar with Rubin's missing data classifications. To generate random missing data the `type = 'random'` is specified. Two additional arguments are needed to generate the missing data, first the missing proportion needs to be specified with `miss_prop` and the name of the new response variable with missing data needs to be specified with `new_outcome`. Below is an example generating data with random missing data.
+
+```{r missing_random}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+  reg_weights = c(4, 0.5, 0.75, 0, 0.33),
+  fixed = list(time = list(var_type = 'time'),
+               weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment', 'Control'),
+                            var_level = 2)),
+  randomeffect = list(int_id = list(variance = 8, var_level = 2),
+                      time_id = list(variance = 3, var_level = 2)),
+  missing_data = list(miss_prop = .25, new_outcome = 'y_missing',
+                      type = 'random'),
+  sample_size = list(level1 = 10, level2 = 20)
+)
+
+data_w_missing <- sim_arguments %>%
+  simulate_fixed(data = NULL, .) %>%
+  simulate_randomeffect(sim_arguments) %>%
+  simulate_error(sim_arguments) %>%
+  generate_response(sim_arguments) %>%
+  generate_missing(sim_arguments)
+
+head(data_w_missing, n = 10)
+```
+
+We can look at the amount of missing data:
+
+```{r amount_missing}
+prop.table(table(is.na(data_w_missing$y_missing)))
+```
+
+
+## MAR Missing Data
+
+
+## Dropout Missing Data
+
+
+# Model Fit Arguments
+The default behavior when fitting models to the generated data
 
 # Power Arguments
 

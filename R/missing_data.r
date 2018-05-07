@@ -43,9 +43,13 @@ missing_data <- function(sim_data, resp_var = 'sim_data',
 #'   }
 #' @export 
 generate_missing <- function(data, sim_args) {
+  
+  resp_var <- parse_formula(sim_args)[['outcome']]
+  
   purrr::invoke("missing_data",
-                    sim_args$missing_data,
-                    sim_data = data)
+                sim_args[['missing_data']],
+                sim_data = data,
+                resp_var = resp_var)
 }
 
 #' Dropout Missing Data

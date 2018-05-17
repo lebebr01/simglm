@@ -9,6 +9,7 @@ vignette: >
 ---
 ```{r setup, include=FALSE}
 library(knitr)
+library(dplyr)
 library(simglm)
 knit_print.data.frame = function(x, ...) {
   res = paste(c('', '', kable(x, output = FALSE)), collapse = '\n')

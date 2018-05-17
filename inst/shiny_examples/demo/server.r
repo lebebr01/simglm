@@ -281,7 +281,8 @@ server <- function(input, output, session) {
   cov_param <- reactive({
     num_cov <- input$number_cov - input$num_discrete
     if(input$change_cov_dist) {
-      dist_fun_cov <- sapply(1:num_cov, function(i) input[[paste0('c_dist', i)]])
+      dist_fun_cov <- sapply(1:num_cov, function(i) 
+        input[[paste0('c_dist', i)]])
     } else {
       dist_fun_cov <- sapply(1:num_cov, function(i) 'rnorm')
     }
@@ -626,7 +627,7 @@ server <- function(input, output, session) {
       params <- cbind(params, est)
       params$diff <- as.numeric(params$Parameter) - as.numeric(params$est)
     }
-    datatable(params, rownames = FALSE)
+    DT::datatable(params, rownames = FALSE)
   })
   
   output$downloadData <- downloadHandler(
@@ -998,11 +999,11 @@ server <- function(input, output, session) {
       pow_param <- attr(terms(fixed()),"term.labels")
     }
     alpha <- input$alpha
-    pow_dist = input$type_dist
-    pow_tail = as.numeric(as.character(input$tails))
-    replicates = input$repl
-    missing = FALSE
-    missing_args = list(NULL)
+    pow_dist <- input$type_dist
+    pow_tail <- as.numeric(as.character(input$tails))
+    replicates <- input$repl
+    missing <- FALSE
+    missing_args <- list(NULL)
     
     if(is.null(input$vary_arg_sel)) {
       vary_vals <- NULL
@@ -1015,8 +1016,8 @@ server <- function(input, output, session) {
     }
     
     if(input$missing) {
-      missing = TRUE
-      missing_args = list(miss_prop = input$miss_prop, type = missing_type(),
+      missing <- TRUE
+      missing_args <- list(miss_prop = input$miss_prop, type = missing_type(),
                           clust_var = miss_clustvar(), within_id = miss_withinid(), 
                           miss_cov = missing_cov())
     }
@@ -1145,7 +1146,7 @@ server <- function(input, output, session) {
   # })
   
   output$power_table <- renderDataTable({
-    datatable(power_sim())
+    DT::datatable(power_sim())
   })
   
   output$power_code <- renderUI({

@@ -5,7 +5,8 @@
 \title{Dropout Missing Data}
 \usage{
 dropout_missing(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
-  clust_var = "clustID", within_id = "withinID", miss_prop)
+  clust_var = "clustID", within_id = "withinID", miss_prop = NULL,
+  dropout_location = NULL)
 }
 \arguments{
 \item{sim_data}{Simulated data frame}
@@ -19,9 +20,10 @@ the missing data.}
 
 \item{within_id}{ID variable within each cluster.}
 
-\item{miss_prop}{Proportion of missing data overall or a vector
-the same length as the number of clusters representing the
-percentage of missing data for each cluster}
+\item{miss_prop}{Proportion of missing data overall}
+
+\item{dropout_location}{A vector the same length as the number of clusters 
+representing the percentage of missing data for each cluster}
 }
 \description{
 Function that inputs simulated data and returns data frame with

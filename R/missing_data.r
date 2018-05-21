@@ -10,16 +10,17 @@
 #' @param clust_var Cluster variable used for the grouping, set to 
 #'           NULL by default which means no clustering.
 #' @param within_id ID variable within each cluster.
-#' @param miss_prop Proportion of missing data overall or a vector
-#'           the same length as the number of clusters representing the
-#'           percentage of missing data for each cluster
+#' @param miss_prop Proportion of missing data overall 
+#' @param dropout_location A vector the same length as the number of clusters 
+#'   representing the percentage of missing data for each cluster
 #' @param type The type of missing data to generate, currently supports
 #'           droput, random, or missing at random (mar) missing data.
 #' @param miss_cov Covariate that the missing values are based on.
 #' @export 
 missing_data <- function(sim_data, resp_var = 'sim_data',
                          new_outcome = 'sim_data2',
-                         clust_var = NULL, within_id = NULL, miss_prop,
+                         clust_var = NULL, within_id = NULL, miss_prop = NULL,
+                         dropout_location = NULL,
                          type = c('dropout', 'random', 'mar'),
                          miss_cov) {
   switch(type,
@@ -71,14 +72,14 @@ generate_missing <- function(data, sim_args) {
 #'   the missing data.
 #' @param clust_var Cluster variable used for the grouping.
 #' @param within_id ID variable within each cluster.
-#' @param miss_prop Proportion of missing data overall or a vector
-#'           the same length as the number of clusters representing the
-#'           percentage of missing data for each cluster
+#' @param miss_prop Proportion of missing data overall 
+#' @param dropout_location A vector the same length as the number of clusters 
+#'   representing the percentage of missing data for each cluster
 #' @export 
 dropout_missing <- function(sim_data, resp_var = 'sim_data', 
                             new_outcome = 'sim_data2', 
                         clust_var = 'clustID', within_id = "withinID", 
-                        miss_prop) {
+                        miss_prop = NULL, dropout_location = NULL) {
   
   if(resp_var %ni% names(sim_data)) {
     stop(paste(resp_var, 'not found in variables of data supplied'))
@@ -95,7 +96,7 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
   
   num_obs <- nrow(sim_data)
   
-  if(length(miss_prop) == 1) {
+  if(!is.null(miss_prop)) {
     if(miss_prop > 1) {
       miss_prop <- miss_prop / 100
     }
@@ -111,8 +112,9 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
                                                     lim[2]), 2))
     }
     
-  } else {
-    num_missing <- round(len_groups * miss_prop, 0)
+  } 
+  if(!is.null(dropout_location)) {
+    num_missing <- round(len_groups * dropout_location, 0)
   }
     
   missing_obs <- lapply(1:length(num_missing), function(xx) 

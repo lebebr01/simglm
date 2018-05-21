@@ -5,8 +5,8 @@
 \title{Master Missing Data Function}
 \usage{
 missing_data(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
-  clust_var = NULL, within_id = NULL, miss_prop, type = c("dropout",
-  "random", "mar"), miss_cov)
+  clust_var = NULL, within_id = NULL, miss_prop = NULL,
+  dropout_location = NULL, type = c("dropout", "random", "mar"), miss_cov)
 }
 \arguments{
 \item{sim_data}{Simulated data frame}
@@ -21,9 +21,10 @@ NULL by default which means no clustering.}
 
 \item{within_id}{ID variable within each cluster.}
 
-\item{miss_prop}{Proportion of missing data overall or a vector
-the same length as the number of clusters representing the
-percentage of missing data for each cluster}
+\item{miss_prop}{Proportion of missing data overall}
+
+\item{dropout_location}{A vector the same length as the number of clusters 
+representing the percentage of missing data for each cluster}
 
 \item{type}{The type of missing data to generate, currently supports
 droput, random, or missing at random (mar) missing data.}

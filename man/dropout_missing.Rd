@@ -23,7 +23,7 @@ the missing data.}
 \item{miss_prop}{Proportion of missing data overall}
 
 \item{dropout_location}{A vector the same length as the number of clusters 
-representing the percentage of missing data for each cluster}
+representing the number of data observations for each individual.}
 }
 \description{
 Function that inputs simulated data and returns data frame with

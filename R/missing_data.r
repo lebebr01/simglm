@@ -12,7 +12,7 @@
 #' @param within_id ID variable within each cluster.
 #' @param miss_prop Proportion of missing data overall 
 #' @param dropout_location A vector the same length as the number of clusters 
-#'   representing the percentage of missing data for each cluster
+#'   representing the number of data observations for each individual.
 #' @param type The type of missing data to generate, currently supports
 #'           droput, random, or missing at random (mar) missing data.
 #' @param miss_cov Covariate that the missing values are based on.
@@ -25,7 +25,7 @@ missing_data <- function(sim_data, resp_var = 'sim_data',
                          miss_cov) {
   switch(type,
          dropout = dropout_missing(sim_data, resp_var, new_outcome, clust_var, 
-                                   within_id, miss_prop),
+                                   within_id, miss_prop, dropout_location),
          random = random_missing(sim_data, resp_var, new_outcome, miss_prop, 
                                  clust_var, within_id),
          mar = mar_missing(sim_data, resp_var, new_outcome, miss_cov, miss_prop)
@@ -74,7 +74,7 @@ generate_missing <- function(data, sim_args) {
 #' @param within_id ID variable within each cluster.
 #' @param miss_prop Proportion of missing data overall 
 #' @param dropout_location A vector the same length as the number of clusters 
-#'   representing the percentage of missing data for each cluster
+#'   representing the number of data observations for each individual.
 #' @export 
 dropout_missing <- function(sim_data, resp_var = 'sim_data', 
                             new_outcome = 'sim_data2', 
@@ -114,7 +114,7 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
     
   } 
   if(!is.null(dropout_location)) {
-    num_missing <- round(len_groups * dropout_location, 0)
+    num_missing <- round(len_groups - dropout_location, 0)
   }
     
   missing_obs <- lapply(1:length(num_missing), function(xx) 

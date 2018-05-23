@@ -342,9 +342,136 @@ prop.table(table(is.na(data_w_missing$y_missing)))
 
 
 ## MAR Missing Data
+Data that are missing at random (MAR) can be generated as well. 
 
+```{r missing_mar}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+  reg_weights = c(4, 0.5, 0.75, 0, 0.33),
+  fixed = list(time = list(var_type = 'time'),
+               weight = list(var_type = 'continuous', mean = 180, sd = 30,
+                             var_level = 1),
+               age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment', 'Control'),
+                            var_level = 2)),
+  randomeffect = list(int_id = list(variance = 8, var_level = 2),
+                      time_id = list(variance = 3, var_level = 2)),
+  missing_data = list(new_outcome = 'y_missing', miss_cov = 'weight', 
+                      mar_prop = seq(from = 0, to = .9, length.out = 200),
+                      type = 'mar'),
+  sample_size = list(level1 = 10, level2 = 20)
+)
+
+data_w_missing <- sim_arguments %>%
+  simulate_fixed(data = NULL, .) %>%
+  simulate_randomeffect(sim_arguments) %>%
+  simulate_error(sim_arguments) %>%
+  generate_response(sim_arguments) %>%
+  generate_missing(sim_arguments)
+
+head(data_w_missing, n = 10)
+```
+
+We can look at the amount of missing data:
+
+```{r amount_missing_mar}
+prop.table(table(is.na(data_w_missing$y_missing)))
+```
 
 ## Dropout Missing Data
+Dropout missing data is possible when simulating data from a longitudinal design. When requesting dropout missing data, observations are removed after a specific point in the time cycle. For example, perhaps an individual stops being a part of the study after the third measurement. To request this type of missing data, the `type = 'dropout'` can be specified. In addition, one new argument is needed, `clust_var`. This argument represents the id associated with the clusters with longitudinal data. Below is an example:
+
+```{r missing_dropout}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+  reg_weights = c(4, 0.5, 0.75, 0, 0.33),
+  fixed = list(time = list(var_type = 'time'),
+               weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment', 'Control'),
+                            var_level = 2)),
+  randomeffect = list(int_id = list(variance = 8, var_level = 2),
+                      time_id = list(variance = 3, var_level = 2)),
+  missing_data = list(miss_prop = .25, new_outcome = 'y_missing',
+                      clust_var = 'id',
+                      type = 'dropout'),
+  sample_size = list(level1 = 10, level2 = 20)
+)
+
+data_w_missing <- sim_arguments %>%
+  simulate_fixed(data = NULL, .) %>%
+  simulate_randomeffect(sim_arguments) %>%
+  simulate_error(sim_arguments) %>%
+  generate_response(sim_arguments) %>%
+  generate_missing(sim_arguments)
+
+head(data_w_missing, n = 10)
+```
+
+We can look at the amount of missing data:
+
+```{r amount_missing_dropout}
+prop.table(table(is.na(data_w_missing$y_missing)))
+```
+
+We can also look now at the amount of missing by the time variable.
+
+```{r missing_by_time}
+prop.table(table(is.na(data_w_missing$y_missing), data_w_missing$time))
+```
+
+### Specify location of dropout
+If additional control is desired, specifying the location of the dropout is possible. In this situation, a vector is passed to `dropout_location` that specifies for each individual (more generally each level 2 unit) where the dropout occurs. Below is an example of this.
+
+```{r missing_dropout_spec}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+  reg_weights = c(4, 0.5, 0.75, 0, 0.33),
+  fixed = list(time = list(var_type = 'time'),
+               weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment', 'Control'),
+                            var_level = 2)),
+  randomeffect = list(int_id = list(variance = 8, var_level = 2),
+                      time_id = list(variance = 3, var_level = 2)),
+  missing_data = list(new_outcome = 'y_missing',
+      dropout_location = c(3, 9, 1, 6, 7, 8, 6, 9, 2, 4, 6, 5, 8, 9, 4, 5, 
+                           6, 7, 2, 9),
+                      clust_var = 'id', within_id = 'level1_id',
+                      type = 'dropout'),
+  sample_size = list(level1 = 10, level2 = 20)
+)
+
+data_w_missing <- sim_arguments %>%
+  simulate_fixed(data = NULL, .) %>%
+  simulate_randomeffect(sim_arguments) %>%
+  simulate_error(sim_arguments) %>%
+  generate_response(sim_arguments) %>%
+  generate_missing(sim_arguments)
+
+head(data_w_missing, n = 10)
+```
+
+We can look at the amount of missing data:
+
+```{r amount_missing_dropout_spec}
+prop.table(table(is.na(data_w_missing$y_missing)))
+```
+
+We can also look now at the amount of missing by the time variable.
+
+```{r missing_by_time_dropout_spec}
+prop.table(table(is.na(data_w_missing$y_missing), data_w_missing$time))
+```
 
 
 # Model Fit Arguments

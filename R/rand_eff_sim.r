@@ -150,11 +150,11 @@ sim_cross <- function(num_ids, variance = NULL, dist = 'rnorm',
 #' @export 
 simulate_randomeffect <- function(data, sim_args, ...) {
   
-  random_formula <- parse_formula(sim_args)$randomeffect
+  random_formula <- parse_formula(sim_args)[['randomeffect']]
 
   random_formula_parsed <- parse_randomeffect(random_formula)
   
-  random_effects_names <- names(sim_args$randomeffect)
+  random_effects_names <- names(sim_args[['randomeffect']])
   
   cross_class <- parse_crossclass(sim_args, random_formula_parsed)
   

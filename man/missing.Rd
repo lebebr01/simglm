@@ -9,7 +9,8 @@
 \usage{
 missing_data(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
   clust_var = NULL, within_id = NULL, miss_prop = NULL,
-  dropout_location = NULL, type = c("dropout", "random", "mar"), miss_cov)
+  dropout_location = NULL, type = c("dropout", "random", "mar"), miss_cov,
+  mar_prop)
 
 dropout_missing(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
   clust_var = "clustID", within_id = "withinID", miss_prop = NULL,
@@ -19,7 +20,7 @@ random_missing(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
   miss_prop, clust_var = NULL, within_id = "withinID")
 
 mar_missing(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
-  miss_cov, miss_prop)
+  miss_cov, mar_prop)
 }
 \arguments{
 \item{sim_data}{Simulated data frame}
@@ -43,6 +44,9 @@ representing the number of data observations for each individual.}
 droput, random, or missing at random (mar) missing data.}
 
 \item{miss_cov}{Covariate that the missing values are based on.}
+
+\item{mar_prop}{Proportion of missing data for each unique value 
+specified in the miss_cov argument.}
 }
 \description{
 Function that inputs simulated data and returns data frame with 

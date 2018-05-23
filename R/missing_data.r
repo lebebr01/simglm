@@ -18,6 +18,8 @@
 #' @param type The type of missing data to generate, currently supports
 #'           droput, random, or missing at random (mar) missing data.
 #' @param miss_cov Covariate that the missing values are based on.
+#' @param mar_prop Proportion of missing data for each unique value 
+#'   specified in the miss_cov argument.
 #' @export 
 #' @rdname missing
 missing_data <- function(sim_data, resp_var = 'sim_data',
@@ -25,13 +27,13 @@ missing_data <- function(sim_data, resp_var = 'sim_data',
                          clust_var = NULL, within_id = NULL, miss_prop = NULL,
                          dropout_location = NULL,
                          type = c('dropout', 'random', 'mar'),
-                         miss_cov) {
+                         miss_cov, mar_prop) {
   switch(type,
          dropout = dropout_missing(sim_data, resp_var, new_outcome, clust_var, 
                                    within_id, miss_prop, dropout_location),
          random = random_missing(sim_data, resp_var, new_outcome, miss_prop, 
                                  clust_var, within_id),
-         mar = mar_missing(sim_data, resp_var, new_outcome, miss_cov, miss_prop)
+         mar = mar_missing(sim_data, resp_var, new_outcome, miss_cov, mar_prop)
          )
 }
 
@@ -182,11 +184,11 @@ random_missing <- function(sim_data, resp_var = 'sim_data',
 }
 
 #' @inheritParams missing_data
-#' @importFrom dplyr arrange
+#' @importFrom dplyr count select slice left_join mutate
 #' @export 
 #' @rdname missing
 mar_missing <- function(sim_data, resp_var = 'sim_data', 
-                        new_outcome = 'sim_data2', miss_cov, miss_prop) {
+                        new_outcome = 'sim_data2', miss_cov, mar_prop) {
   
   if(as.character(resp_var) %ni% names(sim_data)) {
     stop(paste(resp_var, 'not found in variables of data supplied'))
@@ -199,18 +201,24 @@ mar_missing <- function(sim_data, resp_var = 'sim_data',
   
   num_obs <- nrow(sim_data)
 
-  uniq_vals <- dplyr::arrange(data.frame(cov = with(sim_data, 
-                                unique(eval(parse(text = miss_cov))))), cov)
+  var_enq <- rlang::sym(miss_cov)
+  uniq_vals <- dplyr::count(sim_data, !!var_enq)
   
-  miss_per <- cbind(miss_cov = uniq_vals, miss_prop = miss_prop,
-                    miss_prob = runif(length(miss_prop)))
+  if(nrow(uniq_vals) != length(mar_prop)) {
+    stop(paste('mar_prop argument must be the same length as 
+               unique values in', miss_cov))
+  }
   
-  join_var <- as.character(miss_cov)
-  sim_data2 <- merge(sim_data, miss_per, by.x = miss_cov, by.y = 'cov')
+  num <- uniq_vals[['n']]
+  miss_per <- cbind(dplyr::select(uniq_vals, !!var_enq), miss_prop = mar_prop)
+  miss_per <- dplyr::slice(miss_per, rep(1:n(), times = num))
+  miss_per <- dplyr::mutate(miss_per, miss_prob = runif(nrow(miss_per)))
   
-  sim_data2 <- cbind(sim_data2, sim_data2 = 
-                       with(sim_data2, ifelse(miss_prob < miss_prop, NA, 
-                                              eval(parse(text = resp_var)))))
+  sim_data <- dplyr::left_join(sim_data, miss_per, by = miss_cov)
+  sim_data <- mutate(sim_data, missing = ifelse(miss_prob < miss_prop, 1, 0))
   
-  sim_data2
+  sim_data[new_outcome] <- sim_data[resp_var]
+  sim_data[sim_data['missing'] == 1, new_outcome] <- NA
+  
+  sim_data
 }

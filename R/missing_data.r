@@ -1,7 +1,9 @@
-#' Master Missing Data Function
+#' Missing Data Functions
 #' 
-#' This function is a wrapper to easily call the specific types of 
-#' missing data mechanisms.
+#' Function that inputs simulated data and returns data frame with 
+#' new response variable that includes missing data. Missing data types
+#' incorporated include dropout missing data, missing at random, and 
+#' random missing data.
 #' 
 #' @param sim_data Simulated data frame
 #' @param resp_var Character string of response variable with complete data.
@@ -17,6 +19,7 @@
 #'           droput, random, or missing at random (mar) missing data.
 #' @param miss_cov Covariate that the missing values are based on.
 #' @export 
+#' @rdname missing
 missing_data <- function(sim_data, resp_var = 'sim_data',
                          new_outcome = 'sim_data2',
                          clust_var = NULL, within_id = NULL, miss_prop = NULL,
@@ -53,29 +56,10 @@ generate_missing <- function(data, sim_args) {
                 resp_var = resp_var)
 }
 
-#' Dropout Missing Data
-#' 
-#' Function that inputs simulated data and returns data frame with
-#' new response variable that includes missing data. This function
-#' does dropout missing data, that is missing data dependent on time.
-#' Likely most appropriate for longitudinal data.
-#' 
-#' The function returns two new variables to the original data frame.
-#' The first is a dichotomous variable representing whether the response
-#' variable would be marked as NA (1) or not (0). The second is a 
-#' re-representation of the response variable with the values coded as 
-#' NA named 'sim_data2'.
-#' 
-#' @param sim_data Simulated data frame
-#' @param resp_var Character string of response variable with complete data.
-#' @param new_outcome Character string of new outcome variable name that includes
-#'   the missing data.
-#' @param clust_var Cluster variable used for the grouping.
-#' @param within_id ID variable within each cluster.
-#' @param miss_prop Proportion of missing data overall 
-#' @param dropout_location A vector the same length as the number of clusters 
-#'   representing the number of data observations for each individual.
-#' @export 
+
+#' @inheritParams missing_data
+#' @export
+#' @rdname missing 
 dropout_missing <- function(sim_data, resp_var = 'sim_data', 
                             new_outcome = 'sim_data2', 
                         clust_var = 'clustID', within_id = "withinID", 
@@ -132,29 +116,9 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
 }
 
 
-#' Random Missing Data
-#' 
-#' Function that inputs simulated data and returns data frame with
-#' new response variable that includes missing data. This function 
-#' simulates data that is randomly missing or missing completely at
-#' random.
-#' 
-#' The function returns two new variables to the original data frame.
-#' The first is a dichotomous variable representing whether the response
-#' variable would be marked as NA (1) or not (0). The second is a 
-#' re-representation of the response variable with the values coded as 
-#' NA named 'sim_data2'.
-#' 
-#' @param sim_data Simulated data frame
-#' @param resp_var Character string of response variable with complete data.
-#' @param new_outcome Character string of new outcome variable name that includes
-#'   the missing data.
-#' @param miss_prop Proportion of missing data overall or a vector
-#'           the same length as the number of clusters representing the
-#'           percentage of missing data for each cluster
-#' @param clust_var Cluster variable used for the grouping.
-#' @param within_id ID variable within each cluster.
+#' @inheritParams missing_data
 #' @export 
+#' @rdname missing
 random_missing <- function(sim_data, resp_var = 'sim_data', 
                            new_outcome = 'sim_data2', miss_prop,
                            clust_var = NULL, within_id = "withinID") {
@@ -216,23 +180,10 @@ random_missing <- function(sim_data, resp_var = 'sim_data',
   sim_data
 }
 
-#' Missing at Random
-#' 
-#' This type of missing data structure will be simulated based on values of a 
-#' third variable. For example, the likelihood of a missing value is a function 
-#' of gender, socioeconomic status, or age. Note, this function is similar to 
-#' dropout missing data, but instead of missing due to time, this is missing
-#' due to another covariate.
-#' 
-#' @param sim_data Simulated data frame
-#' @param resp_var Character string of response variable with complete data.
-#' @param new_outcome Character string of new outcome variable name that includes
-#'   the missing data.
-#' @param miss_cov Covariate that the missing values are based on.
-#' @param miss_prop A vector the same length as the number of unique values 
-#'           from miss_cov variable.
+#' @inheritParams missing_data
 #' @importFrom dplyr arrange
 #' @export 
+#' @rdname missing
 mar_missing <- function(sim_data, resp_var = 'sim_data', 
                         new_outcome = 'sim_data2', miss_cov, miss_prop) {
   

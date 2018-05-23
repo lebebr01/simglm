@@ -2,11 +2,24 @@
 % Please edit documentation in R/missing_data.r
 \name{missing_data}
 \alias{missing_data}
-\title{Master Missing Data Function}
+\alias{dropout_missing}
+\alias{random_missing}
+\alias{mar_missing}
+\title{Missing Data Functions}
 \usage{
 missing_data(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
   clust_var = NULL, within_id = NULL, miss_prop = NULL,
   dropout_location = NULL, type = c("dropout", "random", "mar"), miss_cov)
+
+dropout_missing(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
+  clust_var = "clustID", within_id = "withinID", miss_prop = NULL,
+  dropout_location = NULL)
+
+random_missing(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
+  miss_prop, clust_var = NULL, within_id = "withinID")
+
+mar_missing(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
+  miss_cov, miss_prop)
 }
 \arguments{
 \item{sim_data}{Simulated data frame}
@@ -32,6 +45,8 @@ droput, random, or missing at random (mar) missing data.}
 \item{miss_cov}{Covariate that the missing values are based on.}
 }
 \description{
-This function is a wrapper to easily call the specific types of 
-missing data mechanisms.
+Function that inputs simulated data and returns data frame with 
+new response variable that includes missing data. Missing data types
+incorporated include dropout missing data, missing at random, and 
+random missing data.
 }

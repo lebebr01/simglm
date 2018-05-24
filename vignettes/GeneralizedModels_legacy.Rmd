@@ -1,9 +1,9 @@
 ---
-title: "Simulate Data from Generalized Linear Models"
+title: "Simulate Data from Generalized Linear Models - legacy code"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Simulate generalized linear models with simglm}
+  %\VignetteIndexEntry{Simulate generalized linear models with simglm - legacy code}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---

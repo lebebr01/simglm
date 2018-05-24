@@ -1,9 +1,9 @@
 ---
-title: "Unbalanced Data"
+title: "Unbalanced Data - legacy code"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Unbalanced Data}
+  %\VignetteIndexEntry{Unbalanced Data - legacy code}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---

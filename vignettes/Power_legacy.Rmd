@@ -1,9 +1,9 @@
 ---
-title: "Power with simglm"
+title: "Power with simglm - legacy code"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Power with simglm}
+  %\VignetteIndexEntry{Power with simglm - legacy code}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---

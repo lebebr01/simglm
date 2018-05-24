@@ -473,7 +473,18 @@ prop.table(table(is.na(data_w_missing$y_missing), data_w_missing$time))
 
 
 # Model Fit Arguments
-The default behavior when fitting models to the generated data
+The default behavior when fitting models to the generated data is to fit a model with the same formula as the generated data (i.e. `formula` simulation arguments). Secondly, the default model functions are `lm`/`glm` for single level simulation and `lmer`/`glmer` for multilevel simulation. Finally, the default regression weights specified in `reg_weights` are to compute statistics for power, type I error rates, and precision. 
+
+These defaults can be overriden by specifying simulation arguments through the named list called `model_fit`. Some examples were given in the Tidy Simulation vignette and the options that are able to be specified will depend on the type of model fitting function specified. A few examples are given for various model types, however, the user is directed to the documentation of the modeling functions specified through the `model_function` argument.
+
+## Changing Family Argument
+
+
+## Adding Serial Correlation
+
+
+## Marginal Models
+
 
 # Power Arguments
 

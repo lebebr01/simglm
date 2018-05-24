@@ -168,6 +168,9 @@ simulate_fixed(data = NULL, sim_arguments) %>%
 
 The only additional argument that is needed for the `generate_response` function is the `reg_weights` argument. This argument represents the regression coeficients associated with $\beta$ in the equation $Y_{j} = X_{j} \beta + e_{j}$. The regression coefficients are multiplied by the design matrix to generate the column labeled "fixed_outcome" in the output. The output also contains the column, "random_effects" which are all 0 here indicating there are no random effects and the response variable, "y".
 
+### Non-normal Outcomes
+
+
 
 # Functions for Power Analysis
 Now that the basics of tidy simulation have been shown in the context of a linear regression model, let's explore an example in which the power for this model is to be evaluated. In particular, suppose we are interested in estimating empirical power for the three fixed effects based on the following formula: `y ~ 1 + weight + age + sex`. More specifically, we are interested in estimating power for "weight", "age", and "sex" variables. A few additional functions are needed for this step including:
@@ -283,7 +286,8 @@ sim_arguments <- list(
   )
 )
 
-replicate_simulation(sim_arguments, simulate_fixed(data = NULL, sim_arguments) %>%
+replicate_simulation(sim_arguments, 
+                     simulate_fixed(data = NULL, sim_arguments) %>%
                        simulate_error(sim_arguments) %>%
                        generate_response(sim_arguments) %>% 
                        model_fit(sim_arguments) %>%

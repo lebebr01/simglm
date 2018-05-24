@@ -399,8 +399,7 @@ sim_arguments <- list(
   randomeffect = list(int_id = list(variance = 8, var_level = 2),
                       time_id = list(variance = 3, var_level = 2)),
   missing_data = list(miss_prop = .25, new_outcome = 'y_missing',
-                      clust_var = 'id',
-                      type = 'dropout'),
+                      clust_var = 'id', type = 'dropout'),
   sample_size = list(level1 = 10, level2 = 20)
 )
 
@@ -446,8 +445,7 @@ sim_arguments <- list(
   missing_data = list(new_outcome = 'y_missing',
       dropout_location = c(3, 9, 1, 6, 7, 8, 6, 9, 2, 4, 6, 5, 8, 9, 4, 5, 
                            6, 7, 2, 9),
-                      clust_var = 'id', within_id = 'level1_id',
-                      type = 'dropout'),
+                      clust_var = 'id', type = 'dropout'),
   sample_size = list(level1 = 10, level2 = 20)
 )
 

@@ -54,14 +54,14 @@ test_that("MAR missing", {
                          data_str = "single")
   
   # generate missing data
-  miss_prop <- c(0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2, 0.15, 0.1, 0.05)
-  miss_prop <- rep(miss_prop, each = 450)
-  tmp_single_miss <- missing_data(temp_single, miss_prop = miss_prop, 
+  mar_prop <- c(0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2, 0.15, 0.1, 0.05)
+  mar_prop <- rep(mar_prop, each = 450)
+  tmp_single_miss <- missing_data(temp_single, mar_prop = mar_prop, 
                                   type = 'mar', miss_cov = 'income')
   
   diff <- sum(abs(prop.table(table(tmp_single_miss$miss_prop, 
                    is.na(tmp_single_miss$sim_data2)), 1)[,2] 
-  - unique(sort(miss_prop))))
+  - unique(sort(mar_prop))))
   
   expect_equal(diff, .1, tolerance = .05)
 })

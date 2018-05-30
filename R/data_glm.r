@@ -154,12 +154,12 @@ data_glm_nested3 <- function(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3,
 #' @export
 transform_outcome <- function(outcome, type, ...) {
   
-  if(type == 'logistic') {
+  if(type %in% c('logistic', 'binary')) {
     probability <- exp(outcome) / (1 + exp(outcome))
     rbinom(length(outcome), size = 1, 
            prob = probability)
   } else {
-    if(type == 'count') {
+    if(type %in% c('count', 'poisson')) {
       rpois(length(outcome), lambda = exp(outcome))
     } else {
       purrr::map()

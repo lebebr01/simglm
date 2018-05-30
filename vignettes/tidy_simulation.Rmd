@@ -169,8 +169,46 @@ simulate_fixed(data = NULL, sim_arguments) %>%
 The only additional argument that is needed for the `generate_response` function is the `reg_weights` argument. This argument represents the regression coeficients associated with $\beta$ in the equation $Y_{j} = X_{j} \beta + e_{j}$. The regression coefficients are multiplied by the design matrix to generate the column labeled "fixed_outcome" in the output. The output also contains the column, "random_effects" which are all 0 here indicating there are no random effects and the response variable, "y".
 
 ### Non-normal Outcomes
+Non-normal outcomes are possible with simglm. Two non-normal outcomes are currently supported with more support coming in the future. Binary and count outcomes are supported and can be specified with the `outcome_type` simulation argument. If `outcome_type = 'logistic'` or `outcome_type = 'binary'` then a binary outcome is generated (ie. 0/1 variable) using the `rbinom` function. If `outcome_type = 'count'` or `outcome_type = 'poisson'` then the outcome is transformed to be a count variable (ie. discrete variable; 0, 1, 2, etc.). 
 
+Here is an example of generating a binary outcome.
+```{r binary}
+set.seed(321) 
 
+sim_arguments <- list(
+  formula = y ~ 1 + weight + age + sex,
+  fixed = list(weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60),
+               sex = list(var_type = 'factor', levels = c('male', 'female'))),
+  error = list(variance = 25),
+  sample_size = 10,
+  reg_weights = c(2, 0.3, -0.1, 0.5),
+  outcome_type = 'binary'
+)
+
+simulate_fixed(data = NULL, sim_arguments) %>%
+  simulate_error(sim_arguments) %>%
+  generate_response(sim_arguments)
+```
+
+And finally, an example of generating a count outcome. Note, the weight variable here has been grand mean centered in the generation (ie. mean = 0). This helps to ensure that the counts are not too large.
+```{r count}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + sex,
+  fixed = list(weight = list(var_type = 'continuous', mean = 0, sd = 30),
+               sex = list(var_type = 'factor', levels = c('male', 'female'))),
+  error = list(variance = 25),
+  sample_size = 10,
+  reg_weights = c(2, 0.01, 0.5),
+  outcome_type = 'count'
+)
+
+simulate_fixed(data = NULL, sim_arguments) %>%
+  simulate_error(sim_arguments) %>%
+  generate_response(sim_arguments)
+```
 
 # Functions for Power Analysis
 Now that the basics of tidy simulation have been shown in the context of a linear regression model, let's explore an example in which the power for this model is to be evaluated. In particular, suppose we are interested in estimating empirical power for the three fixed effects based on the following formula: `y ~ 1 + weight + age + sex`. More specifically, we are interested in estimating power for "weight", "age", and "sex" variables. A few additional functions are needed for this step including:

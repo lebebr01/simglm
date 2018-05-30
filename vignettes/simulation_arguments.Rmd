@@ -1,9 +1,9 @@
 ---
-title: "Simulation Arguments for `simglm`"
+title: "Simulation Arguments Details for `simglm`"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Tidy Simulation with `simglm`}
+  %\VignetteIndexEntry{Simulation Argument Details for `simglm`}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---

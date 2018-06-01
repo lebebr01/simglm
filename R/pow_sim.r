@@ -675,7 +675,6 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var,
 #'   }
 #' @param ... Additional arguments needed to pass on to model fitting 
 #'   functions. See specific model fitting functions for specific details.
-#' @examples 
 #' 
 #' @export 
 model_fit <- function(data, sim_args, ...) {
@@ -751,7 +750,6 @@ tidy_mixed <- function(model) {
 #' @importFrom purrr rerun
 #' @importFrom dplyr enquo
 #' @importFrom dplyr quo
-#' @examples 
 #' 
 #' @export 
 replicate_simulation <- function(sim_args, expression = NULL, ...) {

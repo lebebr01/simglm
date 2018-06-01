@@ -159,4 +159,4 @@ utils::globalVariables(c('test_stat', 'reject', 'estimate', 'term',
                          'std.error', '.', 'sd_estimate', 'avg_se',
                          't1e', 'power_args', 'adjusted_teststat',
                          't1e_args', 'param_estimate_sd', 'avg_standard_error',
-                         'statistic'))
+                         'statistic', 'n', 'miss_prob', 'miss_prop'))

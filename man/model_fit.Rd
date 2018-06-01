@@ -25,6 +25,3 @@ functions. See specific model fitting functions for specific details.}
 \description{
 Tidy Model Fitting Function
 }
-\examples{
-
-}

@@ -18,7 +18,3 @@ for more information. The named list may contain the following:
 \description{
 A function that parses the formula simulation syntax in order to simulate data.
 }
-\examples{
-
-
-}

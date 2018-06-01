@@ -753,7 +753,6 @@ sim_variable <- function(var_type = c("continuous", "factor", "ordinal",
 #'   }
 #' @param ... Other arguments to pass to error simulation functions.
 #' @importFrom purrr modify_if
-#' @examples 
 #' 
 #' @export 
 simulate_fixed <- function(data, sim_args, ...) {

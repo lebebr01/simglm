@@ -11,7 +11,6 @@
 #'   }
 #' 
 #' @export
-#' @examples 
 #' 
 #' 
 parse_formula <- function(sim_args) {

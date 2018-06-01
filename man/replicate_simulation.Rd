@@ -23,6 +23,3 @@ expressions for a single replication.}
 \description{
 Replicate Simulation
 }
-\examples{
-
-}

@@ -23,6 +23,3 @@ for more information. The named list may contain the following:
 \description{
 This function simulates the fixed portion of the model using a formula syntax.
 }
-\examples{
-
-}

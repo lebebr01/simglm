@@ -145,7 +145,6 @@ sim_cross <- function(num_ids, variance = NULL, dist = 'rnorm',
 #'     \item error: This is the error (i.e. residual term).
 #'   }
 #' @param ... Other arguments to pass to error simulation functions.
-#' @examples 
 #' 
 #' @export 
 simulate_randomeffect <- function(data, sim_args, ...) {

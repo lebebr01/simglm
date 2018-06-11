@@ -673,29 +673,38 @@ sim_pow_single <- function(fixed, fixed_param, cov_param, n, error_var,
 #'     \item model_fit: These are arguments passed to the \code{\link{model_fit}}
 #'       function. 
 #'   }
-#' @param ... Additional arguments needed to pass on to model fitting 
-#'   functions. See specific model fitting functions for specific details.
+#' @param ... Currently not used.
 #' 
 #' @export 
 model_fit <- function(data, sim_args, ...) {
   
-  if(is.null(sim_args[['model_fit']][['model_function']])) {
+  model_args <- sim_args[['model_fit']]
+  
+  if(is.null(model_args[['model_function']])) {
     if(length(parse_formula(sim_args)[['randomeffect']]) == 0) {
       model_function <- 'lm'
+      if(!is.null(sim_args[['outcome_type']])) {
+        model_function <- 'glm'
+      }
     } else {
       model_function <- 'lmer'
+      if(!is.null(sim_args[['outcome_type']])) {
+        model_function <- 'glmer'
+      }
     }
   } else {
-    model_function <- sim_args[['model_fit']][['model_function']]
-  }
-  if(is.null(sim_args[['model_fit']][['formula']])) {
-    formula <- sim_args[['formula']]
-  } else {
-    formula <- sim_args[['model_fit']][['formula']]
+    model_function <- model_args[['model_function']]
   }
   
+  if(is.null(model_args[['formula']])) {
+    model_args[['formula']] <- sim_args[['formula']]
+  }
+  
+  model_args[['model_function']] <- NULL
+  
   purrr::invoke(model_function, 
-                list(formula = formula, data = data, ...))
+                model_args, 
+                data = data)
 }
 
 #' Extract Coefficients
@@ -706,7 +715,7 @@ model_fit <- function(data, sim_args, ...) {
 #' @export 
 extract_coefficients <- function(model, extract_function = NULL) {
   
-  if(class(model) %in% c('glmerMod', 'lmerMod')) {
+  if(any(c('glmerMod', 'lmerMod') %in% class(model))) {
     tidy_mixed(model)
   } else {
     if(is.null(extract_function)) {
@@ -822,6 +831,9 @@ compute_statistics <- function(data,  sim_args, power = TRUE,
                        'term')
   }
   
+  avg_estimates <- aggregate_estimate(data_df,
+                                      rlang::syms(group_vars))
+  
   if(power) {
     power_computation <- aggregate_power(data_df, 
                                          rlang::syms(group_vars))
@@ -843,7 +855,8 @@ compute_statistics <- function(data,  sim_args, power = TRUE,
     precision_computation <- NULL
   }
   
-  statistics <- dplyr::bind_cols(power_computation, 
+  statistics <- dplyr::bind_cols(avg_estimates,
+                                 power_computation, 
                                  type_1_error_computation, 
                                  precision_computation) 
   
@@ -916,6 +929,15 @@ compute_t1e <- function(data, sim_args, t1e_args) {
                             1, 0))
     }
   }
+}
+
+aggregate_estimate <- function(data, group_var) {
+  
+  group_by_var <- dplyr::quos(!!! group_var)
+  
+  data %>%
+    group_by(!!! group_by_var) %>%
+    summarise(avg_estimate = mean(estimate))
 }
 
 aggregate_power <- function(data, group_var) {

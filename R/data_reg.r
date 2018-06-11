@@ -188,7 +188,7 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     data <- cbind(data, response_outcomes, row.names = NULL)
   }
   
-  if(is.null(data['error'])) {
+  if(is.null(data[['error']])) {
     data['error'] <- 0
   }
   

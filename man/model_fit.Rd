@@ -19,8 +19,7 @@ for more information. The named list may contain the following:
     function. 
 }}
 
-\item{...}{Additional arguments needed to pass on to model fitting 
-functions. See specific model fitting functions for specific details.}
+\item{...}{Currently not used.}
 }
 \description{
 Tidy Model Fitting Function

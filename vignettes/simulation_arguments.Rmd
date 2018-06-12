@@ -475,15 +475,107 @@ prop.table(table(is.na(data_w_missing$y_missing), data_w_missing$time))
 # Model Fit Arguments
 The default behavior when fitting models to the generated data is to fit a model with the same formula as the generated data (i.e. `formula` simulation arguments). Secondly, the default model functions are `lm`/`glm` for single level simulation and `lmer`/`glmer` for multilevel simulation. Finally, the default regression weights specified in `reg_weights` are to compute statistics for power, type I error rates, and precision. 
 
-These defaults can be overriden by specifying simulation arguments through the named list called `model_fit`. Some examples were given in the Tidy Simulation vignette and the options that are able to be specified will depend on the type of model fitting function specified. A few examples are given for various model types, however, the user is directed to the documentation of the modeling functions specified through the `model_function` argument.
+These defaults can be overriden by specifying simulation arguments through the named list called `model_fit`. Some examples were given in the Tidy Simulation vignette and the options that are able to be specified will depend on the model fitting function specified. A few examples are given for various model types, however, the user is directed to the documentation of the modeling functions specified through the `model_function` argument.
 
 ## Changing Family Argument
+For GLM models, users may wish to directly specify the family argument or change the link function within a specific family. For example, when generating data with a binary dependent variable, the logistic or probit links could be used when specifying the binomial family. Below is an example of using the binomial family with a logit link (the default link function). 
 
+```{r binomial_logit}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + age + sex,
+  fixed = list(weight = list(var_type = 'continuous', mean = 0, sd = 30),
+               age = list(var_type = 'ordinal', levels = 0:30),
+               sex = list(var_type = 'factor', levels = c('male', 'female'))),
+  error = list(variance = 25),
+  sample_size = 10,
+  reg_weights = c(2, 0.3, -0.1, 0.5),
+  outcome_type = 'binary',
+  model_fit = list(
+    model_function = 'glm',
+    family = binomial
+  )
+)
+
+simulate_fixed(data = NULL, sim_arguments) %>%
+  simulate_error(sim_arguments) %>%
+  generate_response(sim_arguments) %>%
+  model_fit(sim_arguments) %>% .$family
+```
+
+The link function could then be changed to a probit link function with the following code:
+
+```{r binomial_probit}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + age + sex,
+  fixed = list(weight = list(var_type = 'continuous', mean = 0, sd = 30),
+               age = list(var_type = 'ordinal', levels = 0:30),
+               sex = list(var_type = 'factor', levels = c('male', 'female'))),
+  error = list(variance = 25),
+  sample_size = 10,
+  reg_weights = c(2, 0.3, -0.1, 0.5),
+  outcome_type = 'binary',
+  model_fit = list(
+    model_function = 'glm',
+    family = binomial(link = 'probit')
+  )
+)
+
+simulate_fixed(data = NULL, sim_arguments) %>%
+  simulate_error(sim_arguments) %>%
+  generate_response(sim_arguments) %>%
+  model_fit(sim_arguments) %>% .$family
+```
 
 ## Adding Serial Correlation
+Serial correlation can be added to longitudinal designs and fitted using the nlme R package. Below is an example of implementing this functionality in the data generation and model fitting. 
+
+To come...
 
 
 ## Marginal Models
+It is also possible to change the default model fitting functions. For example, an alternative model approach to mixed models is generalized estimating equations (GEE) or marginal models. One implementation of these models in R is the geepack package. Below is a marginal model in a longitudinal context.
+
+```{r gee}
+set.seed(321) 
+
+# To-DO: Add knot variable and debug
+
+sim_arguments <- list(
+  formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+  fixed = list(time = list(var_type = 'time',
+                           time_levels = c(0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6)),
+               weight = list(var_type = 'continuous', mean = 0, sd = 30),
+               age = list(var_type = 'ordinal', levels = 0:30, var_level = 2),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment', 'Control'),
+                            var_level = 2)),
+  reg_weights = c(0.4, 0.2, -0.5, 1, -0.6),
+  randomeffect = list(int_id = list(variance = 8, var_level = 2),
+                time_id = list(variance = 3, var_level = 2)),
+  error = list(variance = 5),
+  outcome_type = 'binary',
+  sample_size = list(level1 = 10, level2 = 20),
+  model_fit = list(
+    model_function = geepack::geeglm,
+    formula = y ~ 1 + time + weight + age + treat,
+    id = 'level1_id',
+    family = binomial,
+    corstr = 'ar1'
+  )
+)
+
+simulate_fixed(data = NULL, sim_arguments) %>%
+  simulate_error(sim_arguments) %>%
+  simulate_randomeffect(sim_arguments) %>%
+  generate_response(sim_arguments) %>%
+  model_fit(sim_arguments) %>%
+  extract_coefficients()
+```
+
 
 
 # Power Arguments

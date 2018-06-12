@@ -696,6 +696,10 @@ model_fit <- function(data, sim_args, ...) {
     model_function <- model_args[['model_function']]
   }
   
+  if('id' %in% names(model_args)) {
+    model_args[['id']] <- data[[model_args[['id']]]]
+  }
+  
   if(is.null(model_args[['formula']])) {
     model_args[['formula']] <- sim_args[['formula']]
   }

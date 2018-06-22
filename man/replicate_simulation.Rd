@@ -4,7 +4,7 @@
 \alias{replicate_simulation}
 \title{Replicate Simulation}
 \usage{
-replicate_simulation(sim_args, expression = NULL, ...)
+replicate_simulation(sim_args, expression = NULL, return_list = FALSE, ...)
 }
 \arguments{
 \item{sim_args}{A named list with special model formula syntax. See details and examples
@@ -17,6 +17,10 @@ for more information. The named list may contain the following:
 
 \item{expression}{Simulation, model fitting, and coefficient extraction
 expressions for a single replication.}
+
+\item{return_list}{TRUE/FALSE indicating whether a full list output should be
+returned. If TRUE, the nested list is returned. If FALSE, replications are 
+combined with a replication id appended.}
 
 \item{...}{Currently not used.}
 }

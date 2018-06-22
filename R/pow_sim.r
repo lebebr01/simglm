@@ -759,24 +759,28 @@ tidy_mixed <- function(model) {
 #'   }
 #' @param expression Simulation, model fitting, and coefficient extraction
 #'   expressions for a single replication.
+#' @param return_list TRUE/FALSE indicating whether a full list output should be
+#'   returned. If TRUE, the nested list is returned. If FALSE, replications are 
+#'   combined with a replication id appended.
 #' @param ... Currently not used.
 #' @importFrom purrr rerun
 #' @importFrom dplyr enquo
 #' @importFrom dplyr quo
 #' 
 #' @export 
-replicate_simulation <- function(sim_args, expression = NULL, ...) {
+replicate_simulation <- function(sim_args, expression = NULL, 
+                                 return_list = FALSE,...) {
   
   if(is.null(sim_args[['vary_arguments']])) {
     expression_quo <- dplyr::enquo(expression)
     purrr::rerun(sim_args[['replications']], !!expression_quo)
   } else {
-    replicate_simulation_vary(sim_args)
+    replicate_simulation_vary(sim_args, return_list = FALSE)
   }
   
 }
 
-replicate_simulation_vary <- function(sim_args) {
+replicate_simulation_vary <- function(sim_args, return_list = FALSE) {
   
   conditions <- data.frame(sapply(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE),
                                   as.character))
@@ -787,15 +791,28 @@ replicate_simulation_vary <- function(sim_args) {
           purrr::rerun(sim_arguments[[xx]][['replications']], simglm(sim_arguments[[xx]]))
             )
   
-  power_list <- lapply(seq_along(sim_arguments), function(xx) 
-    data.frame(conditions[xx, , drop = FALSE],
-               dplyr::bind_rows(power_out[[xx]]),
-               row.names = NULL
+  if(return_list) {
+    return(power_out)
+  } else {
+    
+    power_df <- lapply(power_out, dplyr::bind_rows)
+    
+    num_rows <- unlist(lapply(power_df, nrow))
+    
+    rep_id <- lapply(seq_along(num_rows), function(xx) 
+      rep(1:sim_args[['replications']], 
+          each = num_rows[xx]/sim_args[['replications']]))
+    
+    power_list <- lapply(seq_along(sim_arguments), function(xx) 
+      data.frame(conditions[xx, , drop = FALSE],
+                 replication = rep_id[[xx]],
+                 power_df[[xx]],
+                 row.names = NULL
+      )
     )
-  )
-  
-  power_list
-  
+    
+    power_list
+  }
 }
 
 #' Compute Power, Type I Error, or Precision Statistics

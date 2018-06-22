@@ -288,7 +288,8 @@ sim_arguments <- list(
   replications = 10
 )
 
-replicate_simulation(sim_arguments, simulate_fixed(data = NULL, sim_arguments) %>%
+replicate_simulation(sim_arguments, 
+                     simulate_fixed(data = NULL, sim_arguments) %>%
                        simulate_error(sim_arguments) %>%
                        generate_response(sim_arguments) %>% 
                        model_fit(sim_arguments) %>%

@@ -577,6 +577,33 @@ simulate_fixed(data = NULL, sim_arguments) %>%
 ```
 
 
-
 # Power Arguments
 
+
+# Vary Simulation Arguments
+The `replicate_simulation` function first shown in the "tidy_simulation" vignette, can directly allow for the varying of simulation arguments. In order to vary simulation arguments, an additional named list called `vary_arguments` can be added to the simulation arguments passed to the functions. The `vary_arguments` elements of the simulation arguments is a nested named list. Within the named list, the arguments that are wished to be varied are specified by name. For example, a common argument varied is sample size. The following example varies the sample size to return multiple simulated data sets with different sample sizes.
+
+```{r vary_simulation}
+sim_arguments <- list(
+  formula =  resp_var ~ 1 + time + factor(trt) + time:factor(trt) + 
+    (1 + time | individual),
+  reg_weights = c(4, 0.5, 0.75, 0),
+  fixed = list(time = list(var_type = 'time'),
+               trt = list(var_type = 'factor', levels = c('Drug', 'Placebo'), 
+                          var_level = 2)
+               ),
+  randomeffect = list(int_clust = list(variance = .2, var_level = 2),
+                      time_clust = list(variance = .3, var_level = 2)),
+  replications = 3,
+  error = list(variance = 1),
+  vary_arguments = list(
+    sample_size = list(list(level1 = 5, level2 = 50),
+                       list(level1 = 5, level2 = 60))
+  )
+)
+
+replicate_simulation(sim_arguments, return_list = TRUE)
+```
+
+
+## Varying Arguments to Compute Power

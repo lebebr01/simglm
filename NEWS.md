@@ -1,3 +1,7 @@
+# simglm 0.7.1
+* Release for new tidy simulation framework
+* New vignettes showing this functionality
+
 # simglm 0.6.3
 * Add piecewise linear simulation.
 

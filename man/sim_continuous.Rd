@@ -4,8 +4,8 @@
 \alias{sim_continuous}
 \title{Simulate continuous variables}
 \usage{
-sim_continuous(k = NULL, n, p, dist_fun, var_type = c("level1", "level2",
-  "level3", "single"), ...)
+sim_continuous(k = NULL, n, p, dist_fun, var_type = c("level1",
+  "level2", "level3", "single"), ...)
 }
 \arguments{
 \item{k}{Number of third level clusters.}

@@ -7,17 +7,18 @@
 \alias{mar_missing}
 \title{Missing Data Functions}
 \usage{
-missing_data(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
-  clust_var = NULL, within_id = NULL, miss_prop = NULL,
-  dropout_location = NULL, type = c("dropout", "random", "mar"), miss_cov,
-  mar_prop)
+missing_data(sim_data, resp_var = "sim_data",
+  new_outcome = "sim_data2", clust_var = NULL, within_id = NULL,
+  miss_prop = NULL, dropout_location = NULL, type = c("dropout",
+  "random", "mar"), miss_cov, mar_prop)
 
-dropout_missing(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
-  clust_var = "clustID", within_id = "withinID", miss_prop = NULL,
-  dropout_location = NULL)
+dropout_missing(sim_data, resp_var = "sim_data",
+  new_outcome = "sim_data2", clust_var = "clustID",
+  within_id = "withinID", miss_prop = NULL, dropout_location = NULL)
 
-random_missing(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
-  miss_prop, clust_var = NULL, within_id = "withinID")
+random_missing(sim_data, resp_var = "sim_data",
+  new_outcome = "sim_data2", miss_prop, clust_var = NULL,
+  within_id = "withinID")
 
 mar_missing(sim_data, resp_var = "sim_data", new_outcome = "sim_data2",
   miss_cov, mar_prop)

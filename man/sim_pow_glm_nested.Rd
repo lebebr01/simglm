@@ -6,12 +6,13 @@
 \usage{
 sim_pow_glm_nested(fixed, random, fixed_param, random_param = list(),
   cov_param, n, p, data_str, cor_vars = NULL, fact_vars = list(NULL),
-  unbal = list(level2 = FALSE, level3 = FALSE), unbal_design = list(level2 =
-  NULL, level3 = NULL), contrasts = NULL, outcome_type,
-  cross_class_params = NULL, knot_args = list(NULL), missing = FALSE,
-  missing_args = list(NULL), pow_param = NULL, alpha, pow_dist = c("z",
-  "t"), pow_tail = c(1, 2), lme4_fit_mod = NULL, lme4_fit_family,
-  general_mod = NULL, general_extract = NULL, ...)
+  unbal = list(level2 = FALSE, level3 = FALSE),
+  unbal_design = list(level2 = NULL, level3 = NULL), contrasts = NULL,
+  outcome_type, cross_class_params = NULL, knot_args = list(NULL),
+  missing = FALSE, missing_args = list(NULL), pow_param = NULL,
+  alpha, pow_dist = c("z", "t"), pow_tail = c(1, 2),
+  lme4_fit_mod = NULL, lme4_fit_family, general_mod = NULL,
+  general_extract = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 

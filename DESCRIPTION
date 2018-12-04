@@ -33,6 +33,6 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Author: Brandon LeBeau [aut, cre]
 Maintainer: Brandon LeBeau <lebebr01+simglm@gmail.com>

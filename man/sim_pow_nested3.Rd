@@ -4,16 +4,18 @@
 \alias{sim_pow_nested3}
 \title{Power simulation for nested designs}
 \usage{
-sim_pow_nested3(fixed, random, random3, fixed_param, random_param = list(),
-  random_param3 = list(), cov_param, k, n, p, error_var, with_err_gen,
-  arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL),
-  unbal = list(level2 = FALSE, level3 = FALSE), unbal_design = list(level2 =
-  NULL, level3 = NULL), lvl1_err_params = NULL, arima_mod = list(NULL),
-  contrasts = NULL, homogeneity = TRUE, heterogeneity_var = NULL,
+sim_pow_nested3(fixed, random, random3, fixed_param,
+  random_param = list(), random_param3 = list(), cov_param, k, n, p,
+  error_var, with_err_gen, arima = FALSE, data_str, cor_vars = NULL,
+  fact_vars = list(NULL), unbal = list(level2 = FALSE, level3 = FALSE),
+  unbal_design = list(level2 = NULL, level3 = NULL),
+  lvl1_err_params = NULL, arima_mod = list(NULL), contrasts = NULL,
+  homogeneity = TRUE, heterogeneity_var = NULL,
   cross_class_params = NULL, knot_args = list(NULL), missing = FALSE,
-  missing_args = list(NULL), pow_param = NULL, alpha, pow_dist = c("z",
-  "t"), pow_tail = c(1, 2), lme4_fit_mod = NULL, nlme_fit_mod = NULL,
-  arima_fit_mod = NULL, general_mod = NULL, general_extract = NULL, ...)
+  missing_args = list(NULL), pow_param = NULL, alpha,
+  pow_dist = c("z", "t"), pow_tail = c(1, 2), lme4_fit_mod = NULL,
+  nlme_fit_mod = NULL, arima_fit_mod = NULL, general_mod = NULL,
+  general_extract = NULL, ...)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 

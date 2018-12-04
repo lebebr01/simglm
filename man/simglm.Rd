@@ -4,7 +4,6 @@
 \name{simglm}
 \alias{simglm}
 \alias{simglm-package}
-\alias{simglm}
 \title{simglm: A package to simulate and perform power by simulation for 
    models based on the generalized linear model.}
 \usage{

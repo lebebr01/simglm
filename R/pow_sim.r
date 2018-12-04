@@ -435,12 +435,15 @@ sim_pow_nested <- function(fixed, random, fixed_param, random_param = list(),
     stop('pow_param must be a subset of fixed')
   }
   
-  data <- sim_reg_nested(fixed, random, fixed_param, random_param, 
-                         cov_param, n, p, error_var, with_err_gen, arima,
-                         data_str, cor_vars, fact_vars, unbal, unbal_design,
-                         lvl1_err_params, arima_mod, contrasts, 
+  data <- sim_reg_nested(fixed, random, fixed_param, random_param , 
+                         cov_param, n, p, error_var, with_err_gen, 
+                         arima , data_str, cor_vars , 
+                         fact_vars, unbal, 
+                         unbal_design, lvl1_err_params, 
+                         arima_mod, contrasts, 
                          homogeneity, heterogeneity_var, 
-                         cross_class_params, knot_args, ...)
+                         cross_class_params, knot_args,
+                         ...)
   if(missing) {
     data <- do.call(missing_data, c(list(sim_data = data), 
                                          missing_args))
@@ -739,6 +742,10 @@ tidy_mixed <- function(model) {
   mod_results <- stats::coef(ss) %>% data.frame(check.names=FALSE)
   mod_results <- data.frame(term = rownames(mod_results), mod_results,
                             row.names = NULL)
+  
+  if(class(model) == 'glmerMod') {
+   mod_results <- mod_results[, 1:4]
+  }
   
   names(mod_results) <- c('term', 'estimate', 'std.error', 'statistic')
   

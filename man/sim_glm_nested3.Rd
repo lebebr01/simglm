@@ -4,9 +4,10 @@
 \alias{sim_glm_nested3}
 \title{Function to simulate three level nested data}
 \usage{
-sim_glm_nested3(fixed, random, random3, fixed_param, random_param = list(),
-  random_param3 = list(), cov_param, k, n, p, data_str, cor_vars = NULL,
-  fact_vars = list(NULL), unbal = list(level2 = FALSE, level3 = FALSE),
+sim_glm_nested3(fixed, random, random3, fixed_param,
+  random_param = list(), random_param3 = list(), cov_param, k, n, p,
+  data_str, cor_vars = NULL, fact_vars = list(NULL),
+  unbal = list(level2 = FALSE, level3 = FALSE),
   unbal_design = list(level2 = NULL, level3 = NULL), contrasts = NULL,
   outcome_type, cross_class_params = NULL, knot_args = list(NULL), ...)
 }

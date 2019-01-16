@@ -26,11 +26,11 @@ matrix:
       env: R_CODECOV=true
       r: devel
     - os: osx
-      osx_image: xcode8
-      brew_packages: poppler
+      osx_image: xcode10.1
+      disable_homebrew: true
       latex: false
     - os: osx
-      osx_image: beta-xcode6.2
+      osx_image: xcode9.2
       disable_homebrew: true
       latex: false
 

@@ -211,7 +211,7 @@ mar_missing <- function(sim_data, resp_var = 'sim_data',
   
   num <- uniq_vals[['n']]
   miss_per <- cbind(dplyr::select(uniq_vals, !!var_enq), miss_prop = mar_prop)
-  miss_per <- dplyr::slice(miss_per, rep(1:n(), times = num))
+  miss_per <- dplyr::slice(miss_per, rep(1:dplyr::n(), times = num))
   miss_per <- dplyr::mutate(miss_per, miss_prob = runif(nrow(miss_per)))
   
   sim_data <- dplyr::left_join(sim_data, miss_per, by = miss_cov)

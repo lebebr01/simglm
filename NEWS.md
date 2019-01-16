@@ -1,3 +1,6 @@
+# simglm 0.7.2
+* Small maintenance fix for incoming 0.8 dplyr.
+
 # simglm 0.7.1
 * Release for new tidy simulation framework
 * New vignettes showing this functionality

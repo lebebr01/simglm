@@ -19,7 +19,8 @@ Imports:
     rlang,
     dplyr,
     purrr,
-    broom
+    broom,
+    future.apply
 Suggests:
     knitr,
     lme4,
@@ -30,8 +31,7 @@ Suggests:
     ggplot2,
     tidyr,
     geepack,
-    rmarkdown,
-    future.apply
+    rmarkdown
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.1.1

@@ -764,18 +764,16 @@ tidy_mixed <- function(model) {
 #'     \item random: This is the random portion of the model (i.e. random effects)
 #'     \item error: This is the error (i.e. residual term).
 #'   }
-#' @param expression Simulation, model fitting, and coefficient extraction
-#'   expressions for a single replication.
 #' @param return_list TRUE/FALSE indicating whether a full list output should be
 #'   returned. If TRUE, the nested list is returned. If FALSE, replications are 
 #'   combined with a replication id appended.
 #' @param future.seed TRUE/FALSE or numeric. Default value is true, see 
-#'   \code{\link{future.apply::future_replicate}}.
+#'   \code{\link[future.apply:future_lapply]{future_replicate}}.
 #' @param ... Currently not used.
 #' @importFrom future.apply future_replicate
 #' @export 
-replicate_simulation <- function(sim_args, expression = NULL, 
-                                 return_list = FALSE, future.seed = TRUE, ...) {
+replicate_simulation <- function(sim_args, return_list = FALSE, 
+                                 future.seed = TRUE, ...) {
   
   if(is.null(sim_args[['vary_arguments']])) {
     future.apply::future_replicate(sim_args[['replications']], 

@@ -772,8 +772,6 @@ tidy_mixed <- function(model) {
 #' @param future.seed TRUE/FALSE or numeric. Default value is true, see 
 #'   \code{\link{future.apply::future_replicate}}.
 #' @param ... Currently not used.
-#' @importFrom dplyr enquo
-#' @importFrom dplyr quo
 #' @importFrom future.apply future_replicate
 #' @export 
 replicate_simulation <- function(sim_args, expression = NULL, 

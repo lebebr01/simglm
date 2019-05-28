@@ -242,6 +242,33 @@ var(error_data$error)
 ## Heterogeneity of Variance
 It is also possible to generate heterogeneity of variance for the random error. 
 
+```{r heterogeneity}
+simulation_arguments <- list(
+  formula = y ~ 1 + group,
+  fixed = list(group = list(var_type = 'factor', 
+                            levels = c('male', 'female'))),
+  sample_size = 500,
+  error = list(variance = 1),
+  heterogeneity = list(variable = 'group',
+                       variance = c(1, 8)),
+  reg_weights = c(0, .15)
+)
+
+hetero_data <- simulate_fixed(data = NULL, simulation_arguments) %>%
+  simulate_error(simulation_arguments) %>%
+  simulate_heterogeneity(simulation_arguments)
+```
+
+
+```{r heterogeneity-var}
+hetero_data %>% 
+  group_by(group) %>% 
+  summarise(var_error = var(error), 
+            var_o_error = var(orig_error))
+```
+
+
+
 # Random Effect Arguments
 The random effect arguments are passed through a named element of the list to the simulation arguments called 'randomeffect'. Within this element, each random effect specified in the formula must be specified as a named list. The named list allows the user to specify the names that will be used in the data simulation for the random effects. The default behavior of these random effects is to be simulated from a random normal distribution with mean 0 and variance of 1.
 

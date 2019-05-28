@@ -764,30 +764,31 @@ tidy_mixed <- function(model) {
 #'     \item random: This is the random portion of the model (i.e. random effects)
 #'     \item error: This is the error (i.e. residual term).
 #'   }
-#' @param expression Simulation, model fitting, and coefficient extraction
-#'   expressions for a single replication.
 #' @param return_list TRUE/FALSE indicating whether a full list output should be
 #'   returned. If TRUE, the nested list is returned. If FALSE, replications are 
 #'   combined with a replication id appended.
+#' @param future.seed TRUE/FALSE or numeric. Default value is true, see 
+#'   \code{\link[future.apply:future_lapply]{future_replicate}}.
 #' @param ... Currently not used.
-#' @importFrom purrr rerun
-#' @importFrom dplyr enquo
-#' @importFrom dplyr quo
-#' 
+#' @importFrom future.apply future_replicate
 #' @export 
-replicate_simulation <- function(sim_args, expression = NULL, 
-                                 return_list = FALSE,...) {
+replicate_simulation <- function(sim_args, return_list = FALSE, 
+                                 future.seed = TRUE, ...) {
   
   if(is.null(sim_args[['vary_arguments']])) {
-    expression_quo <- dplyr::enquo(expression)
-    purrr::rerun(sim_args[['replications']], !!expression_quo)
+    future.apply::future_replicate(sim_args[['replications']], 
+                                   simglm(sim_args),
+                                   simplify = FALSE,
+                                   future.seed = future.seed)
   } else {
-    replicate_simulation_vary(sim_args, return_list = FALSE)
+    replicate_simulation_vary(sim_args, return_list = FALSE,
+                              future.seed = future.seed)
   }
   
 }
 
-replicate_simulation_vary <- function(sim_args, return_list = FALSE) {
+replicate_simulation_vary <- function(sim_args, return_list = FALSE,
+                                      future.seed = TRUE) {
   
   conditions <- data.frame(sapply(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE),
                                   as.character))
@@ -795,7 +796,10 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE) {
   sim_arguments <- parse_varyarguments(sim_args)
   
   power_out <- lapply(seq_along(sim_arguments), function(xx) 
-          purrr::rerun(sim_arguments[[xx]][['replications']], simglm(sim_arguments[[xx]]))
+          future.apply::future_replicate(sim_arguments[[xx]][['replications']], 
+                                         simglm(sim_arguments[[xx]]),
+                                         simplify = FALSE,
+                                         future.seed = future.seed)
             )
   
   if(return_list) {
@@ -924,14 +928,12 @@ compute_power <- function(data, power_args) {
 
 compute_t1e <- function(data, sim_args, t1e_args) {
   
-  # t1e_args <- parse_power(sim_args)
-  
   fixed_vars <- strsplit(as.character(parse_formula(sim_args)[['fixed']]), "\\+")[[2]]
   
-  if(is.null(sim_args[['model_fit']][['reg_weights']])) {
+  if(is.null(sim_args[['reg_weights_model']])) {
     reg_weights <- sim_args[['reg_weights']]
   } else {
-    reg_weights <- sim_args[['model_fit']][['reg_weights']]
+    reg_weights <- sim_args[['reg_weights_model']]
   }
   
   # if(length(fixed_vars) != length(reg_weights)) {

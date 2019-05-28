@@ -2,10 +2,10 @@ Package: simglm
 Type: Package
 Authors@R: person("Brandon", "LeBeau", email = "lebebr01+simglm@gmail.com",
      role = c("aut", "cre"))
-Version: 0.7.2
+Version: 0.7.3
 License: MIT + file LICENSE
 Title: Simulate Models Based on the Generalized Linear Model
-Description: Easily simulates regression models,
+Description: Simulates regression models,
     including both simple regression and generalized linear mixed
     models with up to three level of nesting. Power simulations that are
     flexible allowing the specification of missing data, unbalanced designs,
@@ -19,7 +19,8 @@ Imports:
     rlang,
     dplyr,
     purrr,
-    broom
+    broom,
+    future.apply
 Suggests:
     knitr,
     lme4,

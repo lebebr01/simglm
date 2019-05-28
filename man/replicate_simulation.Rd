@@ -4,7 +4,7 @@
 \alias{replicate_simulation}
 \title{Replicate Simulation}
 \usage{
-replicate_simulation(sim_args, expression = NULL, return_list = FALSE,
+replicate_simulation(sim_args, return_list = FALSE, future.seed = TRUE,
   ...)
 }
 \arguments{
@@ -16,12 +16,12 @@ for more information. The named list may contain the following:
   \item error: This is the error (i.e. residual term).
 }}
 
-\item{expression}{Simulation, model fitting, and coefficient extraction
-expressions for a single replication.}
-
 \item{return_list}{TRUE/FALSE indicating whether a full list output should be
 returned. If TRUE, the nested list is returned. If FALSE, replications are 
 combined with a replication id appended.}
+
+\item{future.seed}{TRUE/FALSE or numeric. Default value is true, see 
+\code{\link[future.apply:future_lapply]{future_replicate}}.}
 
 \item{...}{Currently not used.}
 }

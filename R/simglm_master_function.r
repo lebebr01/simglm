@@ -31,6 +31,10 @@ simglm <- function(sim_args) {
     data <- simulate_error(data, sim_args = sim_args)
   }
   
+  if(!is.null(sim_args[['heterogeneity']])) {
+    data <- simulate_heterogeneity(data, sim_args = sim_args)
+  }
+  
   if(!is.null(sim_args[['randomeffect']])) {
     data <- simulate_randomeffect(data, sim_args = sim_args)
   }

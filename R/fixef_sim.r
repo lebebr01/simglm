@@ -665,10 +665,8 @@ sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1,
     if(!is.null(ther_val)) {
       cont_var <- standardize(cont_var, ther_val[1], ther_val[2])
     }
-    
-    cont_var <- cont_var %*% chol(c(variance))
+      cont_var <- cont_var %*% chol(c(variance))
   }
-  
   cont_var
 }
 
@@ -818,3 +816,33 @@ simulate_fixed <- function(data, sim_args, ...) {
     data.frame(data, Xmat)
   }
 }
+
+
+#' Tidy heterogeneity of variance simulation
+#' 
+#' This function simulates heterogeneity of level one error variance.
+#' 
+#' @param data Data simulated from other functions to pass to this function. 
+#' This function needs to be specified after `simulate_fixed` and `simulate_error`.
+#' @param sim_args A named list with special model formula syntax. See details and examples
+#'   for more information. The named list may contain the following:
+#'   \itemize{
+#'     \item fixed: This is the fixed portion of the model (i.e. covariates)
+#'     \item random: This is the random portion of the model (i.e. random effects)
+#'     \item error: This is the error (i.e. residual term).
+#'   }
+#' @param ... Other arguments to pass to error simulation functions.
+#' @export
+simulate_heterogeneity <- function(data, sim_args, ...) {
+  
+  heterogeneity_error <- heterogeneity(variance = sim_args[['heterogeneity']][['variance']],
+                fixef = data, 
+                variable = sim_args[['heterogeneity']][['variable']],
+                err = data[['error']])
+
+  data.frame(data[, !(names(data) %in% 'error')], 
+             error = heterogeneity_error, orig_error = data[['error']])
+  
+}
+
+

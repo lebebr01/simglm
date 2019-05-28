@@ -185,7 +185,7 @@ heterogeneity <- function(variance, fixef, variable, err) {
   colnames(dat) <- c('r_num', 'err_old', 'h_var', 'err')
   dat <- dat[order(dat$r_num),]
   
-  dat['err']
+  dat[, 'err']
 }
 
 sim_error <- function(...) {

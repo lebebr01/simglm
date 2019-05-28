@@ -5,7 +5,7 @@
 \title{Replicate Simulation}
 \usage{
 replicate_simulation(sim_args, expression = NULL, return_list = FALSE,
-  ...)
+  future.seed = TRUE, ...)
 }
 \arguments{
 \item{sim_args}{A named list with special model formula syntax. See details and examples
@@ -22,6 +22,9 @@ expressions for a single replication.}
 \item{return_list}{TRUE/FALSE indicating whether a full list output should be
 returned. If TRUE, the nested list is returned. If FALSE, replications are 
 combined with a replication id appended.}
+
+\item{future.seed}{TRUE/FALSE or numeric. Default value is true, see 
+\code{\link{future.apply::future_replicate}}.}
 
 \item{...}{Currently not used.}
 }

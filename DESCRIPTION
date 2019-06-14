@@ -31,9 +31,12 @@ Suggests:
     ggplot2,
     tidyr,
     geepack,
-    rmarkdown
+    rmarkdown,
+    future
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.1.1
 Author: Brandon LeBeau [aut, cre]
 Maintainer: Brandon LeBeau <lebebr01+simglm@gmail.com>
+URL: https://github.com/lebebr01/simglm
+BugReports: https://github.com/lebebr01/simglm/issues

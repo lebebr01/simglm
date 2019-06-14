@@ -611,7 +611,7 @@ simulate_fixed(data = NULL, sim_arguments) %>%
 The `replicate_simulation` function first shown in the "tidy_simulation" vignette, can directly allow for the varying of simulation arguments. In order to vary simulation arguments, an additional named list called `vary_arguments` can be added to the simulation arguments passed to the functions. The `vary_arguments` elements of the simulation arguments is a nested named list. Within the named list, the arguments that are wished to be varied are specified by name. For example, a common argument varied is sample size. The following example varies the sample size to return multiple simulated data sets with different sample sizes.
 
 ```{r vary_simulation}
-library(future.apply)
+library(future)
 plan(multiprocess)
 
 sim_arguments <- list(

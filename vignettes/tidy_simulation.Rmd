@@ -302,7 +302,7 @@ The default power parameter values used are: Normal distribution, two-tailed alt
 ```{r replicate_simulation_power_values}
 set.seed(321) 
 
-library(future.apply)
+library(future)
 plan(multiprocess)
 
 sim_arguments <- list(

@@ -31,7 +31,8 @@ Suggests:
     ggplot2,
     tidyr,
     geepack,
-    rmarkdown
+    rmarkdown,
+    future
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.1.1

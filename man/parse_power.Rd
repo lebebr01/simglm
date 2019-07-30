@@ -4,7 +4,7 @@
 \alias{parse_power}
 \title{Parse power specifications}
 \usage{
-parse_power(sim_args)
+parse_power(sim_args, samp_size)
 }
 \arguments{
 \item{sim_args}{A named list with special model formula syntax. See details and examples
@@ -14,6 +14,9 @@ for more information. The named list may contain the following:
   \item random: This is the random portion of the model (i.e. random effects)
   \item error: This is the error (i.e. residual term).
 }}
+
+\item{samp_size}{The sample size pulled from the simulation arguments or the 
+power model results when vary_arguments is used.}
 }
 \description{
 Parse power specifications

@@ -101,9 +101,11 @@ parse_crossclass <- function(sim_args, random_formula_parsed) {
 #'     \item random: This is the random portion of the model (i.e. random effects)
 #'     \item error: This is the error (i.e. residual term).
 #'   }
+#' @param samp_size The sample size pulled from the simulation arguments or the 
+#'  power model results when vary_arguments is used.
 #' @importFrom dplyr quo
 #' @export 
-parse_power <- function(sim_args) {
+parse_power <- function(sim_args, samp_size) {
   
   if(is.null(sim_args[['power']][['direction']]) || sim_args[['power']][['direction']] %ni% c('lower', 'upper')) {
     number_tails <- 2
@@ -143,17 +145,31 @@ parse_power <- function(sim_args) {
   
   alpha <- alpha / number_tails
   
-  test_statistic <- purrr::invoke(stat_dist, 
+  if(is.null(sim_args[['power']][['opts']][['df']]) & stat_dist == 'qt') {
+    df <- purrr::map(samp_size, `-`, 1)
+    
+    test_statistic <- lapply(seq_along(df), function(xx) {
+      purrr::invoke(stat_dist, 
+                  p = alpha, 
+                  lower.tail = lower_tail,
+                  df = df[[xx]],
+                  opts)
+    })
+  } else {
+    test_statistic <- purrr::invoke(stat_dist, 
                                   p = alpha, 
                                   lower.tail = lower_tail,
                                   opts)
+  }
 
-  list(test_statistic = test_statistic,
-       alpha = alpha, 
-       number_tails = number_tails,
-       direction = tail_direction,
-       distribution = stat_dist
-  )
+  lapply(seq_along(test_statistic), function(xx) {
+    list(test_statistic = test_statistic[[xx]],
+         alpha = alpha, 
+         number_tails = number_tails,
+         direction = tail_direction,
+         distribution = stat_dist
+    )
+  })
   
 }
 

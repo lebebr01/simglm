@@ -846,15 +846,29 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
 #' @importFrom dplyr mutate
 #' @importFrom rlang syms
 #' @export
-compute_statistics <- function(data,  sim_args, power = TRUE, 
+compute_statistics <- function(data, sim_args, power = TRUE, 
                                type_1_error = TRUE, precision = TRUE) {
   
-  power_args <- parse_power(sim_args)
+  if(is.null(sim_args[['sample_size']])) {
+    samp_size <- lapply(seq_along(data), function(xx) {
+      unique(as.numeric(as.character(data[[xx]][['sample_size']])))
+      })
+  } else {
+    samp_size <- sim_args[['sample_size']]
+  }
+  
+  power_args <- parse_power(sim_args, samp_size)
   
   data_df <- data %>%
-    purrr::map(compute_power, power_args) %>% 
-    purrr::map(compute_t1e, sim_args = sim_args, t1e_args = power_args) %>%
+    Map(compute_power, ., power_args) %>%
+    Map(compute_t1e, ., list(sim_args), 
+                         power_args) %>%
     dplyr::bind_rows()
+  
+  # data_df <- data %>%
+  #   purrr::map(compute_power, power_args) %>% 
+  #   purrr::map(compute_t1e, sim_args = sim_args, t1e_args = power_args) %>%
+  #   dplyr::bind_rows()
   
   if(is.null(sim_args['vary_arguments'])) {
     group_vars <- c('term')
@@ -912,16 +926,19 @@ compute_power <- function(data, power_args) {
   
   # power_args <- parse_power(sim_args)
   
-  if(power_args$direction == 'lower') {
+  if(power_args['direction'] == 'lower') {
     data %>%
-      mutate(reject = ifelse(statistic <= power_args['test_statistic'], 1, 0))
+      mutate(reject = ifelse(statistic <= power_args['test_statistic'], 1, 0),
+             test_statistic = power_args[['test_statistic']]) 
   } else {
-    if(power_args$direction == 'upper') {
+    if(power_args['direction'] == 'upper') {
       data %>%
-        mutate(reject = ifelse(statistic >= power_args['test_statistic'], 1, 0))
+        mutate(reject = ifelse(statistic >= power_args['test_statistic'], 1, 0),
+               test_statistic = power_args[['test_statistic']]) 
     } else {
       data %>%
-        mutate(reject = ifelse(abs(statistic) >= power_args['test_statistic'], 1, 0))
+        mutate(reject = ifelse(abs(statistic) >= power_args['test_statistic'], 1, 0),
+               test_statistic = power_args[['test_statistic']]) 
     }
   }
 }
@@ -941,13 +958,13 @@ compute_t1e <- function(data, sim_args, t1e_args) {
   #        reg_weights if specifying model")
   # }
   
-  if(t1e_args$direction == 'lower') {
+  if(t1e_args['direction'] == 'lower') {
     data %>%
       mutate(adjusted_teststat = (estimate - reg_weights) / std.error,
              t1e = ifelse(adjusted_teststat <= t1e_args['test_statistic'], 
                           1, 0))
   } else {
-    if(t1e_args$direction == 'upper') {
+    if(t1e_args['direction'] == 'upper') {
       data %>%
         mutate(adjusted_teststat = (estimate - reg_weights) / std.error,
                t1e = ifelse(adjusted_teststat >= t1e_args['test_statistic'], 
@@ -977,7 +994,8 @@ aggregate_power <- function(data, group_var) {
   data %>%
     group_by(!!! group_by_var) %>%
     summarise(power = mean(reject),
-              avg_test_stat = mean(statistic))
+              avg_test_stat = mean(statistic),
+              crit_value = unique(test_statistic))
 }
 
 aggregate_t1e <- function(data, group_var) {
@@ -987,7 +1005,8 @@ aggregate_t1e <- function(data, group_var) {
   data %>%
     group_by(!!! group_by_var) %>% 
     summarise(type_1_error = mean(t1e),
-              avg_adjtest_stat = mean(adjusted_teststat))
+              avg_adjtest_stat = mean(adjusted_teststat),
+              crit_value = unique(test_statistic))
 
 }
 

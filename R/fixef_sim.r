@@ -787,9 +787,9 @@ simulate_fixed <- function(data, sim_args, ...) {
       data.frame()
   }
   
-  if(any(grepl(":", fixed_vars))) {
-    int.loc <- grep(":", fixed_vars)
-    colnames(Xmat) <- fixed_vars[-int.loc]
+  if(any(grepl(":|^I", fixed_vars))) {
+    int_loc <- grep(":|^I", fixed_vars)
+    colnames(Xmat) <- fixed_vars[-int_loc]
   } else {
     colnames(Xmat) <- fixed_vars
   } 

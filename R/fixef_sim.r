@@ -762,6 +762,12 @@ simulate_fixed <- function(data, sim_args, ...) {
   if(any(grepl('^factor\\(', fixed_vars))) {
     fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
   }
+  if(any(grepl('^ns\\(', fixed_vars))) {
+    fixed_vars <- gsub("ns\\(|\\,.+\\)$", "", fixed_vars)
+  }
+  if(any(grepl("^poly\\(", fixed_vars))) {
+    fixed_vars <- gsub("poly\\(|\\,.+\\)", "", fixed_vars)
+  }
   
   if(is.null(data)) {
     n <- sample_sizes(sim_args[['sample_size']])

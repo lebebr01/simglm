@@ -32,7 +32,8 @@ Suggests:
     tidyr,
     geepack,
     rmarkdown,
-    future
+    future,
+    splines
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.1.1

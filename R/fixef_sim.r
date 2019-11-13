@@ -793,6 +793,7 @@ simulate_fixed <- function(data, sim_args, ...) {
   } else {
     colnames(Xmat) <- fixed_vars
   } 
+  
   if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
     sim_args[['fixed']][[xx]]$var_type)) == 'factor')) {
     

@@ -149,6 +149,40 @@ factor_names <- function(sim_args, fixed_vars) {
   unlist(fixed_vars)
 }
 
+poly_ns_names <- function(sim_args) {
+  fixed_formula <- parse_formula(sim_args)[['fixed']]
+  
+  fixed_vars <- attr(terms(fixed_formula), "term.labels") 
+  
+  ns_loc <- grepl("^ns|^bs", fixed_vars)
+  if(any(ns_loc)) {
+    ns_new_names <- ns_names(fixed_vars[ns_loc])
+  }
+  poly_loc <- grepl("^poly", fixed_vars)
+  
+  
+  poly_new_names <- poly_names(fixed_vars[poly_loc])
+  
+} 
+
+ns_df_names <- function(x) {
+  name <- gsub("ns\\(|bs\\(|\\,.+\\)$", "", x)
+
+  func_arg <- unlist(regmatches(x, regexec("df\\s+=\\s+[0-9]+", x)))
+  num <- unlist(regmatches(func_arg, regexec("[0-9]+", func_arg)))
+  
+  paste(name, 1:as.numeric(num), sep = "_")
+  
+}
+
+poly_names <- function(x) {
+  degree_arg <- unlist(regmatches(x, regexec("degree\\s+=\\s+[0-9]+", x)))
+  num <- unlist(regmatches(degree_arg, regexec("[0-9]+", degree_arg)))
+  name <- gsub("poly\\(|\\,.+\\)", "", x)
+  
+  paste(name, 1:as.numeric(num), sep = "_")
+}
+
 
 # Horrible hack to keep CRAN happy and suppress NOTES about
 # parts of the code that use non-standard evaluation.

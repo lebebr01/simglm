@@ -156,7 +156,7 @@ poly_ns_names <- function(sim_args) {
   
   ns_loc <- grepl("^ns|^bs", fixed_vars)
   if(any(ns_loc)) {
-    ns_new_names <- ns_names(fixed_vars[ns_loc])
+    ns_new_names <- ns_df_names(fixed_vars[ns_loc])
   }
   poly_loc <- grepl("^poly", fixed_vars)
   
@@ -193,4 +193,5 @@ utils::globalVariables(c('test_stat', 'reject', 'estimate', 'term',
                          'std.error', '.', 'sd_estimate', 'avg_se',
                          't1e', 'power_args', 'adjusted_teststat',
                          't1e_args', 'param_estimate_sd', 'avg_standard_error',
-                         'statistic', 'n', 'miss_prob', 'miss_prop'))
+                         'statistic', 'n', 'miss_prob', 'miss_prop',
+                         'test_statistic'))

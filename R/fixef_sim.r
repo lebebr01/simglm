@@ -795,7 +795,7 @@ simulate_fixed <- function(data, sim_args, ...) {
   } 
   
   if(any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
-    fixed_vars <- poly_ns_names(sim_args, Xmat)
+    fixed_vars <- poly_ns_names(sim_args)
   }
   
   if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 

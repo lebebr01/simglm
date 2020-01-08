@@ -143,6 +143,10 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     fixed_vars <- gsub(":", "\\.", fixed_vars)
   }
   
+  if(any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
+    fixed_vars <- poly_ns_names(sim_args)
+  }
+  
   if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
     sim_args[['fixed']][[xx]]$var_type)) == 'factor')) {
     

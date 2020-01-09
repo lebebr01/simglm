@@ -1,0 +1,289 @@
+---
+title: "Introduction to simglm - Legacy Code"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to simglm - Legacy Code}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+```{r setup, include=FALSE}
+library(knitr)
+library(simglm)
+knit_print.data.frame = function(x, ...) {
+  res = paste(c('', '', kable(x, output = FALSE)), collapse = '\n')
+  asis_output(res)
+}
+```
+# Deprecated
+*This functionality has been deprecated and is no longer supported*. **See tidy_simulation vignette**.
+
+# Introduction to simglm
+
+The `simglm` package aims to define a consistent framework for simulating regression models - including single level and multilevel models. This will hopefully allow the user to quickly simulate data for a class, project, or even a dissertation.
+
+## Installation
+Currently development is happening on github. To install the package, use the `devtools` package:
+```{r install, eval=FALSE}
+library(devtools)
+install_github("lebebr01/simglm", build_vignettes = TRUE)
+library(simglm)
+```
+This should load the `devtools` package, install the `simglm` package, and finally load the `simglm` package. The package has currently not been tested on a Mac machine. I do not anticipate any problems installing on a Mac however.
+
+## Simulate Data
+The master function that handles the simulation grunt work is the `sim_reg` function. As always, you can do `?sim_reg` to pull up the help file for the function. 
+
+### Single Level
+Let's look at a simple single level regression example to get started:
+
+```{r singlelevel}
+fixed <- ~ 1 + act + diff + numCourse + act:numCourse
+fixed_param <- c(2, 4, 1, 3.5, 2)
+cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
+                  var_type = c("single", "single", "single"),
+                  opts = list(list(mean = 0, sd = 4),
+                              list(mean = 0, sd = 3),
+                              list(mean = 0, sd = 3)))
+n <- 150
+error_var <- 3
+with_err_gen = 'rnorm'
+temp_single <- sim_reg(fixed = fixed, fixed_param = fixed_param, 
+                       cov_param = cov_param,
+                       n = n, error_var = error_var, 
+                       with_err_gen = with_err_gen, 
+                       data_str = "single")
+```
+
+A few things to highlight about the above syntax, first the object `fixed` is a one sided formula that gives the names of the variables to be included in the simulated data. The intercept is directly shown in the formulation here, but can also be omitted (similar to linear models in R). I like to include the 1 as it reminds me that I do in fact want an intercept. The next object, `fixed_param` is the regression weights for the fixed effects, this must be the same length as fixed (or one larger if the 1 is not explicitly stated in the `fixed` object). Next, `cov_param` represents the mean, standard deviation, and type of variable from the `fixed` object (must by "single" for single level regression).  The `cov_param` object must contain all variables except the intercept and any interactions.
+
+The rest of the arguments are pretty straightforward, `n` is the sample size, `error_var` is the error variance, `with_err_gen` is the distribution of the residuals, and finally in the function call itself, `data_str` must be "single" in this instance to reflect a single level regression.
+
+Finally, looking at the output from the above call:
+```{r printsinglelevel}
+head(temp_single)
+```
+
+As can be seen from the data itself, the first 5 columns represent the raw data used in the simulation, the column labeled "Fbeta" is the matrix multiplication of the design matrix (first 5 columns in this case) by the `fixed_param` object above (the desired values for the fixed effects).  The "err" column is the simulated errors, the column labeled "sim_data" is the simulated data (taking "Fbeta" + "err"), and lastly an ID variable reflecting the individuals.
+
+You could then use simple regression on these data to see how the simulation went:
+```{r simpregmod}
+summary(lm(sim_data ~ 1 + act + diff + numCourse + act:numCourse, data = temp_single))
+```
+
+#### Adding Factor/Categorical/Ordinal Variables
+To add a factor, categorical, or ordinal variable, just append one of the following to the end of the variable name in the `fixed` object: ".f", ".c", ".o", "_f", "_c", or "_o".  These indicate the variable is a discrete variable of some sort. By default, all variables with a ".f" or ".c" will be treated as factors and expanded using dummy coding. If ".o" is used in the variable names, the variable will be discrete but treated as continuous in the simulation (i.e. only a single fixed effect variable). See below for an example.
+```{r singlelevelfact}
+fixed <- ~ 1 + act_o + diff.o + numCourse_f + act_o:numCourse_f
+fixed_param <- c(0.8, 1, 0.2, 0.1, 0, 0.15, 0.2, 0.5, 0.02, -0.6, -0.1)
+cov_param <- NULL
+fact_vars <- list(numlevels = c(36, 8, 5), 
+                  var_type = c('single', 'single', "single"),
+                  opts = list(list(replace = TRUE), list(replace = TRUE),
+                              list(replace = TRUE)))
+n <- 150
+error_var <- 3
+with_err_gen = 'rnorm'
+temp_single_o <- sim_reg(fixed = fixed, fixed_param = fixed_param, 
+                         cov_param = cov_param, n = n, error_var = error_var,
+                         with_err_gen = with_err_gen, data_str = "single", 
+                         fact_vars = fact_vars)
+```
+
+The next thing to add is a new object called `fact_vars`.  This object must be a list that contains `numlevels` and `var_type`. Other optional features will be added in the future to increase functionality - such as including value labels, user specified probabilities, etc. Once these are passed into the `sim.reg()` function, the simulated data now looks like the following.
+```{r printsinglelevelfact}
+head(temp_single_o)
+```
+
+#### Correlated predictor variables
+The ability to add correlated predictor variables is an easy addition. The additional argument `cor_vars` takes a vector of correlations between predictor variables (note this does not include the intercept, factor variables, or any interaction variables). These correlations are further turned into a covariance matrix with the standard deviations specified in the `cov_param` argument. Then through cholesky decomposition, the correlations between the variables are generated prior to simulating the response variable. Below is an example. The default value is no correlation between the covariates.
+
+```{r corvars}
+fixed <- ~ 1 + act + diff + numCourse_o + act:numCourse_o
+fixed_param <- c(2, 4, 1, 3.5, 2)
+cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                  var_type = c("single", "single"),
+                  opts = list(list(mean = 0, sd = 4),
+                              list(mean = 0, sd = 3)))
+fact_vars <- list(numlevels = 5, var_type = "single", 
+                  opts = list(list(replace = TRUE)))
+n <- 150
+error_var <- 3
+with_err_gen = 'rnorm'
+cor_vars <- 0.6
+temp_single_o <- sim_reg(fixed = fixed, fixed_param = fixed_param, 
+                         cov_param = cov_param, n = n, 
+                         error_var = error_var,
+                         with_err_gen = with_err_gen, data_str = "single", 
+                         cor_vars = cor_vars, fact_vars = fact_vars)
+cor(temp_single_o[, 2:3])
+```
+
+#### Editing distributions for covariates.
+The distribution of covariates can also be changed to any R distribution function (e.g. `rnorm` or `rt`). These are called via the `cov_param` argument using `dist_fun`. Any additional parameters besides sample size are called via the optional `opts` argument within `cov_param`. The distributions need not be the same for each covariate. Below is an example generating two covariates using two different distributions and correlating them.
+
+```{r other_dists}
+fixed <- ~ 1 + act + diff + numCourse_o + act:numCourse_o
+fixed_param <- c(2, 4, 1, 3.5, 2)
+cov_param <- list(dist_fun = c('rt', 'rgamma'),
+                  var_type = c("single", "single"),
+                  opts = list(list(df = 5),
+                              list(shape = 2)))
+fact_vars <- list(numlevels = 5, var_type = "single",
+                  opts = list(list(replace = TRUE)))
+n <- 150
+error_var <- 3
+with_err_gen = 'rnorm'
+cor_vars <- 0.6
+temp_single_o <- sim_reg(fixed = fixed, fixed_param = fixed_param, 
+                         cov_param = cov_param, n = n, 
+                         error_var = error_var,
+                         with_err_gen = with_err_gen, data_str = "single", 
+                         cor_vars = cor_vars, fact_vars = fact_vars)
+cor(temp_single_o[, 2:3])
+```
+
+The skewness and kurtosis can be ways to ensure that these distributions are actually generated as desired. For example, the skewness and kurtosis for the `rt` distribution are: `r e1071::skewness(temp_single_o$act)` and `r e1071::kurtosis(temp_single_o$act)`. Similarly done for the `rgamma` distribution: `r e1071::skewness(temp_single_o$diff)` and `r e1071::kurtosis(temp_single_o$diff)`.
+
+#### Heterogeneity
+It is also possible to build in heterogeneity of variance into the simulation design. This is done through two arguments, `homogeneity` and `heterogeneity_var`. Below is a possible specification within a single level framework. By specifying `homogeneity = FALSE`, this indicates that some level of heterogeneity is desired. Finally, by passing a variable name as a character string to the `heterogeneity_var` argument, this is the variable in which heterogeneity in the residuals depends on (i.e. this variable is used to group variables).
+
+```{r heterogeneity}
+fixed <- ~ 1 + act + diff + numCourse + act:numCourse
+fixed_param <- c(2, 4, 1, 3.5, 2)
+cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'), 
+                  var_type = c("single", "single", "single"),
+                  cov_param = list(list(mean = 0, sd = 4),
+                                   list(mean = 0, sd = 3),
+                                   list(mean = 0, sd = 3)))
+n <- 1500
+error_var <- c(3, 50, 10)
+with_err_gen = 'rnorm'
+
+temp_single <- sim_reg(fixed = fixed, fixed_param = fixed_param, 
+                       cov_param = cov_param,
+                       n = n, error_var = error_var, 
+                       with_err_gen = with_err_gen, 
+                       data_str = "single", 
+                       homogeneity = FALSE, heterogeneity_var = 'diff')
+```
+
+The outcome of the heterogeneity from the simulation is best show with a figure.
+
+```{r heterogeneity_figure}
+library(ggplot2)
+ggplot(temp_single, aes(x = diff, y = err)) + 
+  geom_point(size = 3) + theme_bw()
+```
+
+As you can see from the figure, there is an increase in the error variance in the middle of the variable "diff" and smaller amounts of variance in the tails. What was done internally was that the variable "diff" was grouped into 3 groups (based on the length of the argument `error_var`) and the variance values passed from `error_var` are used to create the heterogeneity. In many instances, heterogeneity is thought of with regard to groups. This can be shown with the following:
+
+```{r hetero_groups}
+fixed <- ~ 1 + act_o + diff.o + numCourse_f
+fixed_param <- c(0.8, 1, 0.2, 0.1, 0, 0.15, 0.2)
+cov_param <- NULL
+fact_vars <- list(numlevels = c(36, 8, 5), 
+                  var_type = c('single', 'single', "single"),
+                  opts = list(list(replace = TRUE), list(replace = TRUE),
+                              list(replace = TRUE)))
+n <- 150
+error_var <- c(3, 10, 20, 5, 4)
+with_err_gen = 'rnorm'
+temp_single_o <- sim_reg(fixed = fixed, fixed_param = fixed_param, 
+                         cov_param = cov_param, n = n, error_var = error_var,
+                         with_err_gen = with_err_gen, data_str = "single", 
+                         fact_vars = fact_vars, 
+                         homogeneity = FALSE, heterogeneity_var = 'numCourse_f')
+```
+
+Showing a plot of the outcome.
+
+```{r hetero_groups_fig}
+ggplot(temp_single_o, aes(x = factor(numCourse_f), y = err)) + 
+  geom_boxplot() + theme_bw()
+```
+
+
+### Nested Data
+This package currently supports the simulation of two-level nested or two-level longitudinal models. A few additional arguments are needed to do these models but much is the same.
+```{r longsim}
+fixed <- ~1 + time + diff + act + time:act
+random <- ~1 + time + diff
+fixed_param <- c(4, 2, 6, 2.3, 7)
+random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
+cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
+                  var_type = c("level1", "level2"), 
+                  opts = list(list(mean = 0, sd = 1.5),
+                              list(mean = 0, sd = 4)))
+n <- 150
+p <- 30
+error_var <- 4
+data_str <- "long"
+temp_long <- sim_reg(fixed = fixed, random = random, 
+                     fixed_param = fixed_param, 
+                     random_param = random_param, cov_param = cov_param, 
+                     k = NULL, n = n, p = p,
+                     error_var = error_var, with_err_gen = "rnorm",
+                     data_str = data_str, unbal = list(level2 = FALSE))
+```
+
+Highlighting the new agruments needed, the first is a one sided formula `random`. This specifies which terms should be specified above. Related to `random`, `random_param` is a list of characteristics when simulation the random effects. This list must contain two named components: `random_var` and `rand_gen`. These two components represent the variance of the terms specified in the one sided `random` formula and `rand_gen` which represents a quoted distribution function (e.g. 'rnorm') to simulate the random effects. The `random_var` component must be the same length as the number of terms in `random`. 
+
+The optional named arguments to the `random_param` argument include `ther`, `ther_sim`, and `cor_vars`. First, `cor_vars` is a vector of correlations between random effects, the default is no correlation between random effects. The argument `ther` represents a vector of the theoretical mean and standard deviation of the random effects. This can be used to center simulated values at 0 or scale them to have a standard deviation of 1. The following standardization formula is used: $z = \frac{X - \mu}{\sigma}$, where $\mu$ and $\sigma$ are the values specified within the `ther` argument. The default values are 0 and 1 for $\mu$ and $\sigma$ respectively so that no scaling is performed. The `ther_sim` argument does the same process as `ther`, but the $\mu$ and $\sigma$ values are empirically drawn by sampling one million values from the `rand_gen` specified. Lastly, depending on the `rand_gen` function specified, additional arguments may be needed for that distribution function and can be specified as well. For example, if `rand_gen = 'rchisq'`, including `df = 1` would simulate a chi-square distribution with one degree of freedom. 
+
+The specification of the covariates is still done with the `cov_param` argument, however, now the `var_type` portion of `cov_param` must be either "level1" or "level2" to represent either level 1 or level 2 variables respectively. Note that the time variable is not included in the `cov_param` argument and is automatically specified as discrete starting from 0.  In the future, differing time scales will be expanded.
+
+The other new terms needed are straightforward, `p` is the within cluster sample size (i.e. how many repeated measurements) and `data_str` is now "long" for longitudinal data.
+
+The simulated data now look like the following:
+```{r longdata}
+head(temp_long)
+```
+
+This structure is very similar to before, except now there are columns for the specific random effects as denoted by the lower case b's, a column reflecting the contribution for the random effects combined and lastly now two ID variables, one reflecting the within cluster ID and another being the cluster ID.
+
+Checking how the simulation worked with the following:
+```{r lme4}
+library(lme4)
+lmer(sim_data ~ 1 + time + diff + act + time:act + (1 + time + diff | clustID),
+     data = temp_long)
+```
+One note when looking at the output is that standard deviations are given, not variances as inputted into the simulation function.
+
+#### Specifying Time Variable
+For longitudinal designs, the time variable (linear slope) is generated going from 0 to number of observations minus 1. Therefore, if there are 5 time points (measurement occasions), the time variable by default will be a sequence from 0 to 4 indexing by 1. An optional named argument within `cov_param`, named `time_var`, allows the user to specify the time scale. Below is an example with 5 time points. In this example the first three measurement occasions may be separated by 6 months with the last two occasions being measured 2 years apart and the time variable is represented on the time scale.
+
+```{r long_time}
+fixed <- ~1 + time + diff + act + time:act
+random <- ~1 + time + diff
+fixed_param <- c(4, 2, 6, 2.3, 7)
+random_param <- list(random_var = c(7, 4, 2), rand_gen = 'rnorm')
+cov_param <- list(dist_fun = c('rnorm', 'rnorm'), 
+                  var_type = c("level1", "level2"), 
+                  time_var = c(0, 0.5, 1, 3, 5),
+                  opts = list(list(mean = 0, sd = 1.5), 
+                              list(mean = 0, sd = 4)))
+n <- 150
+p <- 5
+error_var <- 4
+with_err_gen <- 'rnorm'
+data_str <- "long"
+temp_long <- sim_reg(fixed, random, random3 = NULL, fixed_param, 
+                     random_param, random_param3 = NULL,
+                     cov_param, k = NULL, n, p, error_var, with_err_gen, 
+                     data_str = data_str)
+head(temp_long)
+```
+
+
+#### Cross-Sectional Data
+A similar framework can be used for cross-sectional data, such as when students are nested within schools.  The only thing that would need to be changed from the longitudinal portion above is the `data_str` argument from "long" to "cross" for cross-sectional data.
+
+One last note about cross-sectional data.  As a default for longitudinal data, time is always considered to be in the model in some fashion (as noted above when talking about the `cov_param` object). Therefore, when specifying the `cov_param` and `fact_vars` objects, ensure information about all variables is there.
+
+#### Categorical Data for Nested Designs
+The same framework to specify categorical data for single level regression designs is used for nested designs. Just asign the ".f", ".c", or ".o" (or "_f", "_c", or "_o") to the end of the name and the function will take care of the rest.
+
+## Bugs/Feature Requests
+Lastly, for any bugs or feature requests go to the github repository to create post an issue. I will work to resolve them as quickly as possible. See [simglm github repository](https://github.com/lebebr01/simglm)
+

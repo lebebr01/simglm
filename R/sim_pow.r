@@ -270,7 +270,8 @@ sim_pow <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                    lm_fit_mod = NULL, lme4_fit_mod = NULL, nlme_fit_mod = NULL,
                    arima_fit_mod = NULL, general_mod = NULL, general_extract = NULL, 
                    ...) {
-  
+  .Deprecated(msg = "'sim_pow' is no longer supported and will be removed in v 1.0\n
+              See tidy_simulation vignette")
   args <- list(fixed = fixed, random = random, random3 = random3,
                fixed_param = fixed_param, random_param = random_param,
                random_param3 = random_param3,
@@ -602,6 +603,8 @@ sim_pow_glm <- function(fixed, random = NULL, random3 = NULL, fixed_param,
                         glm_fit_mod = NULL, lme4_fit_mod = NULL, 
                         glm_fit_family = NULL, lme4_fit_family = NULL, 
                         general_mod = NULL, general_extract = NULL, ...) {
+  .Deprecated(msg = "'sim_pow_glm' is no longer supported and will be removed in v 1.0\n
+              See tidy_simulation vignette")
   
   args <- list(fixed = fixed, random = random, random3 = random3,
                fixed_param = fixed_param, random_param = random_param,

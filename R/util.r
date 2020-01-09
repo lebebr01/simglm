@@ -149,6 +149,59 @@ factor_names <- function(sim_args, fixed_vars) {
   unlist(fixed_vars)
 }
 
+poly_ns_names <- function(sim_args) {
+  fixed_formula <- parse_formula(sim_args)[['fixed']]
+  
+  fixed_vars <- attr(terms(fixed_formula), "term.labels") 
+  
+  ns_loc <- grep("^ns|^bs", fixed_vars)
+  if(any(ns_loc)) {
+    ns_new_names <- ns_df_names(fixed_vars[ns_loc])
+    if(grepl("df", fixed_vars[ns_loc])) {
+      ns_new_names <- lapply(seq_along(ns_loc), function(xx) {
+        ns_df_names(fixed_vars[ns_loc[xx]])
+      })
+      for(i in seq_along(ns_new_names)) {
+        fixed_vars[ns_loc[i]] <- ns_new_names[i]
+      }
+      fixed_vars <- unlist(fixed_vars)
+    } else {
+      # placeholder for bs names
+    }
+  }
+  poly_loc <- grep("^poly", fixed_vars)
+  if(any(poly_loc)) {
+    poly_new_names <- lapply(seq_along(poly_loc), function(xx) {
+      poly_names(fixed_vars[poly_loc[xx]])
+    })
+    for(i in seq_along(poly_new_names)) {
+      fixed_vars[poly_loc[i]] <- poly_new_names[i]
+    }
+    fixed_vars <- unlist(fixed_vars)
+  }
+  
+  fixed_vars
+  
+} 
+
+ns_df_names <- function(x) {
+  name <- gsub("ns\\(|bs\\(|\\,.+\\)$", "", x)
+
+  func_arg <- unlist(regmatches(x, regexec("df\\s+=\\s+[0-9]+", x)))
+  num <- unlist(regmatches(func_arg, regexec("[0-9]+", func_arg)))
+  
+  paste(name, 1:as.numeric(num), sep = "_")
+  
+}
+
+poly_names <- function(x) {
+  degree_arg <- unlist(regmatches(x, regexec("degree\\s+=\\s+[0-9]+", x)))
+  num <- unlist(regmatches(degree_arg, regexec("[0-9]+", degree_arg)))
+  name <- gsub("poly\\(|\\,.+\\)", "", x)
+  
+  paste(name, 1:as.numeric(num), sep = "_")
+}
+
 
 # Horrible hack to keep CRAN happy and suppress NOTES about
 # parts of the code that use non-standard evaluation.
@@ -159,4 +212,5 @@ utils::globalVariables(c('test_stat', 'reject', 'estimate', 'term',
                          'std.error', '.', 'sd_estimate', 'avg_se',
                          't1e', 'power_args', 'adjusted_teststat',
                          't1e_args', 'param_estimate_sd', 'avg_standard_error',
-                         'statistic', 'n', 'miss_prob', 'miss_prop'))
+                         'statistic', 'n', 'miss_prob', 'miss_prop',
+                         'test_statistic'))

@@ -62,48 +62,48 @@ test_that('list terms vary', {
   expect_equal(nrow(power_out), 3*2*2)
 })
 
-test_that("three level power continuous", {
-  fixed <- ~1 + time + diff + act + actClust + time:act
-  random <- ~1 + time
-  random3 <- ~ 1 + time
-  fixed_param <- c(0.3, 0.6, 0.2, 0.1, 0.25, 0.8)
-  random_param <- list(random_var = c(7, 4), rand_gen = 'rnorm')
-  random_param3 <- list(random_var = c(4, 2), rand_gen = 'rnorm')
-  cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
-                    var_type = c("level1", "level2", "level3"),
-                    opts = list(list(mean = 0, sd = 1.5),
-                                list(mean = 0, sd = 4),
-                                list(mean = 0, sd = 2)))
-  k <- 15
-  n <- 15
-  p <- 4
-  error_var <- 4
-  with_err_gen <- 'rnorm'
-  data_str <- "long"
-  pow_param <- c('time', 'diff', 'act', 'actClust')
-  alpha <- .01
-  pow_dist <- "z"
-  pow_tail <- 2
-  replicates <- 2
-  terms_vary <- list(p = c(10, 20),
-                     random_param = list(list(random_var = c(7, 4), rand_gen = 'rnorm'),
-                                         list(random_var = c(5, 4), rand_gen = 'rnorm')))
-  power_out <- sim_pow(fixed = fixed, random = random, random3 = random3,
-                       fixed_param = fixed_param,
-                       random_param = random_param,
-                       random_param3 = random_param3,
-                       cov_param = cov_param,
-                       k = k, n = n, p = p,
-                       error_var = error_var, with_err_gen = "rnorm",
-                       data_str = data_str, 
-                       unbal = list(level2 = FALSE, level3 = FALSE),
-                       pow_param = pow_param, alpha = alpha,
-                       pow_dist = pow_dist, pow_tail = pow_tail,
-                       replicates = replicates,
-                       terms_vary = terms_vary)
-
-  expect_equal(nrow(power_out), 4*2*2)
-})
+# test_that("three level power continuous", {
+#   fixed <- ~1 + time + diff + act + actClust
+#   random <- ~1 + time
+#   random3 <- ~ 1 
+#   fixed_param <- c(1.5, 1.8, 1.4, 1.4, 1.8)
+#   random_param <- list(random_var = c(10, 8), rand_gen = 'rnorm')
+#   random_param3 <- list(random_var = c(10), rand_gen = 'rnorm')
+#   cov_param <- list(dist_fun = c('rnorm', 'rnorm', 'rnorm'),
+#                     var_type = c("level1", "level2", "level3"),
+#                     opts = list(list(mean = 0, sd = 6),
+#                                 list(mean = 0, sd = 4),
+#                                 list(mean = 0, sd = 3)))
+#   k <- 30
+#   n <- 20
+#   p <- 5
+#   error_var <- 25
+#   with_err_gen <- 'rnorm'
+#   data_str <- "long"
+#   pow_param <- c('time', 'diff', 'act', 'actClust')
+#   alpha <- .01
+#   pow_dist <- "z"
+#   pow_tail <- 2
+#   replicates <- 2
+#   terms_vary <- list(p = c(10, 20),
+#                      random_param = list(list(random_var = c(7, 4), rand_gen = 'rnorm'),
+#                                          list(random_var = c(5, 4), rand_gen = 'rnorm')))
+#   power_out <- sim_pow(fixed = fixed, random = random, random3 = random3,
+#                        fixed_param = fixed_param,
+#                        random_param = random_param,
+#                        random_param3 = random_param3,
+#                        cov_param = cov_param,
+#                        k = k, n = n, p = p,
+#                        error_var = error_var, with_err_gen = "rnorm",
+#                        data_str = data_str, 
+#                        unbal = list(level2 = FALSE, level3 = FALSE),
+#                        pow_param = pow_param, alpha = alpha,
+#                        pow_dist = pow_dist, pow_tail = pow_tail,
+#                        replicates = replicates,
+#                        terms_vary = terms_vary)
+# 
+#   expect_equal(nrow(power_out), 4*2*2)
+# })
 
 test_that('two level power dich', {
   set.seed(200)

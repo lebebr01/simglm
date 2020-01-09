@@ -762,6 +762,12 @@ simulate_fixed <- function(data, sim_args, ...) {
   if(any(grepl('^factor\\(', fixed_vars))) {
     fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
   }
+  if(any(grepl('^ns\\(', fixed_vars))) {
+    fixed_vars <- gsub("ns\\(|bs\\(|\\,.+\\)$", "", fixed_vars)
+  }
+  if(any(grepl("^poly\\(", fixed_vars))) {
+    fixed_vars <- gsub("poly\\(|\\,.+\\)", "", fixed_vars)
+  }
   
   if(is.null(data)) {
     n <- sample_sizes(sim_args[['sample_size']])
@@ -781,14 +787,21 @@ simulate_fixed <- function(data, sim_args, ...) {
       data.frame()
   }
   
-  if(any(grepl(":", fixed_vars))) {
-    int.loc <- grep(":", fixed_vars)
-    colnames(Xmat) <- fixed_vars[-int.loc]
+  if(any(grepl(":|^I", fixed_vars))) {
+    int_loc <- grep(":|^I", fixed_vars)
+    colnames(Xmat) <- fixed_vars[-int_loc]
   } else {
     colnames(Xmat) <- fixed_vars
   } 
+
   if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
-    sim_args[['fixed']][[xx]]$var_type)) == 'factor')) {
+    sim_args[['fixed']][[xx]]$var_type)) == 'factor') | 
+    any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
+    fixed_vars <- poly_ns_names(sim_args)
+    
+    if(any(grepl('^factor\\(', fixed_vars))) {
+      fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
+    }
     
     num_levels <- lapply(seq_along(sim_args[['fixed']]), function(xx) 
       sim_args[['fixed']][[xx]][['levels']])

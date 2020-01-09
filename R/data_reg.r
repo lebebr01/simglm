@@ -133,8 +133,18 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   if(any(grepl('^factor\\(', fixed_vars))) {
     fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
   }
+  if(any(grepl('^ns\\(', fixed_vars))) {
+    fixed_vars <- gsub("ns\\(|\\,.+\\)$", "", fixed_vars)
+  }
+  if(any(grepl("^poly\\(", fixed_vars))) {
+    fixed_vars <- gsub("poly\\(|\\,.+\\)", "", fixed_vars)
+  }
   if(any(grepl(':', fixed_vars))) {
     fixed_vars <- gsub(":", "\\.", fixed_vars)
+  }
+  
+  if(any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
+    fixed_vars <- poly_ns_names(sim_args)
   }
   
   if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 

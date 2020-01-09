@@ -612,7 +612,7 @@ The `replicate_simulation` function first shown in the "tidy_simulation" vignett
 
 ```{r vary_simulation}
 library(future)
-plan(multiprocess)
+plan(multisession)
 
 sim_arguments <- list(
   formula =  resp_var ~ 1 + time + factor(trt) + time:factor(trt) + 

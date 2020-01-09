@@ -36,9 +36,7 @@ matrix:
 
 cran: https://cran.rstudio.com/
 r_packages: 
-   - rmarkdown
    - covr
-   - e1071
    
 after_success:
    - Rscript -e 'library(covr); codecov()'

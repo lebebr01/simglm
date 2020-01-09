@@ -215,7 +215,8 @@ sim_reg <- function(fixed, random, random3, fixed_param,
                     contrasts = NULL, homogeneity = TRUE,
                     heterogeneity_var = NULL, cross_class_params = NULL, 
                     knot_args = list(NULL), ...) {
-  
+  .Deprecated(msg = "'sim_reg' is no longer supported and will be removed with v 1.0\n
+              See tidy_simulation vignette.")
   if(data_str == "single"){
     sim_reg_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen, 
                    arima, data_str, cor_vars, fact_vars, lvl1_err_params, 
@@ -431,7 +432,8 @@ sim_glm <- function(fixed, random, random3, fixed_param, random_param = list(),
                     unbal_design = list("level2" = NULL, "level3" = NULL),
                     contrasts = NULL, outcome_type, 
                     cross_class_params = NULL, knot_args = list(NULL), ...) {
-  
+  .Deprecated(msg = "'sim_glm' is no longer supported and will be removed with v 1.0\n
+              See tidy_simulation vignette.")
   if(data_str == "single"){
     sim_glm_single(fixed, fixed_param, cov_param, n, data_str, 
                    cor_vars, fact_vars, contrasts, outcome_type, 

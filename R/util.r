@@ -156,7 +156,11 @@ poly_ns_names <- function(sim_args) {
   
   ns_loc <- grepl("^ns|^bs", fixed_vars)
   if(any(ns_loc)) {
-    ns_new_names <- ns_df_names(fixed_vars[ns_loc])
+    if(grepl("df", fixed_vars[ns_loc])) {
+      ns_new_names <- ns_df_names(fixed_vars[ns_loc])
+    } else {
+      
+    }
   }
   poly_loc <- grepl("^poly", fixed_vars)
   

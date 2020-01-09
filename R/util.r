@@ -156,16 +156,30 @@ poly_ns_names <- function(sim_args) {
   
   ns_loc <- grepl("^ns|^bs", fixed_vars)
   if(any(ns_loc)) {
+    ns_new_names <- ns_df_names(fixed_vars[ns_loc])
     if(grepl("df", fixed_vars[ns_loc])) {
-      ns_new_names <- ns_df_names(fixed_vars[ns_loc])
+      ns_new_names <- lapply(seq_along(poly_loc), function(xx) {
+        ns_df_names(fixed_vars[ns_loc[xx]])
+      })
+      for(i in seq_along(ns_new_names)) {
+        fixed_vars[ns_loc[i]] <- ns_new_names[i]
+      }
     } else {
-      
+      # placeholder for bs names
     }
   }
-  poly_loc <- grepl("^poly", fixed_vars)
+  poly_loc <- grep("^poly", fixed_vars)
+  if(any(poly_loc)) {
+    poly_new_names <- lapply(seq_along(poly_loc), function(xx) {
+      poly_names(fixed_vars[poly_loc[xx]])
+    })
+    for(i in seq_along(poly_new_names)) {
+      fixed_vars[poly_loc[i]] <- poly_new_names[i]
+    }
+    fixed_vars <- unlist(fixed_vars)
+  }
   
-  
-  poly_new_names <- poly_names(fixed_vars[poly_loc])
+  fixed_vars
   
 } 
 

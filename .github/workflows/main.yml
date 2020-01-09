@@ -12,3 +12,5 @@ jobs:
         run: Rscript -e "install.packages(c('remotes', 'rcmdcheck'))" -e "remotes::install_deps(dependencies = TRUE)"
       - name: Check
         run: Rscript -e "rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'error')"
+      - name: Test coverage
+        run: Rscript -e 'covr::codecov()'

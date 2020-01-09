@@ -9,3 +9,4 @@ README.Rmd
 ^\.Rprofile$
 ^docs$
 ^cran-comments\.md$
+^\.github$

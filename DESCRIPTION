@@ -33,7 +33,8 @@ Suggests:
     geepack,
     rmarkdown,
     future,
-    splines
+    splines,
+    covr
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 6.1.1

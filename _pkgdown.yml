@@ -1,0 +1,10 @@
+destination: docs
+url: https://brandonlebeau.org/packages/simglm
+
+authors:
+  Brandon LeBeau:
+    href: https://brandonlebeau.org
+
+template:
+  params:
+    bootswatch: flatly

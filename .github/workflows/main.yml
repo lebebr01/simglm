@@ -13,4 +13,4 @@ jobs:
       - name: Check
         run: Rscript -e "rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'error')"
       - name: Test coverage
-        run: Rscript -e 'covr::codecov()'
+        run: Rscript -e 'covr::codecov(token = "${{secrets.CODECOV_TOKEN}}")'

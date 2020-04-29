@@ -832,6 +832,7 @@ simulate_fixed <- function(data, sim_args, ...) {
                                  fixed_vars_new[grepl("^poly|^ns", fixed_vars_new)]
       )
       Omat_poly_ns <- Omat[ , fixed_vars_poly_ns, drop = FALSE]
+      names(Omat_poly_ns) <- paste0(names(Omat_poly_ns), "_orig")
     } else {
       Omat_poly_ns <- NULL
     }

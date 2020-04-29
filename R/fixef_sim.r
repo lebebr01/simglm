@@ -818,10 +818,25 @@ simulate_fixed <- function(data, sim_args, ...) {
     Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))
     colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars
     
-    Omat <- Omat[unique_columns(Xmat, Omat, fixed_vars)]
-    names(Omat) <- paste0(fixed_vars[unique_columns(Xmat, Omat, fixed_vars)],
-    '_orig')
+    if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
+      sim_args[['fixed']][[xx]]$var_type)) == 'factor')) {
+      Omat_factor <- Omat[unique_columns(Xmat, Omat, fixed_vars)]
+      names(Omat_factor) <- paste0(fixed_vars[unique_columns(Xmat, Omat, fixed_vars)],
+                                   '_orig')
+    } else {
+      Omat_factor <- NULL
+    }
+    if(any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
+      fixed_vars_new <- attr(terms(fixed_formula), "term.labels") 
+      fixed_vars_poly_ns <- gsub("poly\\(|\\,.+\\)|ns\\(|\\,.+\\)", "", 
+                                 fixed_vars_new[grepl("^poly|^ns", fixed_vars_new)]
+      )
+      Omat_poly_ns <- Omat[ , fixed_vars_poly_ns, drop = FALSE]
+    } else {
+      Omat_poly_ns <- NULL
+    }
     
+    Omat <- dplyr::bind_cols(Omat_factor, Omat_poly_ns)
     
     Xmat <- dplyr::bind_cols(Xmat, Omat)
   } else {

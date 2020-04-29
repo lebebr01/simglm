@@ -4,10 +4,20 @@
 \alias{sim_err_single}
 \title{Function that simulates errors.}
 \usage{
-sim_err_single(error_var, n, with_err_gen, arima = FALSE,
-  lvl1_err_params = NULL, arima_mod = list(NULL), ther = c(0, 1),
-  ther_sim = FALSE, homogeneity = TRUE, fixef = NULL,
-  heterogeneity_var = NULL, ...)
+sim_err_single(
+  error_var,
+  n,
+  with_err_gen,
+  arima = FALSE,
+  lvl1_err_params = NULL,
+  arima_mod = list(NULL),
+  ther = c(0, 1),
+  ther_sim = FALSE,
+  homogeneity = TRUE,
+  fixef = NULL,
+  heterogeneity_var = NULL,
+  ...
+)
 }
 \arguments{
 \item{error_var}{Numeric scalar of error variance or vector used when 

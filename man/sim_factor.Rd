@@ -4,8 +4,14 @@
 \alias{sim_factor}
 \title{Simulate categorical, factor, or discrete variables}
 \usage{
-sim_factor(k = NULL, n, p, numlevels, var_type = c("level1", "level2",
-  "level3", "single"), ...)
+sim_factor(
+  k = NULL,
+  n,
+  p,
+  numlevels,
+  var_type = c("level1", "level2", "level3", "single"),
+  ...
+)
 }
 \arguments{
 \item{k}{Number of third level clusters.}

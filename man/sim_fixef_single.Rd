@@ -4,8 +4,16 @@
 \alias{sim_fixef_single}
 \title{Simulates design matrix for single level model.}
 \usage{
-sim_fixef_single(fixed, fixed_vars, n, cov_param, cor_vars = NULL,
-  fact_vars = list(NULL), contrasts = NULL, knot_args = list(NULL))
+sim_fixef_single(
+  fixed,
+  fixed_vars,
+  n,
+  cov_param,
+  cor_vars = NULL,
+  fact_vars = list(NULL),
+  contrasts = NULL,
+  knot_args = list(NULL)
+)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.}

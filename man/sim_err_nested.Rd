@@ -4,10 +4,21 @@
 \alias{sim_err_nested}
 \title{Function that simulates errors.}
 \usage{
-sim_err_nested(error_var, n, p, with_err_gen, arima = FALSE,
-  lvl1_err_params = NULL, arima_mod = list(NULL), ther = c(0, 1),
-  ther_sim = FALSE, homogeneity = TRUE, fixef = NULL,
-  heterogeneity_var = NULL, ...)
+sim_err_nested(
+  error_var,
+  n,
+  p,
+  with_err_gen,
+  arima = FALSE,
+  lvl1_err_params = NULL,
+  arima_mod = list(NULL),
+  ther = c(0, 1),
+  ther_sim = FALSE,
+  homogeneity = TRUE,
+  fixef = NULL,
+  heterogeneity_var = NULL,
+  ...
+)
 }
 \arguments{
 \item{error_var}{Scalar of error variance}

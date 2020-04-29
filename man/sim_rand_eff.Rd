@@ -4,8 +4,15 @@
 \alias{sim_rand_eff}
 \title{Function to simulate random effects.}
 \usage{
-sim_rand_eff(random_var, n, rand_gen, ther = c(0, 1), ther_sim = FALSE,
-  cor_vars = NULL, ...)
+sim_rand_eff(
+  random_var,
+  n,
+  rand_gen,
+  ther = c(0, 1),
+  ther_sim = FALSE,
+  cor_vars = NULL,
+  ...
+)
 }
 \arguments{
 \item{random_var}{Variance of random effects. Must be same length as random.}

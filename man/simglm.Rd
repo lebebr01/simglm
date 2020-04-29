@@ -3,7 +3,6 @@
 \docType{package}
 \name{simglm}
 \alias{simglm}
-\alias{simglm-package}
 \title{simglm: A package to simulate and perform power by simulation for 
    models based on the generalized linear model.}
 \usage{

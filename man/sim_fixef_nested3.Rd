@@ -4,9 +4,19 @@
 \alias{sim_fixef_nested3}
 \title{Simulates design matrix.}
 \usage{
-sim_fixef_nested3(fixed, fixed_vars, cov_param, k, n, p, data_str,
-  cor_vars = NULL, fact_vars = list(NULL), contrasts = NULL,
-  knot_args = list(NULL))
+sim_fixef_nested3(
+  fixed,
+  fixed_vars,
+  cov_param,
+  k,
+  n,
+  p,
+  data_str,
+  cor_vars = NULL,
+  fact_vars = list(NULL),
+  contrasts = NULL,
+  knot_args = list(NULL)
+)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.}

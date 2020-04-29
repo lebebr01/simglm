@@ -4,8 +4,15 @@
 \alias{sim_continuous2}
 \title{Simulate continuous variables}
 \usage{
-sim_continuous2(n, dist = "rnorm", var_level = 1, variance = NULL,
-  ther_sim = FALSE, ther_val = NULL, ...)
+sim_continuous2(
+  n,
+  dist = "rnorm",
+  var_level = 1,
+  variance = NULL,
+  ther_sim = FALSE,
+  ther_val = NULL,
+  ...
+)
 }
 \arguments{
 \item{n}{A list of sample sizes.}

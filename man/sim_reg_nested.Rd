@@ -4,13 +4,31 @@
 \alias{sim_reg_nested}
 \title{Function to simulate nested data}
 \usage{
-sim_reg_nested(fixed, random, fixed_param, random_param = list(),
-  cov_param, n, p, error_var, with_err_gen, arima = FALSE, data_str,
-  cor_vars = NULL, fact_vars = list(NULL), unbal = FALSE,
-  unbal_design = NULL, lvl1_err_params = NULL,
-  arima_mod = list(NULL), contrasts = NULL, homogeneity = TRUE,
-  heterogeneity_var = NULL, cross_class_params = NULL,
-  knot_args = list(NULL), ...)
+sim_reg_nested(
+  fixed,
+  random,
+  fixed_param,
+  random_param = list(),
+  cov_param,
+  n,
+  p,
+  error_var,
+  with_err_gen,
+  arima = FALSE,
+  data_str,
+  cor_vars = NULL,
+  fact_vars = list(NULL),
+  unbal = FALSE,
+  unbal_design = NULL,
+  lvl1_err_params = NULL,
+  arima_mod = list(NULL),
+  contrasts = NULL,
+  homogeneity = TRUE,
+  heterogeneity_var = NULL,
+  cross_class_params = NULL,
+  knot_args = list(NULL),
+  ...
+)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation. 

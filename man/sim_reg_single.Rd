@@ -4,11 +4,25 @@
 \alias{sim_reg_single}
 \title{Master function to simulate single level data.}
 \usage{
-sim_reg_single(fixed, fixed_param, cov_param, n, error_var, with_err_gen,
-  arima = FALSE, data_str, cor_vars = NULL, fact_vars = list(NULL),
-  lvl1_err_params = NULL, arima_mod = list(NULL), contrasts = NULL,
-  homogeneity = TRUE, heterogeneity_var = NULL,
-  knot_args = list(NULL), ...)
+sim_reg_single(
+  fixed,
+  fixed_param,
+  cov_param,
+  n,
+  error_var,
+  with_err_gen,
+  arima = FALSE,
+  data_str,
+  cor_vars = NULL,
+  fact_vars = list(NULL),
+  lvl1_err_params = NULL,
+  arima_mod = list(NULL),
+  contrasts = NULL,
+  homogeneity = TRUE,
+  heterogeneity_var = NULL,
+  knot_args = list(NULL),
+  ...
+)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.

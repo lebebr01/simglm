@@ -4,10 +4,25 @@
 \alias{sim_glm_nested}
 \title{Simulate two level logistic regression model}
 \usage{
-sim_glm_nested(fixed, random, fixed_param, random_param = list(),
-  cov_param, n, p, data_str, cor_vars = NULL, fact_vars = list(NULL),
-  unbal = FALSE, unbal_design = NULL, contrasts = NULL, outcome_type,
-  cross_class_params = NULL, knot_args = list(NULL), ...)
+sim_glm_nested(
+  fixed,
+  random,
+  fixed_param,
+  random_param = list(),
+  cov_param,
+  n,
+  p,
+  data_str,
+  cor_vars = NULL,
+  fact_vars = list(NULL),
+  unbal = FALSE,
+  unbal_design = NULL,
+  contrasts = NULL,
+  outcome_type,
+  cross_class_params = NULL,
+  knot_args = list(NULL),
+  ...
+)
 }
 \arguments{
 \item{fixed}{One sided formula for fixed effects in the simulation.

@@ -4,8 +4,18 @@
 \alias{data_glm_nested3}
 \title{Simulates three level nested data with a single third level random effect}
 \usage{
-data_glm_nested3(Xmat, Zmat, Zmat3, beta, rand_eff, rand_eff3, k, n, p,
-  outcome_type)
+data_glm_nested3(
+  Xmat,
+  Zmat,
+  Zmat3,
+  beta,
+  rand_eff,
+  rand_eff3,
+  k,
+  n,
+  p,
+  outcome_type
+)
 }
 \arguments{
 \item{Xmat}{A matrix of covariates.}

@@ -37,7 +37,7 @@ Suggests:
     covr
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Author: Brandon LeBeau [aut, cre]
 Maintainer: Brandon LeBeau <lebebr01+simglm@gmail.com>
 URL: https://github.com/lebebr01/simglm

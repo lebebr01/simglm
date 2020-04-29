@@ -88,7 +88,7 @@
       <h1>Tidy Simulation with <code>simglm</code>
 </h1>
             
-            <h4 class="date">2020-02-11</h4>
+            <h4 class="date">2020-04-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/master/vignettes/tidy_simulation.Rmd"><code>vignettes/tidy_simulation.Rmd</code></a></small>
       <div class="hidden name"><code>tidy_simulation.Rmd</code></div>
@@ -214,17 +214,17 @@
 <span id="cb7-9"><a href="#cb7-9"></a>)</span>
 <span id="cb7-10"><a href="#cb7-10"></a></span>
 <span id="cb7-11"><a href="#cb7-11"></a><span class="kw"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span>(<span class="dt">data =</span> <span class="ot">NULL</span>, sim_arguments)</span></code></pre></div>
-<pre><code>##    X.Intercept.   weight age sex  weight1 age1   sex1 level1_id
-## 1             1 231.1471  44   0 231.1471   44 female         1
-## 2             1 158.6388  38   0 158.6388   38 female         2
-## 3             1 171.6605  31   0 171.6605   31 female         3
-## 4             1 176.4105  40   0 176.4105   40 female         4
-## 5             1 176.2812  60   1 176.2812   60   male         5
-## 6             1 188.0455  47   0 188.0455   47 female         6
-## 7             1 201.8052  33   0 201.8052   33 female         7
-## 8             1 186.9941  43   1 186.9941   43   male         8
-## 9             1 190.1734  52   0 190.1734   52 female         9
-## 10            1 163.4426  31   0 163.4426   31 female        10</code></pre>
+<pre><code>##    X.Intercept.   weight age sex sex_orig level1_id
+## 1             1 231.1471  44   0   female         1
+## 2             1 158.6388  38   0   female         2
+## 3             1 171.6605  31   0   female         3
+## 4             1 176.4105  40   0   female         4
+## 5             1 176.2812  60   1     male         5
+## 6             1 188.0455  47   0   female         6
+## 7             1 201.8052  33   0   female         7
+## 8             1 186.9941  43   1     male         8
+## 9             1 190.1734  52   0   female         9
+## 10            1 163.4426  31   0   female        10</code></pre>
 <p>The required arguments when a factor variable are identical to an ordinal variable, however for factor variables the <code>levels</code> argument can either be an integer or can be a character vector where the character labels are specified directly. As you can see from the output, when a character vector is used, two variables are returned, one that contains the variable represented numerically and another that is the variable represented as a character vector. More details on this behavior to follow.</p>
 </div>
 </div>
@@ -310,28 +310,28 @@
 <span id="cb15-13"><a href="#cb15-13"></a><span class="kw"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span>(<span class="dt">data =</span> <span class="ot">NULL</span>, sim_arguments) <span class="op">%&gt;%</span></span>
 <span id="cb15-14"><a href="#cb15-14"></a><span class="st">  </span><span class="kw"><a href="../reference/simulate_error.html">simulate_error</a></span>(sim_arguments) <span class="op">%&gt;%</span></span>
 <span id="cb15-15"><a href="#cb15-15"></a><span class="st">  </span><span class="kw"><a href="../reference/generate_response.html">generate_response</a></span>(sim_arguments)</span></code></pre></div>
-<pre><code>##    X.Intercept.   weight age sex  weight1 age1   sex1 level1_id       error
-## 1             1 231.1471  44   0 231.1471   44 female         1   4.5862776
-## 2             1 158.6388  38   0 158.6388   38 female         2  -0.5353077
-## 3             1 171.6605  31   0 171.6605   31 female         3   4.9416770
-## 4             1 176.4105  40   0 176.4105   40 female         4  -5.3611940
-## 5             1 176.2812  60   1 176.2812   60   male         5  -3.7900764
-## 6             1 188.0455  47   0 188.0455   47 female         6   0.4750036
-## 7             1 201.8052  33   0 201.8052   33 female         7 -11.6546559
-## 8             1 186.9941  43   1 186.9941   43   male         8   2.0875799
-## 9             1 190.1734  52   0 190.1734   52 female         9  -5.6016371
-## 10            1 163.4426  31   0 163.4426   31 female        10  -2.3734235
-##    fixed_outcome random_effects        y
-## 1       66.94413              0 71.53041
-## 2       45.79165              0 45.25635
-## 3       50.39814              0 55.33981
-## 4       50.92316              0 45.56196
-## 5       49.38435              0 45.59428
-## 6       53.71365              0 54.18866
-## 7       59.24157              0 47.58692
-## 8       54.29822              0 56.38580
-## 9       53.85202              0 48.25039
-## 10      47.93277              0 45.55934</code></pre>
+<pre><code>##    X.Intercept.   weight age sex sex_orig level1_id       error fixed_outcome
+## 1             1 231.1471  44   0   female         1   4.5862776      66.94413
+## 2             1 158.6388  38   0   female         2  -0.5353077      45.79165
+## 3             1 171.6605  31   0   female         3   4.9416770      50.39814
+## 4             1 176.4105  40   0   female         4  -5.3611940      50.92316
+## 5             1 176.2812  60   1     male         5  -3.7900764      49.38435
+## 6             1 188.0455  47   0   female         6   0.4750036      53.71365
+## 7             1 201.8052  33   0   female         7 -11.6546559      59.24157
+## 8             1 186.9941  43   1     male         8   2.0875799      54.29822
+## 9             1 190.1734  52   0   female         9  -5.6016371      53.85202
+## 10            1 163.4426  31   0   female        10  -2.3734235      47.93277
+##    random_effects        y
+## 1               0 71.53041
+## 2               0 45.25635
+## 3               0 55.33981
+## 4               0 45.56196
+## 5               0 45.59428
+## 6               0 54.18866
+## 7               0 47.58692
+## 8               0 56.38580
+## 9               0 48.25039
+## 10              0 45.55934</code></pre>
 <p>The only additional argument that is needed for the <code>generate_response</code> function is the <code>reg_weights</code> argument. This argument represents the regression coeficients associated with <span class="math inline">\(\beta\)</span> in the equation <span class="math inline">\(Y_{j} = X_{j} \beta + e_{j}\)</span>. The regression coefficients are multiplied by the design matrix to generate the column labeled “fixed_outcome” in the output. The output also contains the column, “random_effects” which are all 0 here indicating there are no random effects and the response variable, “y”.</p>
 <div id="non-normal-outcomes" class="section level3">
 <h3 class="hasAnchor">
@@ -354,28 +354,28 @@
 <span id="cb17-14"><a href="#cb17-14"></a><span class="kw"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span>(<span class="dt">data =</span> <span class="ot">NULL</span>, sim_arguments) <span class="op">%&gt;%</span></span>
 <span id="cb17-15"><a href="#cb17-15"></a><span class="st">  </span><span class="kw"><a href="../reference/simulate_error.html">simulate_error</a></span>(sim_arguments) <span class="op">%&gt;%</span></span>
 <span id="cb17-16"><a href="#cb17-16"></a><span class="st">  </span><span class="kw"><a href="../reference/generate_response.html">generate_response</a></span>(sim_arguments)</span></code></pre></div>
-<pre><code>##    X.Intercept.   weight age sex  weight1 age1   sex1 level1_id       error
-## 1             1 231.1471  44   0 231.1471   44 female         1   4.5862776
-## 2             1 158.6388  38   0 158.6388   38 female         2  -0.5353077
-## 3             1 171.6605  31   0 171.6605   31 female         3   4.9416770
-## 4             1 176.4105  40   0 176.4105   40 female         4  -5.3611940
-## 5             1 176.2812  60   1 176.2812   60   male         5  -3.7900764
-## 6             1 188.0455  47   0 188.0455   47 female         6   0.4750036
-## 7             1 201.8052  33   0 201.8052   33 female         7 -11.6546559
-## 8             1 186.9941  43   1 186.9941   43   male         8   2.0875799
-## 9             1 190.1734  52   0 190.1734   52 female         9  -5.6016371
-## 10            1 163.4426  31   0 163.4426   31 female        10  -2.3734235
-##    fixed_outcome random_effects untransformed_outcome y
-## 1       66.94413              0              71.53041 1
-## 2       45.79165              0              45.25635 1
-## 3       50.39814              0              55.33981 1
-## 4       50.92316              0              45.56196 1
-## 5       49.38435              0              45.59428 1
-## 6       53.71365              0              54.18866 1
-## 7       59.24157              0              47.58692 1
-## 8       54.29822              0              56.38580 1
-## 9       53.85202              0              48.25039 1
-## 10      47.93277              0              45.55934 1</code></pre>
+<pre><code>##    X.Intercept.   weight age sex sex_orig level1_id       error fixed_outcome
+## 1             1 231.1471  44   0   female         1   4.5862776      66.94413
+## 2             1 158.6388  38   0   female         2  -0.5353077      45.79165
+## 3             1 171.6605  31   0   female         3   4.9416770      50.39814
+## 4             1 176.4105  40   0   female         4  -5.3611940      50.92316
+## 5             1 176.2812  60   1     male         5  -3.7900764      49.38435
+## 6             1 188.0455  47   0   female         6   0.4750036      53.71365
+## 7             1 201.8052  33   0   female         7 -11.6546559      59.24157
+## 8             1 186.9941  43   1     male         8   2.0875799      54.29822
+## 9             1 190.1734  52   0   female         9  -5.6016371      53.85202
+## 10            1 163.4426  31   0   female        10  -2.3734235      47.93277
+##    random_effects untransformed_outcome y
+## 1               0              71.53041 1
+## 2               0              45.25635 1
+## 3               0              55.33981 1
+## 4               0              45.56196 1
+## 5               0              45.59428 1
+## 6               0              54.18866 1
+## 7               0              47.58692 1
+## 8               0              56.38580 1
+## 9               0              48.25039 1
+## 10              0              45.55934 1</code></pre>
 <p>And finally, an example of generating a count outcome. Note, the weight variable here has been grand mean centered in the generation (ie. mean = 0). This helps to ensure that the counts are not too large.</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">321</span>) </span>
 <span id="cb19-2"><a href="#cb19-2"></a></span>
@@ -392,28 +392,28 @@
 <span id="cb19-13"><a href="#cb19-13"></a><span class="kw"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span>(<span class="dt">data =</span> <span class="ot">NULL</span>, sim_arguments) <span class="op">%&gt;%</span></span>
 <span id="cb19-14"><a href="#cb19-14"></a><span class="st">  </span><span class="kw"><a href="../reference/simulate_error.html">simulate_error</a></span>(sim_arguments) <span class="op">%&gt;%</span></span>
 <span id="cb19-15"><a href="#cb19-15"></a><span class="st">  </span><span class="kw"><a href="../reference/generate_response.html">generate_response</a></span>(sim_arguments)</span></code></pre></div>
-<pre><code>##    X.Intercept.     weight sex    weight1   sex1 level1_id      error
-## 1             1  51.147097   1  51.147097   male         1 -4.0233584
-## 2             1 -21.361157   1 -21.361157   male         2  2.2803457
-## 3             1  -8.339547   0  -8.339547 female         3  2.1016629
-## 4             1  -3.589471   1  -3.589471   male         4  2.8879225
-## 5             1  -3.718819   1  -3.718819   male         5  2.2317803
-## 6             1   8.045513   0   8.045513 female         6  4.5862776
-## 7             1  21.805245   0  21.805245 female         7 -0.5353077
-## 8             1   6.994062   0   6.994062 female         8  4.9416770
-## 9             1  10.173416   1  10.173416   male         9 -5.3611940
-## 10            1 -16.557440   0 -16.557440 female        10 -3.7900764
-##    fixed_outcome random_effects untransformed_outcome    y
-## 1       3.011471              0             -1.011887    0
-## 2       2.286388              0              4.566734   90
-## 3       1.916605              0              4.018267   58
-## 4       2.464105              0              5.352028  194
-## 5       2.462812              0              4.694592  114
-## 6       2.080455              0              6.666733  743
-## 7       2.218052              0              1.682745    7
-## 8       2.069941              0              7.011618 1061
-## 9       2.601734              0             -2.759460    0
-## 10      1.834426              0             -1.955651    0</code></pre>
+<pre><code>##    X.Intercept.     weight sex sex_orig level1_id      error fixed_outcome
+## 1             1  51.147097   1     male         1 -4.0233584      3.011471
+## 2             1 -21.361157   1     male         2  2.2803457      2.286388
+## 3             1  -8.339547   0   female         3  2.1016629      1.916605
+## 4             1  -3.589471   1     male         4  2.8879225      2.464105
+## 5             1  -3.718819   1     male         5  2.2317803      2.462812
+## 6             1   8.045513   0   female         6  4.5862776      2.080455
+## 7             1  21.805245   0   female         7 -0.5353077      2.218052
+## 8             1   6.994062   0   female         8  4.9416770      2.069941
+## 9             1  10.173416   1     male         9 -5.3611940      2.601734
+## 10            1 -16.557440   0   female        10 -3.7900764      1.834426
+##    random_effects untransformed_outcome    y
+## 1               0             -1.011887    0
+## 2               0              4.566734   90
+## 3               0              4.018267   58
+## 4               0              5.352028  194
+## 5               0              4.694592  114
+## 6               0              6.666733  743
+## 7               0              1.682745    7
+## 8               0              7.011618 1061
+## 9               0             -2.759460    0
+## 10              0             -1.955651    0</code></pre>
 </div>
 </div>
 </div>
@@ -584,17 +584,17 @@
 <span id="cb29-17"><a href="#cb29-17"></a><span class="st">  </span><span class="kw"><a href="../reference/generate_response.html">generate_response</a></span>(sim_arguments)</span>
 <span id="cb29-18"><a href="#cb29-18"></a></span>
 <span id="cb29-19"><a href="#cb29-19"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(nested_data, <span class="dt">n =</span> <span class="dv">10</span>)</span></code></pre></div>
-<pre><code>##    X.Intercept.   weight age sex  weight1 age1   sex1 level1_id neighborhood
-## 1             1 231.1471  39   0 231.1471   39 female         1            1
-## 2             1 158.6388  30   0 158.6388   30 female         2            1
-## 3             1 171.6605  35   0 171.6605   35 female         3            1
-## 4             1 176.4105  42   0 176.4105   42 female         4            1
-## 5             1 176.2812  46   1 176.2812   46   male         5            1
-## 6             1 188.0455  34   0 188.0455   34 female         6            1
-## 7             1 201.8052  43   0 201.8052   43 female         7            1
-## 8             1 186.9941  38   0 186.9941   38 female         8            1
-## 9             1 190.1734  53   1 190.1734   53   male         9            1
-## 10            1 163.4426  41   1 163.4426   41   male        10            1
+<pre><code>##    X.Intercept.   weight age sex sex_orig level1_id neighborhood
+## 1             1 231.1471  39   0   female         1            1
+## 2             1 158.6388  30   0   female         2            1
+## 3             1 171.6605  35   0   female         3            1
+## 4             1 176.4105  42   0   female         4            1
+## 5             1 176.2812  46   1     male         5            1
+## 6             1 188.0455  34   0   female         6            1
+## 7             1 201.8052  43   0   female         7            1
+## 8             1 186.9941  38   0   female         8            1
+## 9             1 190.1734  53   1     male         9            1
+## 10            1 163.4426  41   1     male        10            1
 ##    int_neighborhood       error fixed_outcome random_effects        y
 ## 1         -2.018169  0.03970688      4.865587      -2.018169 2.887125
 ## 2         -2.018169  1.10030811      5.240835      -2.018169 4.322974

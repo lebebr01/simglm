@@ -132,12 +132,28 @@
     <p>Takes simulation parameters as inputs and returns simulated data.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>sim_glm</span>(<span class='no'>fixed</span>, <span class='no'>random</span>, <span class='no'>random3</span>, <span class='no'>fixed_param</span>, <span class='kw'>random_param</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
-  <span class='kw'>random_param3</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(), <span class='no'>cov_param</span>, <span class='no'>k</span>, <span class='no'>n</span>, <span class='no'>p</span>, <span class='no'>data_str</span>,
-  <span class='kw'>cor_vars</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fact_vars</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>), <span class='kw'>unbal</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>level2</span> <span class='kw'>=</span>
-  <span class='fl'>FALSE</span>, <span class='kw'>level3</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>), <span class='kw'>unbal_design</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>level2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>level3</span> <span class='kw'>=</span>
-  <span class='kw'>NULL</span>), <span class='kw'>contrasts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>outcome_type</span>, <span class='kw'>cross_class_params</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>knot_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>), <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>sim_glm</span>(
+  <span class='no'>fixed</span>,
+  <span class='no'>random</span>,
+  <span class='no'>random3</span>,
+  <span class='no'>fixed_param</span>,
+  <span class='kw'>random_param</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
+  <span class='kw'>random_param3</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
+  <span class='no'>cov_param</span>,
+  <span class='no'>k</span>,
+  <span class='no'>n</span>,
+  <span class='no'>p</span>,
+  <span class='no'>data_str</span>,
+  <span class='kw'>cor_vars</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>fact_vars</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
+  <span class='kw'>unbal</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>level2</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>level3</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
+  <span class='kw'>unbal_design</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>level2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>level3</span> <span class='kw'>=</span> <span class='kw'>NULL</span>),
+  <span class='kw'>contrasts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>outcome_type</span>,
+  <span class='kw'>cross_class_params</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>knot_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -346,7 +362,7 @@ linear mixed models (aka. hierarchical linear models or multilevel models).</p>
 <span class='no'>random_param</span>, <span class='kw'>random_param3</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
  <span class='no'>cov_param</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>n</span>, <span class='no'>p</span>, <span class='kw'>data_str</span> <span class='kw'>=</span> <span class='no'>data_str</span>, <span class='kw'>outcome_type</span> <span class='kw'>=</span> <span class='st'>'poisson'</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: 'sim_glm' is no longer supported and will be removed with v 1.0</span>
 #&gt; <span class='warning'></span>
-#&gt; <span class='warning'>              See tidy_simulation vignette.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs produced</span></div><div class='input'>
+#&gt; <span class='warning'>              See tidy_simulation vignette.</span></div><div class='input'>
 <span class='co'># Three level example</span>
 <span class='no'>fixed</span> <span class='kw'>&lt;-</span> ~<span class='fl'>1</span> + <span class='no'>time</span> + <span class='no'>diff</span> + <span class='no'>act</span> + <span class='no'>actClust</span> + <span class='no'>time</span>:<span class='no'>act</span>
 <span class='no'>random</span> <span class='kw'>&lt;-</span> ~<span class='fl'>1</span> + <span class='no'>time</span> + <span class='no'>diff</span>
@@ -371,7 +387,7 @@ linear mixed models (aka. hierarchical linear models or multilevel models).</p>
   <span class='no'>temp_three</span> <span class='kw'>&lt;-</span> <span class='fu'>sim_glm</span>(<span class='no'>fixed</span>, <span class='no'>random</span>, <span class='no'>random3</span>, <span class='no'>fixed_param</span>, <span class='no'>random_param</span>,
   <span class='no'>random_param3</span>, <span class='no'>cov_param</span>, <span class='no'>k</span>,<span class='no'>n</span>, <span class='no'>p</span>, <span class='kw'>data_str</span> <span class='kw'>=</span> <span class='no'>data_str</span>, <span class='kw'>outcome_type</span> <span class='kw'>=</span> <span class='st'>'poisson'</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: 'sim_glm' is no longer supported and will be removed with v 1.0</span>
 #&gt; <span class='warning'></span>
-#&gt; <span class='warning'>              See tidy_simulation vignette.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: NAs produced</span></div><div class='input'>
+#&gt; <span class='warning'>              See tidy_simulation vignette.</span></div><div class='input'>
 
 </div></pre>
   </div>

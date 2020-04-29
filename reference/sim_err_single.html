@@ -132,10 +132,20 @@
     <p>Input error simulation parameters and outputs simulated errors.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>sim_err_single</span>(<span class='no'>error_var</span>, <span class='no'>n</span>, <span class='no'>with_err_gen</span>, <span class='kw'>arima</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>lvl1_err_params</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>arima_mod</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>), <span class='kw'>ther</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>),
-  <span class='kw'>ther_sim</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>homogeneity</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>fixef</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>heterogeneity_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>sim_err_single</span>(
+  <span class='no'>error_var</span>,
+  <span class='no'>n</span>,
+  <span class='no'>with_err_gen</span>,
+  <span class='kw'>arima</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>lvl1_err_params</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>arima_mod</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
+  <span class='kw'>ther</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>),
+  <span class='kw'>ther_sim</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>homogeneity</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>fixef</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>heterogeneity_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

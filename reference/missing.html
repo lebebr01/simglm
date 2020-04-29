@@ -138,21 +138,45 @@ incorporated include dropout missing data, missing at random, and
 random missing data.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>missing_data</span>(<span class='no'>sim_data</span>, <span class='kw'>resp_var</span> <span class='kw'>=</span> <span class='st'>"sim_data"</span>,
-  <span class='kw'>new_outcome</span> <span class='kw'>=</span> <span class='st'>"sim_data2"</span>, <span class='kw'>clust_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>within_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>miss_prop</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dropout_location</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"dropout"</span>,
-  <span class='st'>"random"</span>, <span class='st'>"mar"</span>), <span class='no'>miss_cov</span>, <span class='no'>mar_prop</span>)
+    <pre class="usage"><span class='fu'>missing_data</span>(
+  <span class='no'>sim_data</span>,
+  <span class='kw'>resp_var</span> <span class='kw'>=</span> <span class='st'>"sim_data"</span>,
+  <span class='kw'>new_outcome</span> <span class='kw'>=</span> <span class='st'>"sim_data2"</span>,
+  <span class='kw'>clust_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>within_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>miss_prop</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>dropout_location</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"dropout"</span>, <span class='st'>"random"</span>, <span class='st'>"mar"</span>),
+  <span class='no'>miss_cov</span>,
+  <span class='no'>mar_prop</span>
+)
 
-<span class='fu'>dropout_missing</span>(<span class='no'>sim_data</span>, <span class='kw'>resp_var</span> <span class='kw'>=</span> <span class='st'>"sim_data"</span>,
-  <span class='kw'>new_outcome</span> <span class='kw'>=</span> <span class='st'>"sim_data2"</span>, <span class='kw'>clust_var</span> <span class='kw'>=</span> <span class='st'>"clustID"</span>,
-  <span class='kw'>within_id</span> <span class='kw'>=</span> <span class='st'>"withinID"</span>, <span class='kw'>miss_prop</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dropout_location</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
+<span class='fu'>dropout_missing</span>(
+  <span class='no'>sim_data</span>,
+  <span class='kw'>resp_var</span> <span class='kw'>=</span> <span class='st'>"sim_data"</span>,
+  <span class='kw'>new_outcome</span> <span class='kw'>=</span> <span class='st'>"sim_data2"</span>,
+  <span class='kw'>clust_var</span> <span class='kw'>=</span> <span class='st'>"clustID"</span>,
+  <span class='kw'>within_id</span> <span class='kw'>=</span> <span class='st'>"withinID"</span>,
+  <span class='kw'>miss_prop</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>dropout_location</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+)
 
-<span class='fu'>random_missing</span>(<span class='no'>sim_data</span>, <span class='kw'>resp_var</span> <span class='kw'>=</span> <span class='st'>"sim_data"</span>,
-  <span class='kw'>new_outcome</span> <span class='kw'>=</span> <span class='st'>"sim_data2"</span>, <span class='no'>miss_prop</span>, <span class='kw'>clust_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>within_id</span> <span class='kw'>=</span> <span class='st'>"withinID"</span>)
+<span class='fu'>random_missing</span>(
+  <span class='no'>sim_data</span>,
+  <span class='kw'>resp_var</span> <span class='kw'>=</span> <span class='st'>"sim_data"</span>,
+  <span class='kw'>new_outcome</span> <span class='kw'>=</span> <span class='st'>"sim_data2"</span>,
+  <span class='no'>miss_prop</span>,
+  <span class='kw'>clust_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>within_id</span> <span class='kw'>=</span> <span class='st'>"withinID"</span>
+)
 
-<span class='fu'>mar_missing</span>(<span class='no'>sim_data</span>, <span class='kw'>resp_var</span> <span class='kw'>=</span> <span class='st'>"sim_data"</span>, <span class='kw'>new_outcome</span> <span class='kw'>=</span> <span class='st'>"sim_data2"</span>,
-  <span class='no'>miss_cov</span>, <span class='no'>mar_prop</span>)</pre>
+<span class='fu'>mar_missing</span>(
+  <span class='no'>sim_data</span>,
+  <span class='kw'>resp_var</span> <span class='kw'>=</span> <span class='st'>"sim_data"</span>,
+  <span class='kw'>new_outcome</span> <span class='kw'>=</span> <span class='st'>"sim_data2"</span>,
+  <span class='no'>miss_cov</span>,
+  <span class='no'>mar_prop</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

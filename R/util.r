@@ -203,6 +203,14 @@ poly_names <- function(x) {
 }
 
 
+unique_columns <- function(x, y, names) {
+  unlist(
+  lapply(seq_along(names), function(xx) 
+    any(x[[names[xx]]] != y[[names[xx]]]))
+  )
+  }
+
+
 # Horrible hack to keep CRAN happy and suppress NOTES about
 # parts of the code that use non-standard evaluation.
 # See:

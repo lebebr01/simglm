@@ -817,6 +817,12 @@ simulate_fixed <- function(data, sim_args, ...) {
     Omat <- Xmat
     Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))
     colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars
+    
+    Omat <- Omat[unique_columns(Xmat, Omat, fixed_vars)]
+    names(Omat) <- paste0(fixed_vars[unique_columns(Xmat, Omat, fixed_vars)],
+    '_orig')
+    
+    
     Xmat <- dplyr::bind_cols(Xmat, Omat)
   } else {
     Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))

@@ -21,7 +21,7 @@ test_that('fixed poly sim', {
   )
   
   expect_equal(nrow(simulate_fixed(data = NULL, sim_arguments)), 10)
-  expect_equal(ncol(simulate_fixed(data = NULL, sim_arguments)), 7)
+  expect_equal(ncol(simulate_fixed(data = NULL, sim_arguments)), 6)
   
   sim_arguments <- list(
     formula = y ~ 1 + poly(x1, degree = 3) + poly(x2, degree = 2),
@@ -92,5 +92,5 @@ library(splines)
   )
   
   expect_equal(nrow(simulate_fixed(data = NULL, sim_arguments)), 10)
-  expect_equal(ncol(simulate_fixed(data = NULL, sim_arguments)), 9)
+  expect_equal(ncol(simulate_fixed(data = NULL, sim_arguments)), 8)
 })

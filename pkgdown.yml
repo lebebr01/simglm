@@ -1,9 +1,10 @@
 pandoc: 2.7.3
-pkgdown: 1.4.1.9000
-pkgdown_sha: 732fb5b9ccc0ef87a73dfd0772ae661a4039b2a8
+pkgdown: 1.5.1.9000
+pkgdown_sha: c181e5c9ac09b28974a97f5e32deddc36690fcf2
 articles:
   simulation_arguments: simulation_arguments.html
   tidy_simulation: tidy_simulation.html
+last_built: 2020-04-30T13:13Z
 urls:
   reference: https://brandonlebeau.org/packages/simglm/reference
   article: https://brandonlebeau.org/packages/simglm/articles

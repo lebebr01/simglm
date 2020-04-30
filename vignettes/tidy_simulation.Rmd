@@ -299,11 +299,13 @@ To generate this output, only the number of replications is needed. Here only 10
 
 The default power parameter values used are: Normal distribution, two-tailed alternative hypotheses, and alpha of 0.05. Additional power parameters can be passed directly to override default values by including a power argument within the simulation arguments. For example, if a t-distribution with one degree of freedom an alpha of 0.02 is desired, these can be added as follows:
 
+Note: A user would likely want to change `plan(sequential)` to something like `plan(mutisession)` or `plan(multicore)` to run these in parallel. `plan(sequential)` is used here for vignette processing.
+
 ```{r replicate_simulation_power_values}
 set.seed(321) 
 
 library(future)
-plan(multiprocess)
+plan(sequential)
 
 sim_arguments <- list(
   formula = y ~ 1 + weight + age + sex,

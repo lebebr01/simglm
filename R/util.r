@@ -145,9 +145,41 @@ factor_names <- function(sim_args, fixed_vars) {
   
   fixed_levels_gt2_names <- lapply(seq_along(fixed_levels_gt2), function(xx) 
     paste0(fixed_levels_gt2[xx], '_', 1:(num_levels_gt2[[xx]] - 1)))
-  fixed_vars[loc] <- fixed_levels_gt2_names
-  unlist(fixed_vars)
+  
+  var_loc <- lapply(seq_along(fixed_levels_gt2), function(xx) 
+    grep(fixed_levels_gt2[xx], fixed_vars))
+  
+  updated_names <- lapply(seq_along(fixed_levels_gt2), function(ii) 
+    lapply(seq_along(fixed_levels_gt2_names[[ii]]), function(xx) 
+      gsub(fixed_levels_gt2[ii], 
+           fixed_levels_gt2_names[[ii]][xx], 
+           fixed_vars[var_loc[[ii]]])
+    )
+  )
+  
+  reordered_names <- lapply(seq_along(fixed_levels_gt2), function(ii)
+    reorder_names(updated_names[[ii]])
+    )
+  
+  
+  imported_names <- lapply(seq_along(fixed_levels_gt2), function(ii)
+    c(fixed_vars[-var_loc[[ii]]], reordered_names[[ii]])
+    )
+
+  unlist(imported_names)
 }
+
+reorder_names <- function(names) {
+  unlisted_names <- unlist(names[[1]])
+  if(any(grepl(":|^I", unlisted_names))) { 
+    int_loc <- grep(":|^I", unlisted_names)
+    c(unlisted_names[-int_loc], unlisted_names[int_loc])
+  } else {
+    unlisted_names
+  }
+  
+}
+
 
 poly_ns_names <- function(sim_args) {
   fixed_formula <- parse_formula(sim_args)[['fixed']]

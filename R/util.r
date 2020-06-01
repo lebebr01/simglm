@@ -158,7 +158,7 @@ factor_names <- function(sim_args, fixed_vars) {
   )
   
   reordered_names <- lapply(seq_along(fixed_levels_gt2), function(ii)
-    reorder_names(updated_names[[ii]])
+       reorder_names(updated_names[[ii]])
     )
   
   
@@ -170,7 +170,7 @@ factor_names <- function(sim_args, fixed_vars) {
 }
 
 reorder_names <- function(names) {
-  unlisted_names <- unlist(names[[1]])
+  unlisted_names <- do.call('c', names)
   if(any(grepl(":|^I", unlisted_names))) { 
     int_loc <- grep(":|^I", unlisted_names)
     c(unlisted_names[-int_loc], unlisted_names[int_loc])
@@ -235,12 +235,13 @@ poly_names <- function(x) {
 }
 
 
-unique_columns <- function(x, y, names) {
+unique_columns <- function(x, y) {
   unlist(
-  lapply(seq_along(names), function(xx) 
-    any(x[[names[xx]]] != y[[names[xx]]]))
+    lapply(seq_along(names(y)), function(xx) 
+      any(y[[xx]] != x[[grep(names(y)[[xx]], names(x))[1]]])
+    )
   )
-  }
+}
 
 
 # Horrible hack to keep CRAN happy and suppress NOTES about

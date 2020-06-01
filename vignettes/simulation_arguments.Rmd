@@ -1,5 +1,5 @@
 ---
-title: "Simulation Arguments Details for `simglm`"
+title: "Simulation Argument Details for `simglm`"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >

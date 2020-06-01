@@ -95,7 +95,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/simulation_arguments.html">Simulation Arguments Details for `simglm`</a>
+      <a href="../articles/simulation_arguments.html">Simulation Argument Details for `simglm`</a>
     </li>
     <li>
       <a href="../articles/tidy_simulation.html">Tidy Simulation with `simglm`</a>
@@ -387,21 +387,21 @@ linear mixed models (aka. hierarchical linear models or multilevel models).</p>
 #&gt; 
 #&gt; Residuals:
 #&gt;     Min      1Q  Median      3Q     Max 
-#&gt; -4.8783 -0.9630  0.1199  1.1711  4.5155 
+#&gt; -4.2808 -1.0185 -0.0534  0.8892  5.4641 
 #&gt; 
 #&gt; Coefficients:
 #&gt;               Estimate Std. Error t value Pr(&gt;|t|)    
-#&gt; (Intercept)    1.82173    0.15853   11.49   &lt;2e-16 ***
-#&gt; act            3.99039    0.03923  101.71   &lt;2e-16 ***
-#&gt; diff           0.88013    0.05270   16.70   &lt;2e-16 ***
-#&gt; numCourse      3.39736    0.05628   60.37   &lt;2e-16 ***
-#&gt; act:numCourse  2.00014    0.01423  140.56   &lt;2e-16 ***
+#&gt; (Intercept)    1.94731    0.13977   13.93   &lt;2e-16 ***
+#&gt; act            3.96356    0.03794  104.48   &lt;2e-16 ***
+#&gt; diff           0.97549    0.04626   21.09   &lt;2e-16 ***
+#&gt; numCourse      3.49988    0.04863   71.97   &lt;2e-16 ***
+#&gt; act:numCourse  2.00024    0.01359  147.15   &lt;2e-16 ***
 #&gt; ---
 #&gt; Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 #&gt; 
-#&gt; Residual standard error: 1.877 on 145 degrees of freedom
-#&gt; Multiple R-squared:  0.9962,	Adjusted R-squared:  0.9961 
-#&gt; F-statistic:  9510 on 4 and 145 DF,  p-value: &lt; 2.2e-16
+#&gt; Residual standard error: 1.708 on 145 degrees of freedom
+#&gt; Multiple R-squared:  0.9965,	Adjusted R-squared:  0.9964 
+#&gt; F-statistic: 1.045e+04 on 4 and 145 DF,  p-value: &lt; 2.2e-16
 #&gt; </div><div class='input'>
 <span class='co'># Longitudinal linear mixed model example</span>
 <span class='no'>fixed</span> <span class='kw'>&lt;-</span> ~<span class='fl'>1</span> + <span class='no'>time</span> + <span class='no'>diff</span> + <span class='no'>act</span> + <span class='no'>time</span>:<span class='no'>act</span>
@@ -429,17 +429,17 @@ linear mixed models (aka. hierarchical linear models or multilevel models).</p>
 #&gt; Formula: sim_data ~ 1 + time + diff + act + time:act + (1 + time + diff |  
 #&gt;     clustID)
 #&gt;    Data: temp_long
-#&gt; REML criterion at convergence: 21411.98
+#&gt; REML criterion at convergence: 21339.01
 #&gt; Random effects:
 #&gt;  Groups   Name        Std.Dev. Corr       
-#&gt;  clustID  (Intercept) 2.509               
-#&gt;           time        2.016    -0.07      
-#&gt;           diff        1.552    -0.11 -0.13
-#&gt;  Residual             2.026               
+#&gt;  clustID  (Intercept) 2.916               
+#&gt;           time        2.126    -0.02      
+#&gt;           diff        1.510    -0.16  0.03
+#&gt;  Residual             1.996               
 #&gt; Number of obs: 4500, groups:  clustID, 150
 #&gt; Fixed Effects:
 #&gt; (Intercept)         time         diff          act     time:act  
-#&gt;       4.030        1.962        5.902        2.284        7.035  </div><div class='input'>
+#&gt;       3.725        1.866        5.853        2.228        7.042  </div><div class='input'>
 <span class='co'># Three level example</span>
 <span class='no'>fixed</span> <span class='kw'>&lt;-</span> ~<span class='fl'>1</span> + <span class='no'>time</span> + <span class='no'>diff</span> + <span class='no'>act</span> + <span class='no'>actClust</span> + <span class='no'>time</span>:<span class='no'>act</span>
 <span class='no'>random</span> <span class='kw'>&lt;-</span> ~<span class='fl'>1</span> + <span class='no'>time</span> + <span class='no'>diff</span>
@@ -470,18 +470,18 @@ linear mixed models (aka. hierarchical linear models or multilevel models).</p>
 #&gt; Formula: sim_data ~ 1 + time + diff + act + actClust + time:act + (1 +  
 #&gt;     time + diff | clustID) + (1 | clust3ID)
 #&gt;    Data: temp_three
-#&gt; REML criterion at convergence: 7930.274
+#&gt; REML criterion at convergence: 7894.225
 #&gt; Random effects:
 #&gt;  Groups   Name        Std.Dev. Corr       
-#&gt;  clustID  (Intercept) 2.580               
-#&gt;           time        2.443     0.13      
-#&gt;           diff        1.420     0.03 -0.09
-#&gt;  clust3ID (Intercept) 2.429               
-#&gt;  Residual             2.050               
+#&gt;  clustID  (Intercept) 3.022               
+#&gt;           time        2.125    -0.12      
+#&gt;           diff        1.416    -0.10  0.06
+#&gt;  clust3ID (Intercept) 1.913               
+#&gt;  Residual             2.030               
 #&gt; Number of obs: 1500, groups:  clustID, 150; clust3ID, 10
 #&gt; Fixed Effects:
 #&gt; (Intercept)         time         diff          act     actClust     time:act  
-#&gt;     3.65516      1.78479      5.92290      2.37106      7.10681      0.03225  </div><div class='input'>
+#&gt;    2.477047     0.988698     6.084495     2.353936     7.071122    -0.008408  </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

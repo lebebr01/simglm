@@ -54,7 +54,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/simulation_arguments.html">Simulation Arguments Details for `simglm`</a>
+      <a href="../articles/simulation_arguments.html">Simulation Argument Details for `simglm`</a>
     </li>
     <li>
       <a href="../articles/tidy_simulation.html">Tidy Simulation with `simglm`</a>
@@ -88,7 +88,7 @@
       <h1 data-toc-skip>Tidy Simulation with <code>simglm</code>
 </h1>
             
-            <h4 class="date">2020-05-05</h4>
+            <h4 class="date">2020-06-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/master/vignettes/tidy_simulation.Rmd"><code>vignettes/tidy_simulation.Rmd</code></a></small>
       <div class="hidden name"><code>tidy_simulation.Rmd</code></div>
@@ -509,20 +509,27 @@
 
 <span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span>(<span class="no">sim_arguments</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span>(<span class="no">sim_arguments</span>)</pre></body></html></div>
-<pre><code>## # A tibble: 3 x 12
-##   term  avg_estimate power avg_test_stat crit_value type_1_error
-##   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;        &lt;dbl&gt;
-## 1 (Int…      47.2      0.6         3.37        1.96          0.5
-## 2 age         0.0852   0.3         0.102       1.96          0.4
-## 3 sex        -0.509    0.1        -0.108       1.96          0.2
-## # … with 6 more variables: avg_adjtest_stat &lt;dbl&gt;, crit_value1 &lt;dbl&gt;,
-## #   param_estimate_sd &lt;dbl&gt;, avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,
-## #   replications &lt;dbl&gt;</code></pre>
+<pre><code>## New names:
+## * term -&gt; term...1
+## * term -&gt; term...3
+## * crit_value -&gt; crit_value...6
+## * term -&gt; term...7
+## * crit_value -&gt; crit_value...10
+## * ...</code></pre>
+<pre><code>## # A tibble: 3 x 15
+##   term...1 avg_estimate term...3 power avg_test_stat crit_value...6 term...7
+##   &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt; &lt;chr&gt;   
+## 1 (Interc…      47.2    (Interc…   0.6         3.37            1.96 (Interc…
+## 2 age            0.0852 age        0.3         0.102           1.96 age     
+## 3 sex           -0.509  sex        0.1        -0.108           1.96 sex     
+## # … with 8 more variables: type_1_error &lt;dbl&gt;, avg_adjtest_stat &lt;dbl&gt;,
+## #   crit_value...10 &lt;dbl&gt;, term...11 &lt;chr&gt;, param_estimate_sd &lt;dbl&gt;,
+## #   avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;, replications &lt;dbl&gt;</code></pre>
 <p>As can be seen from the output, the default behavior is to return statistics for power, average test statistic, type I error rate, adjusted average test statistic, standard deviation of parameter estimate, average standard error, precision ration (standard deviation of parameter estimate divided by average standard error), and the number of replications for each term.</p>
 <p>To generate this output, only the number of replications is needed. Here only 10 replications were done, in practice many more replications would be done to ensure there are accurate results.</p>
 <p>The default power parameter values used are: Normal distribution, two-tailed alternative hypotheses, and alpha of 0.05. Additional power parameters can be passed directly to override default values by including a power argument within the simulation arguments. For example, if a t-distribution with one degree of freedom an alpha of 0.02 is desired, these can be added as follows:</p>
 <p>Note: A user would likely want to change <code><a href="https://rdrr.io/pkg/future/man/plan.html">plan(sequential)</a></code> to something like <code><a href="https://rdrr.io/pkg/future/man/plan.html">plan(mutisession)</a></code> or <code><a href="https://rdrr.io/pkg/future/man/plan.html">plan(multicore)</a></code> to run these in parallel. <code><a href="https://rdrr.io/pkg/future/man/plan.html">plan(sequential)</a></code> is used here for vignette processing.</p>
-<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>)
+<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>)
 
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">future</span>)
 <span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span>(<span class="no">sequential</span>)
@@ -549,15 +556,22 @@
 
 <span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span>(<span class="no">sim_arguments</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span>(<span class="no">sim_arguments</span>)</pre></body></html></div>
-<pre><code>## # A tibble: 3 x 12
-##   term  avg_estimate power avg_test_stat crit_value type_1_error
-##   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;        &lt;dbl&gt;
-## 1 (Int…      55.9        0         7.26        31.8            0
-## 2 age        -0.0994     0        -0.603       31.8            0
-## 3 sex         0.561      0         0.189       31.8            0
-## # … with 6 more variables: avg_adjtest_stat &lt;dbl&gt;, crit_value1 &lt;dbl&gt;,
-## #   param_estimate_sd &lt;dbl&gt;, avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,
-## #   replications &lt;dbl&gt;</code></pre>
+<pre><code>## New names:
+## * term -&gt; term...1
+## * term -&gt; term...3
+## * crit_value -&gt; crit_value...6
+## * term -&gt; term...7
+## * crit_value -&gt; crit_value...10
+## * ...</code></pre>
+<pre><code>## # A tibble: 3 x 15
+##   term...1 avg_estimate term...3 power avg_test_stat crit_value...6 term...7
+##   &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt; &lt;chr&gt;   
+## 1 (Interc…      55.9    (Interc…     0         7.26            31.8 (Interc…
+## 2 age           -0.0994 age          0        -0.603           31.8 age     
+## 3 sex            0.561  sex          0         0.189           31.8 sex     
+## # … with 8 more variables: type_1_error &lt;dbl&gt;, avg_adjtest_stat &lt;dbl&gt;,
+## #   crit_value...10 &lt;dbl&gt;, term...11 &lt;chr&gt;, param_estimate_sd &lt;dbl&gt;,
+## #   avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;, replications &lt;dbl&gt;</code></pre>
 </div>
 </div>
 <div id="nested-designs" class="section level1">
@@ -566,7 +580,7 @@
 <p>Nested designs are ones in which data belong to multiple levels. An example could be individuals nested within neighborhoods. In this example, a specific individual is tied directly to one neighborhood. These types of data often include correlations between individuals within a neighborhood that need to be taken into account when modeling the data. These types of data can be generated with simglm.</p>
 <p>To do this, the formula syntax introduced above is modified slightly to include information on the nesting structure. In the example below, the nesting structure in the formula is specified in the portion within the parentheses. How the part within parentheses could be read is, add a random intercept effect for each neighborhood. This random intercept effect is similar to random error found in regression models, except the error is associated with neighborhoods and is the same values for all individuals within that neighborhood. The simulation arguments, <code>randomeffect</code> provides information about this term, where the variance can be specified.</p>
 <p>Finally, the <code>sample_size</code> argument needs to be modified to include information about the two levels of nested. You could read the <code>sample_size = list(level1 = 10, level2 = 20)</code> argument below as: create 20 neighborhoods (ie. <code>level2 = 20</code>) and within each neighborhood have 10 individuals (ie. <code>level1 = 10</code>). Therefore the total sample size (ie. rows in the data) would be 200.</p>
-<div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>)
+<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>)
 
 <span class="no">sim_arguments</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
   <span class="kw">formula</span> <span class="kw">=</span> <span class="no">y</span> ~ <span class="fl">1</span> + <span class="no">weight</span> + <span class="no">age</span> + <span class="no">sex</span> + (<span class="fl">1</span> <span class="kw">|</span> <span class="no">neighborhood</span>),
@@ -607,7 +621,7 @@
 ## 8         -2.018169  0.93313126      5.990178      -2.018169 4.905141
 ## 9         -2.018169 -1.39912533      9.224798      -2.018169 5.807503
 ## 10        -2.018169 -0.01603532      7.626723      -2.018169 5.592519</code></pre>
-<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">nested_data</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="no">nested_data</span>)</pre></body></html></div>
 <pre><code>## [1] 200</code></pre>
 <p>The vignette simulation_arguments contains more example of specifying random effects and additional nesting designs including three levels of nested and cross-classified models.</p>
 </div>

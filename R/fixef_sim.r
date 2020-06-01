@@ -821,7 +821,12 @@ simulate_fixed <- function(data, sim_args, ...) {
     if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
       sim_args[['fixed']][[xx]]$var_type)) == 'factor')) {
       Omat_factor <- Omat[unique_columns(Xmat, Omat)]
-      Omat_factor_names <- attr(terms(fixed_formula), "term.labels")[-int_loc]
+      if(any(grepl(":|^I", names(Omat_factor)))) {
+        Omat_factor_names <- attr(terms(fixed_formula), "term.labels")[-int_loc]
+      } else {
+        Omat_factor_names <- attr(terms(fixed_formula), "term.labels")
+      }
+     
       names(Omat_factor) <- paste0(Omat_factor_names[unique_columns(Xmat, Omat)],
                                    '_orig')
     } else {

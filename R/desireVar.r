@@ -14,11 +14,6 @@
 #' @param equalWeight Should equal weights be used, 
 #'  only TRUE is currently supported.
 #' @export 
-#' @examples
-#' \donttest{
-#' # calculating variance to be 2.5 with 2 distributions
-#' desireVar(2.5, 2, means = c(-1, 1), equalWeight = TRUE)
-#' }
 desireVar <- function(desVar, num_dist, means, equalWeight = TRUE){
   if(length(means) != num_dist) stop("num_dist must equal length of means")
   if(equalWeight != TRUE) stop("Only equalWeight is currently supported")

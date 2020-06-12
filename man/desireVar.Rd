@@ -26,9 +26,3 @@ This function can be used to generate the inputs for the \code{\link{rbimod}}
 variances when a specific variance is desired.  Especially useful when 
 attempting to simulate a mixture normal/bimodal distribution.
 }
-\examples{
-\donttest{
-# calculating variance to be 2.5 with 2 distributions
-desireVar(2.5, 2, means = c(-1, 1), equalWeight = TRUE)
-}
-}

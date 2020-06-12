@@ -169,15 +169,6 @@ adds the specified number of normal distributions into a single vector.</p>
 <p>Use of the function <code><a href='desireVar.html'>desireVar</a></code> can be used to generate a mixture 
 normal distribution with a specific global variance.</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='co'>## mix normal with two normal distributions (bimodal)</span>
-<span class='no'>simData</span> <span class='kw'>&lt;-</span> <span class='fu'>rbimod</span>(<span class='fl'>100</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>2</span>, <span class='fl'>3</span>), <span class='kw'>var</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1.5</span>, <span class='fl'>1.5</span>), <span class='kw'>num_dist</span> <span class='kw'>=</span> <span class='fl'>2</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/density.html'>density</a></span>(<span class='no'>simData</span>))</div><div class='img'><img src='rbimod-1.png' alt='' width='700' height='433' /></div><div class='input'>
-<span class='co'>## mixt normal with four distributions (multimodal)</span>
-<span class='no'>simData</span> <span class='kw'>&lt;-</span> <span class='fu'>rbimod</span>(<span class='fl'>400</span>, <span class='kw'>mean</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>14</span>, -<span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>20</span>), <span class='kw'>var</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1.2</span>, <span class='fl'>4</span>)),
-  <span class='kw'>num_dist</span> <span class='kw'>=</span> <span class='fl'>4</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/plot.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/density.html'>density</a></span>(<span class='no'>simData</span>))</div><div class='img'><img src='rbimod-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='co'># }</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

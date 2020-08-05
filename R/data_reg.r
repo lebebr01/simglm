@@ -139,9 +139,6 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   if(any(grepl("^poly\\(", fixed_vars))) {
     fixed_vars <- gsub("poly\\(|\\,.+\\)", "", fixed_vars)
   }
-  if(any(grepl(':', fixed_vars))) {
-    fixed_vars <- gsub(":", "\\.", fixed_vars)
-  }
   
   if(any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
     fixed_vars <- poly_ns_names(sim_args)
@@ -160,6 +157,10 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     )) {
       fixed_vars <- factor_names(sim_args, fixed_vars)
     }
+  }
+  
+  if(any(grepl(':', fixed_vars))) {
+    fixed_vars <- gsub(":", "\\.", fixed_vars)
   }
   
   # Xmat <- model.matrix(fixed_formula, data.frame(data), contrasts.arg = contrasts)

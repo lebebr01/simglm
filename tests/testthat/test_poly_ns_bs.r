@@ -1,4 +1,4 @@
-context('poly_ns_bs_sim')
+context('poly, ns, bs, fixed effect sim')
 
 test_that('fixed poly sim', {
   set.seed(321) 

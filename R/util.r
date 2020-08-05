@@ -134,13 +134,29 @@ compute_samplesize <- function(data, sim_args) {
 
 length_unique <- function(x) length(unique(x))
 
+is_factor_var <- function(sim_args) {
+  unlist(lapply(seq_along(sim_args[['fixed']]), function(yy) 
+    isTRUE(sim_args[['fixed']][[yy]][['var_type']] == 'factor')))
+}
+
 factor_names <- function(sim_args, fixed_vars) {
-  num_levels <- lapply(seq_along(sim_args[['fixed']]), function(xx) 
+  
+  which_factor <- is_factor_var(sim_args)
+  
+  fixed_vars_continuous <- fixed_vars[!which_factor]
+  fixed_vars_cat <- fixed_vars[which_factor]
+  
+  if(any(grepl(":|^I", fixed_vars_cat))) {
+    int_loc <- grep(":|^I", fixed_vars_cat)
+    fixed_vars_cat <- fixed_vars_cat[-int_loc]
+  } 
+  
+  num_levels <- lapply(fixed_vars_cat, function(xx) 
     sim_args[['fixed']][[xx]][['levels']])
   num_levels <- purrr::modify_if(num_levels, is.character, length)
     
   loc <- num_levels > 2
-  fixed_levels_gt2 <- fixed_vars[loc]
+  fixed_levels_gt2 <- fixed_vars_cat[loc]
   num_levels_gt2 <- num_levels[loc]
   
   fixed_levels_gt2_names <- lapply(seq_along(fixed_levels_gt2), function(xx) 

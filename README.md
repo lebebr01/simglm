@@ -3,7 +3,7 @@
 [![R build status](https://github.com/lebebr01/simglm/workflows/R-CMD-check/badge.svg)](https://github.com/lebebr01/simglm/actions?workflow=R-CMD-check)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/lebebr01/simglm?branch=master&svg=true)](https://ci.appveyor.com/project/lebebr01/simglm)
 [![codecov.io](https://codecov.io/github/lebebr01/simglm/coverage.svg?branch=master)](https://codecov.io/github/lebebr01/simglm?branch=master)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/simglm)](https://cran.r-project.org/package=simglm)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/simglm)](https://cran.r-project.org/package=simglm)
 
 
 ## Package Installation

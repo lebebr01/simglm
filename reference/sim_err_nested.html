@@ -55,6 +55,16 @@
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-43425299-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-43425299-3');
+</script>
+
 
   </head>
 
@@ -72,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -136,19 +146,19 @@
     </div>
 
     <pre class="usage"><span class='fu'>sim_err_nested</span>(
-  <span class='no'>error_var</span>,
-  <span class='no'>n</span>,
-  <span class='no'>p</span>,
-  <span class='no'>with_err_gen</span>,
-  <span class='kw'>arima</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>lvl1_err_params</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>arima_mod</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
-  <span class='kw'>ther</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>),
-  <span class='kw'>ther_sim</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>homogeneity</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>fixef</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>heterogeneity_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>...</span>
+  <span class='kw'>error_var</span>,
+  <span class='kw'>n</span>,
+  <span class='kw'>p</span>,
+  <span class='kw'>with_err_gen</span>,
+  arima = <span class='fl'>FALSE</span>,
+  lvl1_err_params = <span class='kw'>NULL</span>,
+  arima_mod = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
+  ther = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>),
+  ther_sim = <span class='fl'>FALSE</span>,
+  homogeneity = <span class='fl'>TRUE</span>,
+  fixef = <span class='kw'>NULL</span>,
+  heterogeneity_var = <span class='kw'>NULL</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>

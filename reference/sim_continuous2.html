@@ -56,6 +56,16 @@ R is supported." />
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-43425299-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-43425299-3');
+</script>
+
 
   </head>
 
@@ -73,7 +83,7 @@ R is supported." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -138,13 +148,13 @@ R is supported.</p>
     </div>
 
     <pre class="usage"><span class='fu'>sim_continuous2</span>(
-  <span class='no'>n</span>,
-  <span class='kw'>dist</span> <span class='kw'>=</span> <span class='st'>"rnorm"</span>,
-  <span class='kw'>var_level</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>variance</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ther_sim</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>ther_val</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>...</span>
+  <span class='kw'>n</span>,
+  dist = <span class='st'>"rnorm"</span>,
+  var_level = <span class='fl'>1</span>,
+  variance = <span class='kw'>NULL</span>,
+  ther_sim = <span class='fl'>FALSE</span>,
+  ther_val = <span class='kw'>NULL</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>

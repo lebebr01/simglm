@@ -55,6 +55,16 @@
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-43425299-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-43425299-3');
+</script>
+
 
   </head>
 
@@ -72,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -136,29 +146,29 @@
     </div>
 
     <pre class="usage"><span class='fu'>sim_reg_nested</span>(
-  <span class='no'>fixed</span>,
-  <span class='no'>random</span>,
-  <span class='no'>fixed_param</span>,
-  <span class='kw'>random_param</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
-  <span class='no'>cov_param</span>,
-  <span class='no'>n</span>,
-  <span class='no'>p</span>,
-  <span class='no'>error_var</span>,
-  <span class='no'>with_err_gen</span>,
-  <span class='kw'>arima</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>data_str</span>,
-  <span class='kw'>cor_vars</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fact_vars</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
-  <span class='kw'>unbal</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>unbal_design</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>lvl1_err_params</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>arima_mod</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
-  <span class='kw'>contrasts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>homogeneity</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>heterogeneity_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>cross_class_params</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>knot_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
-  <span class='no'>...</span>
+  <span class='kw'>fixed</span>,
+  <span class='kw'>random</span>,
+  <span class='kw'>fixed_param</span>,
+  random_param = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
+  <span class='kw'>cov_param</span>,
+  <span class='kw'>n</span>,
+  <span class='kw'>p</span>,
+  <span class='kw'>error_var</span>,
+  <span class='kw'>with_err_gen</span>,
+  arima = <span class='fl'>FALSE</span>,
+  <span class='kw'>data_str</span>,
+  cor_vars = <span class='kw'>NULL</span>,
+  fact_vars = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
+  unbal = <span class='fl'>FALSE</span>,
+  unbal_design = <span class='kw'>NULL</span>,
+  lvl1_err_params = <span class='kw'>NULL</span>,
+  arima_mod = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
+  contrasts = <span class='kw'>NULL</span>,
+  homogeneity = <span class='fl'>TRUE</span>,
+  heterogeneity_var = <span class='kw'>NULL</span>,
+  cross_class_params = <span class='kw'>NULL</span>,
+  knot_args = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -337,25 +347,24 @@ and many other variables useful to help when running simulation studies.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>#' # Longitudinal linear mixed model example</span>
-<span class='no'>fixed</span> <span class='kw'>&lt;-</span> ~<span class='fl'>1</span> + <span class='no'>time</span> + <span class='no'>diff</span> + <span class='no'>act</span> + <span class='no'>time</span>:<span class='no'>act</span>
-<span class='no'>random</span> <span class='kw'>&lt;-</span> ~<span class='fl'>1</span> + <span class='no'>time</span> + <span class='no'>diff</span>
-<span class='no'>fixed_param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>, <span class='fl'>2</span>, <span class='fl'>6</span>, <span class='fl'>2.3</span>, <span class='fl'>7</span>)
-<span class='no'>random_param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>random_var</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>7</span>, <span class='fl'>4</span>, <span class='fl'>2</span>), <span class='kw'>rand_gen</span> <span class='kw'>=</span> <span class='st'>'rnorm'</span>)
-<span class='no'>cov_param</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>dist_fun</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'rnorm'</span>, <span class='st'>'rnorm'</span>),
-  <span class='kw'>var_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"level1"</span>, <span class='st'>"level2"</span>),
-  <span class='kw'>opts</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>1.5</span>),
-  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>mean</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>sd</span> <span class='kw'>=</span> <span class='fl'>4</span>)))
-<span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fl'>150</span>
-<span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fl'>30</span>
-<span class='no'>error_var</span> <span class='kw'>&lt;-</span> <span class='fl'>4</span>
-<span class='no'>with_err_gen</span> <span class='kw'>&lt;-</span> <span class='st'>'rnorm'</span>
-<span class='no'>data_str</span> <span class='kw'>&lt;-</span> <span class='st'>"long"</span>
-<span class='no'>temp_long</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='sim_reg.html'>sim_reg</a></span>(<span class='no'>fixed</span>, <span class='no'>random</span>, <span class='kw'>random3</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>fixed_param</span>,
-   <span class='no'>random_param</span>, <span class='kw'>random_param3</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-   <span class='no'>cov_param</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>n</span>, <span class='no'>p</span>, <span class='no'>error_var</span>, <span class='no'>with_err_gen</span>, <span class='kw'>data_str</span> <span class='kw'>=</span> <span class='no'>data_str</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: 'sim_reg' is no longer supported and will be removed with v 1.0</span>
+<span class='kw'>fixed</span> <span class='op'>&lt;-</span> <span class='op'>~</span><span class='fl'>1</span> <span class='op'>+</span> <span class='kw'>time</span> <span class='op'>+</span> <span class='kw'>diff</span> <span class='op'>+</span> <span class='kw'>act</span> <span class='op'>+</span> <span class='kw'>time</span><span class='op'>:</span><span class='kw'>act</span>
+<span class='kw'>random</span> <span class='op'>&lt;-</span> <span class='op'>~</span><span class='fl'>1</span> <span class='op'>+</span> <span class='kw'>time</span> <span class='op'>+</span> <span class='kw'>diff</span>
+<span class='kw'>fixed_param</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>4</span>, <span class='fl'>2</span>, <span class='fl'>6</span>, <span class='fl'>2.3</span>, <span class='fl'>7</span>)
+<span class='kw'>random_param</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(random_var = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>7</span>, <span class='fl'>4</span>, <span class='fl'>2</span>), rand_gen = <span class='st'>'rnorm'</span>)
+<span class='kw'>cov_param</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(dist_fun = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'rnorm'</span>, <span class='st'>'rnorm'</span>), 
+  var_type = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"level1"</span>, <span class='st'>"level2"</span>),
+  opts = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(mean = <span class='fl'>0</span>, sd = <span class='fl'>1.5</span>), 
+  <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(mean = <span class='fl'>0</span>, sd = <span class='fl'>4</span>)))
+<span class='kw'>n</span> <span class='op'>&lt;-</span> <span class='fl'>150</span>
+<span class='kw'>p</span> <span class='op'>&lt;-</span> <span class='fl'>30</span>
+<span class='kw'>error_var</span> <span class='op'>&lt;-</span> <span class='fl'>4</span>
+<span class='kw'>with_err_gen</span> <span class='op'>&lt;-</span> <span class='st'>'rnorm'</span>
+<span class='kw'>data_str</span> <span class='op'>&lt;-</span> <span class='st'>"long"</span>
+<span class='kw'>temp_long</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sim_reg.html'>sim_reg</a></span>(<span class='kw'>fixed</span>, <span class='kw'>random</span>, random3 = <span class='kw'>NULL</span>, <span class='kw'>fixed_param</span>, 
+   <span class='kw'>random_param</span>, random_param3 = <span class='kw'>NULL</span>,
+   <span class='kw'>cov_param</span>, k = <span class='kw'>NULL</span>, <span class='kw'>n</span>, <span class='kw'>p</span>, <span class='kw'>error_var</span>, <span class='kw'>with_err_gen</span>, data_str = <span class='kw'>data_str</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: 'sim_reg' is no longer supported and will be removed with v 1.0</span>
 #&gt; <span class='warning'></span>
-#&gt; <span class='warning'>              See tidy_simulation vignette.</span></div><div class='input'>
-</div></pre>
+#&gt; <span class='warning'>              See tidy_simulation vignette.</span></div><div class='input'></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

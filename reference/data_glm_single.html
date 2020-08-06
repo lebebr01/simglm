@@ -57,6 +57,16 @@ One is logistic (0/1) outcome and the second being poisson (count) outcomes." />
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-43425299-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-43425299-3');
+</script>
+
 
   </head>
 
@@ -74,7 +84,7 @@ One is logistic (0/1) outcome and the second being poisson (count) outcomes." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -139,7 +149,7 @@ returns simulated data for two different probability distributions.
 One is logistic (0/1) outcome and the second being poisson (count) outcomes.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>data_glm_single</span>(<span class='no'>Xmat</span>, <span class='no'>beta</span>, <span class='no'>n</span>, <span class='no'>outcome_type</span>)</pre>
+    <pre class="usage"><span class='fu'>data_glm_single</span>(<span class='kw'>Xmat</span>, <span class='kw'>beta</span>, <span class='kw'>n</span>, <span class='kw'>outcome_type</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

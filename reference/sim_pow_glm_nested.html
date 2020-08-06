@@ -55,6 +55,16 @@
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-43425299-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-43425299-3');
+</script>
+
 
   </head>
 
@@ -72,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -136,33 +146,33 @@
     </div>
 
     <pre class="usage"><span class='fu'>sim_pow_glm_nested</span>(
-  <span class='no'>fixed</span>,
-  <span class='no'>random</span>,
-  <span class='no'>fixed_param</span>,
-  <span class='kw'>random_param</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
-  <span class='no'>cov_param</span>,
-  <span class='no'>n</span>,
-  <span class='no'>p</span>,
-  <span class='no'>data_str</span>,
-  <span class='kw'>cor_vars</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fact_vars</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
-  <span class='kw'>unbal</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>level2</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>level3</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>),
-  <span class='kw'>unbal_design</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>level2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>level3</span> <span class='kw'>=</span> <span class='kw'>NULL</span>),
-  <span class='kw'>contrasts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>outcome_type</span>,
-  <span class='kw'>cross_class_params</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>knot_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
-  <span class='kw'>missing</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>missing_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
-  <span class='kw'>pow_param</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>alpha</span>,
-  <span class='kw'>pow_dist</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"z"</span>, <span class='st'>"t"</span>),
-  <span class='kw'>pow_tail</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>),
-  <span class='kw'>lme4_fit_mod</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>lme4_fit_family</span>,
-  <span class='kw'>general_mod</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>general_extract</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>...</span>
+  <span class='kw'>fixed</span>,
+  <span class='kw'>random</span>,
+  <span class='kw'>fixed_param</span>,
+  random_param = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
+  <span class='kw'>cov_param</span>,
+  <span class='kw'>n</span>,
+  <span class='kw'>p</span>,
+  <span class='kw'>data_str</span>,
+  cor_vars = <span class='kw'>NULL</span>,
+  fact_vars = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
+  unbal = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(level2 = <span class='fl'>FALSE</span>, level3 = <span class='fl'>FALSE</span>),
+  unbal_design = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(level2 = <span class='kw'>NULL</span>, level3 = <span class='kw'>NULL</span>),
+  contrasts = <span class='kw'>NULL</span>,
+  <span class='kw'>outcome_type</span>,
+  cross_class_params = <span class='kw'>NULL</span>,
+  knot_args = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
+  missing = <span class='fl'>FALSE</span>,
+  missing_args = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
+  pow_param = <span class='kw'>NULL</span>,
+  <span class='kw'>alpha</span>,
+  pow_dist = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"z"</span>, <span class='st'>"t"</span>),
+  pow_tail = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>),
+  lme4_fit_mod = <span class='kw'>NULL</span>,
+  <span class='kw'>lme4_fit_family</span>,
+  general_mod = <span class='kw'>NULL</span>,
+  general_extract = <span class='kw'>NULL</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -302,7 +312,7 @@ simulated.</p></td>
     <tr>
       <th>missing_args</th>
       <td><p>Additional missing arguments to pass to the missing_data 
-function. See <code><a href='missing.html'>missing_data</a></code> for examples.</p></td>
+function. See <code><a href='missing_data.html'>missing_data</a></code> for examples.</p></td>
     </tr>
     <tr>
       <th>pow_param</th>

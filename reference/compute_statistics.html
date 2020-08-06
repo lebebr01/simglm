@@ -55,6 +55,16 @@
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-43425299-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-43425299-3');
+</script>
+
 
   </head>
 
@@ -72,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -136,11 +146,11 @@
     </div>
 
     <pre class="usage"><span class='fu'>compute_statistics</span>(
-  <span class='no'>data</span>,
-  <span class='no'>sim_args</span>,
-  <span class='kw'>power</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>type_1_error</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>precision</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+  <span class='kw'>data</span>,
+  <span class='kw'>sim_args</span>,
+  power = <span class='fl'>TRUE</span>,
+  type_1_error = <span class='fl'>TRUE</span>,
+  precision = <span class='fl'>TRUE</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>

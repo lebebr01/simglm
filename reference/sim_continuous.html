@@ -56,6 +56,16 @@ R is supported." />
 <![endif]-->
 
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-43425299-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-43425299-3');
+</script>
+
 
   </head>
 
@@ -73,7 +83,7 @@ R is supported." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.1</span>
       </span>
     </div>
 
@@ -138,12 +148,12 @@ R is supported.</p>
     </div>
 
     <pre class="usage"><span class='fu'>sim_continuous</span>(
-  <span class='kw'>k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='no'>n</span>,
-  <span class='no'>p</span>,
-  <span class='no'>dist_fun</span>,
-  <span class='kw'>var_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"level1"</span>, <span class='st'>"level2"</span>, <span class='st'>"level3"</span>, <span class='st'>"single"</span>),
-  <span class='no'>...</span>
+  k = <span class='kw'>NULL</span>,
+  <span class='kw'>n</span>,
+  <span class='kw'>p</span>,
+  <span class='kw'>dist_fun</span>,
+  var_type = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"level1"</span>, <span class='st'>"level2"</span>, <span class='st'>"level3"</span>, <span class='st'>"single"</span>),
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>

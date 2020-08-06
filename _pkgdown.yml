@@ -8,3 +8,4 @@ authors:
 template:
   params:
     bootswatch: flatly
+    ganalytics: UA-43425299-3

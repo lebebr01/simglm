@@ -61,7 +61,11 @@ sample_sizes <- function(sample_size) {
                       max = sample_size[['level1']]$max) %>%
         round(0)
     } else {
-      level1 <- rep(sample_size[['level1']], total_level2_samplesize)
+      if(length(sample_size[['level1']]) == sample_size[['level2']]) {
+        level1 <- sample_size[['level1']]
+      } else {
+        level1 <- rep(sample_size[['level1']], total_level2_samplesize)
+      }
     }
     sample_size['level1'] <- list(level1)
     

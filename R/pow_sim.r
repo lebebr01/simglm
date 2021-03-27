@@ -901,10 +901,17 @@ compute_statistics <- function(data, sim_args, power = TRUE,
     precision_computation <- NULL
   }
   
-  statistics <- dplyr::bind_cols(avg_estimates,
-                                 power_computation, 
-                                 type_1_error_computation, 
-                                 precision_computation) 
+  statistics <- dplyr::full_join(
+    avg_estimates,
+    power_computation,
+    by = "term"
+  ) %>% dplyr::full_join(
+    type_1_error_computation,
+    by = "term"
+  ) %>% dplyr::full_join(
+    precision_computation,
+    by = "term"
+  )
   
   select_columns <- rlang::syms(names(statistics)[names(statistics) %ni%
                        regmatches(names(statistics), 

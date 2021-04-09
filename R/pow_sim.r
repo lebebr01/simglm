@@ -883,42 +883,30 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   if(power) {
     power_computation <- aggregate_power(data_df, 
                                          rlang::syms(group_vars))
-  } else {
-    power_computation <- NULL
+    avg_estimates <- dplyr::full_join(avg_estimates, 
+                     power_computation,
+                     by = 'term')
   }
   
   if(type_1_error) {
     type_1_error_computation <- aggregate_t1e(data_df, 
                                               rlang::syms(group_vars))
-  } else {
-    type_1_error_computation <- NULL
+    avg_estimates <- dplyr::full_join(avg_estimates, 
+                                      type_1_error_computation,
+                                      by = 'term')
   }
   
   if(precision) {
     precision_computation <- aggregate_precision(data_df, 
                                                  rlang::syms(group_vars))
-  } else {
-    precision_computation <- NULL
+    avg_estimates <- dplyr::full_join(avg_estimates, 
+                                      precision_computation,
+                                      by = 'term')
   }
   
-  statistics <- dplyr::bind_cols(avg_estimates,
-                                 power_computation, 
-                                 type_1_error_computation, 
-                                 precision_computation) 
+  avg_estimates['replications'] <- sim_args['replications']
   
-  select_columns <- rlang::syms(names(statistics)[names(statistics) %ni%
-                       regmatches(names(statistics), 
-                              regexpr(paste(paste0("^", 
-                                                   group_vars, 
-                                                   "[0-9]+"), 
-                                            collapse = "|"), 
-                                            names(statistics)))])
-  
-  statistics <- dplyr::select(statistics, !!! select_columns)
-  
-  statistics['replications'] <- sim_args['replications']
-  
-  statistics
+  avg_estimates
   
 }
 

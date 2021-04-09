@@ -1,186 +1,186 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://simglm.brandonlebeau.org//index.html</loc>
+    <loc>https://simglm.brandonlebeau.org/index.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/compute_statistics.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/compute_statistics.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/corr_variables.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/corr_variables.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/cross_class.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/cross_class.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/data_glm_nested.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/data_glm_nested.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/data_glm_nested3.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/data_glm_nested3.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/data_glm_single.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/data_glm_single.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/data_reg_nested.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/data_reg_nested.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/data_reg_nested3.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/data_reg_nested3.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/data_reg_single.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/data_reg_single.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/desireVar.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/desireVar.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/extract_coefficients.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/extract_coefficients.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/generate_missing.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/generate_missing.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/generate_response.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/generate_response.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/missing.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/missing.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/model_fit.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/model_fit.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/parse_crossclass.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/parse_crossclass.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/parse_formula.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/parse_formula.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/parse_power.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/parse_power.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/parse_randomeffect.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/parse_randomeffect.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/parse_varyarguments.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/parse_varyarguments.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/rbimod.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/rbimod.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/replicate_simulation.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/replicate_simulation.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/run_shiny.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/run_shiny.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_continuous.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_continuous.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_continuous2.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_continuous2.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_err_nested.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_err_nested.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_err_single.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_err_single.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_factor.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_factor.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_factor2.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_factor2.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_fixef_nested.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_fixef_nested.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_fixef_nested3.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_fixef_nested3.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_fixef_single.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_fixef_single.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_glm.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_glm.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_glm_nested.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_glm_nested.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_glm_nested3.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_glm_nested3.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_glm_single.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_glm_single.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_knot.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_knot.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_pow.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_pow.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_pow_glm.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_pow_glm.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_pow_glm_nested.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_pow_glm_nested.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_pow_glm_nested3.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_pow_glm_nested3.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_pow_glm_single.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_pow_glm_single.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_pow_nested.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_pow_nested.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_pow_nested3.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_pow_nested3.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_pow_single.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_pow_single.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_rand_eff.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_rand_eff.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_reg.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_reg.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_reg_nested.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_reg_nested.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_reg_nested3.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_reg_nested3.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_reg_single.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_reg_single.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/sim_time.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/sim_time.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/simglm.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/simglm.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/simulate_error.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/simulate_error.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/simulate_fixed.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/simulate_fixed.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/simulate_heterogeneity.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/simulate_heterogeneity.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/simulate_randomeffect.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/simulate_randomeffect.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/transform_outcome.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/transform_outcome.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//reference/varcov_randeff.html</loc>
+    <loc>https://simglm.brandonlebeau.org/reference/varcov_randeff.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//articles/simulation_arguments.html</loc>
+    <loc>https://simglm.brandonlebeau.org/articles/simulation_arguments.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org//articles/tidy_simulation.html</loc>
+    <loc>https://simglm.brandonlebeau.org/articles/tidy_simulation.html</loc>
   </url>
 </urlset>

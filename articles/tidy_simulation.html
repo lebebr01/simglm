@@ -25,6 +25,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -43,12 +45,6 @@
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
@@ -73,8 +69,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/lebebr01/simglm/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/lebebr01/simglm/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -94,9 +90,9 @@
       <h1 data-toc-skip>Tidy Simulation with <code>simglm</code>
 </h1>
             
-            <h4 class="date">2020-08-19</h4>
+            <h4 data-toc-skip class="date">2021-04-09</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/master/vignettes/tidy_simulation.Rmd"><code>vignettes/tidy_simulation.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/master/vignettes/tidy_simulation.Rmd" class="external-link"><code>vignettes/tidy_simulation.Rmd</code></a></small>
       <div class="hidden name"><code>tidy_simulation.Rmd</code></div>
 
     </div>
@@ -132,20 +128,19 @@
 <h3 class="hasAnchor">
 <a href="#fixed-portion-of-model" class="anchor"></a>Fixed Portion of Model</h3>
 <p>The fixed portion of the model represents variables that are treated as fixed. This means that the values observed in the data are the only values we are interested in, will generalize to, or that we consider values of interest in our population. Let us consider the following formula: <code>y ~ 1 + x1 + x2</code>. In this formula there are a total of two varaibles that are assumed to be fixed, <code>x1</code> and <code>x2</code>. These variables together with an intercept would make up the design matrix <span class="math inline">\(X_{j}\)</span>. Let’s generate some example data using the <code>simglm</code> package and the <code>simulate_fixed</code> function.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/lebebr01/simglm">simglm</a></span>)
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lebebr01/simglm" class="external-link">simglm</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>) 
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
-<span class="kw">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-  formula = <span class="kw">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">x1</span> <span class="op">+</span> <span class="kw">x2</span>,
-  fixed = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(x1 = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'continuous'</span>, mean = <span class="fl">180</span>, sd = <span class="fl">30</span>),
-               x2 = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'continuous'</span>, mean = <span class="fl">40</span>, sd = <span class="fl">5</span>)),
-  sample_size = <span class="fl">10</span>
-)
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span>,
+  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">180</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,
+               x2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">40</span>, sd <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">10</span>
+<span class="op">)</span>
 
-<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span>(data = <span class="kw">NULL</span>, <span class="kw">sim_arguments</span>)
-</pre></div>
+<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept.       x1       x2 level1_id
 ## 1             1 231.1471 41.73851         1
 ## 2             1 158.6388 47.42296         2
@@ -167,18 +162,17 @@
 <code>sample_size</code>: this argument tells the function how many responses to generate.</li>
 </ul>
 <p>The columns <code>x1</code> and <code>x2</code> would represent variables that we would gather if these data were real. To reflect a real life scenario, consider the following fixed simuation.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>) 
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
-<span class="kw">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-  formula = <span class="kw">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">weight</span> <span class="op">+</span> <span class="kw">age</span>,
-  fixed = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(weight = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'continuous'</span>, mean = <span class="fl">180</span>, sd = <span class="fl">30</span>),
-               age = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'continuous'</span>, mean = <span class="fl">40</span>, sd = <span class="fl">5</span>)),
-  sample_size = <span class="fl">10</span>
-)
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">weight</span> <span class="op">+</span> <span class="va">age</span>,
+  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">180</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,
+               age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">40</span>, sd <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">10</span>
+<span class="op">)</span>
 
-<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span>(data = <span class="kw">NULL</span>, <span class="kw">sim_arguments</span>)
-</pre></div>
+<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept.   weight      age level1_id
 ## 1             1 231.1471 41.73851         1
 ## 2             1 158.6388 47.42296         2
@@ -191,18 +185,17 @@
 ## 9             1 190.1734 42.88792         9
 ## 10            1 163.4426 42.23178        10</code></pre>
 <p>Now instead of the variables being called <code>x1</code> and <code>x2</code>, they now reflect variables weight (measured in lbs) and age (measured continuously, not rounded to whole digits). If we wished to change the <code>'age'</code> variable to be rounded to a whole integer, we could change the variable type to <code>'ordinal'</code> as such.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>) 
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
-<span class="kw">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-  formula = <span class="kw">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">weight</span> <span class="op">+</span> <span class="kw">age</span>,
-  fixed = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(weight = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'continuous'</span>, mean = <span class="fl">180</span>, sd = <span class="fl">30</span>),
-               age = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'ordinal'</span>, levels = <span class="fl">30</span><span class="op">:</span><span class="fl">60</span>)),
-  sample_size = <span class="fl">10</span>
-)
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">weight</span> <span class="op">+</span> <span class="va">age</span>,
+  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">180</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,
+               age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, levels <span class="op">=</span> <span class="fl">30</span><span class="op">:</span><span class="fl">60</span><span class="op">)</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">10</span>
+<span class="op">)</span>
 
-<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span>(data = <span class="kw">NULL</span>, <span class="kw">sim_arguments</span>)
-</pre></div>
+<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept.   weight age level1_id
 ## 1             1 231.1471  44         1
 ## 2             1 158.6388  38         2
@@ -215,19 +208,18 @@
 ## 9             1 190.1734  52         9
 ## 10            1 163.4426  31        10</code></pre>
 <p>When specifying a <code>var_type</code> as <code>'ordinal'</code>, an additional <code>levels</code> argument is needed to determine which values are possible for the simulation. The last type of variable that is useful to discuss now would be factor or categorical variables. These variables can be generated by setting the <code>var_type = 'factor'</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>) 
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
-<span class="kw">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-  formula = <span class="kw">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">weight</span> <span class="op">+</span> <span class="kw">age</span> <span class="op">+</span> <span class="kw">sex</span>,
-  fixed = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(weight = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'continuous'</span>, mean = <span class="fl">180</span>, sd = <span class="fl">30</span>),
-               age = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'ordinal'</span>, levels = <span class="fl">30</span><span class="op">:</span><span class="fl">60</span>),
-               sex = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'factor'</span>, levels = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'male'</span>, <span class="st">'female'</span>))),
-  sample_size = <span class="fl">10</span>
-)
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">weight</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">sex</span>,
+  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">180</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,
+               age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, levels <span class="op">=</span> <span class="fl">30</span><span class="op">:</span><span class="fl">60</span><span class="op">)</span>,
+               sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'male'</span>, <span class="st">'female'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">10</span>
+<span class="op">)</span>
 
-<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span>(data = <span class="kw">NULL</span>, <span class="kw">sim_arguments</span>)
-</pre></div>
+<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept.   weight age sex sex_orig level1_id
 ## 1             1 231.1471  44   0   female         1
 ## 2             1 158.6388  38   0   female         2
@@ -246,15 +238,14 @@
 <h2 class="hasAnchor">
 <a href="#simulate-random-error" class="anchor"></a>Simulate Random Error</h2>
 <p>The simulation of random error (<span class="math inline">\(e_{j}\)</span> from the equation above) is a bit simpler than generating the fixed effects. Suppose for example, we want to simply simulate random errors that are normally distributed with a mean of 0 and a variance of 1. This can be done with the <code>simulate_error</code> function.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>)
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span>
 
-<span class="kw">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-  sample_size = <span class="fl">10</span>
-)
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  sample_size <span class="op">=</span> <span class="fl">10</span>
+<span class="op">)</span>
 
-<span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span>(data = <span class="kw">NULL</span>, <span class="kw">sim_arguments</span>)
-</pre></div>
+<span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>##         error level1_id
 ## 1   1.7049032         1
 ## 2  -0.7120386         2
@@ -267,16 +258,15 @@
 ## 9   0.3391139         9
 ## 10 -0.5519147        10</code></pre>
 <p>The <code>simulate_error</code> function only needs to know how many data values to simulate. By default, the <code>rnorm</code> function is used to generate random error and this function assumes a mean of 0 and standard deviation of 1 by default. I personally prefer the slightly more verbose code however.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>)
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span>
 
-<span class="kw">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-  error = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(variance = <span class="fl">1</span>),
-  sample_size = <span class="fl">10</span>
-)
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">10</span>
+<span class="op">)</span>
 
-<span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span>(data = <span class="kw">NULL</span>, <span class="kw">sim_arguments</span>)
-</pre></div>
+<span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>##         error level1_id
 ## 1   1.7049032         1
 ## 2  -0.7120386         2
@@ -289,16 +279,15 @@
 ## 9   0.3391139         9
 ## 10 -0.5519147        10</code></pre>
 <p>This code makes it clearer when the variance of the errors is wished to be specified as some other value. For example:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>)
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span>
 
-<span class="kw">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-  error = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(variance = <span class="fl">25</span>),
-  sample_size = <span class="fl">10</span>
-)
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">25</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">10</span>
+<span class="op">)</span>
 
-<span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span>(data = <span class="kw">NULL</span>, <span class="kw">sim_arguments</span>)
-</pre></div>
+<span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>##         error level1_id
 ## 1   8.5245161         1
 ## 2  -3.5601928         2
@@ -315,23 +304,22 @@
 <h2 class="hasAnchor">
 <a href="#generate-response-variable" class="anchor"></a>Generate Response Variable</h2>
 <p>Now that we have seen the basics of simulating fixed variables (covariates) and random error, we can now generate the response by combining the previous two steps and then using the <code>generate_response</code> function. What makes this a tidy simulation is that the pipe from magrittr, <code>%&gt;%</code> can be used to combine steps into a simulation pipeline.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>) 
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
-<span class="kw">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-  formula = <span class="kw">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">weight</span> <span class="op">+</span> <span class="kw">age</span> <span class="op">+</span> <span class="kw">sex</span>,
-  fixed = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(weight = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'continuous'</span>, mean = <span class="fl">180</span>, sd = <span class="fl">30</span>),
-               age = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'ordinal'</span>, levels = <span class="fl">30</span><span class="op">:</span><span class="fl">60</span>),
-               sex = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'factor'</span>, levels = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'male'</span>, <span class="st">'female'</span>))),
-  error = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(variance = <span class="fl">25</span>),
-  sample_size = <span class="fl">10</span>,
-  reg_weights = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span>)
-)
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">weight</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">sex</span>,
+  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">180</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,
+               age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, levels <span class="op">=</span> <span class="fl">30</span><span class="op">:</span><span class="fl">60</span><span class="op">)</span>,
+               sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'male'</span>, <span class="st">'female'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+  error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">25</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">10</span>,
+  reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span><span class="op">)</span>
+<span class="op">)</span>
 
-<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span>(data = <span class="kw">NULL</span>, <span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span>(<span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span>(<span class="kw">sim_arguments</span>)
-</pre></div>
+<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept.   weight age sex sex_orig level1_id       error fixed_outcome
 ## 1             1 231.1471  44   0   female         1   4.5862776      66.94413
 ## 2             1 158.6388  38   0   female         2  -0.5353077      45.79165
@@ -360,24 +348,23 @@
 <a href="#non-normal-outcomes" class="anchor"></a>Non-normal Outcomes</h3>
 <p>Non-normal outcomes are possible with simglm. Two non-normal outcomes are currently supported with more support coming in the future. Binary and count outcomes are supported and can be specified with the <code>outcome_type</code> simulation argument. If <code>outcome_type = 'logistic'</code> or <code>outcome_type = 'binary'</code> then a binary outcome is generated (ie. 0/1 variable) using the <code>rbinom</code> function. If <code>outcome_type = 'count'</code> or <code>outcome_type = 'poisson'</code> then the outcome is transformed to be a count variable (ie. discrete variable; 0, 1, 2, etc.).</p>
 <p>Here is an example of generating a binary outcome.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>) 
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
-<span class="kw">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-  formula = <span class="kw">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">weight</span> <span class="op">+</span> <span class="kw">age</span> <span class="op">+</span> <span class="kw">sex</span>,
-  fixed = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(weight = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'continuous'</span>, mean = <span class="fl">180</span>, sd = <span class="fl">30</span>),
-               age = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'ordinal'</span>, levels = <span class="fl">30</span><span class="op">:</span><span class="fl">60</span>),
-               sex = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'factor'</span>, levels = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'male'</span>, <span class="st">'female'</span>))),
-  error = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(variance = <span class="fl">25</span>),
-  sample_size = <span class="fl">10</span>,
-  reg_weights = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span>),
-  outcome_type = <span class="st">'binary'</span>
-)
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">weight</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">sex</span>,
+  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">180</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,
+               age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, levels <span class="op">=</span> <span class="fl">30</span><span class="op">:</span><span class="fl">60</span><span class="op">)</span>,
+               sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'male'</span>, <span class="st">'female'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+  error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">25</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">10</span>,
+  reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span><span class="op">)</span>,
+  outcome_type <span class="op">=</span> <span class="st">'binary'</span>
+<span class="op">)</span>
 
-<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span>(data = <span class="kw">NULL</span>, <span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span>(<span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span>(<span class="kw">sim_arguments</span>)
-</pre></div>
+<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept.   weight age sex sex_orig level1_id       error fixed_outcome
 ## 1             1 231.1471  44   0   female         1   4.5862776      66.94413
 ## 2             1 158.6388  38   0   female         2  -0.5353077      45.79165
@@ -401,23 +388,22 @@
 ## 9               0              48.25039 1
 ## 10              0              45.55934 1</code></pre>
 <p>And finally, an example of generating a count outcome. Note, the weight variable here has been grand mean centered in the generation (ie. mean = 0). This helps to ensure that the counts are not too large.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>) 
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
-<span class="kw">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-  formula = <span class="kw">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">weight</span> <span class="op">+</span> <span class="kw">sex</span>,
-  fixed = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(weight = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'continuous'</span>, mean = <span class="fl">0</span>, sd = <span class="fl">30</span>),
-               sex = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'factor'</span>, levels = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'male'</span>, <span class="st">'female'</span>))),
-  error = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(variance = <span class="fl">25</span>),
-  sample_size = <span class="fl">10</span>,
-  reg_weights = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">0.01</span>, <span class="fl">0.5</span>),
-  outcome_type = <span class="st">'count'</span>
-)
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">weight</span> <span class="op">+</span> <span class="va">sex</span>,
+  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,
+               sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'male'</span>, <span class="st">'female'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+  error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">25</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">10</span>,
+  reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0.01</span>, <span class="fl">0.5</span><span class="op">)</span>,
+  outcome_type <span class="op">=</span> <span class="st">'count'</span>
+<span class="op">)</span>
 
-<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span>(data = <span class="kw">NULL</span>, <span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span>(<span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span>(<span class="kw">sim_arguments</span>)
-</pre></div>
+<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept.     weight sex sex_orig level1_id      error fixed_outcome
 ## 1             1  51.147097   1     male         1 -4.0233584      3.011471
 ## 2             1 -21.361157   1     male         2  2.2803457      2.286388
@@ -454,25 +440,24 @@
 <code>extract_coefficients</code>: this function will extract the fixed coefficients based on the model fitted.</li>
 </ul>
 <p>To fit a model and extract coefficients, we could do the following building off the example from the previous section:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>) 
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
-<span class="kw">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-  formula = <span class="kw">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">weight</span> <span class="op">+</span> <span class="kw">age</span> <span class="op">+</span> <span class="kw">sex</span>,
-  fixed = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(weight = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'continuous'</span>, mean = <span class="fl">180</span>, sd = <span class="fl">30</span>),
-               age = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'ordinal'</span>, levels = <span class="fl">30</span><span class="op">:</span><span class="fl">60</span>),
-               sex = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'factor'</span>, levels = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'male'</span>, <span class="st">'female'</span>))),
-  error = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(variance = <span class="fl">25</span>),
-  sample_size = <span class="fl">10</span>,
-  reg_weights = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span>)
-)
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">weight</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">sex</span>,
+  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">180</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,
+               age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, levels <span class="op">=</span> <span class="fl">30</span><span class="op">:</span><span class="fl">60</span><span class="op">)</span>,
+               sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'male'</span>, <span class="st">'female'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+  error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">25</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">10</span>,
+  reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span><span class="op">)</span>
+<span class="op">)</span>
 
-<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span>(data = <span class="kw">NULL</span>, <span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span>(<span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span>(<span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/model_fit.html">model_fit</a></span>(<span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/extract_coefficients.html">extract_coefficients</a></span>()
-</pre></div>
+<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/model_fit.html">model_fit</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/extract_coefficients.html">extract_coefficients</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 5
 ##   term        estimate std.error statistic p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
@@ -481,28 +466,27 @@
 ## 3 age           -0.198     0.271   -0.733   0.491 
 ## 4 sex            2.87      5.93     0.484   0.646</code></pre>
 <p>This output contains the model output for a single data simulation, more specifically we can see the parameter name, parameter estimate, the standard error for the parameter estimate, the test statistics, and the p-value. These were estimated using the <code>lm</code> function based on the same formula defined in <code>sim_arguments</code>. It is possible to specify your own formula, model fitting function, and regression weights to the <code>model_fit</code> function. For example, suppose we knew that weight was an important predictor, but are unable to collect it in real life. We could then specify an alternative model when evaluating power, but include the variable in the data generation step.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>) 
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
-<span class="kw">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-  formula = <span class="kw">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">weight</span> <span class="op">+</span> <span class="kw">age</span> <span class="op">+</span> <span class="kw">sex</span>,
-  fixed = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(weight = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'continuous'</span>, mean = <span class="fl">180</span>, sd = <span class="fl">30</span>),
-               age = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'ordinal'</span>, levels = <span class="fl">30</span><span class="op">:</span><span class="fl">60</span>),
-               sex = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'factor'</span>, levels = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'male'</span>, <span class="st">'female'</span>))),
-  error = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(variance = <span class="fl">25</span>),
-  sample_size = <span class="fl">10</span>,
-  reg_weights = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span>),
-  model_fit = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(formula = <span class="kw">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">age</span> <span class="op">+</span> <span class="kw">sex</span>,
-                   model_function = <span class="st">'lm'</span>),
-  reg_weights_model = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span>)
-)
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">weight</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">sex</span>,
+  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">180</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,
+               age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, levels <span class="op">=</span> <span class="fl">30</span><span class="op">:</span><span class="fl">60</span><span class="op">)</span>,
+               sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'male'</span>, <span class="st">'female'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+  error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">25</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">10</span>,
+  reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span><span class="op">)</span>,
+  model_fit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">sex</span>,
+                   model_function <span class="op">=</span> <span class="st">'lm'</span><span class="op">)</span>,
+  reg_weights_model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span><span class="op">)</span>
+<span class="op">)</span>
 
-<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span>(data = <span class="kw">NULL</span>, <span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span>(<span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span>(<span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/model_fit.html">model_fit</a></span>(<span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/extract_coefficients.html">extract_coefficients</a></span>()
-</pre></div>
+<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/model_fit.html">model_fit</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/extract_coefficients.html">extract_coefficients</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 5
 ##   term        estimate std.error statistic p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
@@ -520,92 +504,76 @@
 <li>
 <code>compute_statistics</code>: this function compute desired statistics across the replications.</li>
 </ul>
-<div class="sourceCode" id="cb25"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>) 
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
-<span class="kw">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-  formula = <span class="kw">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">weight</span> <span class="op">+</span> <span class="kw">age</span> <span class="op">+</span> <span class="kw">sex</span>,
-  fixed = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(weight = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'continuous'</span>, mean = <span class="fl">180</span>, sd = <span class="fl">30</span>),
-               age = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'ordinal'</span>, levels = <span class="fl">30</span><span class="op">:</span><span class="fl">60</span>),
-               sex = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'factor'</span>, levels = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'male'</span>, <span class="st">'female'</span>))),
-  error = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(variance = <span class="fl">25</span>),
-  sample_size = <span class="fl">10</span>,
-  reg_weights = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span>),
-  model_fit = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(formula = <span class="kw">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">age</span> <span class="op">+</span> <span class="kw">sex</span>,
-                   model_function = <span class="st">'lm'</span>),
-  reg_weights_model = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span>),
-  replications = <span class="fl">10</span>,
-  extract_coefficients = <span class="fl">TRUE</span>
-)
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">weight</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">sex</span>,
+  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">180</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,
+               age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, levels <span class="op">=</span> <span class="fl">30</span><span class="op">:</span><span class="fl">60</span><span class="op">)</span>,
+               sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'male'</span>, <span class="st">'female'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+  error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">25</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">10</span>,
+  reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span><span class="op">)</span>,
+  model_fit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">sex</span>,
+                   model_function <span class="op">=</span> <span class="st">'lm'</span><span class="op">)</span>,
+  reg_weights_model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span><span class="op">)</span>,
+  replications <span class="op">=</span> <span class="fl">10</span>,
+  extract_coefficients <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span>
 
-<span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span>(<span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span>(<span class="kw">sim_arguments</span>)
-</pre></div>
-<pre><code>## New names:
-## * term -&gt; term...1
-## * term -&gt; term...3
-## * crit_value -&gt; crit_value...6
-## * term -&gt; term...7
-## * crit_value -&gt; crit_value...10
-## * ...</code></pre>
-<pre><code>## # A tibble: 3 x 15
-##   term...1 avg_estimate term...3 power avg_test_stat crit_value...6 term...7
-##   &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt; &lt;chr&gt;   
-## 1 (Interc…      47.2    (Interc…   0.6         3.37            1.96 (Interc…
-## 2 age            0.0852 age        0.3         0.102           1.96 age     
-## 3 sex           -0.509  sex        0.1        -0.108           1.96 sex     
-## # … with 8 more variables: type_1_error &lt;dbl&gt;, avg_adjtest_stat &lt;dbl&gt;,
-## #   crit_value...10 &lt;dbl&gt;, term...11 &lt;chr&gt;, param_estimate_sd &lt;dbl&gt;,
-## #   avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;, replications &lt;dbl&gt;</code></pre>
+<span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 3 x 12
+##   term        avg_estimate power avg_test_stat crit_value.x type_1_error
+##   &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+## 1 (Intercept)      47.2      0.6         3.37          1.96          0.5
+## 2 age               0.0852   0.3         0.102         1.96          0.4
+## 3 sex              -0.509    0.1        -0.108         1.96          0.2
+## # … with 6 more variables: avg_adjtest_stat &lt;dbl&gt;, crit_value.y &lt;dbl&gt;,
+## #   param_estimate_sd &lt;dbl&gt;, avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,
+## #   replications &lt;dbl&gt;</code></pre>
 <p>As can be seen from the output, the default behavior is to return statistics for power, average test statistic, type I error rate, adjusted average test statistic, standard deviation of parameter estimate, average standard error, precision ration (standard deviation of parameter estimate divided by average standard error), and the number of replications for each term.</p>
 <p>To generate this output, only the number of replications is needed. Here only 10 replications were done, in practice many more replications would be done to ensure there are accurate results.</p>
 <p>The default power parameter values used are: Normal distribution, two-tailed alternative hypotheses, and alpha of 0.05. Additional power parameters can be passed directly to override default values by including a power argument within the simulation arguments. For example, if a t-distribution with one degree of freedom an alpha of 0.02 is desired, these can be added as follows:</p>
-<p>Note: A user would likely want to change <code><a href="https://rdrr.io/pkg/future/man/plan.html">plan(sequential)</a></code> to something like <code><a href="https://rdrr.io/pkg/future/man/plan.html">plan(mutisession)</a></code> or <code><a href="https://rdrr.io/pkg/future/man/plan.html">plan(multicore)</a></code> to run these in parallel. <code><a href="https://rdrr.io/pkg/future/man/plan.html">plan(sequential)</a></code> is used here for vignette processing.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>) 
+<p>Note: A user would likely want to change <code><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan(sequential)</a></code> to something like <code><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan(mutisession)</a></code> or <code><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan(multicore)</a></code> to run these in parallel. <code><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan(sequential)</a></code> is used here for vignette processing.</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/HenrikBengtsson/future">future</a></span>)
-<span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html">plan</a></span>(<span class="kw">sequential</span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future" class="external-link">future</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">sequential</span><span class="op">)</span>
 
-<span class="kw">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-  formula = <span class="kw">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">weight</span> <span class="op">+</span> <span class="kw">age</span> <span class="op">+</span> <span class="kw">sex</span>,
-  fixed = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(weight = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'continuous'</span>, mean = <span class="fl">180</span>, sd = <span class="fl">30</span>),
-               age = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'ordinal'</span>, levels = <span class="fl">30</span><span class="op">:</span><span class="fl">60</span>),
-               sex = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'factor'</span>, levels = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'male'</span>, <span class="st">'female'</span>))),
-  error = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(variance = <span class="fl">25</span>),
-  sample_size = <span class="fl">50</span>,
-  reg_weights = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span>),
-  model_fit = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(formula = <span class="kw">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">age</span> <span class="op">+</span> <span class="kw">sex</span>,
-                   model_function = <span class="st">'lm'</span>),
-  reg_weights_model = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span>),
-  replications = <span class="fl">1000</span>,
-  power = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-    dist = <span class="st">'qt'</span>,
-    alpha = <span class="fl">.02</span>,
-    opts = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(df = <span class="fl">1</span>)
-  ),
-  extract_coefficients = <span class="fl">TRUE</span>
-)
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">weight</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">sex</span>,
+  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">180</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,
+               age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, levels <span class="op">=</span> <span class="fl">30</span><span class="op">:</span><span class="fl">60</span><span class="op">)</span>,
+               sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'male'</span>, <span class="st">'female'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+  error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">25</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">50</span>,
+  reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span><span class="op">)</span>,
+  model_fit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">sex</span>,
+                   model_function <span class="op">=</span> <span class="st">'lm'</span><span class="op">)</span>,
+  reg_weights_model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span><span class="op">)</span>,
+  replications <span class="op">=</span> <span class="fl">1000</span>,
+  power <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+    dist <span class="op">=</span> <span class="st">'qt'</span>,
+    alpha <span class="op">=</span> <span class="fl">.02</span>,
+    opts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>df <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+  <span class="op">)</span>,
+  extract_coefficients <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span>
 
-<span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span>(<span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span>(<span class="kw">sim_arguments</span>)
-</pre></div>
-<pre><code>## New names:
-## * term -&gt; term...1
-## * term -&gt; term...3
-## * crit_value -&gt; crit_value...6
-## * term -&gt; term...7
-## * crit_value -&gt; crit_value...10
-## * ...</code></pre>
-<pre><code>## # A tibble: 3 x 15
-##   term...1 avg_estimate term...3 power avg_test_stat crit_value...6 term...7
-##   &lt;chr&gt;           &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt; &lt;chr&gt;   
-## 1 (Interc…      55.9    (Interc…     0         7.26            31.8 (Interc…
-## 2 age           -0.0994 age          0        -0.603           31.8 age     
-## 3 sex            0.561  sex          0         0.189           31.8 sex     
-## # … with 8 more variables: type_1_error &lt;dbl&gt;, avg_adjtest_stat &lt;dbl&gt;,
-## #   crit_value...10 &lt;dbl&gt;, term...11 &lt;chr&gt;, param_estimate_sd &lt;dbl&gt;,
-## #   avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;, replications &lt;dbl&gt;</code></pre>
+<span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 3 x 12
+##   term        avg_estimate power avg_test_stat crit_value.x type_1_error
+##   &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+## 1 (Intercept)      55.9        0         7.26          31.8            0
+## 2 age              -0.0994     0        -0.603         31.8            0
+## 3 sex               0.561      0         0.189         31.8            0
+## # … with 6 more variables: avg_adjtest_stat &lt;dbl&gt;, crit_value.y &lt;dbl&gt;,
+## #   param_estimate_sd &lt;dbl&gt;, avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,
+## #   replications &lt;dbl&gt;</code></pre>
 </div>
 </div>
 <div id="nested-designs" class="section level1">
@@ -614,27 +582,26 @@
 <p>Nested designs are ones in which data belong to multiple levels. An example could be individuals nested within neighborhoods. In this example, a specific individual is tied directly to one neighborhood. These types of data often include correlations between individuals within a neighborhood that need to be taken into account when modeling the data. These types of data can be generated with simglm.</p>
 <p>To do this, the formula syntax introduced above is modified slightly to include information on the nesting structure. In the example below, the nesting structure in the formula is specified in the portion within the parentheses. How the part within parentheses could be read is, add a random intercept effect for each neighborhood. This random intercept effect is similar to random error found in regression models, except the error is associated with neighborhoods and is the same values for all individuals within that neighborhood. The simulation arguments, <code>randomeffect</code> provides information about this term, where the variance can be specified.</p>
 <p>Finally, the <code>sample_size</code> argument needs to be modified to include information about the two levels of nested. You could read the <code>sample_size = list(level1 = 10, level2 = 20)</code> argument below as: create 20 neighborhoods (ie. <code>level2 = 20</code>) and within each neighborhood have 10 individuals (ie. <code>level1 = 10</code>). Therefore the total sample size (ie. rows in the data) would be 200.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="fl">321</span>) 
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
-<span class="kw">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-  formula = <span class="kw">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="kw">weight</span> <span class="op">+</span> <span class="kw">age</span> <span class="op">+</span> <span class="kw">sex</span> <span class="op">+</span> (<span class="fl">1</span> <span class="op">|</span> <span class="kw">neighborhood</span>),
-  reg_weights = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4</span>, <span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.2</span>, <span class="fl">0.33</span>),
-  fixed = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(weight = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'continuous'</span>, mean = <span class="fl">180</span>, sd = <span class="fl">30</span>),
-               age = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'ordinal'</span>, levels = <span class="fl">30</span><span class="op">:</span><span class="fl">60</span>),
-               sex = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(var_type = <span class="st">'factor'</span>, levels = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'male'</span>, <span class="st">'female'</span>))),
-  randomeffect = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(int_neighborhood = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(variance = <span class="fl">8</span>, var_level = <span class="fl">2</span>)),
-  sample_size = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(level1 = <span class="fl">10</span>, level2 = <span class="fl">20</span>)
-)
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">weight</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">sex</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">neighborhood</span><span class="op">)</span>,
+  reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.2</span>, <span class="fl">0.33</span><span class="op">)</span>,
+  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">180</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,
+               age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, levels <span class="op">=</span> <span class="fl">30</span><span class="op">:</span><span class="fl">60</span><span class="op">)</span>,
+               sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'male'</span>, <span class="st">'female'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+  randomeffect <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>int_neighborhood <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">8</span>, var_level <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>level1 <span class="op">=</span> <span class="fl">10</span>, level2 <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
+<span class="op">)</span>
 
-<span class="kw">nested_data</span> <span class="op">&lt;-</span> <span class="kw">sim_arguments</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span>(data = <span class="kw">NULL</span>, <span class="kw">.</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/simulate_randomeffect.html">simulate_randomeffect</a></span>(<span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span>(<span class="kw">sim_arguments</span>) <span class="op">%&gt;%</span>
-  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span>(<span class="kw">sim_arguments</span>)
+<span class="va">nested_data</span> <span class="op">&lt;-</span> <span class="va">sim_arguments</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">.</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/simulate_randomeffect.html">simulate_randomeffect</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="kw">nested_data</span>, n = <span class="fl">10</span>)
-</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nested_data</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept.   weight age sex sex_orig level1_id neighborhood
 ## 1             1 231.1471  39   0   female         1            1
 ## 2             1 158.6388  30   0   female         2            1
@@ -657,9 +624,8 @@
 ## 8         -2.018169  0.93313126      5.990178      -2.018169 4.905141
 ## 9         -2.018169 -1.39912533      9.224798      -2.018169 5.807503
 ## 10        -2.018169 -0.01603532      7.626723      -2.018169 5.592519</code></pre>
-<div class="sourceCode" id="cb33"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(<span class="kw">nested_data</span>)
-</pre></div>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">nested_data</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 200</code></pre>
 <p>The vignette simulation_arguments contains more example of specifying random effects and additional nesting designs including three levels of nested and cross-classified models.</p>
 </div>
@@ -676,11 +642,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://brandonlebeau.org">Brandon LeBeau</a>.</p>
+  <p></p>
+<p>Developed by <a href="https://brandonlebeau.org" class="external-link external-link">Brandon LeBeau</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link external-link">pkgdown</a> 1.6.1.9001.</p>
 </div>
 
       </footer>
@@ -688,6 +656,8 @@
 
   
 
+
+  
 
   </body>
 </html>

@@ -48,6 +48,8 @@ random missing data." />
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -69,9 +71,16 @@ random missing data." />
 </script>
 
 
+
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -92,12 +101,6 @@ random missing data." />
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -122,7 +125,7 @@ random missing data." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/lebebr01/simglm/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -151,45 +154,45 @@ incorporated include dropout missing data, missing at random, and
 random missing data.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>missing_data</span>(
-  <span class='kw'>sim_data</span>,
-  resp_var = <span class='st'>"sim_data"</span>,
-  new_outcome = <span class='st'>"sim_data2"</span>,
-  clust_var = <span class='kw'>NULL</span>,
-  within_id = <span class='kw'>NULL</span>,
-  miss_prop = <span class='kw'>NULL</span>,
-  dropout_location = <span class='kw'>NULL</span>,
-  type = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"dropout"</span>, <span class='st'>"random"</span>, <span class='st'>"mar"</span>),
-  <span class='kw'>miss_cov</span>,
-  <span class='kw'>mar_prop</span>
-)
+    <pre class="usage"><span class='fu'><a href='missing.html'>missing_data</a></span><span class='op'>(</span>
+  <span class='va'>sim_data</span>,
+  resp_var <span class='op'>=</span> <span class='st'>"sim_data"</span>,
+  new_outcome <span class='op'>=</span> <span class='st'>"sim_data2"</span>,
+  clust_var <span class='op'>=</span> <span class='cn'>NULL</span>,
+  within_id <span class='op'>=</span> <span class='cn'>NULL</span>,
+  miss_prop <span class='op'>=</span> <span class='cn'>NULL</span>,
+  dropout_location <span class='op'>=</span> <span class='cn'>NULL</span>,
+  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"dropout"</span>, <span class='st'>"random"</span>, <span class='st'>"mar"</span><span class='op'>)</span>,
+  <span class='va'>miss_cov</span>,
+  <span class='va'>mar_prop</span>
+<span class='op'>)</span>
 
-<span class='fu'>dropout_missing</span>(
-  <span class='kw'>sim_data</span>,
-  resp_var = <span class='st'>"sim_data"</span>,
-  new_outcome = <span class='st'>"sim_data2"</span>,
-  clust_var = <span class='st'>"clustID"</span>,
-  within_id = <span class='st'>"withinID"</span>,
-  miss_prop = <span class='kw'>NULL</span>,
-  dropout_location = <span class='kw'>NULL</span>
-)
+<span class='fu'><a href='missing.html'>dropout_missing</a></span><span class='op'>(</span>
+  <span class='va'>sim_data</span>,
+  resp_var <span class='op'>=</span> <span class='st'>"sim_data"</span>,
+  new_outcome <span class='op'>=</span> <span class='st'>"sim_data2"</span>,
+  clust_var <span class='op'>=</span> <span class='st'>"clustID"</span>,
+  within_id <span class='op'>=</span> <span class='st'>"withinID"</span>,
+  miss_prop <span class='op'>=</span> <span class='cn'>NULL</span>,
+  dropout_location <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span>
 
-<span class='fu'>random_missing</span>(
-  <span class='kw'>sim_data</span>,
-  resp_var = <span class='st'>"sim_data"</span>,
-  new_outcome = <span class='st'>"sim_data2"</span>,
-  <span class='kw'>miss_prop</span>,
-  clust_var = <span class='kw'>NULL</span>,
-  within_id = <span class='st'>"withinID"</span>
-)
+<span class='fu'><a href='missing.html'>random_missing</a></span><span class='op'>(</span>
+  <span class='va'>sim_data</span>,
+  resp_var <span class='op'>=</span> <span class='st'>"sim_data"</span>,
+  new_outcome <span class='op'>=</span> <span class='st'>"sim_data2"</span>,
+  <span class='va'>miss_prop</span>,
+  clust_var <span class='op'>=</span> <span class='cn'>NULL</span>,
+  within_id <span class='op'>=</span> <span class='st'>"withinID"</span>
+<span class='op'>)</span>
 
-<span class='fu'>mar_missing</span>(
-  <span class='kw'>sim_data</span>,
-  resp_var = <span class='st'>"sim_data"</span>,
-  new_outcome = <span class='st'>"sim_data2"</span>,
-  <span class='kw'>miss_cov</span>,
-  <span class='kw'>mar_prop</span>
-)</pre>
+<span class='fu'><a href='missing.html'>mar_missing</a></span><span class='op'>(</span>
+  <span class='va'>sim_data</span>,
+  resp_var <span class='op'>=</span> <span class='st'>"sim_data"</span>,
+  new_outcome <span class='op'>=</span> <span class='st'>"sim_data2"</span>,
+  <span class='va'>miss_cov</span>,
+  <span class='va'>mar_prop</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -253,11 +256,11 @@ specified in the miss_cov argument.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='https://brandonlebeau.org'>Brandon LeBeau</a>.</p>
+  <p><p>Developed by <a href="https://brandonlebeau.org" class="external-link">Brandon LeBeau</a>.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -265,6 +268,8 @@ specified in the miss_cov argument.</p></td>
 
   
 
+
+  
 
   </body>
 </html>

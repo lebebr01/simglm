@@ -45,6 +45,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -66,9 +68,16 @@
 </script>
 
 
+
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -89,12 +98,6 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -119,7 +122,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/lebebr01/simglm/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -145,20 +148,20 @@
     <p>Input error simulation parameters and outputs simulated errors.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>sim_err_single</span>(
-  <span class='kw'>error_var</span>,
-  <span class='kw'>n</span>,
-  <span class='kw'>with_err_gen</span>,
-  arima = <span class='fl'>FALSE</span>,
-  lvl1_err_params = <span class='kw'>NULL</span>,
-  arima_mod = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
-  ther = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>1</span>),
-  ther_sim = <span class='fl'>FALSE</span>,
-  homogeneity = <span class='fl'>TRUE</span>,
-  fixef = <span class='kw'>NULL</span>,
-  heterogeneity_var = <span class='kw'>NULL</span>,
-  <span class='kw'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>sim_err_single</span><span class='op'>(</span>
+  <span class='va'>error_var</span>,
+  <span class='va'>n</span>,
+  <span class='va'>with_err_gen</span>,
+  arima <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  lvl1_err_params <span class='op'>=</span> <span class='cn'>NULL</span>,
+  arima_mod <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='cn'>NULL</span><span class='op'>)</span>,
+  ther <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>,
+  ther_sim <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  homogeneity <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  fixef <span class='op'>=</span> <span class='cn'>NULL</span>,
+  heterogeneity_var <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -244,11 +247,11 @@ heterogeneity of variance simulation.</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='https://brandonlebeau.org'>Brandon LeBeau</a>.</p>
+  <p><p>Developed by <a href="https://brandonlebeau.org" class="external-link">Brandon LeBeau</a>.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -256,6 +259,8 @@ heterogeneity of variance simulation.</p></td>
 
   
 
+
+  
 
   </body>
 </html>

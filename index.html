@@ -29,6 +29,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -47,12 +49,6 @@
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -78,7 +74,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/lebebr01/simglm/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -102,27 +98,23 @@
 <h2 class="hasAnchor">
 <a href="#package-installation" class="anchor"></a>Package Installation</h2>
 <p>This package can be directly installed through CRAN:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"simglm"</span>)
-</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"simglm"</span><span class="op">)</span></code></pre></div>
 <p>The development version of the package can be installed by using the devtools package.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">devtools</span>)
-<span class="fu">install_github</span>(<span class="st">"lebebr01/simglm"</span>)
-</pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">devtools</span><span class="op">)</span>
+<span class="fu">install_github</span><span class="op">(</span><span class="st">"lebebr01/simglm"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="introduction-to-the-simglm-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction-to-the-simglm-package" class="anchor"></a>Introduction to the simglm package</h2>
 <p>The best way to become oriented with the <code>simglm</code> package is through the package vignette. There are two ways to get to the vignettes (both will open a browser to view the vignette). Below is an example loading the “Intro” vignette directly:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes</a></span>()
-<span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span>(<span class="st">"Intro"</span>, package = <span class="st">"simglm"</span>)
-</pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html" class="external-link">browseVignettes</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"Intro"</span>, package <span class="op">=</span> <span class="st">"simglm"</span><span class="op">)</span></code></pre></div>
 <p>Note: If you install the development version of the package, you may need to tell R to build the vignettes when installing the <code>simglm</code> package by doing the following:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu">install_github</span>(<span class="st">"lebebr01/simglm"</span>, build_vignettes = <span class="fl">TRUE</span>)
-</pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">install_github</span><span class="op">(</span><span class="st">"lebebr01/simglm"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="features" class="section level2">
 <h2 class="hasAnchor">
@@ -160,7 +152,7 @@ Currently supports the following features:</p>
 <div id="bugsfeature-requests" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bugsfeature-requests" class="anchor"></a>Bugs/Feature Requests</h2>
-<p>Bugs and feature requests are welcomed. Please track these on GitHub here: <a href="https://github.com/lebebr01/simglm/issues" class="uri">https://github.com/lebebr01/simglm/issues</a>. I’m also open to pull requests.</p>
+<p>Bugs and feature requests are welcomed. Please track these on GitHub here: <a href="https://github.com/lebebr01/simglm/issues" class="external-link uri">https://github.com/lebebr01/simglm/issues</a>. I’m also open to pull requests.</p>
 <p>Enjoy!</p>
 </div>
 </div>
@@ -168,7 +160,7 @@ Currently supports the following features:</p>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=simglm">https://​cloud.r-project.org/​package=simglm</a>
 </li>
@@ -178,41 +170,47 @@ Currently supports the following features:</p>
 </li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>
 <a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
 </li>
 </ul>
 </div>
+
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>
 <a href="https://brandonlebeau.org">Brandon LeBeau</a> <br><small class="roles"> Author, maintainer </small>  </li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/lebebr01/simglm/actions?workflow=R-CMD-check"><img src="https://github.com/lebebr01/simglm/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://ci.appveyor.com/project/lebebr01/simglm"><img src="https://ci.appveyor.com/api/projects/status/github/lebebr01/simglm?branch=master&amp;svg=true" alt="AppVeyor build status"></a></li>
-<li><a href="https://codecov.io/github/lebebr01/simglm?branch=master"><img src="https://codecov.io/github/lebebr01/simglm/coverage.svg?branch=master" alt="codecov.io"></a></li>
-<li><a href="https://cran.r-project.org/package=simglm"><img src="https://www.r-pkg.org/badges/version/simglm" alt="CRAN_Status_Badge"></a></li>
+<li><a href="https://github.com/lebebr01/simglm/actions?workflow=R-CMD-check" class="external-link"><img src="https://github.com/lebebr01/simglm/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://ci.appveyor.com/project/lebebr01/simglm" class="external-link"><img src="https://ci.appveyor.com/api/projects/status/github/lebebr01/simglm?branch=master&amp;svg=true" alt="AppVeyor build status"></a></li>
+<li><a href="https://codecov.io/github/lebebr01/simglm?branch=master" class="external-link"><img src="https://codecov.io/github/lebebr01/simglm/coverage.svg?branch=master" alt="codecov.io"></a></li>
+<li><a href="https://cran.r-project.org/package=simglm" class="external-link"><img src="https://www.r-pkg.org/badges/version/simglm" alt="CRAN_Status_Badge"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://brandonlebeau.org">Brandon LeBeau</a>.</p>
+  <p></p>
+<p>Developed by <a href="https://brandonlebeau.org" class="external-link">Brandon LeBeau</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p>
 </div>
 
       </footer>
@@ -220,6 +218,8 @@ Currently supports the following features:</p>
 
   
 
+
+  
 
   </body>
 </html>

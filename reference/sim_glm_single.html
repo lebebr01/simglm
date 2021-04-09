@@ -45,6 +45,8 @@
 
 
 
+
+
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -66,9 +68,18 @@
 </script>
 
 
+<!-- dependencies from examples -->
+
+
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -89,12 +100,6 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -119,7 +124,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/lebebr01/simglm/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -145,19 +150,19 @@
     <p>Takes simulation parameters as inputs and returns simulated data.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>sim_glm_single</span>(
-  <span class='kw'>fixed</span>,
-  <span class='kw'>fixed_param</span>,
-  <span class='kw'>cov_param</span>,
-  <span class='kw'>n</span>,
-  <span class='kw'>data_str</span>,
-  cor_vars = <span class='kw'>NULL</span>,
-  fact_vars = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
-  contrasts = <span class='kw'>NULL</span>,
-  <span class='kw'>outcome_type</span>,
-  knot_args = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>NULL</span>),
-  <span class='kw'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>sim_glm_single</span><span class='op'>(</span>
+  <span class='va'>fixed</span>,
+  <span class='va'>fixed_param</span>,
+  <span class='va'>cov_param</span>,
+  <span class='va'>n</span>,
+  <span class='va'>data_str</span>,
+  cor_vars <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fact_vars <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='cn'>NULL</span><span class='op'>)</span>,
+  contrasts <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>outcome_type</span>,
+  knot_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='cn'>NULL</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -243,20 +248,22 @@ to help when running simulation studies.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># generating parameters for single level regression</span>
-<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span>(<span class='fl'>2</span>)
-<span class='kw'>fixed</span> <span class='op'>&lt;-</span> <span class='op'>~</span><span class='fl'>1</span> <span class='op'>+</span> <span class='kw'>act</span> <span class='op'>+</span> <span class='kw'>diff</span> <span class='op'>+</span> <span class='kw'>numCourse</span> <span class='op'>+</span> <span class='kw'>act</span><span class='op'>:</span><span class='kw'>numCourse</span>
-<span class='kw'>fixed_param</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.1</span>, <span class='op'>-</span><span class='fl'>0.2</span>, <span class='fl'>0.15</span>, <span class='fl'>0.5</span>, <span class='op'>-</span><span class='fl'>0.02</span>)
-<span class='kw'>cov_param</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(dist_fun = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'rnorm'</span>, <span class='st'>'rnorm'</span>, <span class='st'>'rnorm'</span>),
-   var_type = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"single"</span>, <span class='st'>"single"</span>, <span class='st'>"single"</span>),
-   opts = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(mean = <span class='fl'>0</span>, sd = <span class='fl'>4</span>),
-   <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(mean = <span class='fl'>0</span>, sd = <span class='fl'>3</span>),
-   <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(mean = <span class='fl'>0</span>, sd = <span class='fl'>3</span>)))
-<span class='kw'>n</span> <span class='op'>&lt;-</span> <span class='fl'>150</span>
-<span class='kw'>temp_single</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sim_glm.html'>sim_glm</a></span>(fixed = <span class='kw'>fixed</span>, fixed_param = <span class='kw'>fixed_param</span>, 
-  cov_param = <span class='kw'>cov_param</span>, n = <span class='kw'>n</span>, data_str = <span class='st'>"single"</span>, 
-  outcome_type = <span class='st'>'logistic'</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: 'sim_glm' is no longer supported and will be removed with v 1.0</span>
+<span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span>
+<span class='va'>fixed</span> <span class='op'>&lt;-</span> <span class='op'>~</span><span class='fl'>1</span> <span class='op'>+</span> <span class='va'>act</span> <span class='op'>+</span> <span class='va'>diff</span> <span class='op'>+</span> <span class='va'>numCourse</span> <span class='op'>+</span> <span class='va'>act</span><span class='op'>:</span><span class='va'>numCourse</span>
+<span class='va'>fixed_param</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.1</span>, <span class='op'>-</span><span class='fl'>0.2</span>, <span class='fl'>0.15</span>, <span class='fl'>0.5</span>, <span class='op'>-</span><span class='fl'>0.02</span><span class='op'>)</span>
+<span class='va'>cov_param</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>dist_fun <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'rnorm'</span>, <span class='st'>'rnorm'</span>, <span class='st'>'rnorm'</span><span class='op'>)</span>,
+   var_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"single"</span>, <span class='st'>"single"</span>, <span class='st'>"single"</span><span class='op'>)</span>,
+   opts <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>mean <span class='op'>=</span> <span class='fl'>0</span>, sd <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span>,
+   <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>mean <span class='op'>=</span> <span class='fl'>0</span>, sd <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>,
+   <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>mean <span class='op'>=</span> <span class='fl'>0</span>, sd <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>n</span> <span class='op'>&lt;-</span> <span class='fl'>150</span>
+<span class='va'>temp_single</span> <span class='op'>&lt;-</span> <span class='fu'><a href='sim_glm.html'>sim_glm</a></span><span class='op'>(</span>fixed <span class='op'>=</span> <span class='va'>fixed</span>, fixed_param <span class='op'>=</span> <span class='va'>fixed_param</span>, 
+  cov_param <span class='op'>=</span> <span class='va'>cov_param</span>, n <span class='op'>=</span> <span class='va'>n</span>, data_str <span class='op'>=</span> <span class='st'>"single"</span>, 
+  outcome_type <span class='op'>=</span> <span class='st'>'logistic'</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: 'sim_glm' is no longer supported and will be removed with v 1.0</span>
 #&gt; <span class='warning'></span>
-#&gt; <span class='warning'>              See tidy_simulation vignette.</span></div><div class='input'>  </div></pre>
+#&gt; <span class='warning'>              See tidy_simulation vignette.</span></div><div class='input'>  
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -268,11 +275,11 @@ to help when running simulation studies.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by <a href='https://brandonlebeau.org'>Brandon LeBeau</a>.</p>
+  <p><p>Developed by <a href="https://brandonlebeau.org" class="external-link">Brandon LeBeau</a>.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p></p>
 </div>
 
       </footer>
@@ -280,6 +287,8 @@ to help when running simulation studies.</p>
 
   
 
+
+  
 
   </body>
 </html>

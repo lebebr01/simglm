@@ -148,7 +148,7 @@
     <p>Input simulation parameters and returns random effects.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>sim_rand_eff</span><span class='op'>(</span>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>sim_rand_eff</span><span class='op'>(</span>
   <span class='va'>random_var</span>,
   <span class='va'>n</span>,
   <span class='va'>rand_gen</span>,
@@ -156,7 +156,7 @@
   ther_sim <span class='op'>=</span> <span class='cn'>FALSE</span>,
   cor_vars <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>...</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -200,10 +200,10 @@ called from rand_gen.</p></td>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Simulates random effects for the master function <code><a href='sim_reg.html'>sim_reg</a></code> when
+    <p>Simulates random effects when
 simulating a linear mixed model, both cross sectional and longitudinal. 
-Allows the ability to simulate random effects from a Laplace, 
-chi-square (1), mixture normal, or normal distribution.</p>
+Allows the ability to simulate random effects from any 
+specified distribution.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

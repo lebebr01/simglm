@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Tidy Simulation with <code>simglm</code>
 </h1>
             
-            <h4 data-toc-skip class="date">2021-04-15</h4>
+            <h4 data-toc-skip class="date">2021-05-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/master/vignettes/tidy_simulation.Rmd" class="external-link"><code>vignettes/tidy_simulation.Rmd</code></a></small>
       <div class="hidden name"><code>tidy_simulation.Rmd</code></div>
@@ -101,13 +101,13 @@
     
 <div id="tidy-simulation-with-simglm" class="section level1">
 <h1 class="hasAnchor">
-<a href="#tidy-simulation-with-simglm" class="anchor"></a>Tidy Simulation with <code>simglm</code>
+<a href="#tidy-simulation-with-simglm" class="anchor" aria-hidden="true"></a>Tidy Simulation with <code>simglm</code>
 </h1>
 <p>Introducing a new framework for simulation and power analysis with the <code>simglm</code> package, tidy simulation. The package now has helper functions in which the first argument is always the data and the second argument is always the simulation arguments. A second vignette is written that contains a more exhuastive list of simluation arguments that are allowed. This vignette will give the basics needed to specify simulation arguments to generate simulated data.</p>
 </div>
 <div id="functions-for-basic-simulation" class="section level1">
 <h1 class="hasAnchor">
-<a href="#functions-for-basic-simulation" class="anchor"></a>Functions for Basic Simulation</h1>
+<a href="#functions-for-basic-simulation" class="anchor" aria-hidden="true"></a>Functions for Basic Simulation</h1>
 <p>There are four primary functions to be used for basic simulation functionality. These include:</p>
 <ul>
 <li>
@@ -122,11 +122,11 @@
 <p>We will dive into what each of these component represent in a second, but first let’s start with an example that simulates a linear regression model.</p>
 <div id="first-linear-regression-example" class="section level2">
 <h2 class="hasAnchor">
-<a href="#first-linear-regression-example" class="anchor"></a>First Linear Regression Example</h2>
+<a href="#first-linear-regression-example" class="anchor" aria-hidden="true"></a>First Linear Regression Example</h2>
 <p>Let us assume for this first example that our outcome of interest is continuous and that the data is not clustered. In this example, our model would look like: <span class="math inline">\(Y_{j} = X_{j} \beta + e_{j}\)</span>. In this equation, <span class="math inline">\(Y_{j}\)</span> represents the continuous outcome, <span class="math inline">\(X_{j} \beta\)</span> represents the fixed portion of the model comprised of regression coefficients (<span class="math inline">\(\beta\)</span>) and a design matrix (<span class="math inline">\(X_{j}\)</span>), and <span class="math inline">\(e_{j}\)</span> represents random error.</p>
 <div id="fixed-portion-of-model" class="section level3">
 <h3 class="hasAnchor">
-<a href="#fixed-portion-of-model" class="anchor"></a>Fixed Portion of Model</h3>
+<a href="#fixed-portion-of-model" class="anchor" aria-hidden="true"></a>Fixed Portion of Model</h3>
 <p>The fixed portion of the model represents variables that are treated as fixed. This means that the values observed in the data are the only values we are interested in, will generalize to, or that we consider values of interest in our population. Let us consider the following formula: <code>y ~ 1 + x1 + x2</code>. In this formula there are a total of two varaibles that are assumed to be fixed, <code>x1</code> and <code>x2</code>. These variables together with an intercept would make up the design matrix <span class="math inline">\(X_{j}\)</span>. Let’s generate some example data using the <code>simglm</code> package and the <code>simulate_fixed</code> function.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lebebr01/simglm" class="external-link">simglm</a></span><span class="op">)</span>
@@ -236,7 +236,7 @@
 </div>
 <div id="simulate-random-error" class="section level2">
 <h2 class="hasAnchor">
-<a href="#simulate-random-error" class="anchor"></a>Simulate Random Error</h2>
+<a href="#simulate-random-error" class="anchor" aria-hidden="true"></a>Simulate Random Error</h2>
 <p>The simulation of random error (<span class="math inline">\(e_{j}\)</span> from the equation above) is a bit simpler than generating the fixed effects. Suppose for example, we want to simply simulate random errors that are normally distributed with a mean of 0 and a variance of 1. This can be done with the <code>simulate_error</code> function.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span>
@@ -302,7 +302,7 @@
 </div>
 <div id="generate-response-variable" class="section level2">
 <h2 class="hasAnchor">
-<a href="#generate-response-variable" class="anchor"></a>Generate Response Variable</h2>
+<a href="#generate-response-variable" class="anchor" aria-hidden="true"></a>Generate Response Variable</h2>
 <p>Now that we have seen the basics of simulating fixed variables (covariates) and random error, we can now generate the response by combining the previous two steps and then using the <code>generate_response</code> function. What makes this a tidy simulation is that the pipe from magrittr, <code>%&gt;%</code> can be used to combine steps into a simulation pipeline.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
@@ -345,7 +345,7 @@
 <p>The only additional argument that is needed for the <code>generate_response</code> function is the <code>reg_weights</code> argument. This argument represents the regression coeficients associated with <span class="math inline">\(\beta\)</span> in the equation <span class="math inline">\(Y_{j} = X_{j} \beta + e_{j}\)</span>. The regression coefficients are multiplied by the design matrix to generate the column labeled “fixed_outcome” in the output. The output also contains the column, “random_effects” which are all 0 here indicating there are no random effects and the response variable, “y”.</p>
 <div id="non-normal-outcomes" class="section level3">
 <h3 class="hasAnchor">
-<a href="#non-normal-outcomes" class="anchor"></a>Non-normal Outcomes</h3>
+<a href="#non-normal-outcomes" class="anchor" aria-hidden="true"></a>Non-normal Outcomes</h3>
 <p>Non-normal outcomes are possible with simglm. Two non-normal outcomes are currently supported with more support coming in the future. Binary and count outcomes are supported and can be specified with the <code>outcome_type</code> simulation argument. If <code>outcome_type = 'logistic'</code> or <code>outcome_type = 'binary'</code> then a binary outcome is generated (ie. 0/1 variable) using the <code>rbinom</code> function. If <code>outcome_type = 'count'</code> or <code>outcome_type = 'poisson'</code> then the outcome is transformed to be a count variable (ie. discrete variable; 0, 1, 2, etc.).</p>
 <p>Here is an example of generating a binary outcome.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -431,7 +431,7 @@
 </div>
 <div id="functions-for-power-analysis" class="section level1">
 <h1 class="hasAnchor">
-<a href="#functions-for-power-analysis" class="anchor"></a>Functions for Power Analysis</h1>
+<a href="#functions-for-power-analysis" class="anchor" aria-hidden="true"></a>Functions for Power Analysis</h1>
 <p>Now that the basics of tidy simulation have been shown in the context of a linear regression model, let’s explore an example in which the power for this model is to be evaluated. In particular, suppose we are interested in estimating empirical power for the three fixed effects based on the following formula: <code>y ~ 1 + weight + age + sex</code>. More specifically, we are interested in estimating power for “weight”, “age”, and “sex” variables. A few additional functions are needed for this step including:</p>
 <ul>
 <li>
@@ -496,7 +496,7 @@
 <p>Notice that we now get very different parameter estimates for this single data generation process which reflects the contribution of the variable “weight” that is not taken into account in the model fitting.</p>
 <div id="replicate-analysis" class="section level2">
 <h2 class="hasAnchor">
-<a href="#replicate-analysis" class="anchor"></a>Replicate Analysis</h2>
+<a href="#replicate-analysis" class="anchor" aria-hidden="true"></a>Replicate Analysis</h2>
 <p>When evaluating empirical power, it is essential to replicate the analysis just like a Monte Carlo study to avoid extreme simulation conditions. The simglm package offers functions to aid in the replication given the simulation conditions and the desired simulation framework. To do this, two additional functions are used:</p>
 <ul>
 <li>
@@ -536,7 +536,7 @@
 <p>As can be seen from the output, the default behavior is to return statistics for power, average test statistic, type I error rate, adjusted average test statistic, standard deviation of parameter estimate, average standard error, precision ration (standard deviation of parameter estimate divided by average standard error), and the number of replications for each term.</p>
 <p>To generate this output, only the number of replications is needed. Here only 10 replications were done, in practice many more replications would be done to ensure there are accurate results.</p>
 <p>The default power parameter values used are: Normal distribution, two-tailed alternative hypotheses, and alpha of 0.05. Additional power parameters can be passed directly to override default values by including a power argument within the simulation arguments. For example, if a t-distribution with one degree of freedom an alpha of 0.02 is desired, these can be added as follows:</p>
-<p>Note: A user would likely want to change <code><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan(sequential)</a></code> to something like <code><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan(mutisession)</a></code> or <code><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan(multicore)</a></code> to run these in parallel. <code><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan(sequential)</a></code> is used here for vignette processing.</p>
+<p>Note: A user would likely want to change <code>plan(sequential)</code> to something like <code>plan(mutisession)</code> or <code>plan(multicore)</code> to run these in parallel. <code>plan(sequential)</code> is used here for vignette processing.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
@@ -578,7 +578,7 @@
 </div>
 <div id="nested-designs" class="section level1">
 <h1 class="hasAnchor">
-<a href="#nested-designs" class="anchor"></a>Nested Designs</h1>
+<a href="#nested-designs" class="anchor" aria-hidden="true"></a>Nested Designs</h1>
 <p>Nested designs are ones in which data belong to multiple levels. An example could be individuals nested within neighborhoods. In this example, a specific individual is tied directly to one neighborhood. These types of data often include correlations between individuals within a neighborhood that need to be taken into account when modeling the data. These types of data can be generated with simglm.</p>
 <p>To do this, the formula syntax introduced above is modified slightly to include information on the nesting structure. In the example below, the nesting structure in the formula is specified in the portion within the parentheses. How the part within parentheses could be read is, add a random intercept effect for each neighborhood. This random intercept effect is similar to random error found in regression models, except the error is associated with neighborhoods and is the same values for all individuals within that neighborhood. The simulation arguments, <code>randomeffect</code> provides information about this term, where the variance can be specified.</p>
 <p>Finally, the <code>sample_size</code> argument needs to be modified to include information about the two levels of nested. You could read the <code>sample_size = list(level1 = 10, level2 = 20)</code> argument below as: create 20 neighborhoods (ie. <code>level2 = 20</code>) and within each neighborhood have 10 individuals (ie. <code>level1 = 10</code>). Therefore the total sample size (ie. rows in the data) would be 200.</p>

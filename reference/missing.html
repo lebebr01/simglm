@@ -154,7 +154,7 @@ incorporated include dropout missing data, missing at random, and
 random missing data.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='missing.html'>missing_data</a></span><span class='op'>(</span>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>missing_data</span><span class='op'>(</span>
   <span class='va'>sim_data</span>,
   resp_var <span class='op'>=</span> <span class='st'>"sim_data"</span>,
   new_outcome <span class='op'>=</span> <span class='st'>"sim_data2"</span>,
@@ -167,7 +167,7 @@ random missing data.</p>
   <span class='va'>mar_prop</span>
 <span class='op'>)</span>
 
-<span class='fu'><a href='missing.html'>dropout_missing</a></span><span class='op'>(</span>
+<span class='fu'>dropout_missing</span><span class='op'>(</span>
   <span class='va'>sim_data</span>,
   resp_var <span class='op'>=</span> <span class='st'>"sim_data"</span>,
   new_outcome <span class='op'>=</span> <span class='st'>"sim_data2"</span>,
@@ -177,7 +177,7 @@ random missing data.</p>
   dropout_location <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span>
 
-<span class='fu'><a href='missing.html'>random_missing</a></span><span class='op'>(</span>
+<span class='fu'>random_missing</span><span class='op'>(</span>
   <span class='va'>sim_data</span>,
   resp_var <span class='op'>=</span> <span class='st'>"sim_data"</span>,
   new_outcome <span class='op'>=</span> <span class='st'>"sim_data2"</span>,
@@ -186,13 +186,13 @@ random missing data.</p>
   within_id <span class='op'>=</span> <span class='st'>"withinID"</span>
 <span class='op'>)</span>
 
-<span class='fu'><a href='missing.html'>mar_missing</a></span><span class='op'>(</span>
+<span class='fu'>mar_missing</span><span class='op'>(</span>
   <span class='va'>sim_data</span>,
   resp_var <span class='op'>=</span> <span class='st'>"sim_data"</span>,
   new_outcome <span class='op'>=</span> <span class='st'>"sim_data2"</span>,
   <span class='va'>miss_cov</span>,
   <span class='va'>mar_prop</span>
-<span class='op'>)</span></pre>
+<span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -231,7 +231,7 @@ representing the number of data observations for each individual.</p></td>
     <tr>
       <th>type</th>
       <td><p>The type of missing data to generate, currently supports
-droput, random, or missing at random (mar) missing data.</p></td>
+dropout, random, or missing at random (mar) missing data.</p></td>
     </tr>
     <tr>
       <th>miss_cov</th>

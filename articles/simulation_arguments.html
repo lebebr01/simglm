@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Simulation Argument Details for <code>simglm</code>
 </h1>
             
-            <h4 data-toc-skip class="date">2021-04-15</h4>
+            <h4 data-toc-skip class="date">2021-05-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/master/vignettes/simulation_arguments.Rmd" class="external-link"><code>vignettes/simulation_arguments.Rmd</code></a></small>
       <div class="hidden name"><code>simulation_arguments.Rmd</code></div>
@@ -102,7 +102,7 @@
 <p>The tidy simulation framework uses simulation arguments as the basis for specifying the models to be simulated. The goal of this vignette is to document more thoroughly the various arguments that are possible within each function. It is recommended that new users start with the “Tidy Simulation with <code>simglm</code>” vignette prior to working through this vignette.</p>
 <div id="fixed-arguments" class="section level1">
 <h1 class="hasAnchor">
-<a href="#fixed-arguments" class="anchor"></a>Fixed Arguments</h1>
+<a href="#fixed-arguments" class="anchor" aria-hidden="true"></a>Fixed Arguments</h1>
 <p>Arguments associated with the fixed portion of the model are needed for each fixed variable that needs to be simulated. The fixed variables specified come from the formula argument. Interactions or the intercept are not included in the fixed arguments as these are generated automatically. Let’s start with an example.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lebebr01/simglm" class="external-link">simglm</a></span><span class="op">)</span>
@@ -157,7 +157,7 @@
 <p>Finally, another common argument for all fixed variable types is the argument <code>var_level</code>. This defaults to <code>var_level = 1</code> which would be a variable defined at the level 1 of the model (i.e. unique value for each row in the data). These can be changed to reflect the data level that is desired. For example, <code>var_level = 2</code> would repeat values for each level 2 cluster found in the data and <code>var_level = 3</code> would do the same for each level 3 cluster. Therefore for variables that are at level 2 or level 3, there will be fewer unique values in the data compared to level 1 variables.</p>
 <div id="time-variable" class="section level2">
 <h2 class="hasAnchor">
-<a href="#time-variable" class="anchor"></a>Time Variable</h2>
+<a href="#time-variable" class="anchor" aria-hidden="true"></a>Time Variable</h2>
 <p>For time variables used in longitudinal or repeated measures designs, the default metric is 0 to level1 sample size minus 1. This can be seen above in the output. To change the time variable metric the <code>time_levels</code> argument can be used. A vector of values to specify for the time variable can be given directly. For example, the following could be passed to alter the metric of the time variable: <code>time_levels = c(0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6)</code> where now the time variable would increment in 0.5 units for the first 7 measurements and 1 unit increments for the last three measurements. This could represent a case when the measurements are collected every 6 months for the first 7 measurements and yearly after that.</p>
 <p>Below is the output including the manual time variable specification. The only requirement is that the length of the <code>time_levels</code> argument must match the level1 sample size.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -203,7 +203,7 @@
 </div>
 <div id="continuous-variable" class="section level2">
 <h2 class="hasAnchor">
-<a href="#continuous-variable" class="anchor"></a>Continuous Variable</h2>
+<a href="#continuous-variable" class="anchor" aria-hidden="true"></a>Continuous Variable</h2>
 <p>Continuous variables are generating using distribution functions (i.e. <code>rnorm</code>). Any distribution function found within R, or user written distribution functions can be used, however the default used in <code>rnorm</code>. To change the distribution function used, the argument <code>dist</code> can be specified. For example, if the Gamma distribution is desired for the weight variable, the following code would achieve this:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
@@ -255,27 +255,27 @@
 </div>
 <div id="ordinal-variable" class="section level2">
 <h2 class="hasAnchor">
-<a href="#ordinal-variable" class="anchor"></a>Ordinal Variable</h2>
-<p>Ordinal variable specification uses the <code>sample</code> function within R to generate ordinal variables that are whole integers. The required argument for these types of variables is <code>levels</code>. The <code>levels</code> argument takes a range or vector of integer values to be passed to the <code>sample</code> function within R. For example, these three specifications for the <code>levels</code> argument are valid: <code>3:60</code>, <code><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq(4, 60, 2)</a></code>, <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c(3, 10, 18, 24, 54, 60)</a></code>.</p>
+<a href="#ordinal-variable" class="anchor" aria-hidden="true"></a>Ordinal Variable</h2>
+<p>Ordinal variable specification uses the <code>sample</code> function within R to generate ordinal variables that are whole integers. The required argument for these types of variables is <code>levels</code>. The <code>levels</code> argument takes a range or vector of integer values to be passed to the <code>sample</code> function within R. For example, these three specifications for the <code>levels</code> argument are valid: <code>3:60</code>, <code>seq(4, 60, 2)</code>, <code>c(3, 10, 18, 24, 54, 60)</code>.</p>
 <p>An additional optional argument is <code>replace</code>. The <code>replace</code> argument specified whether the sampling is done with or without replacement. The default behavior is to do sampling with replacement. If sampling without replacement is desired set <code>replace = FALSE</code>. See <code>sample</code> for more details on this argument.</p>
 <p>Finally, the probability of selecting each value specified to the <code>levels</code> argument is also able to be specified through the <code>prob</code> argument. If <code>prob</code> is specified, it takes a vector of probabilities that must be the same length as the levels argument. The default behavior is for each value specified with <code>levels</code> to be equally likely to be sampled.</p>
 </div>
 <div id="factor-variable" class="section level2">
 <h2 class="hasAnchor">
-<a href="#factor-variable" class="anchor"></a>Factor Variable</h2>
-<p>Factor variables are generated similarly to ordinal variables with the <code>sample</code> function, however factor variables allow the generation of text or categorical variables in addition to numeric grouping variables. Therefore the only needed argument for factor variables is a vector of numeric or text strings representing the different groups to be generated. For example, both of these specifications are equivalent: <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c(1, 2, 3, 4)</a></code> and <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c('Freshman', 'Sophomore', 'Junior', 'Senior')</a></code>. Both of these specifications would generate data for these four groups, the difference is that the text labels will be used when text strings are specified.</p>
+<a href="#factor-variable" class="anchor" aria-hidden="true"></a>Factor Variable</h2>
+<p>Factor variables are generated similarly to ordinal variables with the <code>sample</code> function, however factor variables allow the generation of text or categorical variables in addition to numeric grouping variables. Therefore the only needed argument for factor variables is a vector of numeric or text strings representing the different groups to be generated. For example, both of these specifications are equivalent: <code>c(1, 2, 3, 4)</code> and <code>c('Freshman', 'Sophomore', 'Junior', 'Senior')</code>. Both of these specifications would generate data for these four groups, the difference is that the text labels will be used when text strings are specified.</p>
 <p>An additional optional argument is <code>replace</code>. The <code>replace</code> argument specified whether the sampling is done with or without replacement. The default behavior is to do sampling with replacement. If sampling without replacement is desired set <code>replace = FALSE</code>. See <code>sample</code> for more details on this argument.</p>
 <p>Finally, the probability of selecting each value specified to the <code>levels</code> argument is also able to be specified through the <code>prob</code> argument. If <code>prob</code> is specified, it takes a vector of probabilities that must be the same length as the levels argument. The default behavior is for each value specified with <code>levels</code> to be equally likely to be sampled.</p>
 </div>
 <div id="knot-variable" class="section level2">
 <h2 class="hasAnchor">
-<a href="#knot-variable" class="anchor"></a>Knot Variable</h2>
+<a href="#knot-variable" class="anchor" aria-hidden="true"></a>Knot Variable</h2>
 <p>To come…</p>
 </div>
 </div>
 <div id="random-error-arguments" class="section level1">
 <h1 class="hasAnchor">
-<a href="#random-error-arguments" class="anchor"></a>Random Error Arguments</h1>
+<a href="#random-error-arguments" class="anchor" aria-hidden="true"></a>Random Error Arguments</h1>
 <p>By default, the random error is generated as random normal with a mean of 0 and standard deviation of 1. If this is the desired behavior, no additional simulation arguments need to be specified in the simulation arguments. For example, the code below generates random error using the fixed arguments already shown above.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
@@ -316,7 +316,7 @@
 ## 20  0.4463561        10  2</code></pre>
 <div id="optional-arguments-for-random-error" class="section level2">
 <h2 class="hasAnchor">
-<a href="#optional-arguments-for-random-error" class="anchor"></a>Optional Arguments for Random Error</h2>
+<a href="#optional-arguments-for-random-error" class="anchor" aria-hidden="true"></a>Optional Arguments for Random Error</h2>
 <p>The two main optional arguments for the random error component include a <code>dist</code> and <code>variance</code> that represent the error generating function and variance of the random error respectively. For example, if a t-distribution is desired for simulation of random error, <code>dist = 'rt'</code> can be used to specify the t-distribution as the generating distribution. When distributions other than random normal are specified, it is common that additional arguments will need to be specified for the generating distribution function (i.e. <code>rt</code>). In the <code>rt</code> example, the <code>df</code> argument is needed to specify the degrees of freedom for the t-distribution. Below is an example using a t-distribution.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
@@ -416,7 +416,7 @@
 </div>
 <div id="heterogeneity-of-variance" class="section level2">
 <h2 class="hasAnchor">
-<a href="#heterogeneity-of-variance" class="anchor"></a>Heterogeneity of Variance</h2>
+<a href="#heterogeneity-of-variance" class="anchor" aria-hidden="true"></a>Heterogeneity of Variance</h2>
 <p>It is also possible to generate heterogeneity of variance for the random error.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">simulation_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -447,7 +447,7 @@
 </div>
 <div id="random-effect-arguments" class="section level1">
 <h1 class="hasAnchor">
-<a href="#random-effect-arguments" class="anchor"></a>Random Effect Arguments</h1>
+<a href="#random-effect-arguments" class="anchor" aria-hidden="true"></a>Random Effect Arguments</h1>
 <p>The random effect arguments are passed through a named element of the list to the simulation arguments called ‘randomeffect’. Within this element, each random effect specified in the formula must be specified as a named list. The named list allows the user to specify the names that will be used in the data simulation for the random effects. The default behavior of these random effects is to be simulated from a random normal distribution with mean 0 and variance of 1.</p>
 <p>Many of the same arguments that have been discussed with the error simulation are possible for the random effect simulation arguments. These include: <code>dist</code>, <code>variance</code>, <code>ther_sim</code>, <code>ther_val</code> and other arguments that are needed to pass on the data generating function. In addition, the argument <code>var_level</code> first introduced with the fixed effects are present here indicating which level of the data structure the random effect should be generated at. These arguments will not be discussed in more detail here, but readers can see examples of these arguments within the fixed effects and random error sections above.</p>
 <p>Below is an example that simulated two random effects in a two-level nested model and specifies the variance of 8 and 3 for the two random effects respectively. Finally, you will notice in the final output, the names of the random effect columns are specified by the names included in the list associated with the “randomeffect” portion of the simulation arguments.</p>
@@ -492,7 +492,7 @@
 ## 20 -2.013949 -0.185436        10  2</code></pre>
 <div id="cross-classified-random-effects" class="section level2">
 <h2 class="hasAnchor">
-<a href="#cross-classified-random-effects" class="anchor"></a>Cross-Classified Random Effects</h2>
+<a href="#cross-classified-random-effects" class="anchor" aria-hidden="true"></a>Cross-Classified Random Effects</h2>
 <p>If cross-classified random effects are desired, these can be specified directly within the formula syntax as you would with lme4. For example, <code>y ~ 1 + time + weight + age + treat + (1 + time| id) + (1 | neighborhood_id)</code>. When documenting the simulation arguments for the additional cross-classified random effect (i.e. <code>(1 | neighborhood_id)</code>), specifying <code>cross_class = TRUE</code> with that random effect to identify that this is indeed a cross-classified random effect. Secondly, you can also specify directly the number of clusters that are associated with this cross-classified factor, this can be different than those specified in the <code>sample_size</code> argument. This can be done with the <code>num_ids</code> argument. Below is an example with a single cross-classified random effect representing neighborhoods individuals belong in</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
@@ -541,12 +541,12 @@
 </div>
 <div id="missing-data-arguments" class="section level1">
 <h1 class="hasAnchor">
-<a href="#missing-data-arguments" class="anchor"></a>Missing Data Arguments</h1>
+<a href="#missing-data-arguments" class="anchor" aria-hidden="true"></a>Missing Data Arguments</h1>
 <p>Missing data is the standard rather than the exception in real world data. Therefore, generating data that include missing is important for generating data that are representative of real world data. In the power analysis context, most power analyses do not include missing data in the power computations (particularly if these are closed form solutions), but power can be negatively affected by missing data.</p>
 <p>Fortunatly, the simglm package contains many useful frameworks for generating missing data. To generate missing data, the <code>generate_missing</code> function can be used for this. This function is called after the complete data are generated. This means that the complete data and missing data will be generated. Currently three types of missing data are supported, dropout, random, and mar (missing at random). The specification of missing data arguments is done using a named element to the simulation argument list called “missing_data”.</p>
 <div id="random-missing-data" class="section level2">
 <h2 class="hasAnchor">
-<a href="#random-missing-data" class="anchor"></a>Random Missing Data</h2>
+<a href="#random-missing-data" class="anchor" aria-hidden="true"></a>Random Missing Data</h2>
 <p>First, lets explore random missing data. This structure is equivalent to the missing completely at random framework if you are familiar with Rubin’s missing data classifications. To generate random missing data the <code>type = 'random'</code> is specified. Two additional arguments are needed to generate the missing data, first the missing proportion needs to be specified with <code>miss_prop</code> and the name of the new response variable with missing data needs to be specified with <code>new_outcome</code>. Below is an example generating data with random missing data.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
@@ -617,7 +617,7 @@
 </div>
 <div id="mar-missing-data" class="section level2">
 <h2 class="hasAnchor">
-<a href="#mar-missing-data" class="anchor"></a>MAR Missing Data</h2>
+<a href="#mar-missing-data" class="anchor" aria-hidden="true"></a>MAR Missing Data</h2>
 <p>Data that are missing at random (MAR) can be generated as well.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
@@ -690,7 +690,7 @@
 </div>
 <div id="dropout-missing-data" class="section level2">
 <h2 class="hasAnchor">
-<a href="#dropout-missing-data" class="anchor"></a>Dropout Missing Data</h2>
+<a href="#dropout-missing-data" class="anchor" aria-hidden="true"></a>Dropout Missing Data</h2>
 <p>Dropout missing data is possible when simulating data from a longitudinal design. When requesting dropout missing data, observations are removed after a specific point in the time cycle. For example, perhaps an individual stops being a part of the study after the third measurement. To request this type of missing data, the <code>type = 'dropout'</code> can be specified. In addition, one new argument is needed, <code>clust_var</code>. This argument represents the id associated with the clusters with longitudinal data. Below is an example:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
@@ -767,7 +767,7 @@
 ##   TRUE  0.00 0.00 0.00 0.00 0.00 0.01 0.03 0.04 0.08 0.10</code></pre>
 <div id="specify-location-of-dropout" class="section level3">
 <h3 class="hasAnchor">
-<a href="#specify-location-of-dropout" class="anchor"></a>Specify location of dropout</h3>
+<a href="#specify-location-of-dropout" class="anchor" aria-hidden="true"></a>Specify location of dropout</h3>
 <p>If additional control is desired, specifying the location of the dropout is possible. In this situation, a vector is passed to <code>dropout_location</code> that specifies for each individual (more generally each level 2 unit) where the dropout occurs. Below is an example of this.</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
@@ -849,12 +849,12 @@
 </div>
 <div id="model-fit-arguments" class="section level1">
 <h1 class="hasAnchor">
-<a href="#model-fit-arguments" class="anchor"></a>Model Fit Arguments</h1>
+<a href="#model-fit-arguments" class="anchor" aria-hidden="true"></a>Model Fit Arguments</h1>
 <p>The default behavior when fitting models to the generated data is to fit a model with the same formula as the generated data (i.e. <code>formula</code> simulation arguments). Secondly, the default model functions are <code>lm</code>/<code>glm</code> for single level simulation and <code>lmer</code>/<code>glmer</code> for multilevel simulation. Finally, the default regression weights specified in <code>reg_weights</code> are to compute statistics for power, type I error rates, and precision.</p>
 <p>These defaults can be overriden by specifying simulation arguments through the named list called <code>model_fit</code>. Some examples were given in the Tidy Simulation vignette and the options that are able to be specified will depend on the model fitting function specified. A few examples are given for various model types, however, the user is directed to the documentation of the modeling functions specified through the <code>model_function</code> argument.</p>
 <div id="changing-family-argument" class="section level2">
 <h2 class="hasAnchor">
-<a href="#changing-family-argument" class="anchor"></a>Changing Family Argument</h2>
+<a href="#changing-family-argument" class="anchor" aria-hidden="true"></a>Changing Family Argument</h2>
 <p>For GLM models, users may wish to directly specify the family argument or change the link function within a specific family. For example, when generating data with a binary dependent variable, the logistic or probit links could be used when specifying the binomial family. Below is an example of using the binomial family with a logit link (the default link function).</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
@@ -910,13 +910,13 @@
 </div>
 <div id="adding-serial-correlation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#adding-serial-correlation" class="anchor"></a>Adding Serial Correlation</h2>
+<a href="#adding-serial-correlation" class="anchor" aria-hidden="true"></a>Adding Serial Correlation</h2>
 <p>Serial correlation can be added to longitudinal designs and fitted using the nlme R package. Below is an example of implementing this functionality in the data generation and model fitting.</p>
 <p>To come…</p>
 </div>
 <div id="marginal-models" class="section level2">
 <h2 class="hasAnchor">
-<a href="#marginal-models" class="anchor"></a>Marginal Models</h2>
+<a href="#marginal-models" class="anchor" aria-hidden="true"></a>Marginal Models</h2>
 <p>It is also possible to change the default model fitting functions. For example, an alternative model approach to mixed models is generalized estimating equations (GEE) or marginal models. One implementation of these models in R is the geepack package. Below is a marginal model in a longitudinal context.</p>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
@@ -965,13 +965,13 @@
 </div>
 <div id="power-arguments" class="section level1">
 <h1 class="hasAnchor">
-<a href="#power-arguments" class="anchor"></a>Power Arguments</h1>
+<a href="#power-arguments" class="anchor" aria-hidden="true"></a>Power Arguments</h1>
 </div>
 <div id="vary-simulation-arguments" class="section level1">
 <h1 class="hasAnchor">
-<a href="#vary-simulation-arguments" class="anchor"></a>Vary Simulation Arguments</h1>
+<a href="#vary-simulation-arguments" class="anchor" aria-hidden="true"></a>Vary Simulation Arguments</h1>
 <p>The <code>replicate_simulation</code> function first shown in the “tidy_simulation” vignette, can directly allow for the varying of simulation arguments. In order to vary simulation arguments, an additional named list called <code>vary_arguments</code> can be added to the simulation arguments passed to the functions. The <code>vary_arguments</code> elements of the simulation arguments is a nested named list. Within the named list, the arguments that are wished to be varied are specified by name. For example, a common argument varied is sample size. The following example varies the sample size to return multiple simulated data sets with different sample sizes.</p>
-<p>Note: A user would likely want to change <code><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan(sequential)</a></code> to something like <code><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan(mutisession)</a></code> or <code><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan(multicore)</a></code> to run these in parallel. <code><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan(sequential)</a></code> is used here for vignette processing.</p>
+<p>Note: A user would likely want to change <code>plan(sequential)</code> to something like <code>plan(mutisession)</code> or <code>plan(multicore)</code> to run these in parallel. <code>plan(sequential)</code> is used here for vignette processing.</p>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future" class="external-link">future</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">sequential</span><span class="op">)</span>
@@ -5956,7 +5956,7 @@
 ## 900 -0.421322464          6.00   -1.650932037  4.72870340</code></pre>
 <div id="varying-arguments-to-compute-power" class="section level2">
 <h2 class="hasAnchor">
-<a href="#varying-arguments-to-compute-power" class="anchor"></a>Varying Arguments to Compute Power</h2>
+<a href="#varying-arguments-to-compute-power" class="anchor" aria-hidden="true"></a>Varying Arguments to Compute Power</h2>
 </div>
 </div>
   </div>

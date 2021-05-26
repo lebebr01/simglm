@@ -177,7 +177,7 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
 #'  should be computed. Defaults to TRUE.
 #' @param precision TRUE/FALSE flag indicating whether precision should be 
 #'  computed. Defaults to TRUE.
-#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate summarise group_by
 #' @importFrom rlang syms
 #' @export
 compute_statistics <- function(data, sim_args, power = TRUE, 

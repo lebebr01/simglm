@@ -19,8 +19,9 @@ for more information. The named list may contain the following:
 }
 \description{
 The simglm package provides two categories of important functions:
-simulation functions (\code{\link{sim_reg}} and \code{\link{sim_glm}}) and 
-power functions (\code{\link{sim_pow}} and \code{\link{sim_pow_glm}}).
+simulation functions and power functions. The package follows a tidy 
+framework where functions are designed to be similar, do one thing, and 
+stack on top of each other to build more complex systems.
 #'
 
 This function is most useful to pass to \code{\link{replicate_simulation}}.

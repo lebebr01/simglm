@@ -40,8 +40,8 @@ called from rand_gen.}
 Input simulation parameters and returns random effects.
 }
 \details{
-Simulates random effects for the master function \code{\link{sim_reg}} when
+Simulates random effects when
 simulating a linear mixed model, both cross sectional and longitudinal. 
-Allows the ability to simulate random effects from a Laplace, 
-chi-square (1), mixture normal, or normal distribution.
+Allows the ability to simulate random effects from any 
+specified distribution.
 }

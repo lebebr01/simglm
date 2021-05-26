@@ -300,6 +300,7 @@ compute_t1e <- function(data, sim_args, t1e_args) {
   }
 }
 
+#' @importFrom dplyr `%>%`
 aggregate_estimate <- function(data, group_var) {
   
   group_by_var <- dplyr::quos(!!! group_var)
@@ -332,7 +333,7 @@ aggregate_t1e <- function(data, group_var) {
 
 }
 
-
+#' @importFrom stats sd aggregate as.formula model.matrix rbinom rnorm rpois runif terms
 aggregate_precision <- function(data, group_var) {
   
   group_by_var <- dplyr::quos(!!! group_var) 

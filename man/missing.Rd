@@ -66,7 +66,7 @@ NULL by default which means no clustering.}
 representing the number of data observations for each individual.}
 
 \item{type}{The type of missing data to generate, currently supports
-droput, random, or missing at random (mar) missing data.}
+dropout, random, or missing at random (mar) missing data.}
 
 \item{miss_cov}{Covariate that the missing values are based on.}
 

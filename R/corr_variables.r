@@ -7,7 +7,6 @@
 #'    where the first element is the correlation between variable 1 and variable 2, 
 #'    second correlation is between variable 1 and variable 3, and so on.
 #' @param cov_param Variable specification similar to specifying fixed effects. 
-#'    See \code{\link{sim_reg}} for more details.
 #' @param standardize TRUE/FALSE flag indicating whether variables should be standardized
 #'    prior to correlating (this is needed for accurate correlated variables)
 #' @export

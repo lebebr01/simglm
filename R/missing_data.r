@@ -16,7 +16,7 @@
 #' @param dropout_location A vector the same length as the number of clusters 
 #'   representing the number of data observations for each individual.
 #' @param type The type of missing data to generate, currently supports
-#'           droput, random, or missing at random (mar) missing data.
+#'           dropout, random, or missing at random (mar) missing data.
 #' @param miss_cov Covariate that the missing values are based on.
 #' @param mar_prop Proportion of missing data for each unique value 
 #'   specified in the miss_cov argument.
@@ -60,7 +60,16 @@ generate_missing <- function(data, sim_args) {
 }
 
 
-#' @inheritParams missing_data
+#' @param sim_data Simulated data frame
+#' @param resp_var Character string of response variable with complete data.
+#' @param new_outcome Character string of new outcome variable name that includes
+#'   the missing data.
+#' @param clust_var Cluster variable used for the grouping, set to 
+#'           NULL by default which means no clustering.
+#' @param within_id ID variable within each cluster.
+#' @param miss_prop Proportion of missing data overall 
+#' @param dropout_location A vector the same length as the number of clusters 
+#'   representing the number of data observations for each individual.
 #' @export
 #' @rdname missing 
 dropout_missing <- function(sim_data, resp_var = 'sim_data', 
@@ -119,13 +128,19 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
 }
 
 
-#' @inheritParams missing_data
+#' @param sim_data Simulated data frame
+#' @param resp_var Character string of response variable with complete data.
+#' @param new_outcome Character string of new outcome variable name that includes
+#'   the missing data.
+#' @param miss_prop Proportion of missing data overall 
+#' @param clust_var Cluster variable used for the grouping, set to 
+#'           NULL by default which means no clustering.
+#' @param within_id ID variable within each cluster.
 #' @export 
 #' @rdname missing
 random_missing <- function(sim_data, resp_var = 'sim_data', 
                            new_outcome = 'sim_data2', miss_prop,
                            clust_var = NULL, within_id = "withinID") {
-  
   if(resp_var %ni% names(sim_data)) {
     stop(paste(resp_var, 'not found in variables of data supplied'))
   }
@@ -183,7 +198,13 @@ random_missing <- function(sim_data, resp_var = 'sim_data',
   sim_data
 }
 
-#' @inheritParams missing_data
+#' @param sim_data Simulated data frame
+#' @param resp_var Character string of response variable with complete data.
+#' @param new_outcome Character string of new outcome variable name that includes
+#'   the missing data.
+#' @param miss_cov Covariate that the missing values are based on.
+#' @param mar_prop Proportion of missing data for each unique value 
+#'   specified in the miss_cov argument.
 #' @importFrom dplyr count select slice left_join mutate
 #' @export 
 #' @rdname missing

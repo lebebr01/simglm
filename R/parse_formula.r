@@ -208,3 +208,36 @@ parse_varyarguments <- function(sim_args) {
   
 }
 
+
+#' Parse correlation arguments
+#' 
+#' This function is used to parse user specified correlation attributes. 
+#' The correlation attributes need to be in a dataframe to be processed 
+#' internally. Within the dataframe, there are expected to be 3 columns, 
+#' 1) names of variable/attributes, 2) the variable/attribute pair for 1, 
+#' 3) the correlation. 
+#' 
+#' @param sim_args A named list with special model formula syntax. See details and examples
+#'   for more information. The named list may contain the following:
+#'   \itemize{
+#'     \item fixed: This is the fixed portion of the model (i.e. covariates)
+#'     \item random: This is the random portion of the model (i.e. random effects)
+#'     \item error: This is the error (i.e. residual term).
+#'     \item correlate: These are the correlations for random effects and/or
+#'        fixed effects.
+#'   }
+#'   
+#' @export
+parse_correlation <- function(sim_args) {
+  
+  fixed_correlation <- dataframe2matrix(sim_args[['correlate']][['fixed']],
+                                        corr_variable = 'corr', 
+                                        var_names = c('x', 'y'))
+  
+  random_correlation <- dataframe2matrix(sim_args[['correlate']][['random']],
+                                         corr_variable = 'corr',
+                                         var_names = c('x', 'y'))
+  
+  list(fixed_correlation = fixed_correlation,
+       random_correlation = random_correlation)
+}

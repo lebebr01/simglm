@@ -263,6 +263,30 @@ unique_columns <- function(x, y) {
   )
 }
 
+dataframe2matrix <- function(data, corr_variable, var_names) {
+  
+  if(is.null(data)) {
+    NULL
+  } else {
+    n <- ((sqrt(1 + 8 * nrow(data)) + 1) / 2)
+    
+    corr_mat <- matrix(NA, nrow = n, ncol = n)
+    lower <- lower.tri(corr_mat, diag = FALSE)
+    upper <- upper.tri(corr_mat, diag = FALSE)
+    
+    corr_mat[lower] <- data[[corr_variable]]
+    corr_mat[upper] <- data[[corr_variable]]
+    diag(corr_mat) <- 1
+    
+    mat_names <- unique(unlist(data[var_names]))
+    
+    colnames(corr_mat) <-mat_names
+    rownames(corr_mat) <- mat_names
+    
+    corr_mat
+  }
+}
+
 
 # Horrible hack to keep CRAN happy and suppress NOTES about
 # parts of the code that use non-standard evaluation.

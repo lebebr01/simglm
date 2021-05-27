@@ -37,3 +37,98 @@ corr_variables <- function(mat, cor_vars, cov_param, standardize = TRUE) {
   
   Xmat
 }
+
+#' Correlate elements
+#' 
+#' @param data 
+#' @param sim_args A named list with special model formula syntax. See details and examples
+#'   for more information. The named list may contain the following:
+#'   \itemize{
+#'     \item fixed: This is the fixed portion of the model (i.e. covariates)
+#'     \item random: This is the random portion of the model (i.e. random effects)
+#'     \item error: This is the error (i.e. residual term).
+#'     \item correlate: These are the correlations for random effects and/or
+#'        fixed effects.
+#'   }
+#'   
+#' @export
+correlate_variables <- function(data, sim_args, ...) {
+  
+  correlation_matrices <- parse_correlation(sim_args)
+  
+  if(!is.null(correlation_matrices[['random_correlation']])) {
+    correlate_randomeffects(data, sim_args, correlation_matrices)
+  }
+  if(!is.null(correlation_matrices[['fixed_correlation']])) {
+    correlate_fixedeffects(data, sim_args, correlation_matrices)
+  }
+  
+}
+
+correlation2covariance <- function(correlation, sd) {
+  
+  diag(sd) %*% 
+    correlation %*% diag(sd)
+  
+}
+
+correlate_attributes <- function(data, covariance, sd, mean, var_names) {
+  
+  es <- eigen(covariance, symmetric = TRUE)
+  ev <- es$values
+  
+  corr_data <- data.frame(t(mean + es$vectors %*% diag(sqrt(pmax(ev, 0)), length(sd)) %*% 
+              t(data)))
+  
+  names(corr_data) <- var_names
+  
+  corr_data
+}
+
+correlate_randomeffects <- function(data, sim_args, correlation_matrices) {
+  
+    variance_vars <- unlist(lapply(seq_along(sim_args[['randomeffect']]), function(xx) 
+      sim_args[['randomeffect']][[xx]][['variance']]))
+    mean_vars <- unlist(lapply(seq_along(sim_args[['randomeffect']]), function(xx) 
+      sim_args[['randomeffect']][[xx]][['mean']]))
+    if(is.null(mean_vars)) {
+      mean_vars <- rep(0, length(variance_vars))
+    }
+    
+    var_names <- names(sim_args[['randomeffect']])
+    
+    correlate_data <- data[colnames(correlation_matrices[['random_correlation']])]
+    correlate_data <- do.call('cbind', lapply(seq_along(variance_vars), function(xx) 
+      standardize(correlate_data[[xx]], mean = mean_vars[xx], sd = sqrt(variance_vars[xx]))))
+    
+    covariance <- correlation2covariance(correlation_matrices[['random_correlation']],
+                                         sd = sqrt(variance_vars))
+    
+    correlate_attributes(correlate_data, covariance = covariance, 
+                         sd = sqrt(variance_vars), mean = mean_vars,
+                         var_names = var_names)
+}
+
+correlate_fixedeffects <- function(data, sim_args, correlation_matrices) {
+    
+    sd_vars <- unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
+      sim_args[['fixed']][[xx]][['sd']]))
+    mean_vars <- unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
+      sim_args[['fixed']][[xx]][['mean']]))
+    if(is.null(mean_vars)) {
+      mean_vars <- rep(0, length(sd_vars))
+    }
+    var_names <- names(sim_args[['fixed']])
+    
+    correlate_data <- data[colnames(correlation_matrices[['fixed_correlation']])]
+    correlate_data <- do.call('cbind', lapply(seq_along(sd_vars), function(xx) 
+      standardize(correlate_data[[xx]], mean = mean_vars[xx], sd = sd_vars[xx])))
+    
+    covariance <- correlation2covariance(correlation_matrices[['fixed_correlation']],
+                                         sd = sd_vars )
+    
+    correlate_attributes(correlate_data, covariance = covariance, 
+                         sd = sd_vars, mean = mean_vars,
+                         var_names = var_names)
+
+}

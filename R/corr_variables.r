@@ -88,26 +88,30 @@ correlate_attributes <- function(data, covariance, sd, mean, var_names) {
 
 correlate_randomeffects <- function(data, sim_args, correlation_matrices) {
   
-    variance_vars <- unlist(lapply(seq_along(sim_args[['randomeffect']]), function(xx) 
-      sim_args[['randomeffect']][[xx]][['variance']]))
+    sd_vars <- sqrt(unlist(lapply(seq_along(sim_args[['randomeffect']]), function(xx) 
+      sim_args[['randomeffect']][[xx]][['variance']])))
     mean_vars <- unlist(lapply(seq_along(sim_args[['randomeffect']]), function(xx) 
       sim_args[['randomeffect']][[xx]][['mean']]))
     if(is.null(mean_vars)) {
-      mean_vars <- rep(0, length(variance_vars))
+      mean_vars <- rep(0, length(sd_vars))
     }
     
     var_names <- names(sim_args[['randomeffect']])
     
     correlate_data <- data[colnames(correlation_matrices[['random_correlation']])]
-    correlate_data <- do.call('cbind', lapply(seq_along(variance_vars), function(xx) 
-      standardize(correlate_data[[xx]], mean = mean_vars[xx], sd = sqrt(variance_vars[xx]))))
+    correlate_data <- do.call('cbind', lapply(seq_along(sd_vars), function(xx) 
+      standardize(correlate_data[[xx]], mean = mean_vars[xx], sd = sd_vars[xx])))
     
     covariance <- correlation2covariance(correlation_matrices[['random_correlation']],
-                                         sd = sqrt(variance_vars))
+                                         sd = sd_vars)
     
-    correlate_attributes(correlate_data, covariance = covariance, 
-                         sd = sqrt(variance_vars), mean = mean_vars,
+    correlated_data <- correlate_attributes(correlate_data, covariance = covariance, 
+                         sd = sd_vars, mean = mean_vars,
                          var_names = var_names)
+    
+    names(data)[names(data) %in% var_names] <- paste0(var_names, '_old')
+    
+    cbind(data, correlated_data)
 }
 
 correlate_fixedeffects <- function(data, sim_args, correlation_matrices) {
@@ -128,8 +132,12 @@ correlate_fixedeffects <- function(data, sim_args, correlation_matrices) {
     covariance <- correlation2covariance(correlation_matrices[['fixed_correlation']],
                                          sd = sd_vars )
     
-    correlate_attributes(correlate_data, covariance = covariance, 
+    correlated_data <- correlate_attributes(correlate_data, covariance = covariance, 
                          sd = sd_vars, mean = mean_vars,
                          var_names = var_names)
+    
+    names(data)[names(data) %in% var_names] <- paste0(var_names, '_old')
+    
+    cbind(data, correlated_data)
 
 }

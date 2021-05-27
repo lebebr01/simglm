@@ -62,23 +62,38 @@ correlate_variables <- function(data, sim_args, ...) {
   
   if(!is.null(correlation_matrices[['fixed_correlation']])) {
     
+    sd_vars <- unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
+      sim_args[['fixed']][[xx]][['sd']]))
+    mean_vars <- unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
+      sim_args[['fixed']][[xx]][['mean']]))
+    
+    correlate_data <- data[colnames(correlation_matrices[['fixed_correlation']])]
+    correlate_data <- bind_cols(lapply(seq_along(mean_vars), function(xx) 
+      standardize(correlate_data[[xx]], mean = mean_vars[xx], sd = sd_vars[xx])))
+    
+    covariance <- correlation2covariance(correlation_matrices[['fixed_correlation']],
+                                         sd = sd_vars )
+    
+    correlate_attributes(correlate_data, covariance = covariance, 
+                        sd = sd_vars, mean = mean_vars)
+    
   }
   
 }
 
-correlation2covariance <- function(correlation, variance) {
+correlation2covariance <- function(correlation, sd) {
   
-  diag(sqrt(variance)) %*% 
-    correlation %*% diag(sqrt(variance))
+  diag(sd) %*% 
+    correlation %*% diag(sd)
   
 }
 
-correlate_attributes <- function(data, covariance, variance) {
+correlate_attributes <- function(data, covariance, sd, mean) {
   
   es <- eigen(covariance, symmetric = TRUE)
   ev <- es$values
   
-  t(es$vectors %*% diag(sqrt(pmax(ev, 0)), length(variance)) %*% 
-              t(data))
+  data.frame(t(mean + es$vectors %*% diag(sqrt(pmax(ev, 0)), length(sd)) %*% 
+              t(data)))
   
 }

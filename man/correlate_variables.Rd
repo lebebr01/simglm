@@ -7,7 +7,7 @@
 correlate_variables(data, sim_args, ...)
 }
 \arguments{
-\item{data}{}
+\item{data}{Data simulated from other functions to pass to this function.}
 
 \item{sim_args}{A named list with special model formula syntax. See details and examples
 for more information. The named list may contain the following:
@@ -18,6 +18,8 @@ for more information. The named list may contain the following:
   \item correlate: These are the correlations for random effects and/or
      fixed effects.
 }}
+
+\item{...}{Additional arguments, currently not used.}
 }
 \description{
 Correlate elements

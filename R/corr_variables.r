@@ -40,7 +40,7 @@ corr_variables <- function(mat, cor_vars, cov_param, standardize = TRUE) {
 
 #' Correlate elements
 #' 
-#' @param data 
+#' @param data Data simulated from other functions to pass to this function.
 #' @param sim_args A named list with special model formula syntax. See details and examples
 #'   for more information. The named list may contain the following:
 #'   \itemize{
@@ -50,6 +50,7 @@ corr_variables <- function(mat, cor_vars, cov_param, standardize = TRUE) {
 #'     \item correlate: These are the correlations for random effects and/or
 #'        fixed effects.
 #'   }
+#' @param ... Additional arguments, currently not used.
 #'   
 #' @export
 correlate_variables <- function(data, sim_args, ...) {

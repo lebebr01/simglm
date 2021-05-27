@@ -58,12 +58,13 @@ correlate_variables <- function(data, sim_args, ...) {
   correlation_matrices <- parse_correlation(sim_args)
   
   if(!is.null(correlation_matrices[['random_correlation']])) {
-    correlate_randomeffects(data, sim_args, correlation_matrices)
+    data <- correlate_randomeffects(data, sim_args, correlation_matrices)
   }
   if(!is.null(correlation_matrices[['fixed_correlation']])) {
-    correlate_fixedeffects(data, sim_args, correlation_matrices)
+    data <- correlate_fixedeffects(data, sim_args, correlation_matrices)
   }
   
+  data
 }
 
 correlation2covariance <- function(correlation, sd) {

@@ -4,7 +4,7 @@ pkgdown_sha: 3b870d0efcfcf92a42aa881d58c3462cdbb110a8
 articles:
   simulation_arguments: simulation_arguments.html
   tidy_simulation: tidy_simulation.html
-last_built: 2021-05-27T19:09Z
+last_built: 2021-05-27T20:16Z
 urls:
   reference: https://simglm.brandonlebeau.org/reference
   article: https://simglm.brandonlebeau.org/articles

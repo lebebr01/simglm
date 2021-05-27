@@ -123,9 +123,17 @@ sim_continuous <- function(k = NULL, n, p, dist_fun,
 #' @param var_level The level the variable should be simulated at. This can either 
 #'      be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable 
 #'      respectively.
+#' @param variance The variance for random effect simulation.
+#' @param ther_sim A TRUE/FALSE flag indicating whether the error simulation 
+#'  function should be simulated, that is should the mean and standard deviation
+#'  used for standardization be simulated. 
+#' @param ther_val A vector of 2 that should include the theoretical mean and 
+#'  standard deviation of the generating function.
 #' @param ... Additional parameters to pass to the dist_fun argument.
 #' @export 
-sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1, ...) {
+sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1, 
+                            variance = NULL, ther_sim = FALSE, ther_val = NULL, 
+                            ...) {
   
   if(var_level == 1) {
     cont_var <- unlist(lapply(n[['level1']], FUN = dist, ...))
@@ -137,6 +145,19 @@ sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1, ...) {
       cont_var <- rep(unlist(lapply(n[['level3']], FUN = dist, ...)),
                       times = n[['level3_total']])
     }
+  }
+  
+  if(!is.null(variance)) {
+    if(ther_sim) {
+      ther_val <- do.call(dist, c(list(n = 10000000), ...))
+      ther <- c(mean(ther_val), sd(ther_val))
+      
+      cont_var <- standardize(cont_var, ther[1], ther[2])
+    }
+    if(!is.null(ther_val)) {
+      cont_var <- standardize(cont_var, ther_val[1], ther_val[2])
+    }
+      cont_var <- cont_var %*% chol(c(variance))
   }
   cont_var
 }

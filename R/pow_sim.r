@@ -318,7 +318,7 @@ aggregate_power <- function(data, group_var) {
     group_by(!!! group_by_var) %>%
     summarise(power = mean(reject),
               avg_test_stat = mean(statistic),
-              crit_value = unique(test_statistic))
+              crit_value_power = unique(test_statistic))
 }
 
 aggregate_t1e <- function(data, group_var) {
@@ -329,7 +329,7 @@ aggregate_t1e <- function(data, group_var) {
     group_by(!!! group_by_var) %>% 
     summarise(type_1_error = mean(t1e),
               avg_adjtest_stat = mean(adjusted_teststat),
-              crit_value = unique(test_statistic))
+              crit_value_t1e = unique(test_statistic))
 
 }
 

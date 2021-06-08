@@ -525,12 +525,12 @@
 <span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 12
-##   term        avg_estimate power avg_test_stat crit_value.x type_1_error
-##   &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
-## 1 (Intercept)      47.2      0.6         3.37          1.96          0.5
-## 2 age               0.0852   0.3         0.102         1.96          0.4
-## 3 sex              -0.509    0.1        -0.108         1.96          0.2
-## # … with 6 more variables: avg_adjtest_stat &lt;dbl&gt;, crit_value.y &lt;dbl&gt;,
+##   term        avg_estimate power avg_test_stat crit_value_power type_1_error
+##   &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;        &lt;dbl&gt;
+## 1 (Intercept)      47.2      0.6         3.37              1.96          0.5
+## 2 age               0.0852   0.3         0.102             1.96          0.4
+## 3 sex              -0.509    0.1        -0.108             1.96          0.2
+## # … with 6 more variables: avg_adjtest_stat &lt;dbl&gt;, crit_value_t1e &lt;dbl&gt;,
 ## #   param_estimate_sd &lt;dbl&gt;, avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,
 ## #   replications &lt;dbl&gt;</code></pre>
 <p>As can be seen from the output, the default behavior is to return statistics for power, average test statistic, type I error rate, adjusted average test statistic, standard deviation of parameter estimate, average standard error, precision ration (standard deviation of parameter estimate divided by average standard error), and the number of replications for each term.</p>
@@ -566,12 +566,12 @@
 <span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 3 x 12
-##   term        avg_estimate power avg_test_stat crit_value.x type_1_error
-##   &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
-## 1 (Intercept)      55.9        0         7.26          31.8            0
-## 2 age              -0.0994     0        -0.603         31.8            0
-## 3 sex               0.561      0         0.189         31.8            0
-## # … with 6 more variables: avg_adjtest_stat &lt;dbl&gt;, crit_value.y &lt;dbl&gt;,
+##   term        avg_estimate power avg_test_stat crit_value_power type_1_error
+##   &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;        &lt;dbl&gt;
+## 1 (Intercept)      55.9        0         7.26              31.8            0
+## 2 age              -0.0994     0        -0.603             31.8            0
+## 3 sex               0.561      0         0.189             31.8            0
+## # … with 6 more variables: avg_adjtest_stat &lt;dbl&gt;, crit_value_t1e &lt;dbl&gt;,
 ## #   param_estimate_sd &lt;dbl&gt;, avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,
 ## #   replications &lt;dbl&gt;</code></pre>
 </div>

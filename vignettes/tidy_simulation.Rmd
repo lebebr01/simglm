@@ -198,7 +198,7 @@ simulate_fixed(data = NULL, sim_arguments) %>%
 
 The levels of the new grade attribute could also be modified to include unequal probabilities for each class to be sampled. To do this, the prob argument could be passed as follows.
 
-```{r generate_3_categories}
+```{r generate_3_categories_prob}
 set.seed(321) 
 
 sim_arguments <- list(

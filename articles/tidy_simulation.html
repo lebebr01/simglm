@@ -342,13 +342,128 @@
 ## 8               0 56.38580
 ## 9               0 48.25039
 ## 10              0 45.55934</code></pre>
-<p>The only additional argument that is needed for the <code>generate_response</code> function is the <code>reg_weights</code> argument. This argument represents the regression coeficients associated with <span class="math inline">\(\beta\)</span> in the equation <span class="math inline">\(Y_{j} = X_{j} \beta + e_{j}\)</span>. The regression coefficients are multiplied by the design matrix to generate the column labeled “fixed_outcome” in the output. The output also contains the column, “random_effects” which are all 0 here indicating there are no random effects and the response variable, “y”.</p>
+<p>The only additional argument that is needed for the <code>generate_response</code> function is the <code>reg_weights</code> argument. This argument represents the regression coefficients associated with <span class="math inline">\(\beta\)</span> in the equation <span class="math inline">\(Y_{j} = X_{j} \beta + e_{j}\)</span>. The regression coefficients are multiplied by the design matrix to generate the column labeled “fixed_outcome” in the output. The output also contains the column, “random_effects” which are all 0 here indicating there are no random effects and the response variable, “y”.</p>
+<div id="generate-response-with-more-than-2-factor-levels" class="section level3">
+<h3 class="hasAnchor">
+<a href="#generate-response-with-more-than-2-factor-levels" class="anchor" aria-hidden="true"></a>Generate Response with more than 2 factor levels</h3>
+<p>Earlier, a factor or categorical grouping factor with 2 levels was shown. It may be of interest to generate a factor or categorical attribute with more than 2 levels, a feature that is built into simglm.</p>
+<p>The creation a categorical attribute with more than two level is similar to that with 2 levels. The following code creates a categorical attribute with 4 levels based on the grade, freshman, sophomore, junior, or senior. To add more levels, the user would just add more categories to the levels argument. Below, the data are generated and a table showing the different categories are shown.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
+
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">weight</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">sex</span> <span class="op">+</span> <span class="va">grade</span>,
+  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">180</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,
+               age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, levels <span class="op">=</span> <span class="fl">30</span><span class="op">:</span><span class="fl">60</span><span class="op">)</span>,
+               sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, 
+                          levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'male'</span>, <span class="st">'female'</span><span class="op">)</span><span class="op">)</span>,
+               grade <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, 
+                            levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'freshman'</span>, <span class="st">'sophomore'</span>,
+                                       <span class="st">'junior'</span>, <span class="st">'senior'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+  error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">25</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">100</span>
+<span class="op">)</span>
+
+<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">count</span><span class="op">(</span><span class="va">grade_orig</span><span class="op">)</span></code></pre></div>
+<pre><code>##   grade_orig  n
+## 1   freshman 27
+## 2     junior 32
+## 3     senior 21
+## 4  sophomore 20</code></pre>
+<p>The levels of the new grade attribute could also be modified to include unequal probabilities for each class to be sampled. To do this, the prob argument could be passed as follows.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
+
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">weight</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">sex</span> <span class="op">+</span> <span class="va">grade</span>,
+  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">180</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,
+               age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, levels <span class="op">=</span> <span class="fl">30</span><span class="op">:</span><span class="fl">60</span><span class="op">)</span>,
+               sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, 
+                          levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'male'</span>, <span class="st">'female'</span><span class="op">)</span><span class="op">)</span>,
+               grade <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, 
+                            levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'freshman'</span>, <span class="st">'sophomore'</span>,
+                                       <span class="st">'junior'</span>, <span class="st">'senior'</span><span class="op">)</span>,
+                            prob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.05</span>, <span class="fl">.3</span>, <span class="fl">.45</span>, <span class="fl">.2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+  error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">25</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">100</span>
+<span class="op">)</span>
+
+<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">count</span><span class="op">(</span><span class="va">grade_orig</span><span class="op">)</span></code></pre></div>
+<pre><code>##   grade_orig  n
+## 1   freshman  6
+## 2     junior 43
+## 3     senior 25
+## 4  sophomore 26</code></pre>
+<p>When generating more than 2 levels for a categorical attribute, the default behavior within R and with simglm is to create dummy or indicator variables to be used within a linear model. Therefore, in order to generate the outcome for an attribute with more than 2 levels, multiple indicator or dummy attributes need to be created. The number of indicator or dummy attributes is always 1 less than the number of categories, so for the grade attribute example, there needs to be 3 indicator attributes to represent the 4 categories within a linear model. An example of what these indicators attributes would look like is presented below.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
+  grade <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'freshman'</span>, <span class="st">'sophomore'</span>, <span class="st">'junior'</span>, <span class="st">'senior'</span><span class="op">)</span>,
+                 size <span class="op">=</span> <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>sophomore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">grade</span> <span class="op">==</span> <span class="st">'sophomore'</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,
+         junior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">grade</span> <span class="op">==</span> <span class="st">'junior'</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>, 
+         senior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">grade</span> <span class="op">==</span> <span class="st">'senior'</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>##        grade sophomore junior senior
+## 1     junior         0      1      0
+## 2   freshman         0      0      0
+## 3     junior         0      1      0
+## 4  sophomore         1      0      0
+## 5     senior         0      0      1
+## 6   freshman         0      0      0
+## 7  sophomore         1      0      0
+## 8  sophomore         1      0      0
+## 9  sophomore         1      0      0
+## 10  freshman         0      0      0</code></pre>
+<p>Each indicator takes a value of 1 or 0 for each new column created. These indicate which category is represented by each attribute, for example, the 1 for the sophomore column indicates that this term would represent the effect of moving from the reference group to the sophomore category. The reference group is selected by the group or category that does not have an indicator attribute for it, in this example it is the freshman group. The default behavior in R is to use the category that is closest to “A” in alphabetical order.</p>
+<p>It is important to understand how the indicator attributes are generated as this will impact how the response outcome is created. In this case, since there will be 3 indicator variables to represent the 4 categories of the grade attribute, 3 regression weights will need to be added to the <code>reg_weights</code> argument. These terms would represent the effect (mean level change) from moving from the reference group to each of the indicator variables. Using the example above, this would reflect the mean difference between freshman and sophomore, freshman and junior, and freshman and senior.</p>
+<p>The other element that needs to be kept track of, is the order that these indicator attributes are created by R. The default behavior is for these to be created in alphabetical order. This is will be … (to come), see <a href="https://github.com/lebebr01/simglm/issues/83" class="external-link">Issue 83</a>.</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
+
+<span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">weight</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">sex</span> <span class="op">+</span> <span class="va">grade</span>,
+  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">180</span>, sd <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>,
+               age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, levels <span class="op">=</span> <span class="fl">30</span><span class="op">:</span><span class="fl">60</span><span class="op">)</span>,
+               sex <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, 
+                          levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'male'</span>, <span class="st">'female'</span><span class="op">)</span><span class="op">)</span>,
+               grade <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, 
+                            levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'freshman'</span>, <span class="st">'sophomore'</span>,
+                                       <span class="st">'junior'</span>, <span class="st">'senior'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+  error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">25</span><span class="op">)</span>,
+  sample_size <span class="op">=</span> <span class="fl">100</span>,
+  reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">.1</span>, <span class="fl">.55</span>, <span class="fl">1.5</span>, <span class="fl">.75</span>, <span class="fl">1.8</span>, <span class="fl">2.5</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>##   X.Intercept.   weight age sex grade_1 grade_2 grade_3 sex_orig grade_orig
+## 1            1 231.1471  30   1       0       0       0     male   freshman
+## 2            1 158.6388  41   1       0       0       1     male  sophomore
+## 3            1 171.6605  57   1       0       0       0     male   freshman
+## 4            1 176.4105  49   0       0       1       0   female     senior
+## 5            1 176.2812  53   1       0       1       0     male     senior
+## 6            1 188.0455  49   1       0       1       0     male     senior
+##   level1_id      error fixed_outcome random_effects        y
+## 1         1  1.7227563      43.11471              0 44.83747
+## 2         2 -3.7481776      44.41388              0 40.66571
+## 3         3  1.7652524      52.01605              0 53.78130
+## 4         4  8.7723189      48.39105              0 57.16337
+## 5         5  0.2289527      52.07812              0 52.30707
+## 6         6 -2.5894973      51.05455              0 48.46505</code></pre>
+<p>Notice how 3 additional parameters to the <code>reg_weights</code> argument were specified to reflect the 3 additional indicator attributes representing the 4 categorical grade groups simulated.</p>
+</div>
 <div id="non-normal-outcomes" class="section level3">
 <h3 class="hasAnchor">
 <a href="#non-normal-outcomes" class="anchor" aria-hidden="true"></a>Non-normal Outcomes</h3>
 <p>Non-normal outcomes are possible with simglm. Two non-normal outcomes are currently supported with more support coming in the future. Binary and count outcomes are supported and can be specified with the <code>outcome_type</code> simulation argument. If <code>outcome_type = 'logistic'</code> or <code>outcome_type = 'binary'</code> then a binary outcome is generated (ie. 0/1 variable) using the <code>rbinom</code> function. If <code>outcome_type = 'count'</code> or <code>outcome_type = 'poisson'</code> then the outcome is transformed to be a count variable (ie. discrete variable; 0, 1, 2, etc.).</p>
 <p>Here is an example of generating a binary outcome.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -388,7 +503,7 @@
 ## 9               0              48.25039 1
 ## 10              0              45.55934 1</code></pre>
 <p>And finally, an example of generating a count outcome. Note, the weight variable here has been grand mean centered in the generation (ie. mean = 0). This helps to ensure that the counts are not too large.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -440,7 +555,7 @@
 <code>extract_coefficients</code>: this function will extract the fixed coefficients based on the model fitted.</li>
 </ul>
 <p>To fit a model and extract coefficients, we could do the following building off the example from the previous section:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -466,7 +581,7 @@
 ## 3 age           -0.198     0.271   -0.733   0.491 
 ## 4 sex            2.87      5.93     0.484   0.646</code></pre>
 <p>This output contains the model output for a single data simulation, more specifically we can see the parameter name, parameter estimate, the standard error for the parameter estimate, the test statistics, and the p-value. These were estimated using the <code>lm</code> function based on the same formula defined in <code>sim_arguments</code>. It is possible to specify your own formula, model fitting function, and regression weights to the <code>model_fit</code> function. For example, suppose we knew that weight was an important predictor, but are unable to collect it in real life. We could then specify an alternative model when evaluating power, but include the variable in the data generation step.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -504,7 +619,7 @@
 <li>
 <code>compute_statistics</code>: this function compute desired statistics across the replications.</li>
 </ul>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -537,7 +652,7 @@
 <p>To generate this output, only the number of replications is needed. Here only 10 replications were done, in practice many more replications would be done to ensure there are accurate results.</p>
 <p>The default power parameter values used are: Normal distribution, two-tailed alternative hypotheses, and alpha of 0.05. Additional power parameters can be passed directly to override default values by including a power argument within the simulation arguments. For example, if a t-distribution with one degree of freedom an alpha of 0.02 is desired, these can be added as follows:</p>
 <p>Note: A user would likely want to change <code>plan(sequential)</code> to something like <code>plan(mutisession)</code> or <code>plan(multicore)</code> to run these in parallel. <code>plan(sequential)</code> is used here for vignette processing.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future" class="external-link">future</a></span><span class="op">)</span>
@@ -582,7 +697,7 @@
 <p>Nested designs are ones in which data belong to multiple levels. An example could be individuals nested within neighborhoods. In this example, a specific individual is tied directly to one neighborhood. These types of data often include correlations between individuals within a neighborhood that need to be taken into account when modeling the data. These types of data can be generated with simglm.</p>
 <p>To do this, the formula syntax introduced above is modified slightly to include information on the nesting structure. In the example below, the nesting structure in the formula is specified in the portion within the parentheses. How the part within parentheses could be read is, add a random intercept effect for each neighborhood. This random intercept effect is similar to random error found in regression models, except the error is associated with neighborhoods and is the same values for all individuals within that neighborhood. The simulation arguments, <code>randomeffect</code> provides information about this term. One element that is often of interest to modify is the variance of the random effect term(s). For example, if the variance of the random effect should be 8, then the argument, <code>variance = 8</code>, could be added to the specific term as shown below.</p>
 <p>Finally, the <code>sample_size</code> argument needs to be modified to include information about the two levels of nested. You could read the <code>sample_size = list(level1 = 10, level2 = 20)</code> argument below as: create 20 neighborhoods (ie. <code>level2 = 20</code>) and within each neighborhood have 10 individuals (ie. <code>level1 = 10</code>). Therefore the total sample size (ie. rows in the data) would be 200.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -624,7 +739,7 @@
 ## 8         -2.018169  0.93313126      5.990178      -2.018169 4.905141
 ## 9         -2.018169 -1.39912533      9.224798      -2.018169 5.807503
 ## 10        -2.018169 -0.01603532      7.626723      -2.018169 5.592519</code></pre>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">nested_data</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 200</code></pre>
 <p>The vignette simulation_arguments contains more example of specifying random effects and additional nesting designs including three levels of nested and cross-classified models.</p>

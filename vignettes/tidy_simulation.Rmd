@@ -4,8 +4,10 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tidy Simulation with `simglm`}
-  %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 ```{r setup, include=FALSE}
 library(knitr)
@@ -166,7 +168,100 @@ simulate_fixed(data = NULL, sim_arguments) %>%
   generate_response(sim_arguments)
 ```
 
-The only additional argument that is needed for the `generate_response` function is the `reg_weights` argument. This argument represents the regression coeficients associated with $\beta$ in the equation $Y_{j} = X_{j} \beta + e_{j}$. The regression coefficients are multiplied by the design matrix to generate the column labeled "fixed_outcome" in the output. The output also contains the column, "random_effects" which are all 0 here indicating there are no random effects and the response variable, "y".
+The only additional argument that is needed for the `generate_response` function is the `reg_weights` argument. This argument represents the regression coefficients associated with $\beta$ in the equation $Y_{j} = X_{j} \beta + e_{j}$. The regression coefficients are multiplied by the design matrix to generate the column labeled "fixed_outcome" in the output. The output also contains the column, "random_effects" which are all 0 here indicating there are no random effects and the response variable, "y".
+
+### Generate Response with more than 2 factor levels
+Earlier, a factor or categorical grouping factor with 2 levels was shown. It may be of interest to generate a factor or categorical attribute with more than 2 levels, a feature that is built into simglm. 
+
+The creation a categorical attribute with more than two level is similar to that with 2 levels. The following code creates a categorical attribute with 4 levels based on the grade, freshman, sophomore, junior, or senior. To add more levels, the user would just add more categories to the levels argument. Below, the data are generated and a table showing the different categories are shown.
+
+```{r generate_3_categories}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + age + sex + grade,
+  fixed = list(weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60),
+               sex = list(var_type = 'factor', 
+                          levels = c('male', 'female')),
+               grade = list(var_type = 'factor', 
+                            levels = c('freshman', 'sophomore',
+                                       'junior', 'senior'))),
+  error = list(variance = 25),
+  sample_size = 100
+)
+
+simulate_fixed(data = NULL, sim_arguments) %>%
+  simulate_error(sim_arguments) %>%
+  count(grade_orig)
+```
+
+The levels of the new grade attribute could also be modified to include unequal probabilities for each class to be sampled. To do this, the prob argument could be passed as follows.
+
+```{r generate_3_categories}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + age + sex + grade,
+  fixed = list(weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60),
+               sex = list(var_type = 'factor', 
+                          levels = c('male', 'female')),
+               grade = list(var_type = 'factor', 
+                            levels = c('freshman', 'sophomore',
+                                       'junior', 'senior'),
+                            prob = c(.05, .3, .45, .2))),
+  error = list(variance = 25),
+  sample_size = 100
+)
+
+simulate_fixed(data = NULL, sim_arguments) %>%
+  simulate_error(sim_arguments) %>%
+  count(grade_orig)
+```
+
+When generating more than 2 levels for a categorical attribute, the default behavior within R and with simglm is to create dummy or indicator variables to be used within a linear model. Therefore, in order to generate the outcome for an attribute with more than 2 levels, multiple indicator or dummy attributes need to be created. The number of indicator or dummy attributes is always 1 less than the number of categories, so for the grade attribute example, there needs to be 3 indicator attributes to represent the 4 categories within a linear model. An example of what these indicators attributes would look like is presented below.
+
+```{r indicator}
+data.frame(
+  grade = sample(c('freshman', 'sophomore', 'junior', 'senior'),
+                 size = 10, replace = TRUE)
+) %>% 
+  mutate(sophomore = ifelse(grade == 'sophomore', 1, 0),
+         junior = ifelse(grade == 'junior', 1, 0), 
+         senior = ifelse(grade == 'senior', 1, 0))
+```
+
+Each indicator takes a value of 1 or 0 for each new column created. These indicate which category is represented by each attribute, for example, the 1 for the sophomore column indicates that this term would represent the effect of moving from the reference group to the sophomore category. The reference group is selected by the group or category that does not have an indicator attribute for it, in this example it is the freshman group. The default behavior in R is to use the category that is closest to "A" in alphabetical order. 
+
+It is important to understand how the indicator attributes are generated as this will impact how the response outcome is created. In this case, since there will be 3 indicator variables to represent the 4 categories of the grade attribute, 3 regression weights will need to be added to the `reg_weights` argument. These terms would represent the effect (mean level change) from moving from the reference group to each of the indicator variables. Using the example above, this would reflect the mean difference between freshman and sophomore, freshman and junior, and freshman and senior. 
+
+The other element that needs to be kept track of, is the order that these indicator attributes are created by R. The default behavior is for these to be created in alphabetical order. This is will be ... (to come), see [Issue 83](https://github.com/lebebr01/simglm/issues/83).
+
+```{r generate_3_categories}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + age + sex + grade,
+  fixed = list(weight = list(var_type = 'continuous', mean = 180, sd = 30),
+               age = list(var_type = 'ordinal', levels = 30:60),
+               sex = list(var_type = 'factor', 
+                          levels = c('male', 'female')),
+               grade = list(var_type = 'factor', 
+                            levels = c('freshman', 'sophomore',
+                                       'junior', 'senior'))),
+  error = list(variance = 25),
+  sample_size = 100,
+  reg_weights = c(2, .1, .55, 1.5, .75, 1.8, 2.5)
+)
+
+simulate_fixed(data = NULL, sim_arguments) %>%
+  simulate_error(sim_arguments) %>%
+  generate_response(sim_arguments) %>% 
+  head()
+```
+
+Notice how 3 additional parameters to the `reg_weights` argument were specified to reflect the 3 additional indicator attributes representing the 4 categorical grade groups simulated. 
 
 ### Non-normal Outcomes
 Non-normal outcomes are possible with simglm. Two non-normal outcomes are currently supported with more support coming in the future. Binary and count outcomes are supported and can be specified with the `outcome_type` simulation argument. If `outcome_type = 'logistic'` or `outcome_type = 'binary'` then a binary outcome is generated (ie. 0/1 variable) using the `rbinom` function. If `outcome_type = 'count'` or `outcome_type = 'poisson'` then the outcome is transformed to be a count variable (ie. discrete variable; 0, 1, 2, etc.). 

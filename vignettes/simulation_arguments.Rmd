@@ -564,9 +564,9 @@ To come...
 
 
 ## Marginal Models
-It is also possible to change the default model fitting functions. For example, an alternative model approach to mixed models is generalized estimating equations (GEE) or marginal models. One implementation of these models in R is the geepack package. Below is a marginal model in a longitudinal context.
+It is also possible to change the default model fitting functions. For example, an alternative model approach to mixed models is generalized estimating equations (GEE) or marginal models. One implementation of these models in R is the geepack package. Below is the code to fit a marginal model in a longitudinal context. The code is not evaluated, so no coefficients are shown, but if you have the `geepack` package installed, this code should run as written. 
 
-```{r gee}
+```{r gee, eval = FALSE}
 set.seed(321) 
 
 # To-DO: Add knot variable and debug

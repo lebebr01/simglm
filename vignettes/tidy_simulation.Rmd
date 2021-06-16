@@ -238,7 +238,7 @@ It is important to understand how the indicator attributes are generated as this
 
 The other element that needs to be kept track of, is the order that these indicator attributes are created by R. The default behavior is for these to be created in alphabetical order. This is will be ... (to come), see [Issue 83](https://github.com/lebebr01/simglm/issues/83).
 
-```{r generate_3_categories}
+```{r generate_3_categories_resp}
 set.seed(321) 
 
 sim_arguments <- list(

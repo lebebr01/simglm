@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.3</span>
       </span>
     </div>
 
@@ -125,26 +125,26 @@
 <span class="va">fixed_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fixed_data</span>, n <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept. time   weight age treat treat_orig level1_id id
-## 1             1    0 231.1471  39     0    Control         1  1
-## 2             1    1 158.6388  39     0    Control         2  1
-## 3             1    2 171.6605  39     0    Control         3  1
-## 4             1    3 176.4105  39     0    Control         4  1
-## 5             1    4 176.2812  39     0    Control         5  1
-## 6             1    5 188.0455  39     0    Control         6  1
-## 7             1    6 201.8052  39     0    Control         7  1
-## 8             1    7 186.9941  39     0    Control         8  1
-## 9             1    8 190.1734  39     0    Control         9  1
-## 10            1    9 163.4426  39     0    Control        10  1
-## 11            1    0 190.4310  30     0    Control         1  2
-## 12            1    1 224.5378  30     0    Control         2  2
-## 13            1    2 185.6498  30     0    Control         3  2
-## 14            1    3 253.2978  30     0    Control         4  2
-## 15            1    4 145.3968  30     0    Control         5  2
-## 16            1    5 155.8598  30     0    Control         6  2
-## 17            1    6 193.6821  30     0    Control         7  2
-## 18            1    7 192.6100  30     0    Control         8  2
-## 19            1    8 197.3275  30     0    Control         9  2
-## 20            1    9 193.3907  30     0    Control        10  2</code></pre>
+## 1             1    0 231.1471  39     1    Control         1  1
+## 2             1    1 158.6388  39     1    Control         2  1
+## 3             1    2 171.6605  39     1    Control         3  1
+## 4             1    3 176.4105  39     1    Control         4  1
+## 5             1    4 176.2812  39     1    Control         5  1
+## 6             1    5 188.0455  39     1    Control         6  1
+## 7             1    6 201.8052  39     1    Control         7  1
+## 8             1    7 186.9941  39     1    Control         8  1
+## 9             1    8 190.1734  39     1    Control         9  1
+## 10            1    9 163.4426  39     1    Control        10  1
+## 11            1    0 190.4310  30     1    Control         1  2
+## 12            1    1 224.5378  30     1    Control         2  2
+## 13            1    2 185.6498  30     1    Control         3  2
+## 14            1    3 253.2978  30     1    Control         4  2
+## 15            1    4 145.3968  30     1    Control         5  2
+## 16            1    5 155.8598  30     1    Control         6  2
+## 17            1    6 193.6821  30     1    Control         7  2
+## 18            1    7 192.6100  30     1    Control         8  2
+## 19            1    8 197.3275  30     1    Control         9  2
+## 20            1    9 193.3907  30     1    Control        10  2</code></pre>
 <p>The following example shows the five types of variables that can be generated. These types are specified with the <code>var_type</code> argument and can be one of the following five types:</p>
 <ul>
 <li>‘time’: This type of variable is used for a time metric variable</li>
@@ -180,26 +180,26 @@
 <span class="va">fixed_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fixed_data</span>, n <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept. time   weight age treat treat_orig level1_id id
-## 1             1  0.0 231.1471  39     0    Control         1  1
-## 2             1  0.5 158.6388  39     0    Control         2  1
-## 3             1  1.0 171.6605  39     0    Control         3  1
-## 4             1  1.5 176.4105  39     0    Control         4  1
-## 5             1  2.0 176.2812  39     0    Control         5  1
-## 6             1  2.5 188.0455  39     0    Control         6  1
-## 7             1  3.0 201.8052  39     0    Control         7  1
-## 8             1  4.0 186.9941  39     0    Control         8  1
-## 9             1  5.0 190.1734  39     0    Control         9  1
-## 10            1  6.0 163.4426  39     0    Control        10  1
-## 11            1  0.0 190.4310  30     0    Control         1  2
-## 12            1  0.5 224.5378  30     0    Control         2  2
-## 13            1  1.0 185.6498  30     0    Control         3  2
-## 14            1  1.5 253.2978  30     0    Control         4  2
-## 15            1  2.0 145.3968  30     0    Control         5  2
-## 16            1  2.5 155.8598  30     0    Control         6  2
-## 17            1  3.0 193.6821  30     0    Control         7  2
-## 18            1  4.0 192.6100  30     0    Control         8  2
-## 19            1  5.0 197.3275  30     0    Control         9  2
-## 20            1  6.0 193.3907  30     0    Control        10  2</code></pre>
+## 1             1  0.0 231.1471  39     1    Control         1  1
+## 2             1  0.5 158.6388  39     1    Control         2  1
+## 3             1  1.0 171.6605  39     1    Control         3  1
+## 4             1  1.5 176.4105  39     1    Control         4  1
+## 5             1  2.0 176.2812  39     1    Control         5  1
+## 6             1  2.5 188.0455  39     1    Control         6  1
+## 7             1  3.0 201.8052  39     1    Control         7  1
+## 8             1  4.0 186.9941  39     1    Control         8  1
+## 9             1  5.0 190.1734  39     1    Control         9  1
+## 10            1  6.0 163.4426  39     1    Control        10  1
+## 11            1  0.0 190.4310  30     1    Control         1  2
+## 12            1  0.5 224.5378  30     1    Control         2  2
+## 13            1  1.0 185.6498  30     1    Control         3  2
+## 14            1  1.5 253.2978  30     1    Control         4  2
+## 15            1  2.0 145.3968  30     1    Control         5  2
+## 16            1  2.5 155.8598  30     1    Control         6  2
+## 17            1  3.0 193.6821  30     1    Control         7  2
+## 18            1  4.0 192.6100  30     1    Control         8  2
+## 19            1  5.0 197.3275  30     1    Control         9  2
+## 20            1  6.0 193.3907  30     1    Control        10  2</code></pre>
 </div>
 <div id="continuous-variable" class="section level2">
 <h2 class="hasAnchor">
@@ -224,26 +224,26 @@
 <span class="va">fixed_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fixed_data</span>, n <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept. time   weight age treat treat_orig level1_id id
-## 1             1  0.0 5.922362  41     1  Treatment         1  1
-## 2             1  0.5 1.500918  41     1  Treatment         2  1
-## 3             1  1.0 1.894797  41     1  Treatment         3  1
-## 4             1  1.5 2.307843  41     1  Treatment         4  1
-## 5             1  2.0 1.975996  41     1  Treatment         5  1
-## 6             1  2.5 2.882207  41     1  Treatment         6  1
-## 7             1  3.0 3.064936  41     1  Treatment         7  1
-## 8             1  4.0 1.703499  41     1  Treatment         8  1
-## 9             1  5.0 7.518809  41     1  Treatment         9  1
-## 10            1  6.0 2.442868  41     1  Treatment        10  1
-## 11            1  0.0 7.855513  52     0    Control         1  2
-## 12            1  0.5 1.008858  52     0    Control         2  2
-## 13            1  1.0 3.452912  52     0    Control         3  2
-## 14            1  1.5 7.881209  52     0    Control         4  2
-## 15            1  2.0 2.262056  52     0    Control         5  2
-## 16            1  2.5 3.255559  52     0    Control         6  2
-## 17            1  3.0 4.160648  52     0    Control         7  2
-## 18            1  4.0 2.333586  52     0    Control         8  2
-## 19            1  5.0 1.900442  52     0    Control         9  2
-## 20            1  6.0 1.445119  52     0    Control        10  2</code></pre>
+## 1             1  0.0 5.922362  41     0  Treatment         1  1
+## 2             1  0.5 1.500918  41     0  Treatment         2  1
+## 3             1  1.0 1.894797  41     0  Treatment         3  1
+## 4             1  1.5 2.307843  41     0  Treatment         4  1
+## 5             1  2.0 1.975996  41     0  Treatment         5  1
+## 6             1  2.5 2.882207  41     0  Treatment         6  1
+## 7             1  3.0 3.064936  41     0  Treatment         7  1
+## 8             1  4.0 1.703499  41     0  Treatment         8  1
+## 9             1  5.0 7.518809  41     0  Treatment         9  1
+## 10            1  6.0 2.442868  41     0  Treatment        10  1
+## 11            1  0.0 7.855513  52     1    Control         1  2
+## 12            1  0.5 1.008858  52     1    Control         2  2
+## 13            1  1.0 3.452912  52     1    Control         3  2
+## 14            1  1.5 7.881209  52     1    Control         4  2
+## 15            1  2.0 2.262056  52     1    Control         5  2
+## 16            1  2.5 3.255559  52     1    Control         6  2
+## 17            1  3.0 4.160648  52     1    Control         7  2
+## 18            1  4.0 2.333586  52     1    Control         8  2
+## 19            1  5.0 1.900442  52     1    Control         9  2
+## 20            1  6.0 1.445119  52     1    Control        10  2</code></pre>
 <p>This would be the resulting distribution of the weight variable generated.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
@@ -441,8 +441,8 @@
 <pre><code>## # A tibble: 2 x 3
 ##   group var_error var_o_error
 ##   &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
-## 1     0      1.03        1.03
-## 2     1      8.65        1.08</code></pre>
+## 1     0      1.08        1.08
+## 2     1      8.25        1.03</code></pre>
 </div>
 </div>
 <div id="random-effect-arguments" class="section level1">
@@ -576,38 +576,38 @@
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data_w_missing</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept. time   weight age treat treat_orig level1_id id    int_id
-## 1             1    0 231.1471  39     0    Control         1  1 0.2244243
-## 2             1    1 158.6388  39     0    Control         2  1 0.2244243
-## 3             1    2 171.6605  39     0    Control         3  1 0.2244243
-## 4             1    3 176.4105  39     0    Control         4  1 0.2244243
-## 5             1    4 176.2812  39     0    Control         5  1 0.2244243
-## 6             1    5 188.0455  39     0    Control         6  1 0.2244243
-## 7             1    6 201.8052  39     0    Control         7  1 0.2244243
-## 8             1    7 186.9941  39     0    Control         8  1 0.2244243
-## 9             1    8 190.1734  39     0    Control         9  1 0.2244243
-## 10            1    9 163.4426  39     0    Control        10  1 0.2244243
+## 1             1    0 231.1471  39     1    Control         1  1 0.2244243
+## 2             1    1 158.6388  39     1    Control         2  1 0.2244243
+## 3             1    2 171.6605  39     1    Control         3  1 0.2244243
+## 4             1    3 176.4105  39     1    Control         4  1 0.2244243
+## 5             1    4 176.2812  39     1    Control         5  1 0.2244243
+## 6             1    5 188.0455  39     1    Control         6  1 0.2244243
+## 7             1    6 201.8052  39     1    Control         7  1 0.2244243
+## 8             1    7 186.9941  39     1    Control         8  1 0.2244243
+## 9             1    8 190.1734  39     1    Control         9  1 0.2244243
+## 10            1    9 163.4426  39     1    Control        10  1 0.2244243
 ##     time_id        error fixed_outcome random_effects        y miss_prob
-## 1  2.533554  2.382697049      177.3603      0.2244243 179.9674     0.646
-## 2  2.533554 -0.319179378      123.4791      2.7579779 125.9179     0.088
-## 3  2.533554  0.716756305      133.7453      5.2915315 139.7536     0.534
-## 4  2.533554 -0.314477357      137.8079      7.8250850 145.3185     0.560
-## 5  2.533554 -0.325146339      138.2109     10.3586386 148.2444     0.119
-## 6  2.533554  0.006078237      147.5341     12.8921922 160.4324     0.415
-## 7  2.533554  1.286803356      158.3539     15.4257457 175.0665     0.718
-## 8  2.533554 -1.039387080      147.7455     17.9592993 164.6655     0.697
-## 9  2.533554  0.385799112      150.6301     20.4928529 171.5087     0.928
-## 10 2.533554  1.927576531      131.0819     23.0264064 156.0359     0.829
+## 1  2.533554  2.382697049      177.6903      0.2244243 180.2974     0.646
+## 2  2.533554 -0.319179378      123.8091      2.7579779 126.2479     0.088
+## 3  2.533554  0.716756305      134.0753      5.2915315 140.0836     0.534
+## 4  2.533554 -0.314477357      138.1379      7.8250850 145.6485     0.560
+## 5  2.533554 -0.325146339      138.5409     10.3586386 148.5744     0.119
+## 6  2.533554  0.006078237      147.8641     12.8921922 160.7624     0.415
+## 7  2.533554  1.286803356      158.6839     15.4257457 175.3965     0.718
+## 8  2.533554 -1.039387080      148.0755     17.9592993 164.9955     0.697
+## 9  2.533554  0.385799112      150.9601     20.4928529 171.8387     0.928
+## 10 2.533554  1.927576531      131.4119     23.0264064 156.3659     0.829
 ##    miss_prob y_missing
-## 1          0  179.9674
+## 1          0  180.2974
 ## 2          1        NA
-## 3          0  139.7536
-## 4          0  145.3185
+## 3          0  140.0836
+## 4          0  145.6485
 ## 5          1        NA
-## 6          0  160.4324
-## 7          0  175.0665
-## 8          0  164.6655
-## 9          0  171.5087
-## 10         0  156.0359</code></pre>
+## 6          0  160.7624
+## 7          0  175.3965
+## 8          0  164.9955
+## 9          0  171.8387
+## 10         0  156.3659</code></pre>
 <p>We can look at the amount of missing data:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -649,38 +649,38 @@
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data_w_missing</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept. time   weight age treat treat_orig level1_id id    int_id
-## 1             1    0 231.1471  39     0    Control         1  1 0.2244243
-## 2             1    1 158.6388  39     0    Control         2  1 0.2244243
-## 3             1    2 171.6605  39     0    Control         3  1 0.2244243
-## 4             1    3 176.4105  39     0    Control         4  1 0.2244243
-## 5             1    4 176.2812  39     0    Control         5  1 0.2244243
-## 6             1    5 188.0455  39     0    Control         6  1 0.2244243
-## 7             1    6 201.8052  39     0    Control         7  1 0.2244243
-## 8             1    7 186.9941  39     0    Control         8  1 0.2244243
-## 9             1    8 190.1734  39     0    Control         9  1 0.2244243
-## 10            1    9 163.4426  39     0    Control        10  1 0.2244243
+## 1             1    0 231.1471  39     1    Control         1  1 0.2244243
+## 2             1    1 158.6388  39     1    Control         2  1 0.2244243
+## 3             1    2 171.6605  39     1    Control         3  1 0.2244243
+## 4             1    3 176.4105  39     1    Control         4  1 0.2244243
+## 5             1    4 176.2812  39     1    Control         5  1 0.2244243
+## 6             1    5 188.0455  39     1    Control         6  1 0.2244243
+## 7             1    6 201.8052  39     1    Control         7  1 0.2244243
+## 8             1    7 186.9941  39     1    Control         8  1 0.2244243
+## 9             1    8 190.1734  39     1    Control         9  1 0.2244243
+## 10            1    9 163.4426  39     1    Control        10  1 0.2244243
 ##     time_id        error fixed_outcome random_effects        y miss_prop
-## 1  2.533554  2.382697049      177.3603      0.2244243 179.9674 0.8683417
-## 2  2.533554 -0.319179378      123.4791      2.7579779 125.9179 0.2035176
-## 3  2.533554  0.716756305      133.7453      5.2915315 139.7536 0.3165829
-## 4  2.533554 -0.314477357      137.8079      7.8250850 145.3185 0.3844221
-## 5  2.533554 -0.325146339      138.2109     10.3586386 148.2444 0.3798995
-## 6  2.533554  0.006078237      147.5341     12.8921922 160.4324 0.5562814
-## 7  2.533554  1.286803356      158.3539     15.4257457 175.0665 0.7236181
-## 8  2.533554 -1.039387080      147.7455     17.9592993 164.6655 0.5201005
-## 9  2.533554  0.385799112      150.6301     20.4928529 171.5087 0.5743719
-## 10 2.533554  1.927576531      131.0819     23.0264064 156.0359 0.2442211
+## 1  2.533554  2.382697049      177.6903      0.2244243 180.2974 0.8683417
+## 2  2.533554 -0.319179378      123.8091      2.7579779 126.2479 0.2035176
+## 3  2.533554  0.716756305      134.0753      5.2915315 140.0836 0.3165829
+## 4  2.533554 -0.314477357      138.1379      7.8250850 145.6485 0.3844221
+## 5  2.533554 -0.325146339      138.5409     10.3586386 148.5744 0.3798995
+## 6  2.533554  0.006078237      147.8641     12.8921922 160.7624 0.5562814
+## 7  2.533554  1.286803356      158.6839     15.4257457 175.3965 0.7236181
+## 8  2.533554 -1.039387080      148.0755     17.9592993 164.9955 0.5201005
+## 9  2.533554  0.385799112      150.9601     20.4928529 171.8387 0.5743719
+## 10 2.533554  1.927576531      131.4119     23.0264064 156.3659 0.2442211
 ##    miss_prob missing y_missing
 ## 1  0.4186856       1        NA
-## 2  0.7042782       0  125.9179
-## 3  0.8222003       0  139.7536
-## 4  0.7070236       0  145.3185
+## 2  0.7042782       0  126.2479
+## 3  0.8222003       0  140.0836
+## 4  0.7070236       0  145.6485
 ## 5  0.1005621       1        NA
 ## 6  0.2103423       1        NA
 ## 7  0.3023945       1        NA
-## 8  0.6374396       0  164.6655
-## 9  0.6387437       0  171.5087
-## 10 0.8129966       0  156.0359</code></pre>
+## 8  0.6374396       0  164.9955
+## 9  0.6387437       0  171.8387
+## 10 0.8129966       0  156.3659</code></pre>
 <p>We can look at the amount of missing data:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -720,37 +720,37 @@
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data_w_missing</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept. time   weight age treat treat_orig level1_id id    int_id
-## 1             1    0 231.1471  39     0    Control         1  1 0.2244243
-## 2             1    1 158.6388  39     0    Control         2  1 0.2244243
-## 3             1    2 171.6605  39     0    Control         3  1 0.2244243
-## 4             1    3 176.4105  39     0    Control         4  1 0.2244243
-## 5             1    4 176.2812  39     0    Control         5  1 0.2244243
-## 6             1    5 188.0455  39     0    Control         6  1 0.2244243
-## 7             1    6 201.8052  39     0    Control         7  1 0.2244243
-## 8             1    7 186.9941  39     0    Control         8  1 0.2244243
-## 9             1    8 190.1734  39     0    Control         9  1 0.2244243
-## 10            1    9 163.4426  39     0    Control        10  1 0.2244243
+## 1             1    0 231.1471  39     1    Control         1  1 0.2244243
+## 2             1    1 158.6388  39     1    Control         2  1 0.2244243
+## 3             1    2 171.6605  39     1    Control         3  1 0.2244243
+## 4             1    3 176.4105  39     1    Control         4  1 0.2244243
+## 5             1    4 176.2812  39     1    Control         5  1 0.2244243
+## 6             1    5 188.0455  39     1    Control         6  1 0.2244243
+## 7             1    6 201.8052  39     1    Control         7  1 0.2244243
+## 8             1    7 186.9941  39     1    Control         8  1 0.2244243
+## 9             1    8 190.1734  39     1    Control         9  1 0.2244243
+## 10            1    9 163.4426  39     1    Control        10  1 0.2244243
 ##     time_id        error fixed_outcome random_effects        y missing
-## 1  2.533554  2.382697049      177.3603      0.2244243 179.9674       0
-## 2  2.533554 -0.319179378      123.4791      2.7579779 125.9179       0
-## 3  2.533554  0.716756305      133.7453      5.2915315 139.7536       0
-## 4  2.533554 -0.314477357      137.8079      7.8250850 145.3185       0
-## 5  2.533554 -0.325146339      138.2109     10.3586386 148.2444       0
-## 6  2.533554  0.006078237      147.5341     12.8921922 160.4324       0
-## 7  2.533554  1.286803356      158.3539     15.4257457 175.0665       0
-## 8  2.533554 -1.039387080      147.7455     17.9592993 164.6655       0
-## 9  2.533554  0.385799112      150.6301     20.4928529 171.5087       0
-## 10 2.533554  1.927576531      131.0819     23.0264064 156.0359       1
+## 1  2.533554  2.382697049      177.6903      0.2244243 180.2974       0
+## 2  2.533554 -0.319179378      123.8091      2.7579779 126.2479       0
+## 3  2.533554  0.716756305      134.0753      5.2915315 140.0836       0
+## 4  2.533554 -0.314477357      138.1379      7.8250850 145.6485       0
+## 5  2.533554 -0.325146339      138.5409     10.3586386 148.5744       0
+## 6  2.533554  0.006078237      147.8641     12.8921922 160.7624       0
+## 7  2.533554  1.286803356      158.6839     15.4257457 175.3965       0
+## 8  2.533554 -1.039387080      148.0755     17.9592993 164.9955       0
+## 9  2.533554  0.385799112      150.9601     20.4928529 171.8387       0
+## 10 2.533554  1.927576531      131.4119     23.0264064 156.3659       1
 ##    y_missing
-## 1   179.9674
-## 2   125.9179
-## 3   139.7536
-## 4   145.3185
-## 5   148.2444
-## 6   160.4324
-## 7   175.0665
-## 8   164.6655
-## 9   171.5087
+## 1   180.2974
+## 2   126.2479
+## 3   140.0836
+## 4   145.6485
+## 5   148.5744
+## 6   160.7624
+## 7   175.3965
+## 8   164.9955
+## 9   171.8387
 ## 10        NA</code></pre>
 <p>We can look at the amount of missing data:</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
@@ -799,31 +799,31 @@
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data_w_missing</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept. time   weight age treat treat_orig level1_id id    int_id
-## 1             1    0 231.1471  39     0    Control         1  1 0.2244243
-## 2             1    1 158.6388  39     0    Control         2  1 0.2244243
-## 3             1    2 171.6605  39     0    Control         3  1 0.2244243
-## 4             1    3 176.4105  39     0    Control         4  1 0.2244243
-## 5             1    4 176.2812  39     0    Control         5  1 0.2244243
-## 6             1    5 188.0455  39     0    Control         6  1 0.2244243
-## 7             1    6 201.8052  39     0    Control         7  1 0.2244243
-## 8             1    7 186.9941  39     0    Control         8  1 0.2244243
-## 9             1    8 190.1734  39     0    Control         9  1 0.2244243
-## 10            1    9 163.4426  39     0    Control        10  1 0.2244243
+## 1             1    0 231.1471  39     1    Control         1  1 0.2244243
+## 2             1    1 158.6388  39     1    Control         2  1 0.2244243
+## 3             1    2 171.6605  39     1    Control         3  1 0.2244243
+## 4             1    3 176.4105  39     1    Control         4  1 0.2244243
+## 5             1    4 176.2812  39     1    Control         5  1 0.2244243
+## 6             1    5 188.0455  39     1    Control         6  1 0.2244243
+## 7             1    6 201.8052  39     1    Control         7  1 0.2244243
+## 8             1    7 186.9941  39     1    Control         8  1 0.2244243
+## 9             1    8 190.1734  39     1    Control         9  1 0.2244243
+## 10            1    9 163.4426  39     1    Control        10  1 0.2244243
 ##     time_id        error fixed_outcome random_effects        y missing
-## 1  2.533554  2.382697049      177.3603      0.2244243 179.9674       0
-## 2  2.533554 -0.319179378      123.4791      2.7579779 125.9179       0
-## 3  2.533554  0.716756305      133.7453      5.2915315 139.7536       0
-## 4  2.533554 -0.314477357      137.8079      7.8250850 145.3185       1
-## 5  2.533554 -0.325146339      138.2109     10.3586386 148.2444       1
-## 6  2.533554  0.006078237      147.5341     12.8921922 160.4324       1
-## 7  2.533554  1.286803356      158.3539     15.4257457 175.0665       1
-## 8  2.533554 -1.039387080      147.7455     17.9592993 164.6655       1
-## 9  2.533554  0.385799112      150.6301     20.4928529 171.5087       1
-## 10 2.533554  1.927576531      131.0819     23.0264064 156.0359       1
+## 1  2.533554  2.382697049      177.6903      0.2244243 180.2974       0
+## 2  2.533554 -0.319179378      123.8091      2.7579779 126.2479       0
+## 3  2.533554  0.716756305      134.0753      5.2915315 140.0836       0
+## 4  2.533554 -0.314477357      138.1379      7.8250850 145.6485       1
+## 5  2.533554 -0.325146339      138.5409     10.3586386 148.5744       1
+## 6  2.533554  0.006078237      147.8641     12.8921922 160.7624       1
+## 7  2.533554  1.286803356      158.6839     15.4257457 175.3965       1
+## 8  2.533554 -1.039387080      148.0755     17.9592993 164.9955       1
+## 9  2.533554  0.385799112      150.9601     20.4928529 171.8387       1
+## 10 2.533554  1.927576531      131.4119     23.0264064 156.3659       1
 ##    y_missing
-## 1   179.9674
-## 2   125.9179
-## 3   139.7536
+## 1   180.2974
+## 2   126.2479
+## 3   140.0836
 ## 4         NA
 ## 5         NA
 ## 6         NA

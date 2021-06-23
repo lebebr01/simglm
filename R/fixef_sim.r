@@ -195,6 +195,46 @@ sim_knot <- function(var, knot_locations, right = FALSE) {
   cut(var, knot_locat, labels = FALSE, right = right) - 1
 }
 
+#' Simulate knot locations
+#' 
+#' Function that generates knot locations. An example of usefulness of this funciton
+#' would be with generation of interrupted time series data. Another application may
+#' be with simulation of piecewise linear data structures.
+#' 
+#' @param data Data to pass to the sim_knot2 function to determine knot 
+#'   location.
+#' @param sim_args A named list with special model formula syntax. See details and examples
+#'   for more information. The named list may contain the following:
+#'   \itemize{
+#'     \item fixed: This is the fixed portion of the model (i.e. covariates)
+#'     \item random: This is the random portion of the model (i.e. random effects)
+#'     \item error: This is the error (i.e. residual term).
+#'   }
+#' @param ... Other arguments to pass to error simulation functions.
+#' @export 
+#' @examples
+#' sim_knot2()
+simulate_knot <- function(data, sim_args, ...) {
+  
+  purrr::invoke_map("sim_knot2", 
+                    sim_args[['knot']], 
+                    ...
+  )
+  
+}
+
+sim_knot2 <- function(data, variable, knot_locations, right, ...) {
+  
+  if(!right) {
+    knot_locat <- c(min(data[[variable]]), knot_locations, (max(data[[variable]]) + 1))
+  } else {
+    knot_locat <- c((min(data[[variable]]) - 1), knot_locations, (max(data[[variable]])))
+  }
+  
+  cut(data[[variable]], knot_locat, labels = FALSE, right = right, ...) - 1
+  
+}
+
 #' Simulate Time
 #' 
 #' This function simulates data for the time variable of longitudinal data.
@@ -220,14 +260,14 @@ sim_time <- function(n, time_levels = NULL, ...) {
 }
 
 sim_variable <- function(var_type = c("continuous", "factor", "ordinal", 
-                                      "knot", 'time'), ...) {
+                                      'time'), ...) {
   var_type <- match.arg(var_type)
   
   switch(var_type,
     continuous = sim_continuous2(...),
     factor = sim_factor2(...),
     ordinal = sim_factor2(...),
-    knot = sim_knot(...),
+    #knot = sim_knot2(...),
     time = sim_time(...)
   )
 }

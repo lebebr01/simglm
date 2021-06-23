@@ -122,3 +122,19 @@ test_that('number of columns, categorical and continuous', {
   expect_equal(nrow(simulate_fixed(data = NULL, sim_arguments)), 100)
   expect_equal(ncol(simulate_fixed(data = NULL, sim_arguments)), 8)
 })
+
+test_that('knot sim', {
+  sim_args <- list(
+    formula = y ~ 1  + age + age_knot,
+    fixed = list(age = list(var_type = 'ordinal', levels = 30:60)),
+    knot = list(age_knot = list(variable = 'age', 
+                                knot_locations = 50)),
+    sample_size = 250,
+    error = list(variance = 10),
+    reg_weights = c(2, .5, 1.5)
+  )
+  
+  expect_equal(nrow(simulate_fixed(data = NULL, sim_args = sim_args)), 250)
+  expect_equal(ncol(simulate_fixed(data = NULL, sim_args = sim_args)), 4)
+  expect_equal(length(unique(simulate_fixed(data = NULL, sim_args = sim_args)[['age_knot']])), 2)
+})

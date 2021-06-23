@@ -210,16 +210,14 @@ sim_knot <- function(var, knot_locations, right = FALSE) {
 #'     \item random: This is the random portion of the model (i.e. random effects)
 #'     \item error: This is the error (i.e. residual term).
 #'   }
-#' @param ... Other arguments to pass to error simulation functions.
-#' @export 
-#' @examples
-#' sim_knot2()
-simulate_knot <- function(data, sim_args, ...) {
+#' @param data Mostly internal argument.
+#' @export
+simulate_knot <- function(data, sim_args) {
   
   purrr::invoke_map("sim_knot2", 
                     sim_args[['knot']], 
-                    ...
-  )
+                    data = data
+  ) %>% data.frame()
   
 }
 
@@ -323,7 +321,22 @@ simulate_fixed <- function(data, sim_args, ...) {
       data.frame()
   }
   
+
+  
   if(!is.null(sim_args[['knot']])) {
+    
+    knot_names <- names(sim_args[['knot']])
+    knot_loc <- grep(knot_names, fixed_vars)
+    
+    fixed_vars_knot <- fixed_vars[-knot_loc]
+      
+    if(any(grepl(":|^I", fixed_vars_knot))) {
+      int_loc <- grep(":|^I", fixed_vars_knot)
+      colnames(Xmat) <- fixed_vars_knot[-int_loc]
+    } else {
+      colnames(Xmat) <- fixed_vars_knot
+    } 
+    
     Xmat <- cbind(Xmat, 
                   simulate_knot(data = Xmat, sim_args = sim_args))
   }

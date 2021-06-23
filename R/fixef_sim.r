@@ -223,7 +223,7 @@ simulate_knot <- function(data, sim_args, ...) {
   
 }
 
-sim_knot2 <- function(data, variable, knot_locations, right, ...) {
+sim_knot2 <- function(data, variable, knot_locations, right = FALSE, ...) {
   
   if(!right) {
     knot_locat <- c(min(data[[variable]]), knot_locations, (max(data[[variable]]) + 1))

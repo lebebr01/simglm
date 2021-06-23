@@ -323,6 +323,11 @@ simulate_fixed <- function(data, sim_args, ...) {
       data.frame()
   }
   
+  if(!is.null(sim_args[['knot']])) {
+    Xmat <- cbind(Xmat, 
+                  simulate_knot(data = Xmat, sim_args = sim_args))
+  }
+  
   if(any(grepl(":|^I", fixed_vars))) {
     int_loc <- grep(":|^I", fixed_vars)
     colnames(Xmat) <- fixed_vars[-int_loc]

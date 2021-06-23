@@ -241,3 +241,10 @@ parse_correlation <- function(sim_args) {
   list(fixed_correlation = fixed_correlation,
        random_correlation = random_correlation)
 }
+
+parse_knot <- function(sim_args) {
+  
+  grepl('knot', sim_args[['var_type']])
+  
+  
+}

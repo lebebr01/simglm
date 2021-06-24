@@ -97,7 +97,7 @@ correlate_randomeffects <- function(data, sim_args, correlation_matrices) {
       mean_vars <- rep(0, length(sd_vars))
     }
     
-    var_names <- names(sim_args[['randomeffect']])
+    var_names <- names(sim_args[['randomeffect']])[names(sim_args[['randomeffect']]) %in% colnames(correlation_matrices[['random_correlation']])]
     
     correlate_data <- data[colnames(correlation_matrices[['random_correlation']])]
     correlate_data <- do.call('cbind', lapply(seq_along(sd_vars), function(xx) 
@@ -124,7 +124,8 @@ correlate_fixedeffects <- function(data, sim_args, correlation_matrices) {
     if(is.null(mean_vars)) {
       mean_vars <- rep(0, length(sd_vars))
     }
-    var_names <- names(sim_args[['fixed']])
+    
+    var_names <- names(sim_args[['fixed']])[names(sim_args[['fixed']]) %in% colnames(correlation_matrices[['fixed_correlation']])]
     
     correlate_data <- data[colnames(correlation_matrices[['fixed_correlation']])]
     correlate_data <- do.call('cbind', lapply(seq_along(sd_vars), function(xx) 

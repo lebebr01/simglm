@@ -241,3 +241,13 @@ parse_correlation <- function(sim_args) {
   list(fixed_correlation = fixed_correlation,
        random_correlation = random_correlation)
 }
+
+parse_fixedtype <- function(sim_args, names) {
+  
+  lapply(names, function(xx) sim_args[['fixed']][[xx]][['var_type']])
+  
+}
+
+parse_fixedlevels <- function(sim_args, names) {
+  lapply(names, function(xx) sim_args[['fixed']][[xx]]['levels'])
+}

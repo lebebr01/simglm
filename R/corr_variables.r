@@ -138,8 +138,36 @@ correlate_fixedeffects <- function(data, sim_args, correlation_matrices) {
                          sd = sd_vars, mean = mean_vars,
                          var_names = var_names)
     
+    if(any(unlist(parse_fixedtype(sim_args, var_names)) == 'ordinal')) {
+      ordinal_loc <- unlist(parse_fixedtype(sim_args, var_names)) == 'ordinal'
+      
+      ordinal_levels <- parse_fixedlevels(sim_args, var_names[ordinal_loc])
+      ordinal_min <- lapply(seq_along(ordinal_levels), 
+                            function(xx) min(unlist(ordinal_levels[[xx]])))
+      ordinal_max <- lapply(seq_along(ordinal_levels), 
+                            function(xx) max(unlist(ordinal_levels[[xx]])))
+      
+      round_correlated_data <- lapply(var_names[ordinal_loc], 
+                                      function(xx) 
+                                        round_ordinal(correlated_data[[xx]], 
+                                                      min = ordinal_min[[xx]],
+                                                      max = ordinal_max[[xx]]))
+      names(round_correlated_data) <- var_names[ordinal_loc]
+      names(correlated_data)[names(correlated_data) %in% var_names[ordinal_loc]] <- paste0(var_names[ordinal_loc], '_corr')
+      correlated_data <- cbind(correlated_data, round_correlated_data)
+    }
+    
     names(data)[names(data) %in% var_names] <- paste0(var_names, '_old')
     
     cbind(data, correlated_data)
 
+}
+
+round_ordinal <- function(variable, min, max) {
+  
+  rounded_data <- round(variable, 0)
+  rounded_data <- ifelse(rounded_data < min, min, 
+                         ifelse(rounded_data > max, max, rounded_data))
+  
+  rounded_data
 }

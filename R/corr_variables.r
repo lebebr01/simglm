@@ -127,6 +127,23 @@ correlate_fixedeffects <- function(data, sim_args, correlation_matrices) {
     
     var_names <- names(sim_args[['fixed']])[names(sim_args[['fixed']]) %in% colnames(correlation_matrices[['fixed_correlation']])]
     
+    if(any(unlist(parse_fixedtype(sim_args, var_names)) == 'ordinal')) {
+      ordinal_loc <- unlist(parse_fixedtype(sim_args, var_names)) == 'ordinal'
+      
+      sd_ordinal <- lapply(var_names[ordinal_loc], 
+                           function(xx) sd(data[[xx]], na.rm = TRUE))
+      mean_ordinal <- lapply(var_names[ordinal_loc], 
+                            function(xx) mean(data[[xx]], na.rm = TRUE))
+      
+      ordinal_loc_grep <- grep("TRUE", ordinal_loc) - 1
+      
+      for(i in 0:(length(ordinal_loc_grep)-1)) {
+        sd_vars <- append(sd_vars, sd_ordinal[[i+1]], after=(ordinal_loc_grep[i+1]+i))
+        mean_vars <- append(mean_vars, mean_ordinal[[i+1]], after=(ordinal_loc_grep[i+1]+i))
+      }
+      
+    }
+    
     correlate_data <- data[colnames(correlation_matrices[['fixed_correlation']])]
     correlate_data <- do.call('cbind', lapply(seq_along(sd_vars), function(xx) 
       standardize(correlate_data[[xx]], mean = mean_vars[xx], sd = sd_vars[xx])))

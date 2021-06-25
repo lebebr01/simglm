@@ -100,3 +100,44 @@ test_that('correlate fixed and random', {
   expect_equal(mean(sim_data$sat), 500, tolerance = .1)
 })
 
+test_that('ordinal attribute correlation', {
+  
+  sim_arguments <- list(
+    formula = y ~ 1 + education + politics + religiosity + pers_beliefs + rac_acc + main_acc + rac_acc:main_acc ,
+    fixed = list(
+      education = list(var_type = 'ordinal', levels = 1:5, prob = c(.01, .29, .35, .17, .18)),
+      politics = list(var_type = 'continuous', dist = 'rnorm', mean = 0, sd = 1),
+      religiosity = list(var_type = 'continuous', dist = 'rnorm', mean = 0, sd = 1),
+      pers_beliefs = list(var_type = 'continuous', dist = 'rnorm', mean = 0, sd = 1),
+      rac_acc = list(var_type = 'continuous', dist = 'rnorm', mean = 0, sd = 1),
+      main_acc = list(var_type = 'continuous', dist = 'rnorm', mean = 0, sd = 1)
+    ),
+    correlate = list(fixed = data.frame(x = c(rep('education', 5), rep('politics', 4), rep('religiosity', 3), 
+                                              rep('pers_beliefs', 2), 'rac_acc'),
+                                        y = c('politics', 'religiosity', 'pers_beliefs', 'rac_acc', 'main_acc',
+                                              'religiosity', 'pers_beliefs', 'rac_acc', 'main_acc',
+                                              'pers_beliefs', 'rac_acc', 'main_acc',
+                                              'rac_acc', 'main_acc', 'main_acc'),
+                                        corr = c(rep(0.6, 15)))),
+    sample_size = 10000,
+    reg_weights = c(0, -0.03, -0.07, -0.002, 0.24, 0.31, 0.19, -0.33)
+  )
+  
+  set.seed(2)
+  
+  sim_data <- simulate_fixed(data = NULL, sim_arguments) %>%
+    simulate_error(sim_arguments) %>%
+    correlate_variables(sim_arguments)
+  
+  expect_true(min(sim_data$education) == 1)
+  expect_true(max(sim_data$education) == 5)
+  expect_false(max(sim_data$education_corr) == 5)
+  expect_false(min(sim_data$education_corr) == 1)
+  
+  expect_equal(cor(sim_data$education, sim_data$politics), .6, tolerance = .03)
+  expect_equal(cor(sim_data$education, sim_data$religiosity), .6, tolerance = .03)
+  expect_equal(cor(sim_data$education, sim_data$pers_beliefs), .6, tolerance = .03)
+  expect_equal(cor(sim_data$education, sim_data$rac_acc), .6, tolerance = .03)
+  expect_equal(cor(sim_data$education, sim_data$main_acc), .6, tolerance = .03)
+})
+

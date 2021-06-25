@@ -164,11 +164,12 @@ correlate_fixedeffects <- function(data, sim_args, correlation_matrices) {
       ordinal_max <- lapply(seq_along(ordinal_levels), 
                             function(xx) max(unlist(ordinal_levels[[xx]])))
       
-      round_correlated_data <- lapply(var_names[ordinal_loc], 
+      round_correlated_data <- do.call("cbind", lapply(seq_along(var_names[ordinal_loc]), 
                                       function(xx) 
-                                        round_ordinal(correlated_data[[xx]], 
+                                        round_ordinal(correlated_data[[var_names[ordinal_loc][xx]]], 
                                                       min = ordinal_min[[xx]],
-                                                      max = ordinal_max[[xx]]))
+                                                      max = ordinal_max[[xx]]))) %>%
+        data.frame()
       names(round_correlated_data) <- var_names[ordinal_loc]
       names(correlated_data)[names(correlated_data) %in% var_names[ordinal_loc]] <- paste0(var_names[ordinal_loc], '_corr')
       correlated_data <- cbind(correlated_data, round_correlated_data)

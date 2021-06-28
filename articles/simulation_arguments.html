@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Simulation Argument Details for <code>simglm</code>
 </h1>
             
-            <h4 data-toc-skip class="date">2021-06-25</h4>
+            <h4 data-toc-skip class="date">2021-06-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/master/vignettes/simulation_arguments.Rmd" class="external-link"><code>vignettes/simulation_arguments.Rmd</code></a></small>
       <div class="hidden name"><code>simulation_arguments.Rmd</code></div>
@@ -267,17 +267,61 @@
 <p>An additional optional argument is <code>replace</code>. The <code>replace</code> argument specified whether the sampling is done with or without replacement. The default behavior is to do sampling with replacement. If sampling without replacement is desired set <code>replace = FALSE</code>. See <code>sample</code> for more details on this argument.</p>
 <p>Finally, the probability of selecting each value specified to the <code>levels</code> argument is also able to be specified through the <code>prob</code> argument. If <code>prob</code> is specified, it takes a vector of probabilities that must be the same length as the levels argument. The default behavior is for each value specified with <code>levels</code> to be equally likely to be sampled.</p>
 </div>
-<div id="knot-variable" class="section level2">
+<div id="knot-variables" class="section level2">
 <h2 class="hasAnchor">
-<a href="#knot-variable" class="anchor" aria-hidden="true"></a>Knot Variable</h2>
-<p>To come…</p>
+<a href="#knot-variables" class="anchor" aria-hidden="true"></a>Knot Variables</h2>
+<p>Knot variables are defined as those that are a prominent point based on a specific spot of another variable. A common example of these types of variables would occur in interrupted time series data, where there is a place in time where the treatment is given after a series of baselines. The place where the treatment is given is the knot location.</p>
+<p>In simglm, knots are specified within the formula, it is made particularly explicit below with the name: <code>age_knot</code>. Adding <code>_knot</code> at the end of a knot variable is not needed, but is used here to be more illustrative. When specifying knot attributes, the specific behavior of these attributes are controlled through the <code>knot</code> named element of the simulation arguments. See the example below with the simulation arguments for the variable, <code>age_knot</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sim_args</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+    formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span>  <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">age_knot</span>,
+    fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, levels <span class="op">=</span> <span class="fl">30</span><span class="op">:</span><span class="fl">60</span><span class="op">)</span><span class="op">)</span>,
+    knot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>age_knot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variable <span class="op">=</span> <span class="st">'age'</span>, 
+                                knot_locations <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span>,
+    sample_size <span class="op">=</span> <span class="fl">500</span>,
+    error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
+    reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">.5</span>, <span class="fl">1.5</span><span class="op">)</span>
+  <span class="op">)</span></code></pre></div>
+<p>The required elements to simulate a knot variable is the variable to base the knot location on. This is specified with, <code>variable = 'age'</code> above. The second required element is the argument, <code>knot_locations</code> which specifies the location where the knot is placed. The knot variable itself is a variable that takes on the number of knot locations plus one, therefore in this example, the <code>age_knot</code> variable takes on two values. This would be similar to an indicator or dummy variable used in a linear regression model.</p>
+<p>Similar to above, the <code><a href="../reference/simulate_fixed.html">simulate_fixed()</a></code> function does the simulation of this fixed effect term.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, sim_args <span class="op">=</span> <span class="va">sim_args</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>##   X.Intercept. age age_knot level1_id
+## 1            1  50        1         1
+## 2            1  56        1         2
+## 3            1  30        0         3
+## 4            1  38        0         4
+## 5            1  33        0         5
+## 6            1  42        0         6</code></pre>
+<p>As specified, this term would represent a change in the intercept for those that are larger than the knot location, above this was specified as 50 years. More complicated structures can be obtained. One example shown here is that an interaction between the knot variable and the age variable can be made. This term would then represent a change in slope for those that are older than 50. The only change needed is to add this term to the specification within the formula and also add another term to the <code>reg_weights</code> argument to specify on average the magnitude of the slope change.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sim_args</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+    formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span>  <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">age_knot</span> <span class="op">+</span> <span class="va">age</span><span class="op">:</span><span class="va">age_knot</span>,
+    fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, levels <span class="op">=</span> <span class="fl">30</span><span class="op">:</span><span class="fl">60</span><span class="op">)</span><span class="op">)</span>,
+    knot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>age_knot <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variable <span class="op">=</span> <span class="st">'age'</span>, 
+                                knot_locations <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span>,
+    sample_size <span class="op">=</span> <span class="fl">500</span>,
+    error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>,
+    reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">.5</span>, <span class="fl">1.5</span>, <span class="fl">10</span><span class="op">)</span>
+  <span class="op">)</span>
+
+<span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, sim_args <span class="op">=</span> <span class="va">sim_args</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>##   X.Intercept. age age_knot age.age_knot level1_id
+## 1            1  48        0            0         1
+## 2            1  51        1           51         2
+## 3            1  42        0            0         3
+## 4            1  49        0            0         4
+## 5            1  35        0            0         5
+## 6            1  33        0            0         6</code></pre>
 </div>
 </div>
 <div id="random-error-arguments" class="section level1">
 <h1 class="hasAnchor">
 <a href="#random-error-arguments" class="anchor" aria-hidden="true"></a>Random Error Arguments</h1>
 <p>By default, the random error is generated as random normal with a mean of 0 and standard deviation of 1. If this is the desired behavior, no additional simulation arguments need to be specified in the simulation arguments. For example, the code below generates random error using the fixed arguments already shown above.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -318,7 +362,7 @@
 <h2 class="hasAnchor">
 <a href="#optional-arguments-for-random-error" class="anchor" aria-hidden="true"></a>Optional Arguments for Random Error</h2>
 <p>The two main optional arguments for the random error component include a <code>dist</code> and <code>variance</code> that represent the error generating function and variance of the random error respectively. For example, if a t-distribution is desired for simulation of random error, <code>dist = 'rt'</code> can be used to specify the t-distribution as the generating distribution. When distributions other than random normal are specified, it is common that additional arguments will need to be specified for the generating distribution function (i.e. <code>rt</code>). In the <code>rt</code> example, the <code>df</code> argument is needed to specify the degrees of freedom for the t-distribution. Below is an example using a t-distribution.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -357,7 +401,7 @@
 ## 19  0.2150117         9  2
 ## 20  2.1937363        10  2</code></pre>
 <p>Finally, the variance of the random error can also be specified to be something other than the default 1. For example, if the variance is desired to be 10, then the argument <code>variance = 10</code> will set this variance. This variance works with any distribution function. For example, the following will generate data as a t-distribution with a variance of 10.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -376,7 +420,7 @@
 <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">error_data</span><span class="op">$</span><span class="va">error</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 19.36487</code></pre>
 <p>Note that the variance does not actually equal 10 here. This is due to the generating distribution specified (i.e. t-distribution with 4 degrees of freedom) has a theoretical variance of 2. In cases when the random error has a variance other than 1, the variable needs to be standardized prior to converting to the desired variance value. The standardization can be done in two ways. One, an empirical mean and standard deviation of the generating distribution can be obtained by setting the argument <code>ther_sim = TRUE</code>. For example:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -395,7 +439,7 @@
 <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">error_data</span><span class="op">$</span><span class="va">error</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 6.893405</code></pre>
 <p>This simulation takes longer to run as the generated empirical mean and standard deviation for the standardization draws a large number of random values from the specified distribution. To speed up this process, the theoretical values can be specified directly within the <code>ther_val</code> argument as a vector with the mean specified first followed by the standard deviation. This is shown below:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -418,7 +462,7 @@
 <h2 class="hasAnchor">
 <a href="#heterogeneity-of-variance" class="anchor" aria-hidden="true"></a>Heterogeneity of Variance</h2>
 <p>It is also possible to generate heterogeneity of variance for the random error.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">simulation_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
   formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">group</span>,
   fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'factor'</span>, 
@@ -433,7 +477,7 @@
 <span class="va">hetero_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">simulation_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">simulation_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/simulate_heterogeneity.html">simulate_heterogeneity</a></span><span class="op">(</span><span class="va">simulation_arguments</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">hetero_data</span> <span class="op">%&gt;%</span> 
   <span class="fu">group_by</span><span class="op">(</span><span class="va">group</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">summarise</span><span class="op">(</span>var_error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">var</a></span><span class="op">(</span><span class="va">error</span><span class="op">)</span>, 
@@ -451,7 +495,7 @@
 <p>The random effect arguments are passed through a named element of the list to the simulation arguments called ‘randomeffect’. Within this element, each random effect specified in the formula must be specified as a named list. The named list allows the user to specify the names that will be used in the data simulation for the random effects. The default behavior of these random effects is to be simulated from a random normal distribution with mean 0 and variance of 1.</p>
 <p>Many of the same arguments that have been discussed with the error simulation are possible for the random effect simulation arguments. These include: <code>dist</code>, <code>variance</code>, <code>ther_sim</code>, <code>ther_val</code> and other arguments that are needed to pass on the data generating function. In addition, the argument <code>var_level</code> first introduced with the fixed effects are present here indicating which level of the data structure the random effect should be generated at. These arguments will not be discussed in more detail here, but readers can see examples of these arguments within the fixed effects and random error sections above.</p>
 <p>Below is an example that simulated two random effects in a two-level nested model and specifies the variance of 8 and 3 for the two random effects respectively. Finally, you will notice in the final output, the names of the random effect columns are specified by the names included in the list associated with the “randomeffect” portion of the simulation arguments.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -494,7 +538,7 @@
 <h2 class="hasAnchor">
 <a href="#cross-classified-random-effects" class="anchor" aria-hidden="true"></a>Cross-Classified Random Effects</h2>
 <p>If cross-classified random effects are desired, these can be specified directly within the formula syntax as you would with lme4. For example, <code>y ~ 1 + time + weight + age + treat + (1 + time| id) + (1 | neighborhood_id)</code>. When documenting the simulation arguments for the additional cross-classified random effect (i.e. <code>(1 | neighborhood_id)</code>), specifying <code>cross_class = TRUE</code> with that random effect to identify that this is indeed a cross-classified random effect. Secondly, you can also specify directly the number of clusters that are associated with this cross-classified factor, this can be different than those specified in the <code>sample_size</code> argument. This can be done with the <code>num_ids</code> argument. Below is an example with a single cross-classified random effect representing neighborhoods individuals belong in</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -548,7 +592,7 @@
 <h2 class="hasAnchor">
 <a href="#random-missing-data" class="anchor" aria-hidden="true"></a>Random Missing Data</h2>
 <p>First, lets explore random missing data. This structure is equivalent to the missing completely at random framework if you are familiar with Rubin’s missing data classifications. To generate random missing data the <code>type = 'random'</code> is specified. Two additional arguments are needed to generate the missing data, first the missing proportion needs to be specified with <code>miss_prop</code> and the name of the new response variable with missing data needs to be specified with <code>new_outcome</code>. Below is an example generating data with random missing data.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -609,7 +653,7 @@
 ## 9          0  171.8387
 ## 10         0  156.3659</code></pre>
 <p>We can look at the amount of missing data:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## FALSE  TRUE 
@@ -619,7 +663,7 @@
 <h2 class="hasAnchor">
 <a href="#mar-missing-data" class="anchor" aria-hidden="true"></a>MAR Missing Data</h2>
 <p>Data that are missing at random (MAR) can be generated as well.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -682,7 +726,7 @@
 ## 9  0.6387437       0  171.8387
 ## 10 0.8129966       0  156.3659</code></pre>
 <p>We can look at the amount of missing data:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## FALSE  TRUE 
@@ -692,7 +736,7 @@
 <h2 class="hasAnchor">
 <a href="#dropout-missing-data" class="anchor" aria-hidden="true"></a>Dropout Missing Data</h2>
 <p>Dropout missing data is possible when simulating data from a longitudinal design. When requesting dropout missing data, observations are removed after a specific point in the time cycle. For example, perhaps an individual stops being a part of the study after the third measurement. To request this type of missing data, the <code>type = 'dropout'</code> can be specified. In addition, one new argument is needed, <code>clust_var</code>. This argument represents the id associated with the clusters with longitudinal data. Below is an example:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -753,13 +797,13 @@
 ## 9   171.8387
 ## 10        NA</code></pre>
 <p>We can look at the amount of missing data:</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## FALSE  TRUE 
 ##  0.74  0.26</code></pre>
 <p>We can also look now at the amount of missing by the time variable.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span>, <span class="va">data_w_missing</span><span class="op">$</span><span class="va">time</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##        
 ##            0    1    2    3    4    5    6    7    8    9
@@ -769,7 +813,7 @@
 <h3 class="hasAnchor">
 <a href="#specify-location-of-dropout" class="anchor" aria-hidden="true"></a>Specify location of dropout</h3>
 <p>If additional control is desired, specifying the location of the dropout is possible. In this situation, a vector is passed to <code>dropout_location</code> that specifies for each individual (more generally each level 2 unit) where the dropout occurs. Below is an example of this.</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -832,13 +876,13 @@
 ## 9         NA
 ## 10        NA</code></pre>
 <p>We can look at the amount of missing data:</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## FALSE  TRUE 
 ##  0.58  0.42</code></pre>
 <p>We can also look now at the amount of missing by the time variable.</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span>, <span class="va">data_w_missing</span><span class="op">$</span><span class="va">time</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##        
 ##             0     1     2     3     4     5     6     7     8     9
@@ -856,7 +900,7 @@
 <h2 class="hasAnchor">
 <a href="#changing-family-argument" class="anchor" aria-hidden="true"></a>Changing Family Argument</h2>
 <p>For GLM models, users may wish to directly specify the family argument or change the link function within a specific family. For example, when generating data with a binary dependent variable, the logistic or probit links could be used when specifying the binomial family. Below is an example of using the binomial family with a logit link (the default link function).</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -882,7 +926,7 @@
 ## Family: binomial 
 ## Link function: logit</code></pre>
 <p>The link function could then be changed to a probit link function with the following code:</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -918,7 +962,7 @@
 <h2 class="hasAnchor">
 <a href="#marginal-models" class="anchor" aria-hidden="true"></a>Marginal Models</h2>
 <p>It is also possible to change the default model fitting functions. For example, an alternative model approach to mixed models is generalized estimating equations (GEE) or marginal models. One implementation of these models in R is the geepack package. Below is the code to fit a marginal model in a longitudinal context. The code is not evaluated, so no coefficients are shown, but if you have the <code>geepack</code> package installed, this code should run as written.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="co"># To-DO: Add knot variable and debug</span>
@@ -964,7 +1008,7 @@
 <a href="#vary-simulation-arguments" class="anchor" aria-hidden="true"></a>Vary Simulation Arguments</h1>
 <p>The <code>replicate_simulation</code> function first shown in the “tidy_simulation” vignette, can directly allow for the varying of simulation arguments. In order to vary simulation arguments, an additional named list called <code>vary_arguments</code> can be added to the simulation arguments passed to the functions. The <code>vary_arguments</code> elements of the simulation arguments is a nested named list. Within the named list, the arguments that are wished to be varied are specified by name. For example, a common argument varied is sample size. The following example varies the sample size to return multiple simulated data sets with different sample sizes.</p>
 <p>Note: A user would likely want to change <code>plan(sequential)</code> to something like <code>plan(mutisession)</code> or <code>plan(multicore)</code> to run these in parallel. <code>plan(sequential)</code> is used here for vignette processing.</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future" class="external-link">future</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">sequential</span><span class="op">)</span>
 

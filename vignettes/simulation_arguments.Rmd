@@ -373,7 +373,67 @@ Data attributes are often correlated, therefore, in order to really mimic real-w
 ## Fixed Effect Correlation
 
 
+```{r correlate-fixed}
+sim_args <- list(formula = y ~ 1 + act + gpa + commute_time, 
+                 fixed = list(act = list(var_type = 'ordinal',
+                                         levels = 15:36),
+                              gpa = list(var_type = 'continuous',
+                                         mean = 2, 
+                                         sd = .5),
+                              commute_time = list(var_type = 'continuous',
+                                         mean = 15, 
+                                         sd = 6)),
+                 correlate = list(fixed = data.frame(x = c('act', 'act', 'gpa'), 
+                                                     y = c('gpa', 'commute_time', 'commute_time'), 
+                                                     corr = c(0.5, .6, .2))),
+                 sample_size = 1000)
+
+correlate_attribute <- simulate_fixed(data = NULL, sim_args) %>%
+  correlate_variables(sim_args)
+
+head(correlate_attribute)
+```
+
+```{r correlate-fixed-values}
+select(correlate_attribute, -X.Intercept., -level1_id) %>%
+  cor(.)
+```
+
+
+
 ## Random Effect Correlation
+
+
+```{r random-correlate}
+sim_args <- list(formula = y ~ 1 + act + gpa + sat + (1 + act | id), 
+                 fixed = list(act = list(var_type = 'continuous',
+                                         mean = 20, 
+                                         sd = 4),
+                              gpa = list(var_type = 'continuous',
+                                         mean = 2, 
+                                         sd = .5),
+                              sat = list(var_type = 'continuous',
+                                         mean = 500, 
+                                         sd = 100)),
+                 
+                 randomeffect = list(int_id = list(variance = 8, var_level = 2),
+                                     act_id = list(variance = 3, var_level = 2)),
+                 sample_size = list(level1 = 100, level2 = 5000),
+                 correlate = list(random = data.frame(x = 'int_id', y = 'act_id',
+                                                      corr = .3))
+                 )
+
+random_correlate <- simulate_randomeffect(data = NULL, sim_args) %>%
+  correlate_variables(sim_args)
+
+head(random_correlate)
+```
+
+```{r random-correlate-values}
+select(random_correlate, -level1_id, -id) %>%
+  cor(.)
+```
+
 
 
 # Missing Data Arguments

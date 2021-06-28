@@ -583,6 +583,109 @@
 ## 20 -2.013949 -0.185436 -5.0111674               2        10  2</code></pre>
 </div>
 </div>
+<div id="correlated-fixed-and-random-effects" class="section level1">
+<h1 class="hasAnchor">
+<a href="#correlated-fixed-and-random-effects" class="anchor" aria-hidden="true"></a>Correlated Fixed and Random Effects</h1>
+<p>Data attributes are often correlated, therefore, in order to really mimic real-world data, simulated data that are correlated would be desired. This can be done with <code>simglm</code> by using the function <code>correlated_variables()</code>. This function processes a new set of simulation arguments specified with the named <code>correlate</code>. In what follows, discussion of correlating fixed effects will be explored first, followed by correlating random effects next.</p>
+<div id="fixed-effect-correlation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#fixed-effect-correlation" class="anchor" aria-hidden="true"></a>Fixed Effect Correlation</h2>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sim_args</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">act</span> <span class="op">+</span> <span class="va">gpa</span> <span class="op">+</span> <span class="va">commute_time</span>, 
+                 fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>act <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>,
+                                         levels <span class="op">=</span> <span class="fl">15</span><span class="op">:</span><span class="fl">36</span><span class="op">)</span>,
+                              gpa <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>,
+                                         mean <span class="op">=</span> <span class="fl">2</span>, 
+                                         sd <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span>,
+                              commute_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>,
+                                         mean <span class="op">=</span> <span class="fl">15</span>, 
+                                         sd <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">)</span>,
+                 correlate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'act'</span>, <span class="st">'act'</span>, <span class="st">'gpa'</span><span class="op">)</span>, 
+                                                     y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'gpa'</span>, <span class="st">'commute_time'</span>, <span class="st">'commute_time'</span><span class="op">)</span>, 
+                                                     corr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">.6</span>, <span class="fl">.2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+                 sample_size <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>
+
+<span class="va">correlate_attribute</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_args</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/correlate_variables.html">correlate_variables</a></span><span class="op">(</span><span class="va">sim_args</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">correlate_attribute</span><span class="op">)</span></code></pre></div>
+<pre><code>##   X.Intercept. act_old  gpa_old commute_time_old level1_id act_corr      gpa
+## 1            1      31 2.542058         19.84992         1 33.34939 2.007960
+## 2            1      30 1.094168         11.30912         2 24.89321 2.123880
+## 3            1      31 1.824700         13.73815         3 29.60763 2.215003
+## 4            1      16 1.573188         15.26606         4 14.56133 1.552374
+## 5            1      20 1.344491         19.25067         5 17.05369 1.321968
+## 6            1      16 1.389140         15.84091         6 13.60838 1.452813
+##   commute_time act
+## 1     16.40195  33
+## 2     24.17105  25
+## 3     20.65193  30
+## 4     10.05897  15
+## 5     14.62946  17
+## 6     11.14732  15</code></pre>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">select</span><span class="op">(</span><span class="va">correlate_attribute</span>, <span class="op">-</span><span class="va">X.Intercept.</span>, <span class="op">-</span><span class="va">level1_id</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span></code></pre></div>
+<pre><code>##                     act_old     gpa_old commute_time_old  act_corr        gpa
+## act_old          1.00000000  0.04962541       0.04835660 0.9188642  0.3863944
+## gpa_old          0.04962541  1.00000000      -0.04152076 0.4396757  0.3779704
+## commute_time_old 0.04835660 -0.04152076       1.00000000 0.0300287 -0.8447945
+## act_corr         0.91886422  0.43967570       0.03002870 1.0000000  0.4942777
+## gpa              0.38639439  0.37797036      -0.84479447 0.4942777  1.0000000
+## commute_time     0.86267143 -0.46233028       0.06300074 0.5931195  0.1524556
+## act              0.92275601  0.41973540       0.03151538 0.9956235  0.4881891
+##                  commute_time        act
+## act_old            0.86267143 0.92275601
+## gpa_old           -0.46233028 0.41973540
+## commute_time_old   0.06300074 0.03151538
+## act_corr           0.59311946 0.99562355
+## gpa                0.15245559 0.48818907
+## commute_time       1.00000000 0.60667173
+## act                0.60667173 1.00000000</code></pre>
+</div>
+<div id="random-effect-correlation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#random-effect-correlation" class="anchor" aria-hidden="true"></a>Random Effect Correlation</h2>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sim_args</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">act</span> <span class="op">+</span> <span class="va">gpa</span> <span class="op">+</span> <span class="va">sat</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="va">act</span> <span class="op">|</span> <span class="va">id</span><span class="op">)</span>, 
+                 fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>act <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>,
+                                         mean <span class="op">=</span> <span class="fl">20</span>, 
+                                         sd <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>,
+                              gpa <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>,
+                                         mean <span class="op">=</span> <span class="fl">2</span>, 
+                                         sd <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span>,
+                              sat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>,
+                                         mean <span class="op">=</span> <span class="fl">500</span>, 
+                                         sd <span class="op">=</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span>,
+                 
+                 randomeffect <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>int_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">8</span>, var_level <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,
+                                     act_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">3</span>, var_level <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span>,
+                 sample_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>level1 <span class="op">=</span> <span class="fl">100</span>, level2 <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span>,
+                 correlate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>random <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">'int_id'</span>, y <span class="op">=</span> <span class="st">'act_id'</span>,
+                                                      corr <span class="op">=</span> <span class="fl">.3</span><span class="op">)</span><span class="op">)</span>
+                 <span class="op">)</span>
+
+<span class="va">random_correlate</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulate_randomeffect.html">simulate_randomeffect</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_args</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/correlate_variables.html">correlate_variables</a></span><span class="op">(</span><span class="va">sim_args</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">random_correlate</span><span class="op">)</span></code></pre></div>
+<pre><code>##   int_id_old act_id_old level1_id id   int_id   act_id
+## 1  -5.137806  -2.204438         1  1 4.540962 3.362763
+## 2  -5.137806  -2.204438         2  1 4.540962 3.362763
+## 3  -5.137806  -2.204438         3  1 4.540962 3.362763
+## 4  -5.137806  -2.204438         4  1 4.540962 3.362763
+## 5  -5.137806  -2.204438         5  1 4.540962 3.362763
+## 6  -5.137806  -2.204438         6  1 4.540962 3.362763</code></pre>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">select</span><span class="op">(</span><span class="va">random_correlate</span>, <span class="op">-</span><span class="va">level1_id</span>, <span class="op">-</span><span class="va">id</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span></code></pre></div>
+<pre><code>##              int_id_old   act_id_old     int_id     act_id
+## int_id_old  1.000000000  0.001196824 -0.9888210 -0.4418334
+## act_id_old  0.001196824  1.000000000  0.1479240 -0.8976253
+## int_id     -0.988820977  0.147924047  1.0000000  0.3031302
+## act_id     -0.441833443 -0.897625255  0.3031302  1.0000000</code></pre>
+</div>
+</div>
 <div id="missing-data-arguments" class="section level1">
 <h1 class="hasAnchor">
 <a href="#missing-data-arguments" class="anchor" aria-hidden="true"></a>Missing Data Arguments</h1>
@@ -592,7 +695,7 @@
 <h2 class="hasAnchor">
 <a href="#random-missing-data" class="anchor" aria-hidden="true"></a>Random Missing Data</h2>
 <p>First, lets explore random missing data. This structure is equivalent to the missing completely at random framework if you are familiar with Rubin’s missing data classifications. To generate random missing data the <code>type = 'random'</code> is specified. Two additional arguments are needed to generate the missing data, first the missing proportion needs to be specified with <code>miss_prop</code> and the name of the new response variable with missing data needs to be specified with <code>new_outcome</code>. Below is an example generating data with random missing data.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -653,7 +756,7 @@
 ## 9          0  171.8387
 ## 10         0  156.3659</code></pre>
 <p>We can look at the amount of missing data:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## FALSE  TRUE 
@@ -663,7 +766,7 @@
 <h2 class="hasAnchor">
 <a href="#mar-missing-data" class="anchor" aria-hidden="true"></a>MAR Missing Data</h2>
 <p>Data that are missing at random (MAR) can be generated as well.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -726,7 +829,7 @@
 ## 9  0.6387437       0  171.8387
 ## 10 0.8129966       0  156.3659</code></pre>
 <p>We can look at the amount of missing data:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## FALSE  TRUE 
@@ -736,7 +839,7 @@
 <h2 class="hasAnchor">
 <a href="#dropout-missing-data" class="anchor" aria-hidden="true"></a>Dropout Missing Data</h2>
 <p>Dropout missing data is possible when simulating data from a longitudinal design. When requesting dropout missing data, observations are removed after a specific point in the time cycle. For example, perhaps an individual stops being a part of the study after the third measurement. To request this type of missing data, the <code>type = 'dropout'</code> can be specified. In addition, one new argument is needed, <code>clust_var</code>. This argument represents the id associated with the clusters with longitudinal data. Below is an example:</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -797,13 +900,13 @@
 ## 9   171.8387
 ## 10        NA</code></pre>
 <p>We can look at the amount of missing data:</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## FALSE  TRUE 
 ##  0.74  0.26</code></pre>
 <p>We can also look now at the amount of missing by the time variable.</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span>, <span class="va">data_w_missing</span><span class="op">$</span><span class="va">time</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##        
 ##            0    1    2    3    4    5    6    7    8    9
@@ -813,7 +916,7 @@
 <h3 class="hasAnchor">
 <a href="#specify-location-of-dropout" class="anchor" aria-hidden="true"></a>Specify location of dropout</h3>
 <p>If additional control is desired, specifying the location of the dropout is possible. In this situation, a vector is passed to <code>dropout_location</code> that specifies for each individual (more generally each level 2 unit) where the dropout occurs. Below is an example of this.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -876,13 +979,13 @@
 ## 9         NA
 ## 10        NA</code></pre>
 <p>We can look at the amount of missing data:</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## FALSE  TRUE 
 ##  0.58  0.42</code></pre>
 <p>We can also look now at the amount of missing by the time variable.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span>, <span class="va">data_w_missing</span><span class="op">$</span><span class="va">time</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##        
 ##             0     1     2     3     4     5     6     7     8     9
@@ -900,7 +1003,7 @@
 <h2 class="hasAnchor">
 <a href="#changing-family-argument" class="anchor" aria-hidden="true"></a>Changing Family Argument</h2>
 <p>For GLM models, users may wish to directly specify the family argument or change the link function within a specific family. For example, when generating data with a binary dependent variable, the logistic or probit links could be used when specifying the binomial family. Below is an example of using the binomial family with a logit link (the default link function).</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -926,7 +1029,7 @@
 ## Family: binomial 
 ## Link function: logit</code></pre>
 <p>The link function could then be changed to a probit link function with the following code:</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -962,7 +1065,7 @@
 <h2 class="hasAnchor">
 <a href="#marginal-models" class="anchor" aria-hidden="true"></a>Marginal Models</h2>
 <p>It is also possible to change the default model fitting functions. For example, an alternative model approach to mixed models is generalized estimating equations (GEE) or marginal models. One implementation of these models in R is the geepack package. Below is the code to fit a marginal model in a longitudinal context. The code is not evaluated, so no coefficients are shown, but if you have the <code>geepack</code> package installed, this code should run as written.</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
 <span class="co"># To-DO: Add knot variable and debug</span>
@@ -1008,7 +1111,7 @@
 <a href="#vary-simulation-arguments" class="anchor" aria-hidden="true"></a>Vary Simulation Arguments</h1>
 <p>The <code>replicate_simulation</code> function first shown in the “tidy_simulation” vignette, can directly allow for the varying of simulation arguments. In order to vary simulation arguments, an additional named list called <code>vary_arguments</code> can be added to the simulation arguments passed to the functions. The <code>vary_arguments</code> elements of the simulation arguments is a nested named list. Within the named list, the arguments that are wished to be varied are specified by name. For example, a common argument varied is sample size. The following example varies the sample size to return multiple simulated data sets with different sample sizes.</p>
 <p>Note: A user would likely want to change <code>plan(sequential)</code> to something like <code>plan(mutisession)</code> or <code>plan(multicore)</code> to run these in parallel. <code>plan(sequential)</code> is used here for vignette processing.</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HenrikBengtsson/future" class="external-link">future</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/future/man/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">sequential</span><span class="op">)</span>
 

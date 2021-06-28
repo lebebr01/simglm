@@ -367,6 +367,15 @@ random_data <- simulate_randomeffect(data = NULL, sim_arguments)
 head(random_data, n = 20)
 ```
 
+# Correlated Fixed and Random Effects
+Data attributes are often correlated, therefore, in order to really mimic real-world data, simulated data that are correlated would be desired. This can be done with `simglm` by using the function `correlated_variables()`. This function processes a new set of simulation arguments specified with the named `correlate`. In what follows, discussion of correlating fixed effects will be explored first, followed by correlating random effects next. 
+
+## Fixed Effect Correlation
+
+
+## Random Effect Correlation
+
+
 # Missing Data Arguments
 Missing data is the standard rather than the exception in real world data. Therefore, generating data that include missing is important for generating data that are representative of real world data. In the power analysis context, most power analyses do not include missing data in the power computations (particularly if these are closed form solutions), but power can be negatively affected by missing data. 
 

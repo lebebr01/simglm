@@ -159,7 +159,7 @@ factor_names <- function(sim_args, fixed_vars) {
     sim_args[['fixed']][[xx]][['levels']])
   num_levels <- purrr::modify_if(num_levels, is.character, length)
     
-  loc <- num_levels > 2
+  loc <- num_levels > 1
   fixed_levels_gt2 <- fixed_vars_cat[loc]
   num_levels_gt2 <- num_levels[loc]
   

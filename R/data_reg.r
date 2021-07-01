@@ -44,7 +44,7 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     num_levels <- purrr::modify_if(num_levels, is.character, length)
     
     if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
-      num_levels[[xx]] > 2 & 
+      num_levels[[xx]] > 1 & 
       sim_args[['fixed']][[xx]][['var_type']] == 'factor'))
     )) {
       fixed_vars <- factor_names(sim_args, fixed_vars)

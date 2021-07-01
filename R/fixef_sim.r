@@ -362,7 +362,7 @@ simulate_fixed <- function(data, sim_args, ...) {
     num_levels <- purrr::modify_if(num_levels, is.character, length)
     
     if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
-      num_levels[[xx]] > 2 & 
+      num_levels[[xx]] > 1 & 
       sim_args[['fixed']][[xx]][['var_type']] == 'factor'))
       )) {
       fixed_vars <- factor_names(sim_args, fixed_vars)
@@ -380,8 +380,8 @@ simulate_fixed <- function(data, sim_args, ...) {
         Omat_factor_names <- Omat_factor_names[-int_loc]
       }
      
-      names(Omat_factor) <- paste0(Omat_factor_names[unique_columns(Xmat, Omat)],
-                                   '_orig')
+      # names(Omat_factor) <- paste0(Omat_factor_names[unique_columns(Xmat, Omat)],
+      #                              '_orig')
     } else {
       Omat_factor <- NULL
     }
@@ -391,7 +391,7 @@ simulate_fixed <- function(data, sim_args, ...) {
                                  fixed_vars_new[grepl("^poly|^ns", fixed_vars_new)]
       )
       Omat_poly_ns <- Omat[ , fixed_vars_poly_ns, drop = FALSE]
-      names(Omat_poly_ns) <- paste0(names(Omat_poly_ns), "_orig")
+      # names(Omat_poly_ns) <- paste0(names(Omat_poly_ns), "_orig")
     } else {
       Omat_poly_ns <- NULL
     }

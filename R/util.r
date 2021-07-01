@@ -166,8 +166,14 @@ factor_names <- function(sim_args, fixed_vars) {
   fixed_levels_gt2_names <- lapply(seq_along(fixed_levels_gt2), function(xx) 
     paste0(fixed_levels_gt2[xx], '_', 1:(num_levels_gt2[[xx]] - 1)))
   
-  var_loc <- lapply(seq_along(fixed_levels_gt2), function(xx) 
-    grep(fixed_levels_gt2[xx], fixed_vars))
+  if(any(grepl(":|^I", fixed_vars))) {
+    int_loc <- grep(":|^I", fixed_vars)
+    var_loc <- lapply(seq_along(fixed_levels_gt2), function(xx) 
+      grep(fixed_levels_gt2[xx], fixed_vars[-int_loc]))
+  } else {
+    var_loc <- lapply(seq_along(fixed_levels_gt2), function(xx) 
+      grep(fixed_levels_gt2[xx], fixed_vars))
+  }
   
   updated_names <- lapply(seq_along(fixed_levels_gt2), function(ii) 
     lapply(seq_along(fixed_levels_gt2_names[[ii]]), function(xx) 
@@ -181,11 +187,41 @@ factor_names <- function(sim_args, fixed_vars) {
        reorder_names(updated_names[[ii]])
     )
   
+  new_interaction_names <- interaction_names(fixed_vars, 
+                                             fixed_levels_gt2_names)
+  
+  # need to generalize these so that they match better, 
+  # this would particularly be in the [ii] for reordered_names and new_interaction_names
   for(ii in var_loc) {
     fixed_vars[ii] <- reordered_names[ii]
   }
+  if(any(grepl(":|^I", fixed_vars))) {
+    int_loc <- grep(":|^I", fixed_vars)
+    for(ii in int_loc) {
+      fixed_vars[ii] <- new_interaction_names[ii]
+    }
+  }
   
   unlist(fixed_vars)
+}
+
+interaction_names <- function(fixed_vars, renamed_vars) {
+  
+  int_loc <- grep(":|^I", fixed_vars)
+  
+  int_names <- lapply(int_loc, function(ii) 
+    unlist(strsplit(fixed_vars[ii], split = ":"))
+    )
+  
+  int_vars_location <- lapply(seq_along(int_names), function(ii) 
+    grep(paste(int_names[[ii]], collapse = "|"), fixed_vars[-int_loc[ii]]))
+  
+  renamed_int_vars <- lapply(seq_along(int_vars_location), function(ii)
+    do.call(paste, c(expand.grid(renamed_vars, stringsAsFactors = FALSE), sep = ":"))
+  )
+  
+  renamed_int_vars
+  
 }
 
 reorder_names <- function(names) {

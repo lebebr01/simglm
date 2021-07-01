@@ -181,12 +181,11 @@ factor_names <- function(sim_args, fixed_vars) {
        reorder_names(updated_names[[ii]])
     )
   
+  for(ii in var_loc) {
+    fixed_vars[ii] <- reordered_names[ii]
+  }
   
-  imported_names <- lapply(seq_along(fixed_levels_gt2), function(ii)
-    c(fixed_vars[-var_loc[[ii]]], reordered_names[[ii]])
-    )
-
-  unlist(imported_names)
+  unlist(fixed_vars)
 }
 
 reorder_names <- function(names) {

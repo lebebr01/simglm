@@ -193,7 +193,7 @@ sim_arguments <- list(
 
 simulate_fixed(data = NULL, sim_arguments) %>%
   simulate_error(sim_arguments) %>%
-  count(grade_orig)
+  count(grade)
 ```
 
 The levels of the new grade attribute could also be modified to include unequal probabilities for each class to be sampled. To do this, the prob argument could be passed as follows.
@@ -217,7 +217,7 @@ sim_arguments <- list(
 
 simulate_fixed(data = NULL, sim_arguments) %>%
   simulate_error(sim_arguments) %>%
-  count(grade_orig)
+  count(grade)
 ```
 
 When generating more than 2 levels for a categorical attribute, the default behavior within R and with simglm is to create dummy or indicator variables to be used within a linear model. Therefore, in order to generate the outcome for an attribute with more than 2 levels, multiple indicator or dummy attributes need to be created. The number of indicator or dummy attributes is always 1 less than the number of categories, so for the grade attribute example, there needs to be 3 indicator attributes to represent the 4 categories within a linear model. An example of what these indicators attributes would look like is presented below.

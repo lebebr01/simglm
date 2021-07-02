@@ -192,13 +192,13 @@ factor_names <- function(sim_args, fixed_vars) {
   
   # need to generalize these so that they match better, 
   # this would particularly be in the [ii] for reordered_names and new_interaction_names
-  for(ii in var_loc) {
-    fixed_vars[ii] <- reordered_names[ii]
+  for(ii in seq_along(var_loc)) {
+    fixed_vars[var_loc[[ii]]] <- reordered_names[ii]
   }
   if(any(grepl(":|^I", fixed_vars))) {
     int_loc <- grep(":|^I", fixed_vars)
-    for(ii in int_loc) {
-      fixed_vars[ii] <- new_interaction_names[ii]
+    for(ii in seq_along(int_loc)) {
+      fixed_vars[[int_loc[ii]]] <- new_interaction_names[ii]
     }
   }
   

@@ -225,10 +225,10 @@ interaction_names <- function(fixed_vars, renamed_vars, sim_args) {
   renamed_int_vars <- lapply(seq_along(int_vars_location_f), function(ii) {
     if(length(int_vars_location_f[[ii]]) == 1) {
       cont_vars <- int_names[[ii]][!factor_vars]
+      do.call(paste, c(expand.grid(cont_vars, renamed_vars[[ii]], stringsAsFactors = FALSE), sep = ":"))
     } else {
-      cont_vars <- NULL
+      do.call(paste, c(expand.grid(renamed_vars[[ii]], stringsAsFactors = FALSE), sep = ":"))
     }
-    do.call(paste, c(expand.grid(cont_vars, renamed_vars[[ii]], stringsAsFactors = FALSE), sep = ":"))
   }
   )
   

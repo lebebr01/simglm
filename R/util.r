@@ -188,7 +188,8 @@ factor_names <- function(sim_args, fixed_vars) {
     )
   
   new_interaction_names <- interaction_names(fixed_vars, 
-                                             fixed_levels_gt2_names)
+                                             fixed_levels_gt2_names,
+                                             sim_args)
   
   # need to generalize these so that they match better, 
   # this would particularly be in the [ii] for reordered_names and new_interaction_names
@@ -205,7 +206,7 @@ factor_names <- function(sim_args, fixed_vars) {
   unlist(fixed_vars)
 }
 
-interaction_names <- function(fixed_vars, renamed_vars) {
+interaction_names <- function(fixed_vars, renamed_vars, sim_args) {
   
   int_loc <- grep(":|^I", fixed_vars)
   
@@ -213,11 +214,22 @@ interaction_names <- function(fixed_vars, renamed_vars) {
     unlist(strsplit(fixed_vars[ii], split = ":"))
     )
   
-  int_vars_location <- lapply(seq_along(int_names), function(ii) 
-    grep(paste(int_names[[ii]], collapse = "|"), fixed_vars[-int_loc[ii]]))
+  factor_vars <- unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
+    sim_args[['fixed']][[xx]][['var_type']] == 'factor'
+    )
+  )
   
-  renamed_int_vars <- lapply(seq_along(int_vars_location), function(ii)
-    do.call(paste, c(expand.grid(renamed_vars, stringsAsFactors = FALSE), sep = ":"))
+  int_vars_location_f <- lapply(seq_along(int_names), function(ii) 
+    grep(paste(int_names[[ii]][factor_vars], collapse = "|"), fixed_vars[-int_loc[ii]]))
+  
+  renamed_int_vars <- lapply(seq_along(int_vars_location_f), function(ii) {
+    if(length(int_vars_location_f[[ii]]) == 1) {
+      cont_vars <- int_names[[ii]][!factor_vars]
+    } else {
+      cont_vars <- NULL
+    }
+    do.call(paste, c(expand.grid(cont_vars, renamed_vars[[ii]], stringsAsFactors = FALSE), sep = ":"))
+  }
   )
   
   renamed_int_vars

@@ -227,7 +227,13 @@ interaction_names <- function(fixed_vars, renamed_vars, sim_args) {
       cont_vars <- int_names[[ii]][!int_names[[ii]] %in% factor_names]
       do.call(paste, c(expand.grid(cont_vars, renamed_vars[[int_names[[ii]][int_names[[ii]] %in% factor_names]]], stringsAsFactors = FALSE), sep = ":"))
     } else {
-      do.call(paste, c(expand.grid(renamed_vars[int_names[[ii]][int_names[[ii]] %in% factor_names]], stringsAsFactors = FALSE), sep = ":"))
+      if(all(int_names[[ii]] %in% factor_names)) {
+        do.call(paste, c(expand.grid(renamed_vars[int_names[[ii]][int_names[[ii]] %in% factor_names]], stringsAsFactors = FALSE), sep = ":"))
+      } else {
+        cont_vars <- int_names[[ii]][!int_names[[ii]] %in% factor_names]
+        factor_expand <- expand.grid(renamed_vars[int_names[[ii]][int_names[[ii]] %in% factor_names]], stringsAsFactors = FALSE)
+        do.call(paste, c(cbind(cont_vars, factor_expand), sep = ":"))
+      }
     }
   }
   )

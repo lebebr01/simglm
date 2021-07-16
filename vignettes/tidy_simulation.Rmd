@@ -21,7 +21,7 @@ knit_print.data.frame = function(x, ...) {
 
 # Tidy Simulation with `simglm`
 
-Introducing a new framework for simulation and power analysis with the `simglm` package, tidy simulation. The package now has helper functions in which the first argument is always the data and the second argument is always the simulation arguments. A second vignette is written that contains a more exhuastive list of simluation arguments that are allowed. This vignette will give the basics needed to specify simulation arguments to generate simulated data.
+Introducing a new framework for simulation and power analysis with the `simglm` package, tidy simulation. The package now has helper functions in which the first argument is always the data and the second argument is always the simulation arguments. A second vignette is written that contains a more exhaustive list of simulation arguments that are allowed. This vignette will give the basics needed to specify simulation arguments to generate simulated data.
 
 # Functions for Basic Simulation
 There are four primary functions to be used for basic simulation functionality. These include:

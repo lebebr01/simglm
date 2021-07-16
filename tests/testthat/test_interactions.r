@@ -13,12 +13,13 @@ test_that('3way interaction', {
     reg_weights = c(0,0,1,2,0, 0)    ## less parameters than previous example!
     # outcome_type = 'count'
   )
+  fixed_vars <- simulate_fixed(data = NULL, sim_args = sim_arguments)
   
-  expect_equal(ncol(simulate_fixed(data = NULL, sim_args = sim_arguments)), 13)
-  expect_equal(length(unique(simulate_fixed(data = NULL, sim_args = sim_arguments)[['education']])), 4)
-  expect_equal(length(unique(simulate_fixed(data = NULL, sim_args = sim_arguments)[['education_1']])), 2)
-  expect_equal(length(unique(simulate_fixed(data = NULL, sim_args = sim_arguments)[['education_2']])), 2)
-  expect_equal(length(unique(simulate_fixed(data = NULL, sim_args = sim_arguments)[['education_3']])), 2)
+  expect_equal(ncol(fixed_vars), 13)
+  expect_equal(length(unique(fixed_vars[['education']])), 4)
+  expect_equal(length(unique(fixed_vars[['education_1']])), 2)
+  expect_equal(length(unique(fixed_vars[['education_2']])), 2)
+  expect_equal(length(unique(fixed_vars[['education_3']])), 2)
   
   sim_arguments <- list(
     formula = y ~ 1 + sex + type + education + sex:type + sex:education + education:type + sex:education:type,
@@ -31,12 +32,13 @@ test_that('3way interaction', {
     reg_weights = c(0,0,1,2,0, 0)    ## less parameters than previous example!
     # outcome_type = 'count'
   )
+  fixed_vars <- simulate_fixed(data = NULL, sim_args = sim_arguments)
   
-  expect_equal(ncol(simulate_fixed(data = NULL, sim_args = sim_arguments)), 28)
-  expect_equal(length(unique(simulate_fixed(data = NULL, sim_args = sim_arguments)[['education']])), 4)
-  expect_equal(length(unique(simulate_fixed(data = NULL, sim_args = sim_arguments)[['education_1']])), 2)
-  expect_equal(length(unique(simulate_fixed(data = NULL, sim_args = sim_arguments)[['education_2']])), 2)
-  expect_equal(length(unique(simulate_fixed(data = NULL, sim_args = sim_arguments)[['education_3']])), 2)
+  expect_equal(ncol(fixed_vars), 28)
+  expect_equal(length(unique(fixed_vars[['education']])), 4)
+  expect_equal(length(unique(fixed_vars[['education_1']])), 2)
+  expect_equal(length(unique(fixed_vars[['education_2']])), 2)
+  expect_equal(length(unique(fixed_vars[['education_3']])), 2)
   
   sim_arguments <- list(
     formula = y ~ 1 + sex + type + act + sex:type + sex:act + type:act + sex:act:type,
@@ -49,10 +51,10 @@ test_that('3way interaction', {
     reg_weights = c(0,0,1,2,0, 0)    ## less parameters than previous example!
     # outcome_type = 'count'
   )
+  fixed_vars <- simulate_fixed(data = NULL, sim_args = sim_arguments)
   
-  expect_equal(ncol(simulate_fixed(data = NULL, sim_args = sim_arguments)), 13)
-  expect_equal(length(unique(simulate_fixed(data = NULL, sim_args = sim_arguments)[['education']])), 4)
-  expect_equal(length(unique(simulate_fixed(data = NULL, sim_args = sim_arguments)[['education_1']])), 2)
-  expect_equal(length(unique(simulate_fixed(data = NULL, sim_args = sim_arguments)[['education_2']])), 2)
-  expect_equal(length(unique(simulate_fixed(data = NULL, sim_args = sim_arguments)[['education_3']])), 2)
+  expect_equal(ncol(fixed_vars), 15)
+  expect_type(fixed_vars[['act.sex_1.type_1']], 'double')
+  expect_type(fixed_vars[['act.sex_1.type_2']], 'double')
+  expect_type(fixed_vars[['type']], 'character')
 })

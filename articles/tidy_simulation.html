@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.6</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Tidy Simulation with <code>simglm</code>
 </h1>
             
-            <h4 data-toc-skip class="date">2021-07-02</h4>
+            <h4 data-toc-skip class="date">2021-07-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/master/vignettes/tidy_simulation.Rmd" class="external-link"><code>vignettes/tidy_simulation.Rmd</code></a></small>
       <div class="hidden name"><code>tidy_simulation.Rmd</code></div>
@@ -103,7 +103,7 @@
 <h1 class="hasAnchor">
 <a href="#tidy-simulation-with-simglm" class="anchor" aria-hidden="true"></a>Tidy Simulation with <code>simglm</code>
 </h1>
-<p>Introducing a new framework for simulation and power analysis with the <code>simglm</code> package, tidy simulation. The package now has helper functions in which the first argument is always the data and the second argument is always the simulation arguments. A second vignette is written that contains a more exhuastive list of simluation arguments that are allowed. This vignette will give the basics needed to specify simulation arguments to generate simulated data.</p>
+<p>Introducing a new framework for simulation and power analysis with the <code>simglm</code> package, tidy simulation. The package now has helper functions in which the first argument is always the data and the second argument is always the simulation arguments. A second vignette is written that contains a more exhaustive list of simulation arguments that are allowed. This vignette will give the basics needed to specify simulation arguments to generate simulated data.</p>
 </div>
 <div id="functions-for-basic-simulation" class="section level1">
 <h1 class="hasAnchor">
@@ -221,16 +221,16 @@
 
 <span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept.   weight age sex_1    sex level1_id
-## 1             1 231.1471  44     1 female         1
-## 2             1 158.6388  38     1 female         2
-## 3             1 171.6605  31     1 female         3
-## 4             1 176.4105  40     1 female         4
-## 5             1 176.2812  60     0   male         5
-## 6             1 188.0455  47     1 female         6
-## 7             1 201.8052  33     1 female         7
-## 8             1 186.9941  43     0   male         8
-## 9             1 190.1734  52     1 female         9
-## 10            1 163.4426  31     1 female        10</code></pre>
+## 1             1 231.1471  44     0 female         1
+## 2             1 158.6388  38     0 female         2
+## 3             1 171.6605  31     0 female         3
+## 4             1 176.4105  40     0 female         4
+## 5             1 176.2812  60     1   male         5
+## 6             1 188.0455  47     0 female         6
+## 7             1 201.8052  33     0 female         7
+## 8             1 186.9941  43     1   male         8
+## 9             1 190.1734  52     0 female         9
+## 10            1 163.4426  31     0 female        10</code></pre>
 <p>The required arguments when a factor variable are identical to an ordinal variable, however for factor variables the <code>levels</code> argument can either be an integer or can be a character vector where the character labels are specified directly. As you can see from the output, when a character vector is used, two variables are returned, one that contains the variable represented numerically and another that is the variable represented as a character vector. More details on this behavior to follow.</p>
 </div>
 </div>
@@ -321,27 +321,27 @@
   <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept.   weight age sex_1    sex level1_id       error fixed_outcome
-## 1             1 231.1471  44     1 female         1   4.5862776      67.44413
-## 2             1 158.6388  38     1 female         2  -0.5353077      46.29165
-## 3             1 171.6605  31     1 female         3   4.9416770      50.89814
-## 4             1 176.4105  40     1 female         4  -5.3611940      51.42316
-## 5             1 176.2812  60     0   male         5  -3.7900764      48.88435
-## 6             1 188.0455  47     1 female         6   0.4750036      54.21365
-## 7             1 201.8052  33     1 female         7 -11.6546559      59.74157
-## 8             1 186.9941  43     0   male         8   2.0875799      53.79822
-## 9             1 190.1734  52     1 female         9  -5.6016371      54.35202
-## 10            1 163.4426  31     1 female        10  -2.3734235      48.43277
+## 1             1 231.1471  44     0 female         1   4.5862776      66.94413
+## 2             1 158.6388  38     0 female         2  -0.5353077      45.79165
+## 3             1 171.6605  31     0 female         3   4.9416770      50.39814
+## 4             1 176.4105  40     0 female         4  -5.3611940      50.92316
+## 5             1 176.2812  60     1   male         5  -3.7900764      49.38435
+## 6             1 188.0455  47     0 female         6   0.4750036      53.71365
+## 7             1 201.8052  33     0 female         7 -11.6546559      59.24157
+## 8             1 186.9941  43     1   male         8   2.0875799      54.29822
+## 9             1 190.1734  52     0 female         9  -5.6016371      53.85202
+## 10            1 163.4426  31     0 female        10  -2.3734235      47.93277
 ##    random_effects        y
-## 1               0 72.03041
-## 2               0 45.75635
-## 3               0 55.83981
-## 4               0 46.06196
-## 5               0 45.09428
-## 6               0 54.68866
-## 7               0 48.08692
-## 8               0 55.88580
-## 9               0 48.75039
-## 10              0 46.05934</code></pre>
+## 1               0 71.53041
+## 2               0 45.25635
+## 3               0 55.33981
+## 4               0 45.56196
+## 5               0 45.59428
+## 6               0 54.18866
+## 7               0 47.58692
+## 8               0 56.38580
+## 9               0 48.25039
+## 10              0 45.55934</code></pre>
 <p>The only additional argument that is needed for the <code>generate_response</code> function is the <code>reg_weights</code> argument. This argument represents the regression coefficients associated with <span class="math inline">\(\beta\)</span> in the equation <span class="math inline">\(Y_{j} = X_{j} \beta + e_{j}\)</span>. The regression coefficients are multiplied by the design matrix to generate the column labeled “fixed_outcome” in the output. The output also contains the column, “random_effects” which are all 0 here indicating there are no random effects and the response variable, “y”.</p>
 <div id="generate-response-with-more-than-2-factor-levels" class="section level3">
 <h3 class="hasAnchor">
@@ -369,9 +369,9 @@
   <span class="fu">count</span><span class="op">(</span><span class="va">grade</span><span class="op">)</span></code></pre></div>
 <pre><code>##       grade  n
 ## 1  freshman 27
-## 2 sophomore 20
-## 3    junior 32
-## 4    senior 21</code></pre>
+## 2    junior 32
+## 3    senior 21
+## 4 sophomore 20</code></pre>
 <p>The levels of the new grade attribute could also be modified to include unequal probabilities for each class to be sampled. To do this, the prob argument could be passed as follows.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
@@ -395,9 +395,9 @@
   <span class="fu">count</span><span class="op">(</span><span class="va">grade</span><span class="op">)</span></code></pre></div>
 <pre><code>##       grade  n
 ## 1  freshman  6
-## 2 sophomore 26
-## 3    junior 43
-## 4    senior 25</code></pre>
+## 2    junior 43
+## 3    senior 25
+## 4 sophomore 26</code></pre>
 <p>When generating more than 2 levels for a categorical attribute, the default behavior within R and with simglm is to create dummy or indicator variables to be used within a linear model. Therefore, in order to generate the outcome for an attribute with more than 2 levels, multiple indicator or dummy attributes need to be created. The number of indicator or dummy attributes is always 1 less than the number of categories, so for the grade attribute example, there needs to be 3 indicator attributes to represent the 4 categories within a linear model. An example of what these indicators attributes would look like is presented below.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
@@ -443,19 +443,19 @@
   <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>##   X.Intercept.   weight age sex_1 grade_1 grade_2 grade_3    sex     grade
-## 1            1 231.1471  49     1       1       0       0 female sophomore
-## 2            1 158.6388  58     1       0       1       0 female    junior
-## 3            1 171.6605  43     1       0       0       0 female  freshman
-## 4            1 176.4105  37     0       0       0       0   male  freshman
-## 5            1 176.2812  45     1       0       0       1 female    senior
-## 6            1 188.0455  58     0       0       0       0   male  freshman
+## 1            1 231.1471  49     0       0       0       1 female sophomore
+## 2            1 158.6388  58     0       1       0       0 female    junior
+## 3            1 171.6605  43     0       0       0       0 female  freshman
+## 4            1 176.4105  37     1       0       0       0   male  freshman
+## 5            1 176.2812  45     0       0       1       0 female    senior
+## 6            1 188.0455  58     1       0       0       0   male  freshman
 ##   level1_id      error fixed_outcome random_effects        y
-## 1         1  0.0718251      54.31471              0 54.38653
-## 2         2 -0.7071167      53.06388              0 52.35677
-## 3         3  2.2538313      44.31605              0 46.56988
-## 4         4  4.1403091      39.99105              0 44.13136
-## 5         5 -0.4405120      48.37812              0 47.93761
-## 6         6  2.9550896      52.70455              0 55.65964</code></pre>
+## 1         1  0.0718251      54.56471              0 54.63653
+## 2         2 -0.7071167      50.51388              0 49.80677
+## 3         3  2.2538313      42.81605              0 45.06988
+## 4         4  4.1403091      41.49105              0 45.63136
+## 5         5 -0.4405120      46.17812              0 45.73761
+## 6         6  2.9550896      54.20455              0 57.15964</code></pre>
 </div>
 <div id="non-normal-outcomes" class="section level3">
 <h3 class="hasAnchor">
@@ -480,27 +480,27 @@
   <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept.   weight age sex_1    sex level1_id       error fixed_outcome
-## 1             1 231.1471  44     1 female         1   4.5862776      67.44413
-## 2             1 158.6388  38     1 female         2  -0.5353077      46.29165
-## 3             1 171.6605  31     1 female         3   4.9416770      50.89814
-## 4             1 176.4105  40     1 female         4  -5.3611940      51.42316
-## 5             1 176.2812  60     0   male         5  -3.7900764      48.88435
-## 6             1 188.0455  47     1 female         6   0.4750036      54.21365
-## 7             1 201.8052  33     1 female         7 -11.6546559      59.74157
-## 8             1 186.9941  43     0   male         8   2.0875799      53.79822
-## 9             1 190.1734  52     1 female         9  -5.6016371      54.35202
-## 10            1 163.4426  31     1 female        10  -2.3734235      48.43277
+## 1             1 231.1471  44     0 female         1   4.5862776      66.94413
+## 2             1 158.6388  38     0 female         2  -0.5353077      45.79165
+## 3             1 171.6605  31     0 female         3   4.9416770      50.39814
+## 4             1 176.4105  40     0 female         4  -5.3611940      50.92316
+## 5             1 176.2812  60     1   male         5  -3.7900764      49.38435
+## 6             1 188.0455  47     0 female         6   0.4750036      53.71365
+## 7             1 201.8052  33     0 female         7 -11.6546559      59.24157
+## 8             1 186.9941  43     1   male         8   2.0875799      54.29822
+## 9             1 190.1734  52     0 female         9  -5.6016371      53.85202
+## 10            1 163.4426  31     0 female        10  -2.3734235      47.93277
 ##    random_effects untransformed_outcome y
-## 1               0              72.03041 1
-## 2               0              45.75635 1
-## 3               0              55.83981 1
-## 4               0              46.06196 1
-## 5               0              45.09428 1
-## 6               0              54.68866 1
-## 7               0              48.08692 1
-## 8               0              55.88580 1
-## 9               0              48.75039 1
-## 10              0              46.05934 1</code></pre>
+## 1               0              71.53041 1
+## 2               0              45.25635 1
+## 3               0              55.33981 1
+## 4               0              45.56196 1
+## 5               0              45.59428 1
+## 6               0              54.18866 1
+## 7               0              47.58692 1
+## 8               0              56.38580 1
+## 9               0              48.25039 1
+## 10              0              45.55934 1</code></pre>
 <p>And finally, an example of generating a count outcome. Note, the weight variable here has been grand mean centered in the generation (ie. mean = 0). This helps to ensure that the counts are not too large.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
@@ -519,27 +519,27 @@
   <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept.     weight sex_1    sex level1_id      error fixed_outcome
-## 1             1  51.147097     0   male         1 -4.0233584      2.511471
-## 2             1 -21.361157     0   male         2  2.2803457      1.786388
-## 3             1  -8.339547     1 female         3  2.1016629      2.416605
-## 4             1  -3.589471     0   male         4  2.8879225      1.964105
-## 5             1  -3.718819     0   male         5  2.2317803      1.962812
-## 6             1   8.045513     1 female         6  4.5862776      2.580455
-## 7             1  21.805245     1 female         7 -0.5353077      2.718052
-## 8             1   6.994062     1 female         8  4.9416770      2.569941
-## 9             1  10.173416     0   male         9 -5.3611940      2.101734
-## 10            1 -16.557440     1 female        10 -3.7900764      2.334426
+## 1             1  51.147097     1   male         1 -4.0233584      3.011471
+## 2             1 -21.361157     1   male         2  2.2803457      2.286388
+## 3             1  -8.339547     0 female         3  2.1016629      1.916605
+## 4             1  -3.589471     1   male         4  2.8879225      2.464105
+## 5             1  -3.718819     1   male         5  2.2317803      2.462812
+## 6             1   8.045513     0 female         6  4.5862776      2.080455
+## 7             1  21.805245     0 female         7 -0.5353077      2.218052
+## 8             1   6.994062     0 female         8  4.9416770      2.069941
+## 9             1  10.173416     1   male         9 -5.3611940      2.601734
+## 10            1 -16.557440     0 female        10 -3.7900764      1.834426
 ##    random_effects untransformed_outcome    y
-## 1               0             -1.511887    0
-## 2               0              4.066734   53
-## 3               0              4.518267   95
-## 4               0              4.852028  115
-## 5               0              4.194592   70
-## 6               0              7.166733 1240
-## 7               0              2.182745   11
-## 8               0              7.511618 1767
-## 9               0             -3.259460    0
-## 10              0             -1.455651    0</code></pre>
+## 1               0             -1.011887    0
+## 2               0              4.566734   90
+## 3               0              4.018267   58
+## 4               0              5.352028  194
+## 5               0              4.694592  114
+## 6               0              6.666733  743
+## 7               0              1.682745    7
+## 8               0              7.011618 1061
+## 9               0             -2.759460    0
+## 10              0             -1.955651    0</code></pre>
 </div>
 </div>
 </div>
@@ -575,10 +575,10 @@
 <pre><code>## # A tibble: 4 x 5
 ##   term        estimate std.error statistic p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-## 1 (Intercept)    1.13     20.3      0.0553  0.958 
+## 1 (Intercept)   -1.24     19.1     -0.0650  0.950 
 ## 2 weight         0.328     0.103    3.19    0.0189
 ## 3 age           -0.198     0.271   -0.733   0.491 
-## 4 sexfemale     -1.87      5.93    -0.315   0.763</code></pre>
+## 4 sexmale        2.87      5.93     0.484   0.646</code></pre>
 <p>This output contains the model output for a single data simulation, more specifically we can see the parameter name, parameter estimate, the standard error for the parameter estimate, the test statistics, and the p-value. These were estimated using the <code>lm</code> function based on the same formula defined in <code>sim_arguments</code>. It is possible to specify your own formula, model fitting function, and regression weights to the <code>model_fit</code> function. For example, suppose we knew that weight was an important predictor, but are unable to collect it in real life. We could then specify an alternative model when evaluating power, but include the variable in the data generation step.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
@@ -604,9 +604,9 @@
 <pre><code>## # A tibble: 3 x 5
 ##   term        estimate std.error statistic p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-## 1 (Intercept)  48.0       21.3       2.25   0.0594
+## 1 (Intercept)  49.7       15.9       3.13   0.0167
 ## 2 age           0.0488     0.394     0.124  0.905 
-## 3 sexfemale     2.25       8.79      0.256  0.805</code></pre>
+## 3 sexmale      -1.25       8.79     -0.143  0.891</code></pre>
 <p>Notice that we now get very different parameter estimates for this single data generation process which reflects the contribution of the variable “weight” that is not taken into account in the model fitting.</p>
 <div id="replicate-analysis" class="section level2">
 <h2 class="hasAnchor">
@@ -641,9 +641,9 @@
 <pre><code>## # A tibble: 3 x 12
 ##   term        avg_estimate power avg_test_stat crit_value_power type_1_error
 ##   &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;        &lt;dbl&gt;
-## 1 (Intercept)      46.1      0.7         3.06              1.96          0.5
+## 1 (Intercept)      47.2      0.6         3.37              1.96          0.5
 ## 2 age               0.0852   0.3         0.102             1.96          0.4
-## 3 sexfemale         1.51     0.1         0.266             1.96          0.2
+## 3 sexmale          -0.509    0.1        -0.108             1.96          0.2
 ## # … with 6 more variables: avg_adjtest_stat &lt;dbl&gt;, crit_value_t1e &lt;dbl&gt;,
 ## #   param_estimate_sd &lt;dbl&gt;, avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,
 ## #   replications &lt;dbl&gt;</code></pre>
@@ -682,9 +682,9 @@
 <pre><code>## # A tibble: 3 x 12
 ##   term        avg_estimate power avg_test_stat crit_value_power type_1_error
 ##   &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;        &lt;dbl&gt;
-## 1 (Intercept)      56.0        0         7.26              31.8            0
+## 1 (Intercept)      55.9        0         7.26              31.8            0
 ## 2 age              -0.0994     0        -0.603             31.8            0
-## 3 sexfemale         0.439      0         0.150             31.8            0
+## 3 sexmale           0.561      0         0.189             31.8            0
 ## # … with 6 more variables: avg_adjtest_stat &lt;dbl&gt;, crit_value_t1e &lt;dbl&gt;,
 ## #   param_estimate_sd &lt;dbl&gt;, avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,
 ## #   replications &lt;dbl&gt;</code></pre>
@@ -717,27 +717,27 @@
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nested_data</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <pre><code>##    X.Intercept.   weight age sex_1    sex level1_id neighborhood
-## 1             1 231.1471  39     1 female         1            1
-## 2             1 158.6388  30     1 female         2            1
-## 3             1 171.6605  35     1 female         3            1
-## 4             1 176.4105  42     1 female         4            1
-## 5             1 176.2812  46     0   male         5            1
-## 6             1 188.0455  34     1 female         6            1
-## 7             1 201.8052  43     1 female         7            1
-## 8             1 186.9941  38     1 female         8            1
-## 9             1 190.1734  53     0   male         9            1
-## 10            1 163.4426  41     0   male        10            1
+## 1             1 231.1471  39     0 female         1            1
+## 2             1 158.6388  30     0 female         2            1
+## 3             1 171.6605  35     0 female         3            1
+## 4             1 176.4105  42     0 female         4            1
+## 5             1 176.2812  46     1   male         5            1
+## 6             1 188.0455  34     0 female         6            1
+## 7             1 201.8052  43     0 female         7            1
+## 8             1 186.9941  38     0 female         8            1
+## 9             1 190.1734  53     1   male         9            1
+## 10            1 163.4426  41     1   male        10            1
 ##    int_neighborhood       error fixed_outcome random_effects        y
-## 1         -2.018169  0.03970688      5.195587      -2.018169 3.217125
-## 2         -2.018169  1.10030811      5.570835      -2.018169 4.652974
-## 3         -2.018169  1.48822364      6.180186      -2.018169 5.650241
-## 4         -2.018169 -0.29997335      7.437684      -2.018169 5.119542
-## 5         -2.018169  0.47789336      7.911565      -2.018169 6.371289
-## 6         -2.018169 -0.38778144      5.488635      -2.018169 3.082684
-## 7         -2.018169 -0.35268182      6.875843      -2.018169 4.504992
-## 8         -2.018169  0.93313126      6.320178      -2.018169 5.235141
-## 9         -2.018169 -1.39912533      8.894798      -2.018169 5.477503
-## 10        -2.018169 -0.01603532      7.296723      -2.018169 5.262519</code></pre>
+## 1         -2.018169  0.03970688      4.865587      -2.018169 2.887125
+## 2         -2.018169  1.10030811      5.240835      -2.018169 4.322974
+## 3         -2.018169  1.48822364      5.850186      -2.018169 5.320241
+## 4         -2.018169 -0.29997335      7.107684      -2.018169 4.789542
+## 5         -2.018169  0.47789336      8.241565      -2.018169 6.701289
+## 6         -2.018169 -0.38778144      5.158635      -2.018169 2.752684
+## 7         -2.018169 -0.35268182      6.545843      -2.018169 4.174992
+## 8         -2.018169  0.93313126      5.990178      -2.018169 4.905141
+## 9         -2.018169 -1.39912533      9.224798      -2.018169 5.807503
+## 10        -2.018169 -0.01603532      7.626723      -2.018169 5.592519</code></pre>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">nested_data</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 200</code></pre>

@@ -3,44 +3,6 @@
 #' Function that simulates discrete, factor, or categorical variables.  
 #' Is essentially a wrapper around the sample function from base R.
 #' 
-#' @param k Number of third level clusters.
-#' @param n Number of clusters or number of observations for single level
-#' @param p Number of within cluster observations for multilevel
-#' @param numlevels Scalar indicating the number of levels for categorical, 
-#'   factor, or discrete variable
-#' @param var_type Variable type for the variable, must be either 
-#'   "level1", "level2", "level3", or "single"
-#' @param ... Additional parameters passed to the sample function.
-#' @export 
-sim_factor <- function(k = NULL, n, p, numlevels, 
-                       var_type = c('level1', 'level2', 'level3', 'single'),
-                       ...) {
-  end <- cumsum(n)
-  beg <- c(1, cumsum(n) + 1)
-  beg <- beg[-length(beg)]
-  
-  if(!is.null(k)) {
-    lvl3ss <- sapply(lapply(seq_along(beg), function(xx) 		
-      p[beg[xx]:end[xx]]), sum)
-  }
-  
-  var_type <- match.arg(var_type)
-  
-  cat_var <- switch(var_type,
-                    single = base::sample(x = numlevels, size = n, ...),
-                    level3 = rep(base::sample(x = numlevels, size = k, ...), times = lvl3ss),
-                    level2 = rep(base::sample(x = numlevels, size = length(p), ...), times = p),
-                    level1 = base::sample(x = numlevels, size = sum(p), ...)
-  )
-  cat_var
-}
-
-
-#' Simulate categorical, factor, or discrete variables
-#' 
-#' Function that simulates discrete, factor, or categorical variables.  
-#' Is essentially a wrapper around the sample function from base R.
-#' 
 #' @param n A list of sample sizes.
 #' @param levels Scalar indicating the number of levels for categorical, 
 #'   factor, or discrete variable. Can also specify levels as a character vector.
@@ -67,53 +29,7 @@ sim_factor2 <- function(n, levels, var_level = 1, replace = TRUE,
                       times = n[['level3_total']])
     }
   }
-  
-  # if(is.character(levels)) {
-  #   cat_var <- factor(cat_var, levels = levels, labels = levels)
-  # }
-  
   cat_var
-}
-
-
-#' Simulate continuous variables
-#' 
-#' Function that simulates continuous variables. Any distribution function in 
-#' R is supported.
-#' 
-#' @param k Number of third level clusters.
-#' @param n Number of clusters or number of observations for single level
-#' @param p Number of within cluster observations for multilevel
-#' @param dist_fun A distribution function. This argument takes a quoted
-#'      R distribution function (e.g. 'rnorm').
-#' @param var_type Variable type for the variable, must be either "level1", 
-#'      "level2", "level3", or "single"
-#' @param ... Additional parameters to pass to the dist_fun argument.
-#' @export 
-sim_continuous <- function(k = NULL, n, p, dist_fun,
-                           var_type = c('level1', 'level2', 'level3', 'single'),
-                           ...) {
-  
-  end <- cumsum(n)
-  beg <- c(1, cumsum(n) + 1)
-  beg <- beg[-length(beg)]
-  
-  if(!is.null(k)) {
-    lvl3ss <- sapply(lapply(seq_along(beg), function(xx) 		
-      p[beg[xx]:end[xx]]), sum)
-  }
-  
-  var_type <- match.arg(var_type)
-  
-  contVar <- switch(var_type,
-                    single = unlist(lapply(n, FUN = dist_fun, ...)),
-                    level3 = rep(unlist(lapply(k, FUN = dist_fun, ...)), 
-                                 times = lvl3ss),
-                    level2 = rep(unlist(lapply(length(p), FUN = dist_fun, ...)), 
-                                 times = p),
-                    level1 = unlist(lapply(sum(p), FUN = dist_fun, ...))
-  )
-  contVar
 }
 
 #' Simulate continuous variables
@@ -164,35 +80,6 @@ sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1,
       cont_var <- cont_var %*% chol(c(variance))
   }
   cont_var
-}
-
-#' Simulate knot locations
-#' 
-#' Function that generates knot locations. An example of usefulness of this funciton
-#' would be with generation of interrupted time series data. Another application may
-#' be with simulation of piecewise linear data structures.
-#' 
-#' @param var Variable used to create knots in the data. 
-#' @param knot_locations The locations to create knots. These need to be specified 
-#'   with the scale of the variable in mind. See examples.
-#' @param right logical, indicating if the intervals should be closed on the right
-#'   (and open on the left) or vice versa. See \code{\link{cut}} for more details. 
-#'   Defaults to FALSE, which is likely most desirable behavior in this context.
-#' @export 
-#' @examples
-#' sim_knot(0:10, knot_locations = c(4, 9))
-#' sim_knot(rnorm(100), knot_locations = c(-1, 1.5))
-#' sim_knot(0:8, knot_locations = 5)   
-#' sim_knot(0:8, knot_locations = 5, right = TRUE)  
-sim_knot <- function(var, knot_locations, right = FALSE) {
-  
-  if(!right) {
-    knot_locat <- c(min(var), knot_locations, (max(var) + 1))
-  } else {
-    knot_locat <- c((min(var) - 1), knot_locations, (max(var)))
-  }
-  
-  cut(var, knot_locat, labels = FALSE, right = right) - 1
 }
 
 #' Simulate knot locations

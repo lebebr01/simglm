@@ -85,19 +85,10 @@
     <loc>https://simglm.brandonlebeau.org/reference/run_shiny.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org/reference/sim_continuous.html</loc>
-  </url>
-  <url>
     <loc>https://simglm.brandonlebeau.org/reference/sim_continuous2.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org/reference/sim_factor.html</loc>
-  </url>
-  <url>
     <loc>https://simglm.brandonlebeau.org/reference/sim_factor2.html</loc>
-  </url>
-  <url>
-    <loc>https://simglm.brandonlebeau.org/reference/sim_knot.html</loc>
   </url>
   <url>
     <loc>https://simglm.brandonlebeau.org/reference/sim_rand_eff.html</loc>

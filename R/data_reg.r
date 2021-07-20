@@ -78,10 +78,8 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     if(any(cross_class[['cross_class_re']])){
       Zmat <- do.call('cbind', Zmat)
     } else {
-      Zmat <- dplyr::bind_cols()
+      Zmat <- dplyr::bind_cols(Zmat)
     }
-    
-      dplyr::bind_cols()
     
     rand_effects <- dplyr::select(data, random_effects_names)
     

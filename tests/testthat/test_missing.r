@@ -1,89 +1,143 @@
-# context("missing data")
-# 
-# test_that("dropout missing occurring", {
-#   # Simulate longitudinal data
-#   fixed <- ~1 + time + diff + act + time:act
-#   random <- ~1 + time + diff
-#   fixed_param <- c(4, 2, 6, 2.3, 7)
-#   random_param <- list(random_var = c(7, 4, 2), rand_gen = "rnorm")
-#   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-#                     var_type = c("level1", "level2"), 
-#                     opts = list(list(mean = 0, sd = 1.5),
-#                                 list(mean = 0, sd = 4)))
-#   n <- 150
-#   p <- 30
-#   error_var <- 4
-#   with_err_gen <- 'rnorm'
-#   data_str <- "long"
-#   temp_long <- sim_reg(fixed, random, random3 = NULL, fixed_param, random_param, 
-#                        random_param3 = NULL,
-#                        cov_param, k = NULL, n, p, error_var, with_err_gen, 
-#                        data_str = data_str)
-#   
-#   # simulate missing data
-#   temp_long_miss <- missing_data(temp_long, miss_prop = .25, type = 'dropout', 
-#                                  clust_var = 'clustID', within_id = 'withinID')
-#   
-#   expect_equal(as.numeric(prop.table(table(temp_long_miss$missing))[2]),
-#                .25, 
-#                tolerance = .05)
-#   
-#   temp_long_miss <- missing_data(temp_long, miss_prop = .05, type = 'dropout', 
-#                                  clust_var = 'clustID', within_id = 'withinID')
-#   
-#   expect_equal(as.numeric(prop.table(table(temp_long_miss$missing))[2]),
-#                .05, 
-#                tolerance = .05)
-# })
-# 
-# test_that("MAR missing", {
-#   set.seed(1985)
-#   # simulate data
-#   fixed <- ~1 + age + income
-#   fixed_param <- c(2, 0.3, 1.3)
-#   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-#                     var_type = c("single", "single"), 
-#                     opts = list(list(mean = 0, sd = 4),
-#                                 list(mean = 0, sd = 2)))
-#   n <- 4500
-#   error_var <- 3
-#   with_err_gen <- 'rnorm'
-#   temp_single <- sim_reg(fixed = fixed, fixed_param = fixed_param,
-#                          cov_param = cov_param,
-#                          n = n, error_var = error_var, with_err_gen = with_err_gen,
-#                          data_str = "single")
-#   
-#   # generate missing data
-#   mar_prop <- c(0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2, 0.15, 0.1, 0.05)
-#   mar_prop <- rep(mar_prop, each = 450)
-#   tmp_single_miss <- missing_data(temp_single, mar_prop = mar_prop, 
-#                                   type = 'mar', miss_cov = 'income')
-#   
-#   diff <- sum(abs(prop.table(table(tmp_single_miss$miss_prop, 
-#                    is.na(tmp_single_miss$sim_data2)), 1)[,2] 
-#   - unique(sort(mar_prop))))
-#   
-#   expect_equal(diff, .1, tolerance = .05)
-# })
-# 
-# test_that("mcar missing", {
-#   # simulate data
-#   fixed <- ~1 + age + income
-#   fixed_param <- c(2, 0.3, 1.3)
-#   cov_param <- list(dist_fun = c('rnorm', 'rnorm'),
-#                     var_type = c("single", "single"),
-#                     opts = list(list(mean = 0, sd = 4), 
-#                                 list(mean = 0, sd = 3)))
-#   n <- 4500
-#   error_var <- 3
-#   with_err_gen <- 'rnorm'
-#   temp_single <- sim_reg(fixed = fixed, fixed_param = fixed_param,
-#                          cov_param = cov_param,
-#                          n = n, error_var = error_var, with_err_gen = with_err_gen,
-#                          data_str = "single")
-#   tmp_single_miss <- missing_data(temp_single, miss_prop = .25, 
-#                                   type = 'random', clust_var = NULL)
-#   expect_equal(as.numeric(prop.table(table(is.na(tmp_single_miss$sim_data2)))[2]), 
-#                .25, tolerance = .05)
-# })
-# 
+context("missing data sim")
+
+test_that('random missing', {
+  set.seed(321) 
+  sim_arguments <- list(
+    formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+    reg_weights = c(4, 0.5, 0.75, 0, 0.33),
+    fixed = list(time = list(var_type = 'time'),
+                 weight = list(var_type = 'continuous', mean = 180, sd = 30),
+                 age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+                 treat = list(var_type = 'factor', 
+                              levels = c('Treatment', 'Control'),
+                              var_level = 2)),
+    randomeffect = list(int_id = list(variance = 8, var_level = 2),
+                        time_id = list(variance = 3, var_level = 2)),
+    missing_data = list(miss_prop = .25, new_outcome = 'y_missing',
+                        type = 'random'),
+    sample_size = list(level1 = 50, level2 = 30)
+  )
+  data_w_missing <- sim_arguments %>%
+    simulate_fixed(data = NULL, .) %>%
+    simulate_randomeffect(sim_arguments) %>%
+    simulate_error(sim_arguments) %>%
+    generate_response(sim_arguments) %>%
+    generate_missing(sim_arguments)
+  
+  expect_type(data_w_missing[['y']], 'double')
+  expect_type(data_w_missing[['y_missing']], 'double')
+  expect_true(any(is.na(data_w_missing[['y_missing']])))
+  expect_false(any(is.na(data_w_missing[['y']])))
+  expect_equal(prop.table(table(is.na(data_w_missing[['y_missing']])))[[2]],
+               .25, tolerance = .02)
+})
+
+test_that('dropout missing', {
+  set.seed(321) 
+  sim_arguments <- list(
+    formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+    reg_weights = c(4, 0.5, 0.75, 0, 0.33),
+    fixed = list(time = list(var_type = 'time'),
+                 weight = list(var_type = 'continuous', mean = 180, sd = 30),
+                 age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+                 treat = list(var_type = 'factor', 
+                              levels = c('Treatment', 'Control'),
+                              var_level = 2)),
+    randomeffect = list(int_id = list(variance = 8, var_level = 2),
+                        time_id = list(variance = 3, var_level = 2)),
+    missing_data = list(miss_prop = .45, new_outcome = 'missing_y',
+                        clust_var = 'id', type = 'dropout'),
+    sample_size = list(level1 = 10, level2 = 20)
+  )
+  data_w_missing <- sim_arguments %>%
+    simulate_fixed(data = NULL, .) %>%
+    simulate_randomeffect(sim_arguments) %>%
+    simulate_error(sim_arguments) %>%
+    generate_response(sim_arguments) %>%
+    generate_missing(sim_arguments)
+  
+  expect_type(data_w_missing[['y']], 'double')
+  expect_type(data_w_missing[['missing_y']], 'double')
+  expect_true(any(is.na(data_w_missing[['missing_y']])))
+  expect_false(any(is.na(data_w_missing[['y']])))
+  expect_equal(prop.table(table(is.na(data_w_missing[['missing_y']])))[[2]],
+               .45, tolerance = .02)
+  
+  prop_missing <- prop.table(table(is.na(data_w_missing[['missing_y']]), data_w_missing[['time']]))[2, ]
+  expect_lte(prop_missing[[3]], prop_missing[[4]])
+  expect_lte(prop_missing[[5]], prop_missing[[6]])
+})
+
+test_that('dropout by location', {
+  set.seed(321) 
+  sim_arguments <- list(
+    formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+    reg_weights = c(4, 0.5, 0.75, 0, 0.33),
+    fixed = list(time = list(var_type = 'time'),
+                 weight = list(var_type = 'continuous', mean = 180, sd = 30),
+                 age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+                 treat = list(var_type = 'factor', 
+                              levels = c('Treatment', 'Control'),
+                              var_level = 2)),
+    randomeffect = list(int_id = list(variance = 8, var_level = 2),
+                        time_id = list(variance = 3, var_level = 2)),
+    missing_data = list(new_outcome = 'y_missing',
+                        dropout_location = c(3, 9, 1, 6, 7, 8, 6, 9, 2, 4, 6, 5, 8, 9, 4, 5, 
+                                             6, 7, 2, 9),
+                        clust_var = 'id', type = 'dropout'),
+    sample_size = list(level1 = 10, level2 = 20)
+  )
+  data_w_missing <- sim_arguments %>%
+    simulate_fixed(data = NULL, .) %>%
+    simulate_randomeffect(sim_arguments) %>%
+    simulate_error(sim_arguments) %>%
+    generate_response(sim_arguments) %>%
+    generate_missing(sim_arguments)
+  
+  expect_type(data_w_missing[['y']], 'double')
+  expect_type(data_w_missing[['y_missing']], 'double')
+  expect_true(any(is.na(data_w_missing[['y_missing']])))
+  expect_false(any(is.na(data_w_missing[['y']])))
+  
+  expect_true(is.na(subset(data_w_missing, id == 1 & time == 3, select = y_missing)[[1]]))
+  expect_false(is.na(subset(data_w_missing, id == 1 & time == 2, select = y_missing)[[1]]))
+  expect_true(is.na(subset(data_w_missing, id == 2 & time == 9, select = y_missing)[[1]]))
+  expect_false(is.na(subset(data_w_missing, id == 2 & time == 8, select = y_missing)[[1]]))
+})
+
+test_that("missing at random", {
+  set.seed(321) 
+  sim_arguments <- list(
+    formula = y ~ 1 + time + weight + age + treat + (1 + time| id),
+    reg_weights = c(4, 0.5, 0.75, 0, 0.33),
+    fixed = list(time = list(var_type = 'time'),
+                 weight = list(var_type = 'continuous', mean = 180, sd = 30,
+                               var_level = 1),
+                 age = list(var_type = 'ordinal', levels = 30:60, var_level = 2),
+                 treat = list(var_type = 'factor', 
+                              levels = c('Treatment', 'Control'),
+                              var_level = 2)),
+    randomeffect = list(int_id = list(variance = 8, var_level = 2),
+                        time_id = list(variance = 3, var_level = 2)),
+    missing_data = list(new_outcome = 'y_missing', miss_cov = 'weight', 
+                        mar_prop = seq(from = 0, to = .9, length.out = 200),
+                        type = 'mar'),
+    sample_size = list(level1 = 10, level2 = 20)
+  )
+  data_w_missing <- sim_arguments %>%
+    simulate_fixed(data = NULL, .) %>%
+    simulate_randomeffect(sim_arguments) %>%
+    simulate_error(sim_arguments) %>%
+    generate_response(sim_arguments) %>%
+    generate_missing(sim_arguments)
+  
+  expect_type(data_w_missing[['y']], 'double')
+  expect_type(data_w_missing[['y_missing']], 'double')
+  expect_true(any(is.na(data_w_missing[['y_missing']])))
+  expect_false(any(is.na(data_w_missing[['y']])))
+  
+  prop_missing <- table(is.na(data_w_missing[['y_missing']]), cut(data_w_missing[['weight']], breaks = 10))[2,] / 
+    table(cut(data_w_missing[['weight']], breaks = 10))
+  expect_lte(prop_missing[[4]], prop_missing[[5]])
+  expect_lte(prop_missing[[7]], prop_missing[[8]])
+})

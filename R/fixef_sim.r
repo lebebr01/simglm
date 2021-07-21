@@ -141,7 +141,6 @@ sim_time <- function(n, time_levels = NULL, ...) {
             lapply(seq_along(n[['level1']]), function(xx)
               time_levels[1:n[['level1']][xx]]))
   }
-  
 }
 
 sim_variable <- function(var_type = c("continuous", "factor", "ordinal", 
@@ -211,9 +210,6 @@ simulate_fixed <- function(data, sim_args, ...) {
     ) %>% 
       data.frame()
   }
-  
-
-  
   if(!is.null(sim_args[['knot']])) {
     
     knot_names <- names(sim_args[['knot']])
@@ -270,9 +266,6 @@ simulate_fixed <- function(data, sim_args, ...) {
       if(any(grepl(":|^I", Omat_factor_names))) {
         Omat_factor_names <- Omat_factor_names[-int_loc]
       }
-     
-      # names(Omat_factor) <- paste0(Omat_factor_names[unique_columns(Xmat, Omat)],
-      #                              '_orig')
     } else {
       Omat_factor <- NULL
     }
@@ -282,7 +275,6 @@ simulate_fixed <- function(data, sim_args, ...) {
                                  fixed_vars_new[grepl("^poly|^ns", fixed_vars_new)]
       )
       Omat_poly_ns <- Omat[ , fixed_vars_poly_ns, drop = FALSE]
-      # names(Omat_poly_ns) <- paste0(names(Omat_poly_ns), "_orig")
     } else {
       Omat_poly_ns <- NULL
     }

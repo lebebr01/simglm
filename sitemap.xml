@@ -28,13 +28,7 @@
     <loc>https://simglm.brandonlebeau.org/reference/compute_statistics.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org/reference/corr_variables.html</loc>
-  </url>
-  <url>
     <loc>https://simglm.brandonlebeau.org/reference/correlate_variables.html</loc>
-  </url>
-  <url>
-    <loc>https://simglm.brandonlebeau.org/reference/cross_class.html</loc>
   </url>
   <url>
     <loc>https://simglm.brandonlebeau.org/reference/desireVar.html</loc>
@@ -91,9 +85,6 @@
     <loc>https://simglm.brandonlebeau.org/reference/sim_factor2.html</loc>
   </url>
   <url>
-    <loc>https://simglm.brandonlebeau.org/reference/sim_rand_eff.html</loc>
-  </url>
-  <url>
     <loc>https://simglm.brandonlebeau.org/reference/sim_time.html</loc>
   </url>
   <url>
@@ -116,8 +107,5 @@
   </url>
   <url>
     <loc>https://simglm.brandonlebeau.org/reference/transform_outcome.html</loc>
-  </url>
-  <url>
-    <loc>https://simglm.brandonlebeau.org/reference/varcov_randeff.html</loc>
   </url>
 </urlset>

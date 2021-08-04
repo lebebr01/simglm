@@ -219,7 +219,7 @@ compute_statistics <- function(data, sim_args, power = TRUE,
                                          rlang::syms(group_vars))
     avg_estimates <- dplyr::full_join(avg_estimates, 
                      power_computation,
-                     by = 'term')
+                     by = group_vars)
   }
   
   if(type_1_error) {
@@ -227,7 +227,7 @@ compute_statistics <- function(data, sim_args, power = TRUE,
                                               rlang::syms(group_vars))
     avg_estimates <- dplyr::full_join(avg_estimates, 
                                       type_1_error_computation,
-                                      by = 'term')
+                                      by = group_vars)
   }
   
   if(precision) {
@@ -235,7 +235,7 @@ compute_statistics <- function(data, sim_args, power = TRUE,
                                                  rlang::syms(group_vars))
     avg_estimates <- dplyr::full_join(avg_estimates, 
                                       precision_computation,
-                                      by = 'term')
+                                      by = group_vars)
   }
   
   avg_estimates['replications'] <- sim_args['replications']

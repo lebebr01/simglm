@@ -1,4 +1,4 @@
-# Regression simulation function
+# `simglm`: Tidy simulation and power analyses
 
 [![R build status](https://github.com/lebebr01/simglm/workflows/R-CMD-check/badge.svg)](https://github.com/lebebr01/simglm/actions?workflow=R-CMD-check)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/lebebr01/simglm?branch=main&svg=true)](https://ci.appveyor.com/project/lebebr01/simglm)

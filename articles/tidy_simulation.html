@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.8</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Tidy Simulation with <code>simglm</code>
 </h1>
             
-            <h4 data-toc-skip class="date">2021-07-21</h4>
+            <h4 data-toc-skip class="date">2021-08-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/master/vignettes/tidy_simulation.Rmd" class="external-link"><code>vignettes/tidy_simulation.Rmd</code></a></small>
       <div class="hidden name"><code>tidy_simulation.Rmd</code></div>
@@ -422,7 +422,7 @@
 ## 10  freshman         0      0      0</code></pre>
 <p>Each indicator takes a value of 1 or 0 for each new column created. These indicate which category is represented by each attribute, for example, the 1 for the sophomore column indicates that this term would represent the effect of moving from the reference group to the sophomore category. The reference group is selected by the group or category that does not have an indicator attribute for it, in this example it is the freshman group. The default behavior in R is to use the category that is closest to “A” in alphabetical order.</p>
 <p>It is important to understand how the indicator attributes are generated as this will impact how the response outcome is created. In this case, since there will be 3 indicator variables to represent the 4 categories of the grade attribute, 3 regression weights will need to be added to the <code>reg_weights</code> argument. These terms would represent the effect (mean level change) from moving from the reference group to each of the indicator variables. Using the example above, this would reflect the mean difference between freshman and sophomore, freshman and junior, and freshman and senior.</p>
-<p>The other element that needs to be kept track of, is the order that these indicator attributes are created by R. The default behavior is for these to be created in alphabetical order. The simglm package modifies this default behavior to convert those specified with a character vector for the <code>levels</code> argument to be in the same order as specified. This is important as it has implications for the interpretation of the terms specified within <code>reg_weights</code>. To be more concrete, what this means is that the last three terms specified within the <code>reg_weights</code> argument (ie., .75, 1.8, and 2.5) would respectively represent the difference between the sophomore, junior, and senior groups compared to the freshman group. Therefore, the average mean difference between the freshman and sophomore groups would be .75, the mean difference between the freshman and junior groups would be 1.8, and the mean difference between the freshman and senior groups would be 2.5. You could confirm this by saving the simulated data below and fitting a linear regression using the <code>lm</code> function as follows: <code>lm(y ~ 1 + weight + age + sex_orig + grade_orig, data = &amp;&amp;)</code> where the saved data object is placed instead of the <code>&amp;&amp;</code>.</p>
+<p>The other element that needs to be kept track of, is the order that these indicator attributes are created by R. The default behavior is for these to be created in alphabetical order. The simglm package modifies this default behavior to convert those specified with a character vector for the <code>levels</code> argument to be in the same order as specified. This is important as it has implications for the interpretation of the terms specified within <code>reg_weights</code>. To be more concrete, what this means is that the last three terms specified within the <code>reg_weights</code> argument (ie., .75, 1.8, and 2.5) would respectively represent the difference between the sophomore, junior, and senior groups compared to the freshman group. Therefore, the average mean difference between the freshman and sophomore groups would be .75, the mean difference between the freshman and junior groups would be 1.8, and the mean difference between the freshman and senior groups would be 2.5. You could confirm this by saving the simulated data below and fitting a linear regression using the <code>lm</code> function as follows: <code>lm(y ~ 1 + weight + age + sex + grade, data = &amp;&amp;)</code> where the saved data object is placed instead of the <code>&amp;&amp;</code>.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> 
 
@@ -574,7 +574,7 @@
   <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/model_fit.html">model_fit</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/extract_coefficients.html">extract_coefficients</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 4 x 5
+<pre><code>## # A tibble: 4 × 5
 ##   term        estimate std.error statistic p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
 ## 1 (Intercept)   -1.24     19.1     -0.0650  0.950 
@@ -603,7 +603,7 @@
   <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/model_fit.html">model_fit</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/extract_coefficients.html">extract_coefficients</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 5
+<pre><code>## # A tibble: 3 × 5
 ##   term        estimate std.error statistic p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
 ## 1 (Intercept)  49.7       15.9       3.13   0.0167
@@ -640,7 +640,7 @@
 
 <span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 12
+<pre><code>## # A tibble: 3 × 12
 ##   term        avg_estimate power avg_test_stat crit_value_power type_1_error
 ##   &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;        &lt;dbl&gt;
 ## 1 (Intercept)      47.2      0.6         3.37              1.96          0.5
@@ -681,7 +681,7 @@
 
 <span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 12
+<pre><code>## # A tibble: 3 × 12
 ##   term        avg_estimate power avg_test_stat crit_value_power type_1_error
 ##   &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;        &lt;dbl&gt;
 ## 1 (Intercept)      55.9        0         7.26              31.8            0

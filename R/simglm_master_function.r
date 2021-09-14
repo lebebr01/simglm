@@ -39,6 +39,10 @@ simglm <- function(sim_args) {
     data <- simulate_randomeffect(data, sim_args = sim_args)
   }
   
+  if(!is.null(sim_args[['correlate']])) {
+    data <- correlate_variables(data, sim_args = sim_args)
+  }
+  
   data <- generate_response(data, sim_args = sim_args)
   
   if(!is.null(sim_args[['missing_data']])) {

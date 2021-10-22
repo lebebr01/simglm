@@ -53,7 +53,6 @@ sample_sizes <- function(sample_size) {
       }
     }
     total_level2_samplesize <- sum(level2)
-    sample_size['level2'] <- list(level2)
     
     if(1 %in% min_max_loc) {
       level1 <- runif(n = total_level2_samplesize,
@@ -68,6 +67,7 @@ sample_sizes <- function(sample_size) {
       }
     }
     sample_size['level1'] <- list(level1)
+    sample_size['level2'] <- list(level2)
     
     if(length(sample_size) == 3) {
       sample_size['level3_total'] <- list(sample_size_level3(sample_size)) 

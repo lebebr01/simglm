@@ -284,7 +284,12 @@ simulate_fixed <- function(data, sim_args, ...) {
     Xmat <- dplyr::bind_cols(Xmat, Omat)
   } else {
     Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))
-    colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars
+    
+    if(grepl("^0", as.character(fixed_formula)[2])) {
+      colnames(Xmat)[1:ncol(Xmat)] <- fixed_vars
+    } else {
+      colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars
+    }
   }
   
   if(is.null(data)) {

@@ -16,7 +16,7 @@
 sim_factor2 <- function(n, levels, var_level = 1, replace = TRUE,
                        ...) {
   if(var_level == 1) {
-    cat_var <- base::sample(x = levels, size = n[['level1']], 
+    cat_var <- base::sample(x = levels, size = sum(n[['level1']]), 
                             replace = replace, ...)
   } else {
     if(var_level == 2) {

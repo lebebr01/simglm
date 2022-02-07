@@ -16,7 +16,6 @@ Depends:
 Imports:
     stats,
     methods,
-    Matrix,
     rlang,
     dplyr,
     purrr,

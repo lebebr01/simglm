@@ -9,6 +9,7 @@ vignette: >
 editor_options: 
   chunk_output_type: console
 ---
+
 ```{r setup, include=FALSE}
 library(knitr)
 library(dplyr)
@@ -22,6 +23,7 @@ knit_print.data.frame = function(x, ...) {
 The tidy simulation framework uses simulation arguments as the basis for specifying the models to be simulated. The goal of this vignette is to document more thoroughly the various arguments that are possible within each function. It is recommended that new users start with the "Tidy Simulation with `simglm`" vignette prior to working through this vignette.
 
 # Fixed Arguments
+
 Arguments associated with the fixed portion of the model are needed for each fixed variable that needs to be simulated. The fixed variables specified come from the formula argument. Interactions or the intercept are not included in the fixed arguments as these are generated automatically. Let's start with an example.
 
 ```{r fixed_sim}
@@ -46,19 +48,20 @@ fixed_data <- simulate_fixed(data = NULL, sim_arguments)
 head(fixed_data, n = 20)
 ```
 
-The following example shows the five types of variables that can be generated. These types are specified with the `var_type` argument and can be one of the following five types: 
+The following example shows the five types of variables that can be generated. These types are specified with the `var_type` argument and can be one of the following five types:
 
-* 'time': This type of variable is used for a time metric variable
-* 'continuous': This is a continuous distribution, default is to use the `rnorm` distribution function for generation.
-* 'ordinal': This generates ordinal data and is generated using the `sample` function.
-* 'factor': This is a categorical or factor variable specification representing groups or categories.
-* 'knot': This type of variable is generated based on another variable and represents a knot category variable.
+-   'time': This type of variable is used for a time metric variable
+-   'continuous': This is a continuous distribution, default is to use the `rnorm` distribution function for generation.
+-   'ordinal': This generates ordinal data and is generated using the `sample` function.
+-   'factor': This is a categorical or factor variable specification representing groups or categories.
+-   'knot': This type of variable is generated based on another variable and represents a knot category variable.
 
 Each variable type will be explored in more detail.
 
 Finally, another common argument for all fixed variable types is the argument `var_level`. This defaults to `var_level = 1` which would be a variable defined at the level 1 of the model (i.e. unique value for each row in the data). These can be changed to reflect the data level that is desired. For example, `var_level = 2` would repeat values for each level 2 cluster found in the data and `var_level = 3` would do the same for each level 3 cluster. Therefore for variables that are at level 2 or level 3, there will be fewer unique values in the data compared to level 1 variables.
 
 ## Time Variable
+
 For time variables used in longitudinal or repeated measures designs, the default metric is 0 to level1 sample size minus 1. This can be seen above in the output. To change the time variable metric the `time_levels` argument can be used. A vector of values to specify for the time variable can be given directly. For example, the following could be passed to alter the metric of the time variable: `time_levels = c(0, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5, 6)` where now the time variable would increment in 0.5 units for the first 7 measurements and 1 unit increments for the last three measurements. This could represent a case when the measurements are collected every 6 months for the first 7 measurements and yearly after that.
 
 Below is the output including the manual time variable specification. The only requirement is that the length of the `time_levels` argument must match the level1 sample size.
@@ -85,6 +88,7 @@ head(fixed_data, n = 20)
 ```
 
 ## Continuous Variable
+
 Continuous variables are generating using distribution functions (i.e. `rnorm`). Any distribution function found within R, or user written distribution functions can be used, however the default used in `rnorm`. To change the distribution function used, the argument `dist` can be specified. For example, if the Gamma distribution is desired for the weight variable, the following code would achieve this:
 
 ```{r rbeta}
@@ -117,8 +121,8 @@ ggplot(fixed_data, aes(x = weight)) +
   theme_bw()
 ```
 
-
 ## Ordinal Variable
+
 Ordinal variable specification uses the `sample` function within R to generate ordinal variables that are whole integers. The required argument for these types of variables is `levels`. The `levels` argument takes a range or vector of integer values to be passed to the `sample` function within R. For example, these three specifications for the `levels` argument are valid: `3:60`, `seq(4, 60, 2)`, `c(3, 10, 18, 24, 54, 60)`.
 
 An additional optional argument is `replace`. The `replace` argument specified whether the sampling is done with or without replacement. The default behavior is to do sampling with replacement. If sampling without replacement is desired set `replace = FALSE`. See `sample` for more details on this argument.
@@ -126,16 +130,18 @@ An additional optional argument is `replace`. The `replace` argument specified w
 Finally, the probability of selecting each value specified to the `levels` argument is also able to be specified through the `prob` argument. If `prob` is specified, it takes a vector of probabilities that must be the same length as the levels argument. The default behavior is for each value specified with `levels` to be equally likely to be sampled.
 
 ## Factor Variable
-Factor variables are generated similarly to ordinal variables with the `sample` function, however factor variables allow the generation of text or categorical variables in addition to numeric grouping variables. Therefore the only needed argument for factor variables is a vector of numeric or text strings representing the different groups to be generated. For example, both of these specifications are equivalent: `c(1, 2, 3, 4)` and `c('Freshman', 'Sophomore', 'Junior', 'Senior')`. Both of these specifications would generate data for these four groups, the difference is that the text labels will be used when text strings are specified. 
+
+Factor variables are generated similarly to ordinal variables with the `sample` function, however factor variables allow the generation of text or categorical variables in addition to numeric grouping variables. Therefore the only needed argument for factor variables is a vector of numeric or text strings representing the different groups to be generated. For example, both of these specifications are equivalent: `c(1, 2, 3, 4)` and `c('Freshman', 'Sophomore', 'Junior', 'Senior')`. Both of these specifications would generate data for these four groups, the difference is that the text labels will be used when text strings are specified.
 
 An additional optional argument is `replace`. The `replace` argument specified whether the sampling is done with or without replacement. The default behavior is to do sampling with replacement. If sampling without replacement is desired set `replace = FALSE`. See `sample` for more details on this argument.
 
 Finally, the probability of selecting each value specified to the `levels` argument is also able to be specified through the `prob` argument. If `prob` is specified, it takes a vector of probabilities that must be the same length as the levels argument. The default behavior is for each value specified with `levels` to be equally likely to be sampled.
 
 ## Knot Variables
-Knot variables are defined as those that are a prominent point based on a specific spot of another variable. A common example of these types of variables would occur in interrupted time series data, where there is a place in time where the treatment is given after a series of baselines. The place where the treatment is given is the knot location. 
 
-In simglm, knots are specified within the formula, it is made particularly explicit below with the name: `age_knot`. Adding `_knot` at the end of a knot variable is not needed, but is used here to be more illustrative. When specifying knot attributes, the specific behavior of these attributes are controlled through the `knot` named element of the simulation arguments. See the example below with the simulation arguments for the variable, `age_knot`. 
+Knot variables are defined as those that are a prominent point based on a specific spot of another variable. A common example of these types of variables would occur in interrupted time series data, where there is a place in time where the treatment is given after a series of baselines. The place where the treatment is given is the knot location.
+
+In simglm, knots are specified within the formula, it is made particularly explicit below with the name: `age_knot`. Adding `_knot` at the end of a knot variable is not needed, but is used here to be more illustrative. When specifying knot attributes, the specific behavior of these attributes are controlled through the `knot` named element of the simulation arguments. See the example below with the simulation arguments for the variable, `age_knot`.
 
 ```{r knot-args}
 sim_args <- list(
@@ -149,16 +155,16 @@ sim_args <- list(
   )
 ```
 
-The required elements to simulate a knot variable is the variable to base the knot location on. This is specified with, `variable = 'age'` above. The second required element is the argument, `knot_locations` which specifies the location where the knot is placed. The knot variable itself is a variable that takes on the number of knot locations plus one, therefore in this example, the `age_knot` variable takes on two values. This would be similar to an indicator or dummy variable used in a linear regression model. 
+The required elements to simulate a knot variable is the variable to base the knot location on. This is specified with, `variable = 'age'` above. The second required element is the argument, `knot_locations` which specifies the location where the knot is placed. The knot variable itself is a variable that takes on the number of knot locations plus one, therefore in this example, the `age_knot` variable takes on two values. This would be similar to an indicator or dummy variable used in a linear regression model.
 
-Similar to above, the `simulate_fixed()` function does the simulation of this fixed effect term. 
+Similar to above, the `simulate_fixed()` function does the simulation of this fixed effect term.
 
 ```{r knot-sim}
 simulate_fixed(data = NULL, sim_args = sim_args) %>%
   head()
 ```
 
-As specified, this term would represent a change in the intercept for those that are larger than the knot location, above this was specified as 50 years. More complicated structures can be obtained. One example shown here is that an interaction between the knot variable and the age variable can be made. This term would then represent a change in slope for those that are older than 50. The only change needed is to add this term to the specification within the formula and also add another term to the `reg_weights` argument to specify on average the magnitude of the slope change. 
+As specified, this term would represent a change in the intercept for those that are larger than the knot location, above this was specified as 50 years. More complicated structures can be obtained. One example shown here is that an interaction between the knot variable and the age variable can be made. This term would then represent a change in slope for those that are older than 50. The only change needed is to add this term to the specification within the formula and also add another term to the `reg_weights` argument to specify on average the magnitude of the slope change.
 
 ```{r knot-args-int}
 sim_args <- list(
@@ -175,8 +181,8 @@ simulate_fixed(data = NULL, sim_args = sim_args) %>%
   head()
 ```
 
-
 # Random Error Arguments
+
 By default, the random error is generated as random normal with a mean of 0 and standard deviation of 1. If this is the desired behavior, no additional simulation arguments need to be specified in the simulation arguments. For example, the code below generates random error using the fixed arguments already shown above.
 
 ```{r random_error}
@@ -198,6 +204,7 @@ head(error_data, n = 20)
 ```
 
 ## Optional Arguments for Random Error
+
 The two main optional arguments for the random error component include a `dist` and `variance` that represent the error generating function and variance of the random error respectively. For example, if a t-distribution is desired for simulation of random error, `dist = 'rt'` can be used to specify the t-distribution as the generating distribution. When distributions other than random normal are specified, it is common that additional arguments will need to be specified for the generating distribution function (i.e. `rt`). In the `rt` example, the `df` argument is needed to specify the degrees of freedom for the t-distribution. Below is an example using a t-distribution.
 
 ```{r random_error_t}
@@ -283,7 +290,8 @@ var(error_data$error)
 ```
 
 ## Heterogeneity of Variance
-It is also possible to generate heterogeneity of variance for the random error. 
+
+It is also possible to generate heterogeneity of variance for the random error.
 
 ```{r heterogeneity}
 simulation_arguments <- list(
@@ -302,7 +310,6 @@ hetero_data <- simulate_fixed(data = NULL, simulation_arguments) %>%
   simulate_heterogeneity(simulation_arguments)
 ```
 
-
 ```{r heterogeneity-var}
 hetero_data %>% 
   group_by(group) %>% 
@@ -310,9 +317,8 @@ hetero_data %>%
             var_o_error = var(orig_error))
 ```
 
-
-
 # Random Effect Arguments
+
 The random effect arguments are passed through a named element of the list to the simulation arguments called 'randomeffect'. Within this element, each random effect specified in the formula must be specified as a named list. The named list allows the user to specify the names that will be used in the data simulation for the random effects. The default behavior of these random effects is to be simulated from a random normal distribution with mean 0 and variance of 1.
 
 Many of the same arguments that have been discussed with the error simulation are possible for the random effect simulation arguments. These include: `dist`, `variance`, `ther_sim`, `ther_val` and other arguments that are needed to pass on the data generating function. In addition, the argument `var_level` first introduced with the fixed effects are present here indicating which level of the data structure the random effect should be generated at. These arguments will not be discussed in more detail here, but readers can see examples of these arguments within the fixed effects and random error sections above.
@@ -339,8 +345,8 @@ random_data <- simulate_randomeffect(data = NULL, sim_arguments)
 head(random_data, n = 20)
 ```
 
-
 ## Cross-Classified Random Effects
+
 If cross-classified random effects are desired, these can be specified directly within the formula syntax as you would with lme4. For example, `y ~ 1 + time + weight + age + treat + (1 + time| id) + (1 | neighborhood_id)`. When documenting the simulation arguments for the additional cross-classified random effect (i.e. `(1 | neighborhood_id)`), specifying `cross_class = TRUE` with that random effect to identify that this is indeed a cross-classified random effect. Secondly, you can also specify directly the number of clusters that are associated with this cross-classified factor, this can be different than those specified in the `sample_size` argument. This can be done with the `num_ids` argument. Below is an example with a single cross-classified random effect representing neighborhoods individuals belong in
 
 ```{r cross-class}
@@ -368,10 +374,10 @@ head(random_data, n = 20)
 ```
 
 # Correlated Fixed and Random Effects
-Data attributes are often correlated, therefore, in order to really mimic real-world data, simulated data that are correlated would be desired. This can be done with `simglm` by using the function `correlated_variables()`. This function processes a new set of simulation arguments specified with the named `correlate`. In what follows, discussion of correlating fixed effects will be explored first, followed by correlating random effects next. 
+
+Data attributes are often correlated, therefore, in order to really mimic real-world data, simulated data that are correlated would be desired. This can be done with `simglm` by using the function `correlated_variables()`. This function processes a new set of simulation arguments specified with the named `correlate`. In what follows, discussion of correlating fixed effects will be explored first, followed by correlating random effects next.
 
 ## Fixed Effect Correlation
-
 
 ```{r correlate-fixed}
 sim_args <- list(formula = y ~ 1 + act + gpa + commute_time, 
@@ -399,10 +405,7 @@ select(correlate_attribute, -X.Intercept., -level1_id) %>%
   cor(.)
 ```
 
-
-
 ## Random Effect Correlation
-
 
 ```{r random-correlate}
 sim_args <- list(formula = y ~ 1 + act + gpa + sat + (1 + act | id), 
@@ -434,14 +437,14 @@ select(random_correlate, -level1_id, -id) %>%
   cor(.)
 ```
 
-
-
 # Missing Data Arguments
-Missing data is the standard rather than the exception in real world data. Therefore, generating data that include missing is important for generating data that are representative of real world data. In the power analysis context, most power analyses do not include missing data in the power computations (particularly if these are closed form solutions), but power can be negatively affected by missing data. 
+
+Missing data is the standard rather than the exception in real world data. Therefore, generating data that include missing is important for generating data that are representative of real world data. In the power analysis context, most power analyses do not include missing data in the power computations (particularly if these are closed form solutions), but power can be negatively affected by missing data.
 
 Fortunatly, the simglm package contains many useful frameworks for generating missing data. To generate missing data, the `generate_missing` function can be used for this. This function is called after the complete data are generated. This means that the complete data and missing data will be generated. Currently three types of missing data are supported, dropout, random, and mar (missing at random). The specification of missing data arguments is done using a named element to the simulation argument list called "missing_data".
 
 ## Random Missing Data
+
 First, lets explore random missing data. This structure is equivalent to the missing completely at random framework if you are familiar with Rubin's missing data classifications. To generate random missing data the `type = 'random'` is specified. Two additional arguments are needed to generate the missing data, first the missing proportion needs to be specified with `miss_prop` and the name of the new response variable with missing data needs to be specified with `new_outcome`. Below is an example generating data with random missing data.
 
 ```{r missing_random}
@@ -479,9 +482,9 @@ We can look at the amount of missing data:
 prop.table(table(is.na(data_w_missing$y_missing)))
 ```
 
-
 ## MAR Missing Data
-Data that are missing at random (MAR) can be generated as well. 
+
+Data that are missing at random (MAR) can be generated as well.
 
 ```{r missing_mar}
 set.seed(321) 
@@ -521,6 +524,7 @@ prop.table(table(is.na(data_w_missing$y_missing)))
 ```
 
 ## Dropout Missing Data
+
 Dropout missing data is possible when simulating data from a longitudinal design. When requesting dropout missing data, observations are removed after a specific point in the time cycle. For example, perhaps an individual stops being a part of the study after the third measurement. To request this type of missing data, the `type = 'dropout'` can be specified. In addition, one new argument is needed, `clust_var`. This argument represents the id associated with the clusters with longitudinal data. Below is an example:
 
 ```{r missing_dropout}
@@ -565,6 +569,7 @@ prop.table(table(is.na(data_w_missing$y_missing), data_w_missing$time))
 ```
 
 ### Specify location of dropout
+
 If additional control is desired, specifying the location of the dropout is possible. In this situation, a vector is passed to `dropout_location` that specifies for each individual (more generally each level 2 unit) where the dropout occurs. Below is an example of this.
 
 ```{r missing_dropout_spec}
@@ -610,14 +615,15 @@ We can also look now at the amount of missing by the time variable.
 prop.table(table(is.na(data_w_missing$y_missing), data_w_missing$time))
 ```
 
-
 # Model Fit Arguments
-The default behavior when fitting models to the generated data is to fit a model with the same formula as the generated data (i.e. `formula` simulation arguments). Secondly, the default model functions are `lm`/`glm` for single level simulation and `lmer`/`glmer` for multilevel simulation. Finally, the default regression weights specified in `reg_weights` are to compute statistics for power, type I error rates, and precision. 
+
+The default behavior when fitting models to the generated data is to fit a model with the same formula as the generated data (i.e. `formula` simulation arguments). Secondly, the default model functions are `lm`/`glm` for single level simulation and `lmer`/`glmer` for multilevel simulation. Finally, the default regression weights specified in `reg_weights` are to compute statistics for power, type I error rates, and precision.
 
 These defaults can be overriden by specifying simulation arguments through the named list called `model_fit`. Some examples were given in the Tidy Simulation vignette and the options that are able to be specified will depend on the model fitting function specified. A few examples are given for various model types, however, the user is directed to the documentation of the modeling functions specified through the `model_function` argument.
 
 ## Changing Family Argument
-For GLM models, users may wish to directly specify the family argument or change the link function within a specific family. For example, when generating data with a binary dependent variable, the logistic or probit links could be used when specifying the binomial family. Below is an example of using the binomial family with a logit link (the default link function). 
+
+For GLM models, users may wish to directly specify the family argument or change the link function within a specific family. For example, when generating data with a binary dependent variable, the logistic or probit links could be used when specifying the binomial family. Below is an example of using the binomial family with a logit link (the default link function).
 
 ```{r binomial_logit}
 set.seed(321) 
@@ -670,13 +676,14 @@ simulate_fixed(data = NULL, sim_arguments) %>%
 ```
 
 ## Adding Serial Correlation
-Serial correlation can be added to longitudinal designs and fitted using the nlme R package. Below is an example of implementing this functionality in the data generation and model fitting. 
+
+Serial correlation can be added to longitudinal designs and fitted using the nlme R package. Below is an example of implementing this functionality in the data generation and model fitting.
 
 To come...
 
-
 ## Marginal Models
-It is also possible to change the default model fitting functions. For example, an alternative model approach to mixed models is generalized estimating equations (GEE) or marginal models. One implementation of these models in R is the geepack package. Below is the code to fit a marginal model in a longitudinal context. The code is not evaluated, so no coefficients are shown, but if you have the `geepack` package installed, this code should run as written. 
+
+It is also possible to change the default model fitting functions. For example, an alternative model approach to mixed models is generalized estimating equations (GEE) or marginal models. One implementation of these models in R is the geepack package. Below is the code to fit a marginal model in a longitudinal context. The code is not evaluated, so no coefficients are shown, but if you have the `geepack` package installed, this code should run as written.
 
 ```{r gee, eval = FALSE}
 set.seed(321) 
@@ -715,11 +722,10 @@ simulate_fixed(data = NULL, sim_arguments) %>%
   extract_coefficients()
 ```
 
-
 # Power Arguments
 
-
 # Vary Simulation Arguments
+
 The `replicate_simulation` function first shown in the "tidy_simulation" vignette, can directly allow for the varying of simulation arguments. In order to vary simulation arguments, an additional named list called `vary_arguments` can be added to the simulation arguments passed to the functions. The `vary_arguments` elements of the simulation arguments is a nested named list. Within the named list, the arguments that are wished to be varied are specified by name. For example, a common argument varied is sample size. The following example varies the sample size to return multiple simulated data sets with different sample sizes.
 
 Note: A user would likely want to change `plan(sequential)` to something like `plan(mutisession)` or `plan(multicore)` to run these in parallel. `plan(sequential)` is used here for vignette processing.
@@ -748,6 +754,5 @@ sim_arguments <- list(
 
 replicate_simulation(sim_arguments)
 ```
-
 
 ## Varying Arguments to Compute Power

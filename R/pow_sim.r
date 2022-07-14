@@ -110,6 +110,10 @@ replicate_simulation <- function(sim_args, return_list = FALSE,
                                  future.seed = TRUE, ...) {
   
   if(is.null(sim_args[['vary_arguments']])) {
+    
+    if(is.null(sim_args[['replications']])){
+      sim_args[['replications']] <- 1
+    }
     future.apply::future_replicate(sim_args[['replications']], 
                                    simglm(sim_args),
                                    simplify = FALSE,
@@ -123,6 +127,10 @@ replicate_simulation <- function(sim_args, return_list = FALSE,
 
 replicate_simulation_vary <- function(sim_args, return_list = FALSE,
                                       future.seed = TRUE) {
+  
+  if(is.null(sim_args[['replications']])){
+    sim_args[['replications']] <- 1
+  }
   
   conditions <- data.frame(sapply(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE),
                                   as.character))

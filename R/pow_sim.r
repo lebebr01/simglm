@@ -77,7 +77,7 @@ tidy_mixed <- function(model) {
   mod_results <- data.frame(term = rownames(mod_results), mod_results,
                             row.names = NULL)
   
-  if(class(model) == 'glmerMod') {
+  if(is(model, 'glmerMod')) {
    mod_results <- mod_results[, 1:4]
   }
   

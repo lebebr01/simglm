@@ -141,3 +141,33 @@ test_that("missing at random", {
   expect_lte(prop_missing[[4]], prop_missing[[5]])
   expect_lte(prop_missing[[7]], prop_missing[[8]])
 })
+
+test_that("mar small", {
+  set.seed(321) 
+  
+  sim_arguments <- list(
+    formula = y ~ 1 + age + treat,
+    reg_weights = c(0.75, 0, 0.33, 0.6),
+    fixed = list(age = list(var_type = 'ordinal', levels = 30:60),
+                 treat = list(var_type = 'factor', 
+                              levels = c('Control', 'Low Dose', 'High Dose'))),
+    missing_data = list(new_outcome = 'y_missing', miss_cov = 'treat', 
+                        mar_prop = c(0.1, 0.2, 0.4),
+                        type = 'mar'),
+    sample_size = 10000
+  )
+  
+  simulated_data <- simulate_fixed(data = NULL, sim_arguments) |>
+    simulate_error(sim_arguments) |>
+    generate_response(sim_arguments) |>
+    generate_missing(sim_arguments)
+  
+  prop_missing <- addmargins(table(simulated_data$treat, 
+                                   is.na(simulated_data$y_missing)))[, 2] / 
+    addmargins(table(simulated_data$treat, 
+                     is.na(simulated_data$y_missing)))[, 3]
+  
+  expect_equal(as.numeric(round(prop_missing[1:3], 2)), c(0.1, 0.2, 0.4), 
+               tolerance = 1, )
+    
+})

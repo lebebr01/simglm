@@ -226,7 +226,7 @@ mar_missing <- function(sim_data, resp_var = 'sim_data',
   uniq_vals <- dplyr::count(sim_data, !!var_enq)
   
   if(nrow(uniq_vals) != length(mar_prop)) {
-    uniq_vals[['group']] <- cut(uniq_vals[['age']], breaks = length(mar_prop), labels = FALSE)
+    uniq_vals[['group']] <- cut(uniq_vals[[miss_cov]], breaks = length(mar_prop), labels = FALSE)
     missing_prop <- data.frame(group = 1:length(mar_prop),
                                miss_prop = mar_prop)
     miss_per <- left_join(dplyr::select(uniq_vals, !!var_enq, group),
@@ -236,11 +236,9 @@ mar_missing <- function(sim_data, resp_var = 'sim_data',
     miss_per <- cbind(dplyr::select(uniq_vals, !!var_enq), 
                       miss_prop = mar_prop)
   }
-  
-  miss_per <- dplyr::mutate(miss_per, miss_prob = runif(nrow(miss_per)))
-  
   sim_data <- dplyr::left_join(sim_data, miss_per, by = miss_cov)
-  sim_data <- mutate(sim_data, missing = ifelse(miss_prob < miss_prop, 1, 0))
+  sim_data <- dplyr::mutate(sim_data, miss_prob = runif(nrow(sim_data)),
+                            missing = ifelse(miss_prob < miss_prop, 1, 0))
   
   sim_data[new_outcome] <- sim_data[resp_var]
   sim_data[sim_data['missing'] == 1, new_outcome] <- NA

@@ -147,7 +147,7 @@ random_missing <- function(sim_data, resp_var = 'sim_data',
   
   sim_data <- data.frame(sim_data)
 
-  if(is.null(clust_var)){
+  if(is.null(clust_var)) {
     sim_data['miss_prob'] <- round(runif(nrow(sim_data)), 3)
     sim_data['missing'] <- ifelse(sim_data['miss_prob'] < miss_prop, 1, 0)
     sim_data[new_outcome] <- sim_data[resp_var]
@@ -226,13 +226,17 @@ mar_missing <- function(sim_data, resp_var = 'sim_data',
   uniq_vals <- dplyr::count(sim_data, !!var_enq)
   
   if(nrow(uniq_vals) != length(mar_prop)) {
-    stop(paste('mar_prop argument must be the same length as 
-               unique values in', miss_cov))
+    uniq_vals[['group']] <- cut(uniq_vals[['age']], breaks = length(mar_prop), labels = FALSE)
+    missing_prop <- data.frame(group = 1:length(mar_prop),
+                               miss_prop = mar_prop)
+    miss_per <- left_join(dplyr::select(uniq_vals, !!var_enq, group),
+                      missing_prop, 
+                      by = 'group')
+  } else {
+    miss_per <- cbind(dplyr::select(uniq_vals, !!var_enq), 
+                      miss_prop = mar_prop)
   }
   
-  num <- uniq_vals[['n']]
-  miss_per <- cbind(dplyr::select(uniq_vals, !!var_enq), miss_prop = mar_prop)
-  miss_per <- dplyr::slice(miss_per, rep(1:dplyr::n(), times = num))
   miss_per <- dplyr::mutate(miss_per, miss_prob = runif(nrow(miss_per)))
   
   sim_data <- dplyr::left_join(sim_data, miss_per, by = miss_cov)

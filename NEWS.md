@@ -1,3 +1,8 @@
+# simglm 1.0.0
+
+**Changes:**
+* Change default behavior for factor simulations, order of levels are maintained now instead of alphabetical order which is the default in R. 
+
 # simglm 0.7.2
 * Small maintenance fix for incoming 0.8 dplyr.
 

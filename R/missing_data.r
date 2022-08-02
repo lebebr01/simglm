@@ -91,15 +91,12 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
                        length)
   
   num_obs <- length(unique(sim_data[, clust_var]))
-
-  if(miss_prop > 1) {
-    miss_prop <- miss_prop / 100
-  }
-  total_missing <- num_obs * miss_prop
-  missing_range <- round((total_missing *.98):(total_missing * 1.02))
-  n_groups <- length(unique(sim_data[, clust_var]))
   
   if(is.null(dropout_location)) {
+    if(miss_prop > 1) {
+      miss_prop <- miss_prop / 100
+    }
+    n_groups <- length(unique(sim_data[, clust_var]))
     drop_missing <- data.frame(clust_var = seq_len(n_groups))
     colnames(drop_missing) <- clust_var
     drop_missing['missing_clust'] <- ifelse(runif(n_groups) < miss_prop, 1, 0)
@@ -120,7 +117,10 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
   data_split <- split(sim_data, sim_data[, clust_var])
   
   sim_data['missing'] <- do.call("c", lapply(seq_along(missing_obs), function(xx)
-    ifelse(data_split[[xx]][, within_id] %in% missing_obs[[xx]], 1, 0)))
+    dropout_locator(missing_number = num_missing[[xx]],
+                    num_obs = len_groups[[xx]], missing_time = missing_obs[[xx]])
+    )
+    )
   
   sim_data[new_outcome] <- sim_data[resp_var]
   sim_data[sim_data['missing'] == 1, new_outcome] <- NA
@@ -132,12 +132,16 @@ dropout_helper <- function(data, num_obs) {
   if(data == 0) {
     num_obs
   } else {
-    round(runif(1, min = 1, max = num_obs), 0)
+    round(runif(1, min = 2, max = num_obs), 0)
   }
 }
 
-dropout_locator <- function(data, num_obs) {
-  
+dropout_locator <- function(missing_number, num_obs, missing_time) {
+  miss <- rep(0, num_obs)
+  if(missing_number != 0) {
+    miss[missing_time] <- 1
+  }
+  miss
 }
 
 

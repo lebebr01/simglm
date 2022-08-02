@@ -185,7 +185,7 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
 #'  should be computed. Defaults to TRUE.
 #' @param precision TRUE/FALSE flag indicating whether precision should be 
 #'  computed. Defaults to TRUE.
-#' @importFrom dplyr mutate summarise group_by
+#' @importFrom dplyr mutate summarise group_by `%>%`
 #' @importFrom rlang syms
 #' @export
 compute_statistics <- function(data, sim_args, power = TRUE, 
@@ -257,16 +257,16 @@ compute_power <- function(data, power_args) {
   # power_args <- parse_power(sim_args)
   
   if(power_args['direction'] == 'lower') {
-    data %>%
+    data |>
       mutate(reject = ifelse(statistic <= power_args['test_statistic'], 1, 0),
              test_statistic = power_args[['test_statistic']]) 
   } else {
     if(power_args['direction'] == 'upper') {
-      data %>%
+      data |>
         mutate(reject = ifelse(statistic >= power_args['test_statistic'], 1, 0),
                test_statistic = power_args[['test_statistic']]) 
     } else {
-      data %>%
+      data |>
         mutate(reject = ifelse(abs(statistic) >= power_args['test_statistic'], 1, 0),
                test_statistic = power_args[['test_statistic']]) 
     }
@@ -289,18 +289,18 @@ compute_t1e <- function(data, sim_args, t1e_args) {
   # }
   
   if(t1e_args['direction'] == 'lower') {
-    data %>%
+    data |>
       mutate(adjusted_teststat = (estimate - reg_weights) / std.error,
              t1e = ifelse(adjusted_teststat <= t1e_args['test_statistic'], 
                           1, 0))
   } else {
     if(t1e_args['direction'] == 'upper') {
-      data %>%
+      data |>
         mutate(adjusted_teststat = (estimate - reg_weights) / std.error,
                t1e = ifelse(adjusted_teststat >= t1e_args['test_statistic'], 
                             1, 0))
     } else {
-      data %>%
+      data |>
         mutate(adjusted_teststat = (estimate - reg_weights) / std.error,
                t1e = ifelse(abs(adjusted_teststat) >= t1e_args['test_statistic'], 
                             1, 0))
@@ -308,13 +308,12 @@ compute_t1e <- function(data, sim_args, t1e_args) {
   }
 }
 
-#' @importFrom dplyr `%>%`
 aggregate_estimate <- function(data, group_var) {
   
   group_by_var <- dplyr::quos(!!! group_var)
   
-  data %>%
-    group_by(!!! group_by_var) %>%
+  data |>
+    group_by(!!! group_by_var) |>
     summarise(avg_estimate = mean(estimate))
 }
 
@@ -322,8 +321,8 @@ aggregate_power <- function(data, group_var) {
   
   group_by_var <- dplyr::quos(!!! group_var)
   
-  data %>%
-    group_by(!!! group_by_var) %>%
+  data |>
+    group_by(!!! group_by_var) |>
     summarise(power = mean(reject),
               avg_test_stat = mean(statistic),
               crit_value_power = unique(test_statistic))
@@ -333,8 +332,8 @@ aggregate_t1e <- function(data, group_var) {
   
   group_by_var <- dplyr::quos(!!! group_var)
   
-  data %>%
-    group_by(!!! group_by_var) %>% 
+  data |>
+    group_by(!!! group_by_var) |>
     summarise(type_1_error = mean(t1e),
               avg_adjtest_stat = mean(adjusted_teststat),
               crit_value_t1e = unique(test_statistic))
@@ -346,8 +345,8 @@ aggregate_precision <- function(data, group_var) {
   
   group_by_var <- dplyr::quos(!!! group_var) 
   
-  data %>%
-    group_by(!!! group_by_var) %>% 
+  data |>
+    group_by(!!! group_by_var) |>
     summarise(param_estimate_sd = sd(estimate),
               avg_standard_error = mean(std.error),
               precision_ratio = param_estimate_sd / avg_standard_error)

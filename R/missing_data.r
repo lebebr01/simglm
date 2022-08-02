@@ -90,28 +90,29 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
                        sim_data[, clust_var], 
                        length)
   
-  num_obs <- nrow(sim_data)
-  
-  if(!is.null(miss_prop)) {
-    if(miss_prop > 1) {
-      miss_prop <- miss_prop / 100
-    }
-    total_missing <- num_obs * miss_prop
-    missing_range <- round((total_missing *.98):(total_missing * 1.02))
-    n_groups <- length(unique(sim_data[, clust_var]))
-    
-    lim <- prop_limits(miss_prop)
-    
-    num_missing <- 0
-    while(sum(num_missing) %ni% missing_range) {
-      num_missing <- round(len_groups * round(runif(n_groups, lim[1], 
-                                                    lim[2]), 2))
-    }
-    
-  } 
-  if(!is.null(dropout_location)) {
-    num_missing <- round(len_groups - dropout_location, 0)
+  num_obs <- length(unique(sim_data[, clust_var]))
+
+  if(miss_prop > 1) {
+    miss_prop <- miss_prop / 100
   }
+  total_missing <- num_obs * miss_prop
+  missing_range <- round((total_missing *.98):(total_missing * 1.02))
+  n_groups <- length(unique(sim_data[, clust_var]))
+  
+  if(is.null(dropout_location)) {
+    drop_missing <- data.frame(clust_var = seq_len(n_groups))
+    colnames(drop_missing) <- clust_var
+    drop_missing['missing_clust'] <- ifelse(runif(n_groups) < miss_prop, 1, 0)
+    
+    len_groups_people_missing <- len_groups[drop_missing[drop_missing[['missing_clust']] == 1,'id']]
+    
+    dropout_location <- unlist(lapply(seq_along(drop_missing[['missing_clust']]), function(xx) 
+      dropout_helper(drop_missing[['missing_clust']][xx], len_groups[xx]))
+    )
+  }
+    
+  num_missing <- round(len_groups - dropout_location, 0)
+
     
   missing_obs <- lapply(1:length(num_missing), function(xx) 
     (len_groups[xx] - num_missing[xx] + 1):len_groups[xx])
@@ -125,6 +126,15 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
   sim_data[sim_data['missing'] == 1, new_outcome] <- NA
   
   sim_data
+}
+
+dropout_helper <- function(data, num_obs) {
+  if(data == 0) {
+    num_obs
+  } else {
+    round(runif(1, min = 1, max = num_obs), 0)
+  }
+  
 }
 
 

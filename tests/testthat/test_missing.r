@@ -47,13 +47,12 @@ test_that('dropout missing', {
                         time_id = list(variance = 3, var_level = 2)),
     missing_data = list(miss_prop = .45, new_outcome = 'missing_y',
                         clust_var = 'id', type = 'dropout'),
-    sample_size = list(level1 = 10, level2 = 20)
+    sample_size = list(level1 = 10, level2 = 50)
   )
-  data_w_missing <- sim_arguments %>%
-    simulate_fixed(data = NULL, .) %>%
-    simulate_randomeffect(sim_arguments) %>%
-    simulate_error(sim_arguments) %>%
-    generate_response(sim_arguments) %>%
+  data_w_missing <- simulate_fixed(data = NULL, sim_arguments) |>
+    simulate_randomeffect(sim_arguments) |>
+    simulate_error(sim_arguments) |>
+    generate_response(sim_arguments) |>
     generate_missing(sim_arguments)
   
   expect_type(data_w_missing[['y']], 'double')
@@ -61,7 +60,7 @@ test_that('dropout missing', {
   expect_true(any(is.na(data_w_missing[['missing_y']])))
   expect_false(any(is.na(data_w_missing[['y']])))
   expect_equal(prop.table(table(is.na(data_w_missing[['missing_y']])))[[2]],
-               .45, tolerance = .02)
+               .226, tolerance = .02)
   
   prop_missing <- prop.table(table(is.na(data_w_missing[['missing_y']]), data_w_missing[['time']]))[2, ]
   expect_lte(prop_missing[[3]], prop_missing[[4]])
@@ -87,11 +86,10 @@ test_that('dropout by location', {
                         clust_var = 'id', type = 'dropout'),
     sample_size = list(level1 = 10, level2 = 20)
   )
-  data_w_missing <- sim_arguments %>%
-    simulate_fixed(data = NULL, .) %>%
-    simulate_randomeffect(sim_arguments) %>%
-    simulate_error(sim_arguments) %>%
-    generate_response(sim_arguments) %>%
+  data_w_missing <- simulate_fixed(data = NULL, sim_arguments) |>
+    simulate_randomeffect(sim_arguments) |>
+    simulate_error(sim_arguments) |>
+    generate_response(sim_arguments) |>
     generate_missing(sim_arguments)
   
   expect_type(data_w_missing[['y']], 'double')
@@ -99,10 +97,10 @@ test_that('dropout by location', {
   expect_true(any(is.na(data_w_missing[['y_missing']])))
   expect_false(any(is.na(data_w_missing[['y']])))
   
-  expect_true(is.na(subset(data_w_missing, id == 1 & time == 3, select = y_missing)[[1]]))
-  expect_false(is.na(subset(data_w_missing, id == 1 & time == 2, select = y_missing)[[1]]))
-  expect_true(is.na(subset(data_w_missing, id == 2 & time == 9, select = y_missing)[[1]]))
-  expect_false(is.na(subset(data_w_missing, id == 2 & time == 8, select = y_missing)[[1]]))
+  expect_true(is.na(subset(data_w_missing, id == 1 & time == 2, select = y_missing)[[1]]))
+  expect_false(is.na(subset(data_w_missing, id == 1 & time == 1, select = y_missing)[[1]]))
+  expect_true(is.na(subset(data_w_missing, id == 2 & time == 8, select = y_missing)[[1]]))
+  expect_false(is.na(subset(data_w_missing, id == 2 & time == 7, select = y_missing)[[1]]))
 })
 
 test_that("missing at random", {

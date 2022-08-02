@@ -56,5 +56,5 @@ test_that('3way interaction', {
   expect_equal(ncol(fixed_vars), 15)
   expect_type(fixed_vars[['act.sex_1.type_1']], 'double')
   expect_type(fixed_vars[['act.sex_1.type_2']], 'double')
-  expect_type(fixed_vars[['type']], 'character')
+  expect_type(fixed_vars[['type']], 'integer')
 })

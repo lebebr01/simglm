@@ -114,12 +114,12 @@ dropout_missing <- function(sim_data, resp_var = 'sim_data',
   num_missing <- round(len_groups - dropout_location, 0)
 
     
-  missing_obs <- lapply(1:length(num_missing), function(xx) 
-    (len_groups[xx] - num_missing[xx] + 1):len_groups[xx])
+  missing_obs <- lapply(seq_along(num_missing), function(xx) 
+    (len_groups[xx] - num_missing[xx]):len_groups[xx])
   
   data_split <- split(sim_data, sim_data[, clust_var])
   
-  sim_data['missing'] <- do.call("c", lapply(1:length(missing_obs), function(xx)
+  sim_data['missing'] <- do.call("c", lapply(seq_along(missing_obs), function(xx)
     ifelse(data_split[[xx]][, within_id] %in% missing_obs[[xx]], 1, 0)))
   
   sim_data[new_outcome] <- sim_data[resp_var]
@@ -134,6 +134,9 @@ dropout_helper <- function(data, num_obs) {
   } else {
     round(runif(1, min = 1, max = num_obs), 0)
   }
+}
+
+dropout_locator <- function(data, num_obs) {
   
 }
 

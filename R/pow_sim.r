@@ -68,7 +68,7 @@ extract_coefficients <- function(model, extract_function = NULL) {
   
 }
 
-#' @importFrom methods selectMethod
+#' @importFrom methods selectMethod is
 tidy_mixed <- function(model) {
   
   sum_fun <- methods::selectMethod("summary", class(model))

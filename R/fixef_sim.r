@@ -1,11 +1,11 @@
-#' Simulate categorical, factor, or discrete variables
+#' Simulate categorical or factor variables
 #' 
-#' Function that simulates discrete, factor, or categorical variables.  
+#' Function that simulates factor or categorical variables.  
 #' Is essentially a wrapper around the sample function from base R.
 #' 
 #' @param n A list of sample sizes.
-#' @param levels Scalar indicating the number of levels for categorical, 
-#'   factor, or discrete variable. Can also specify levels as a character vector.
+#' @param levels Scalar indicating the number of levels for categorical or
+#'   factor variable. Can also specify levels as a character vector.
 #' @param var_level The level the variable should be simulated at. This can either 
 #'      be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable 
 #'      respectively.
@@ -29,7 +29,44 @@ sim_factor2 <- function(n, levels, var_level = 1, replace = TRUE,
                       times = n[['level3_total']])
     }
   }
+  
+  cat_var <- factor(cat_var, levels = levels)
+  
   cat_var
+}
+
+#' Simulate discrete variables
+#' 
+#' Function that simulates discrete variables.  
+#' Is essentially a wrapper around the sample function from base R.
+#' 
+#' @param n A list of sample sizes.
+#' @param levels Scalar indicating the number of levels for discrete variable. 
+#'      Can also specify levels as a character vector.
+#' @param var_level The level the variable should be simulated at. This can either 
+#'      be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable 
+#'      respectively.
+#' @param replace TRUE/FALSE indicating whether levels should be sampled with 
+#'   replacement. Default is TRUE.
+#' @param ... Additional parameters passed to the sample function.
+#' @export 
+sim_ordinal2 <- function(n, levels, var_level = 1, replace = TRUE,
+                        ...) {
+  if(var_level == 1) {
+    ord_var <- base::sample(x = levels, size = sum(n[['level1']]), 
+                            replace = replace, ...)
+  } else {
+    if(var_level == 2) {
+      ord_var <- rep(base::sample(x = levels, size = sum(n[['level2']]), 
+                                  replace = replace, ...),
+                     times = n[['level1']])
+    } else {
+      ord_var <- rep(base::sample(x = levels, size = n[['level3']], 
+                                  replace = replace, ...),
+                     times = n[['level3_total']])
+    }
+  }
+  ord_var
 }
 
 #' Simulate continuous variables
@@ -150,7 +187,7 @@ sim_variable <- function(var_type = c("continuous", "factor", "ordinal",
   switch(var_type,
     continuous = sim_continuous2(...),
     factor = sim_factor2(...),
-    ordinal = sim_factor2(...),
+    ordinal = sim_ordinal2(...),
     #knot = sim_knot2(...),
     time = sim_time(...)
   )
@@ -197,18 +234,20 @@ simulate_fixed <- function(data, sim_args, ...) {
     id_vars <- id_vars[id_vars %ni% cross_class[['cross_class_idvars']]]
     ids <- create_ids(n, 
                       c('level1_id', id_vars))
-    Xmat <- purrr::invoke_map("sim_variable", 
-                              sim_args[['fixed']],
-                              n = n
-    ) %>% 
-      data.frame()
+    Xmat <- data.frame(
+      purrr::invoke_map("sim_variable", 
+                        sim_args[['fixed']],
+                        n = n
+      )
+    )
   } else {
     n <- compute_samplesize(data, sim_args)
-    Xmat <- purrr::invoke_map("sim_variable", 
-                              sim_args[['fixed']],
-                              n = n
-    ) %>% 
-      data.frame()
+    Xmat <- data.frame(
+      purrr::invoke_map("sim_variable", 
+                        sim_args[['fixed']],
+                        n = n
+      )
+    )
   }
   if(!is.null(sim_args[['knot']])) {
     

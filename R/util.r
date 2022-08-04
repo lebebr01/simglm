@@ -324,7 +324,7 @@ dataframe2matrix <- function(data, corr_variable, var_names) {
   if(is.null(data)) {
     NULL
   } else {
-    n <- ((sqrt(1 + 8 * nrow(data)) + 1) / 2)
+    n <- (sqrt(1 + 8 * nrow(data)) + 1) / 2
     
     corr_mat <- matrix(NA, nrow = n, ncol = n)
     lower <- lower.tri(corr_mat, diag = FALSE)
@@ -336,7 +336,7 @@ dataframe2matrix <- function(data, corr_variable, var_names) {
     
     mat_names <- unique(unlist(data[var_names]))
     
-    colnames(corr_mat) <-mat_names
+    colnames(corr_mat) <- mat_names
     rownames(corr_mat) <- mat_names
     
     corr_mat

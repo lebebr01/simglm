@@ -226,9 +226,19 @@ parse_varyarguments <- function(sim_args) {
 #'     \item correlate: These are the correlations for random effects and/or
 #'        fixed effects.
 #'   }
+#'   @importFrom gtools combinations
 #'   
 #' @export
 parse_correlation <- function(sim_args) {
+  
+  fixed_formula <- parse_formula(sim_args)[['fixed']]
+  
+  fixed_vars <- attr(terms(fixed_formula), "term.labels") 
+  
+  if(length(fixed_vars) != nrow(sim_args[['correlate']][['fixed']])) {
+    pairwise_options <- gtools::combinations(length(fixed_vars), 2, fixed_vars)
+    
+  }
   
   fixed_correlation <- dataframe2matrix(sim_args[['correlate']][['fixed']],
                                         corr_variable = 'corr', 

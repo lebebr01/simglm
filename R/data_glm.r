@@ -11,12 +11,10 @@ transform_outcome <- function(outcome, type, ...) {
     probability <- exp(outcome) / (1 + exp(outcome))
     rbinom(length(outcome), size = 1, 
            prob = probability)
+  } else if(type %in% c('count', 'poisson')) {
+    rpois(length(outcome), lambda = exp(outcome))
   } else {
-    if(type %in% c('count', 'poisson')) {
-      rpois(length(outcome), lambda = exp(outcome))
-    } else {
-      purrr::map()
-    }
-  } 
+    purrr::map()
+  }
 }
 

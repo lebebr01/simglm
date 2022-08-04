@@ -13,6 +13,10 @@ transform_outcome <- function(outcome, type, ...) {
            prob = probability)
   } else if(type %in% c('count', 'poisson')) {
     rpois(length(outcome), lambda = exp(outcome))
+  } else if(type == 'multinomial') {
+    
+  } else if(type == 'ordinal') {
+    
   } else {
     purrr::map()
   }

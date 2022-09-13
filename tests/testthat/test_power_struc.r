@@ -12,8 +12,8 @@ test_that('compute_statistics dimensions', {
     sample_size = 10,
     reg_weights = c(2, 0.3, -0.1, 0.5),
     model_fit = list(formula = y ~ 1 + age + sex,
-                     model_function = 'lm'),
-    reg_weights_model = c(2, -0.1, 0.5),
+                     model_function = 'lm',
+                     reg_weights_model = c(2, -0.1, 0.5)),
     replications = 10,
     extract_coefficients = TRUE
   )

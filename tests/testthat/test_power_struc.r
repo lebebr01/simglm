@@ -18,17 +18,17 @@ test_that('compute_statistics dimensions', {
     extract_coefficients = TRUE
   )
   
-  expect_equal(nrow(replicate_simulation(sim_arguments) %>%
+  expect_equal(nrow(replicate_simulation(sim_arguments) |>
     compute_statistics(sim_arguments)), 3)
-  expect_equal(ncol(replicate_simulation(sim_arguments) %>%
+  expect_equal(ncol(replicate_simulation(sim_arguments) |>
                       compute_statistics(sim_arguments)), 12)
-  expect_equal(ncol(replicate_simulation(sim_arguments) %>%
+  expect_equal(ncol(replicate_simulation(sim_arguments) |>
                       compute_statistics(sim_arguments, power = FALSE)), 9)
-  expect_equal(ncol(replicate_simulation(sim_arguments) %>%
+  expect_equal(ncol(replicate_simulation(sim_arguments) |>
                       compute_statistics(sim_arguments, type_1_error = FALSE)), 9)
-  expect_equal(ncol(replicate_simulation(sim_arguments) %>%
+  expect_equal(ncol(replicate_simulation(sim_arguments) |>
                       compute_statistics(sim_arguments, precision = FALSE)), 9)
-  expect_equal(ncol(replicate_simulation(sim_arguments) %>%
+  expect_equal(ncol(replicate_simulation(sim_arguments) |>
                       compute_statistics(sim_arguments,
                                          power = FALSE, 
                                          type_1_error = FALSE,

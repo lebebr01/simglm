@@ -43,7 +43,6 @@ test_that('correlate fixed and random', {
                                 sat = list(var_type = 'continuous',
                                            mean = 500, 
                                            sd = 100)),
-                   
                    randomeffect = list(int_id = list(variance = 8, var_level = 2),
                                        act_id = list(variance = 3, var_level = 2)),
                    sample_size = list(level1 = 10, level2 = 10000),

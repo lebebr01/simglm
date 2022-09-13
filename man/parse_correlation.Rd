@@ -15,7 +15,8 @@ for more information. The named list may contain the following:
   \item error: This is the error (i.e. residual term).
   \item correlate: These are the correlations for random effects and/or
      fixed effects.
-}}
+}
+@importFrom gtools combinations}
 }
 \description{
 This function is used to parse user specified correlation attributes. 

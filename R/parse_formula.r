@@ -235,9 +235,11 @@ parse_correlation <- function(sim_args) {
   
   fixed_vars <- attr(terms(fixed_formula), "term.labels") 
   
-  if(length(fixed_vars) != nrow(sim_args[['correlate']][['fixed']])) {
-    pairwise_options <- gtools::combinations(length(fixed_vars), 2, fixed_vars)
-    
+  if(!is.null(sim_args[['correlate']][['fixed']])) {
+    if(length(fixed_vars) != nrow(sim_args[['correlate']][['fixed']])) {
+      pairwise_options <- gtools::combinations(length(fixed_vars), 2, fixed_vars)
+      
+    }
   }
   
   fixed_correlation <- dataframe2matrix(sim_args[['correlate']][['fixed']],

@@ -17,6 +17,10 @@ model_fit <- function(data, sim_args, ...) {
   
   model_args <- sim_args[['model_fit']]
   
+  if(!is.null(model_args[['reg_weights_model']])) {
+    model_args[['reg_weights_model']] <- NULL
+  }
+  
   if(is.null(model_args[['model_function']])) {
     if(length(parse_formula(sim_args)[['randomeffect']]) == 0) {
       model_function <- 'lm'
@@ -277,10 +281,10 @@ compute_t1e <- function(data, sim_args, t1e_args) {
   
   fixed_vars <- strsplit(as.character(parse_formula(sim_args)[['fixed']]), "\\+")[[2]]
   
-  if(is.null(sim_args[['reg_weights_model']])) {
+  if(is.null(sim_args[['model_fit']][['reg_weights_model']])) {
     reg_weights <- sim_args[['reg_weights']]
   } else {
-    reg_weights <- sim_args[['reg_weights_model']]
+    reg_weights <- sim_args[['model_fit']][['reg_weights_model']]
   }
   
   # if(length(fixed_vars) != length(reg_weights)) {

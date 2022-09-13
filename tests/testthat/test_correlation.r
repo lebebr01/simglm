@@ -18,7 +18,7 @@ test_that('correlate fixed and random', {
                                                        corr = c(0.5, .6, .2))),
                    sample_size = 10000)
   
-  sim_data <- simulate_fixed(data = NULL, sim_arguments) %>% 
+  sim_data <- simulate_fixed(data = NULL, sim_arguments) |>
     correlate_variables(sim_arguments)
   
   expect_equal(cor(sim_data$act, sim_data$gpa), .5, tolerance = .01)
@@ -51,7 +51,7 @@ test_that('correlate fixed and random', {
                                                         corr = .3))
   )
   
-  sim_data <- simulate_randomeffect(data = NULL, sim_arguments) %>%
+  sim_data <- simulate_randomeffect(data = NULL, sim_arguments) |>
     correlate_variables(sim_arguments) 
   
   expect_equal(cor(sim_data$int_id, sim_data$act_id), .3, tolerance = .025)
@@ -79,8 +79,8 @@ test_that('correlate fixed and random', {
                                                         corr = .3))
   )
   
-  sim_data <- simulate_fixed(data = NULL, sim_arguments) %>%
-    simulate_randomeffect(sim_arguments) %>%
+  sim_data <- simulate_fixed(data = NULL, sim_arguments) |>
+    simulate_randomeffect(sim_arguments) |>
     correlate_variables(sim_arguments)
   
   expect_equal(cor(sim_data$int_id, sim_data$act_id), .3, tolerance = .025)
@@ -125,8 +125,8 @@ test_that('ordinal attribute correlation', {
   
   set.seed(2)
   
-  sim_data <- simulate_fixed(data = NULL, sim_arguments) %>%
-    simulate_error(sim_arguments) %>%
+  sim_data <- simulate_fixed(data = NULL, sim_arguments) |>
+    simulate_error(sim_arguments) |>
     correlate_variables(sim_arguments)
   
   expect_true(min(sim_data$education) == 1)

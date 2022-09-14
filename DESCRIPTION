@@ -20,7 +20,8 @@ Imports:
     dplyr,
     purrr,
     broom,
-    future.apply
+    future.apply,
+    gtools
 Suggests:
     knitr,
     lme4,

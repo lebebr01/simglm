@@ -11,8 +11,6 @@
 #'   }
 #' 
 #' @export
-#' 
-#' 
 parse_formula <- function(sim_args) {
   
   outcome <- sim_args[['formula']] %>%

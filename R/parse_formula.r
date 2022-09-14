@@ -226,7 +226,7 @@ parse_varyarguments <- function(sim_args) {
 #'     \item correlate: These are the correlations for random effects and/or
 #'        fixed effects.
 #'   }
-#'   @importFrom gtools combinations
+#' @importFrom gtools combinations
 #'   
 #' @export
 parse_correlation <- function(sim_args) {

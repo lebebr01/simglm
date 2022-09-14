@@ -43,7 +43,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.1</span>
       </span>
     </div>
 
@@ -53,7 +53,7 @@
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -73,7 +73,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/lebebr01/simglm/">
+  <a href="https://github.com/lebebr01/simglm/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -90,35 +90,36 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="simglm-tidy-simulation-and-power-analyses" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#simglm-tidy-simulation-and-power-analyses" class="anchor" aria-hidden="true"></a><code>simglm</code>: Tidy simulation and power analyses</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="simglm-tidy-simulation-and-power-analyses">
+<code>simglm</code>: Tidy simulation and power analyses<a class="anchor" aria-label="anchor" href="#simglm-tidy-simulation-and-power-analyses"></a>
+</h1></div>
 
-<div id="package-installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#package-installation" class="anchor" aria-hidden="true"></a>Package Installation</h2>
+<div class="section level2">
+<h2 id="package-installation">Package Installation<a class="anchor" aria-label="anchor" href="#package-installation"></a>
+</h2>
 <p>This package can be directly installed through CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"simglm"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"simglm"</span><span class="op">)</span></span></code></pre></div>
 <p>The development version of the package can be installed by using the devtools package.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">devtools</span><span class="op">)</span>
-<span class="fu">install_github</span><span class="op">(</span><span class="st">"lebebr01/simglm"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
+<span><span class="fu">install_github</span><span class="op">(</span><span class="st">"lebebr01/simglm"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="introduction-to-the-simglm-package" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction-to-the-simglm-package" class="anchor" aria-hidden="true"></a>Introduction to the simglm package</h2>
+<div class="section level2">
+<h2 id="introduction-to-the-simglm-package">Introduction to the simglm package<a class="anchor" aria-label="anchor" href="#introduction-to-the-simglm-package"></a>
+</h2>
 <p>The best way to become oriented with the <code>simglm</code> package is through the package vignette. There are two ways to get to the vignettes (both will open a browser to view the vignette). Below is an example loading the “Intro” vignette directly:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html" class="external-link">browseVignettes</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"Intro"</span>, package <span class="op">=</span> <span class="st">"simglm"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html" class="external-link">browseVignettes</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"Intro"</span>, package <span class="op">=</span> <span class="st">"simglm"</span><span class="op">)</span></span></code></pre></div>
 <p>Note: If you install the development version of the package, you may need to tell R to build the vignettes when installing the <code>simglm</code> package by doing the following:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">install_github</span><span class="op">(</span><span class="st">"lebebr01/simglm"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">install_github</span><span class="op">(</span><span class="st">"lebebr01/simglm"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="features" class="section level2">
-<h2 class="hasAnchor">
-<a href="#features" class="anchor" aria-hidden="true"></a>Features</h2>
+<div class="section level2">
+<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
+</h2>
 <p>A flexible suite of functions to simulate nested data.<br>
 Currently supports the following features:</p>
 <ul>
@@ -126,8 +127,7 @@ Currently supports the following features:</p>
 <li>Three levels of nesting</li>
 <li>Specification of distribution of random components (random effects and random error)</li>
 <li>Specification of serial correlation</li>
-<li>Specification of the number of variables
-<ul>
+<li>Specification of the number of variables<ul>
 <li>Ability to add time-varying covariates</li>
 <li>Specify the mean and variance of fixed covariate variables</li>
 <li>Factor variable simulation</li>
@@ -137,8 +137,7 @@ Currently supports the following features:</p>
 <li>Generation of mixture normal distributions</li>
 <li>Cross sectional data simulation</li>
 <li>Single level simulation</li>
-<li>Power by simulation
-<ul>
+<li>Power by simulation<ul>
 <li>Vary parameters for a factorial simulation design.</li>
 <li>Can vary model fitted to the data to misspecify directly.</li>
 </ul>
@@ -149,9 +148,9 @@ Currently supports the following features:</p>
 <li>Cross classified simulation and power</li>
 </ul>
 </div>
-<div id="bugsfeature-requests" class="section level2">
-<h2 class="hasAnchor">
-<a href="#bugsfeature-requests" class="anchor" aria-hidden="true"></a>Bugs/Feature Requests</h2>
+<div class="section level2">
+<h2 id="bugsfeature-requests">Bugs/Feature Requests<a class="anchor" aria-label="anchor" href="#bugsfeature-requests"></a>
+</h2>
 <p>Bugs and feature requests are welcomed. Please track these on GitHub here: <a href="https://github.com/lebebr01/simglm/issues" class="external-link uri">https://github.com/lebebr01/simglm/issues</a>. I’m also open to pull requests.</p>
 <p>Enjoy!</p>
 </div>
@@ -162,12 +161,9 @@ Currently supports the following features:</p>
     <div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=simglm">https://​cloud.r-project.org/​package=simglm</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/lebebr01/simglm/">https://​github.com/​lebebr01/​simglm/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/lebebr01/simglm/issues">https://​github.com/​lebebr01/​simglm/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=simglm" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/lebebr01/simglm/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/lebebr01/simglm/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -175,17 +171,24 @@ Currently supports the following features:</p>
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>
-<a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
 </li>
 </ul>
 </div>
 
 
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing simglm</a></li>
+</ul>
+</div>
+
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>
-<a href="https://brandonlebeau.org">Brandon LeBeau</a> <br><small class="roles"> Author, maintainer </small>  </li>
+<a href="https://brandonlebeau.org" class="external-link">Brandon LeBeau</a> <br><small class="roles"> Author, maintainer </small>  </li>
 </ul>
 </div>
 
@@ -210,7 +213,7 @@ Currently supports the following features:</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

@@ -138,3 +138,39 @@ test_that('knot sim', {
   expect_equal(ncol(simulate_fixed(data = NULL, sim_args = sim_args)), 4)
   expect_equal(length(unique(simulate_fixed(data = NULL, sim_args = sim_args)[['age_knot']])), 2)
 })
+
+test_that("Ceiling and floor effects", {
+  sim_arguments <- list(
+    formula = y ~ 1 + turnover,
+    fixed = list(turnover = list(var_type = 'continuous', mean = 10, sd = 3,
+                                 ceiling = 15)),
+    error = list(variance = 0.1),
+    sample_size = 100
+  )
+  
+  tmp_data <- simulate_fixed(data = NULL, sim_arguments)
+  expect_equal(15, max(tmp_data$turnover))
+  
+  sim_arguments <- list(
+    formula = y ~ 1 + turnover,
+    fixed = list(turnover = list(var_type = 'continuous', mean = 10, sd = 3,
+                                 floor = 8)),
+    error = list(variance = 0.1),
+    sample_size = 100
+  )
+  
+  tmp_data <- simulate_fixed(data = NULL, sim_arguments)
+  expect_equal(8, min(tmp_data$turnover))
+  
+  sim_arguments <- list(
+    formula = y ~ 1 + turnover,
+    fixed = list(turnover = list(var_type = 'continuous', mean = 10, sd = 3,
+                                 floor = 8, ceiling = 12)),
+    error = list(variance = 0.1),
+    sample_size = 100
+  )
+  
+  tmp_data <- simulate_fixed(data = NULL, sim_arguments)
+  expect_equal(8, min(tmp_data$turnover))
+  expect_equal(12, max(tmp_data$turnover))
+})

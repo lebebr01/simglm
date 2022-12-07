@@ -61,7 +61,15 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     Xmat <- cbind(data['X.Intercept.'], Xmat)
   }
   
-  fixed_outcome <- as.matrix(Xmat) %*% sim_args[['reg_weights']]
+  if(is.list(sim_args[['reg_weights']])) {
+    fixed_outcome <- data.frame(do.call("cbind", 
+              lapply(seq_along(sim_args[['reg_weights']]), 
+                     function(xx) 
+                       as.matrix(Xmat) %*% sim_args[['reg_weights']][[xx]])))
+    names(fixed_outcome) <- paste0('logit', 1:ncol(fixed_outcome))
+  } else {
+    fixed_outcome <- as.matrix(Xmat) %*% sim_args[['reg_weights']]
+  }
   
   if(length(parse_formula(sim_args)[['randomeffect']]) != 0) {
     random_formula <- parse_formula(sim_args)[['randomeffect']]
@@ -90,10 +98,18 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   }
   
   if(keep_intermediate) {
-    response_outcomes <- data.frame(
-      fixed_outcome = fixed_outcome,
-      random_effects = random_effects
-    )
+    if(is.list(sim_args[['reg_weights']])) {
+      response_outcomes <- data.frame(
+        fixed_outcome,
+        random_effects = random_effects
+      )
+    } else {
+      response_outcomes <- data.frame(
+        fixed_outcome = fixed_outcome,
+        random_effects = random_effects
+      )
+    }
+    
     data <- cbind(data, response_outcomes, row.names = NULL)
   }
   
@@ -101,11 +117,16 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     data['error'] <- 0
   }
   
-  outcome <- as.numeric(unlist(fixed_outcome + random_effects + data['error']))
+  outcome <- fixed_outcome + random_effects + data[['error']]
   
   if(!is.null(sim_args[['outcome_type']])){
     trans_outcome <- transform_outcome(outcome, type = sim_args[['outcome_type']])
-    data <- cbind(data, untransformed_outcome = outcome)
+    if(ncol(outcome) > 1) {
+      names(outcome) <- paste0('untransformed_outcome', 1:ncol(outcome))
+      data <- cbind(data, outcome) 
+    } else {
+      data <- cbind(data, untransformed_outcome = outcome)
+    }
     data[outcome_name] <- trans_outcome
   } else {
     data[outcome_name] <- outcome

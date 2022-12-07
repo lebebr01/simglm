@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.2</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Tidy Simulation with <code>simglm</code>
 </h1>
             
-            <h4 data-toc-skip class="date">2022-09-14</h4>
+            <h4 data-toc-skip class="date">2022-12-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/HEAD/vignettes/tidy_simulation.Rmd" class="external-link"><code>vignettes/tidy_simulation.Rmd</code></a></small>
       <div class="hidden name"><code>tidy_simulation.Rmd</code></div>
@@ -102,31 +102,57 @@
 <div class="section level2">
 <h2 id="tidy-simulation-with-simglm">Tidy Simulation with <code>simglm</code><a class="anchor" aria-label="anchor" href="#tidy-simulation-with-simglm"></a>
 </h2>
-<p>Introducing a new framework for simulation and power analysis with the <code>simglm</code> package, tidy simulation. The package now has helper functions in which the first argument is always the data and the second argument is always the simulation arguments. A second vignette is written that contains a more exhaustive list of simulation arguments that are allowed. This vignette will give the basics needed to specify simulation arguments to generate simulated data.</p>
+<p>Introducing a new framework for simulation and power analysis with
+the <code>simglm</code> package, tidy simulation. The package now has
+helper functions in which the first argument is always the data and the
+second argument is always the simulation arguments. A second vignette is
+written that contains a more exhaustive list of simulation arguments
+that are allowed. This vignette will give the basics needed to specify
+simulation arguments to generate simulated data.</p>
 </div>
 <div class="section level2">
 <h2 id="functions-for-basic-simulation">Functions for Basic Simulation<a class="anchor" aria-label="anchor" href="#functions-for-basic-simulation"></a>
 </h2>
-<p>There are four primary functions to be used for basic simulation functionality. These include:</p>
+<p>There are four primary functions to be used for basic simulation
+functionality. These include:</p>
 <ul>
 <li>
 <code>simulate_fixed</code>: simulate fixed effects</li>
 <li>
 <code>simulate_error</code>: simulate random error</li>
 <li>
-<code>simulate_randomeffects</code>: simulate random effects or cluster residuals</li>
+<code>simulate_randomeffects</code>: simulate random effects or
+cluster residuals</li>
 <li>
-<code>generate_response</code>: based on fixed, error, and random effects, generate outcome variable <span class="math inline">\(Y_{j}\)</span> given the following <span class="math inline">\(Y_{j} = g(X_{j} \beta + Z_{j} b_{j} + e_{j})\)</span>.</li>
+<code>generate_response</code>: based on fixed, error, and random
+effects, generate outcome variable <span class="math inline">\(Y_{j}\)</span> given the following <span class="math inline">\(Y_{j} = g(X_{j} \beta + Z_{j} b_{j} +
+e_{j})\)</span>.</li>
 </ul>
-<p>We will dive into what each of these component represent in a second, but first let’s start with an example that simulates a linear regression model.</p>
+<p>We will dive into what each of these component represent in a second,
+but first let’s start with an example that simulates a linear regression
+model.</p>
 <div class="section level3">
 <h3 id="first-linear-regression-example">First Linear Regression Example<a class="anchor" aria-label="anchor" href="#first-linear-regression-example"></a>
 </h3>
-<p>Let us assume for this first example that our outcome of interest is continuous and that the data is not clustered. In this example, our model would look like: <span class="math inline">\(Y_{j} = X_{j} \beta + e_{j}\)</span>. In this equation, <span class="math inline">\(Y_{j}\)</span> represents the continuous outcome, <span class="math inline">\(X_{j} \beta\)</span> represents the fixed portion of the model comprised of regression coefficients (<span class="math inline">\(\beta\)</span>) and a design matrix (<span class="math inline">\(X_{j}\)</span>), and <span class="math inline">\(e_{j}\)</span> represents random error.</p>
+<p>Let us assume for this first example that our outcome of interest is
+continuous and that the data is not clustered. In this example, our
+model would look like: <span class="math inline">\(Y_{j} = X_{j} \beta +
+e_{j}\)</span>. In this equation, <span class="math inline">\(Y_{j}\)</span> represents the continuous outcome,
+<span class="math inline">\(X_{j} \beta\)</span> represents the fixed
+portion of the model comprised of regression coefficients (<span class="math inline">\(\beta\)</span>) and a design matrix (<span class="math inline">\(X_{j}\)</span>), and <span class="math inline">\(e_{j}\)</span> represents random error.</p>
 <div class="section level4">
 <h4 id="fixed-portion-of-model">Fixed Portion of Model<a class="anchor" aria-label="anchor" href="#fixed-portion-of-model"></a>
 </h4>
-<p>The fixed portion of the model represents variables that are treated as fixed. This means that the values observed in the data are the only values we are interested in, will generalize to, or that we consider values of interest in our population. Let us consider the following formula: <code>y ~ 1 + x1 + x2</code>. In this formula there are a total of two variables that are assumed to be fixed, <code>x1</code> and <code>x2</code>. These variables together with an intercept would make up the design matrix <span class="math inline">\(X_{j}\)</span>. Let’s generate some example data using the <code>simglm</code> package and the <code>simulate_fixed</code> function.</p>
+<p>The fixed portion of the model represents variables that are treated
+as fixed. This means that the values observed in the data are the only
+values we are interested in, will generalize to, or that we consider
+values of interest in our population. Let us consider the following
+formula: <code>y ~ 1 + x1 + x2</code>. In this formula there are a total
+of two variables that are assumed to be fixed, <code>x1</code> and
+<code>x2</code>. These variables together with an intercept would make
+up the design matrix <span class="math inline">\(X_{j}\)</span>. Let’s
+generate some example data using the <code>simglm</code> package and the
+<code>simulate_fixed</code> function.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lebebr01/simglm" class="external-link">simglm</a></span><span class="op">)</span></span>
 <span></span>
@@ -153,16 +179,34 @@
 <span><span class="co">## 8             1 186.9941 42.10166         8</span></span>
 <span><span class="co">## 9             1 190.1734 42.88792         9</span></span>
 <span><span class="co">## 10            1 163.4426 42.23178        10</span></span></code></pre>
-<p>The first three columns of the resulting data frame is the design matrix described above, <span class="math inline">\(X_{j}\)</span>. You may have noticed that the <code>simulate_fixed</code> function needs three elements defined in the simulation arguments (called <code>sim_arguments</code>) above. These elements are:</p>
+<p>The first three columns of the resulting data frame is the design
+matrix described above, <span class="math inline">\(X_{j}\)</span>. You
+may have noticed that the <code>simulate_fixed</code> function needs
+three elements defined in the simulation arguments (called
+<code>sim_arguments</code>) above. These elements are:</p>
 <ul>
 <li>
-<code>formula</code>: this argument represents a R formula that is used to represent the model that is wished to be simulated. For the <code>simulate_fixed</code> argument, only the right hand side is used.</li>
+<code>formula</code>: this argument represents a R formula that is
+used to represent the model that is wished to be simulated. For the
+<code>simulate_fixed</code> argument, only the right hand side is
+used.</li>
 <li>
-<code>fixed</code>: these represent the specific details for generating the variables (other than the intercept) in the right hand side of the <code>formula</code> simulation argument. Each variable is specified as its own list by name in the <code>formula</code> argument and the <code>var_type</code> specifies the type of variable to generate. The <code>vary_type</code> argument is required for each fixed variable to simulate. Optional arguments, for example <code>mean =</code> and <code>sd =</code> above, will be discussed in more detail later.</li>
+<code>fixed</code>: these represent the specific details for
+generating the variables (other than the intercept) in the right hand
+side of the <code>formula</code> simulation argument. Each variable is
+specified as its own list by name in the <code>formula</code> argument
+and the <code>var_type</code> specifies the type of variable to
+generate. The <code>vary_type</code> argument is required for each fixed
+variable to simulate. Optional arguments, for example
+<code>mean =</code> and <code>sd =</code> above, will be discussed in
+more detail later.</li>
 <li>
-<code>sample_size</code>: this argument tells the function how many responses to generate.</li>
+<code>sample_size</code>: this argument tells the function how many
+responses to generate.</li>
 </ul>
-<p>The columns <code>x1</code> and <code>x2</code> would represent variables that we would gather if these data were real. To reflect a real life scenario, consider the following fixed simuation.</p>
+<p>The columns <code>x1</code> and <code>x2</code> would represent
+variables that we would gather if these data were real. To reflect a
+real life scenario, consider the following fixed simuation.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
@@ -185,7 +229,12 @@
 <span><span class="co">## 8             1 186.9941 42.10166         8</span></span>
 <span><span class="co">## 9             1 190.1734 42.88792         9</span></span>
 <span><span class="co">## 10            1 163.4426 42.23178        10</span></span></code></pre>
-<p>Now instead of the variables being called <code>x1</code> and <code>x2</code>, they now reflect variables weight (measured in lbs) and age (measured continuously, not rounded to whole digits). If we wished to change the <code>'age'</code> variable to be rounded to a whole integer, we could change the variable type to <code>'ordinal'</code> as such.</p>
+<p>Now instead of the variables being called <code>x1</code> and
+<code>x2</code>, they now reflect variables weight (measured in lbs) and
+age (measured continuously, not rounded to whole digits). If we wished
+to change the <code>'age'</code> variable to be rounded to a whole
+integer, we could change the variable type to <code>'ordinal'</code> as
+such.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
@@ -208,7 +257,12 @@
 <span><span class="co">## 8             1 186.9941  43         8</span></span>
 <span><span class="co">## 9             1 190.1734  52         9</span></span>
 <span><span class="co">## 10            1 163.4426  31        10</span></span></code></pre>
-<p>When specifying a <code>var_type</code> as <code>'ordinal'</code>, an additional <code>levels</code> argument is needed to determine which values are possible for the simulation. The last type of variable that is useful to discuss now would be factor or categorical variables. These variables can be generated by setting the <code>var_type = 'factor'</code>.</p>
+<p>When specifying a <code>var_type</code> as <code>'ordinal'</code>, an
+additional <code>levels</code> argument is needed to determine which
+values are possible for the simulation. The last type of variable that
+is useful to discuss now would be factor or categorical variables. These
+variables can be generated by setting the
+<code>var_type = 'factor'</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
@@ -232,13 +286,24 @@
 <span><span class="co">## 8             1 186.9941  43     0   male         8</span></span>
 <span><span class="co">## 9             1 190.1734  52     1 female         9</span></span>
 <span><span class="co">## 10            1 163.4426  31     1 female        10</span></span></code></pre>
-<p>The required arguments when a factor variable are identical to an ordinal variable, however for factor variables the <code>levels</code> argument can either be an integer or can be a character vector where the character labels are specified directly. As you can see from the output, when a character vector is used, two variables are returned, one that contains the variable represented numerically and another that is the variable represented as a character vector. More details on this behavior to follow.</p>
+<p>The required arguments when a factor variable are identical to an
+ordinal variable, however for factor variables the <code>levels</code>
+argument can either be an integer or can be a character vector where the
+character labels are specified directly. As you can see from the output,
+when a character vector is used, two variables are returned, one that
+contains the variable represented numerically and another that is the
+variable represented as a character vector. More details on this
+behavior to follow.</p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="simulate-random-error">Simulate Random Error<a class="anchor" aria-label="anchor" href="#simulate-random-error"></a>
 </h3>
-<p>The simulation of random error (<span class="math inline">\(e_{j}\)</span> from the equation above) is a bit simpler than generating the fixed effects. Suppose for example, we want to simply simulate random errors that are normally distributed with a mean of 0 and a variance of 1. This can be done with the <code>simulate_error</code> function.</p>
+<p>The simulation of random error (<span class="math inline">\(e_{j}\)</span> from the equation above) is a bit
+simpler than generating the fixed effects. Suppose for example, we want
+to simply simulate random errors that are normally distributed with a
+mean of 0 and a variance of 1. This can be done with the
+<code>simulate_error</code> function.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span></span>
 <span></span>
@@ -258,7 +323,11 @@
 <span><span class="co">## 8   0.2331354         8</span></span>
 <span><span class="co">## 9   0.3391139         9</span></span>
 <span><span class="co">## 10 -0.5519147        10</span></span></code></pre>
-<p>The <code>simulate_error</code> function only needs to know how many data values to simulate. By default, the <code>rnorm</code> function is used to generate random error and this function assumes a mean of 0 and standard deviation of 1 by default. I personally prefer the slightly more verbose code however.</p>
+<p>The <code>simulate_error</code> function only needs to know how many
+data values to simulate. By default, the <code>rnorm</code> function is
+used to generate random error and this function assumes a mean of 0 and
+standard deviation of 1 by default. I personally prefer the slightly
+more verbose code however.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span></span>
 <span></span>
@@ -279,7 +348,8 @@
 <span><span class="co">## 8   0.2331354         8</span></span>
 <span><span class="co">## 9   0.3391139         9</span></span>
 <span><span class="co">## 10 -0.5519147        10</span></span></code></pre>
-<p>This code makes it clearer when the variance of the errors is wished to be specified as some other value. For example:</p>
+<p>This code makes it clearer when the variance of the errors is wished
+to be specified as some other value. For example:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span></span>
 <span></span>
@@ -304,7 +374,12 @@
 <div class="section level3">
 <h3 id="generate-response-variable">Generate Response Variable<a class="anchor" aria-label="anchor" href="#generate-response-variable"></a>
 </h3>
-<p>Now that we have seen the basics of simulating fixed variables (covariates) and random error, we can now generate the response by combining the previous two steps and then using the <code>generate_response</code> function. What makes this a tidy simulation is that the pipe from magrittr, <code>%&gt;%</code> can be used to combine steps into a simulation pipeline.</p>
+<p>Now that we have seen the basics of simulating fixed variables
+(covariates) and random error, we can now generate the response by
+combining the previous two steps and then using the
+<code>generate_response</code> function. What makes this a tidy
+simulation is that the pipe from magrittr, <code>%&gt;%</code> can be
+used to combine steps into a simulation pipeline.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
@@ -343,12 +418,29 @@
 <span><span class="co">## 8               0 55.88580</span></span>
 <span><span class="co">## 9               0 48.75039</span></span>
 <span><span class="co">## 10              0 46.05934</span></span></code></pre>
-<p>The only additional argument that is needed for the <code>generate_response</code> function is the <code>reg_weights</code> argument. This argument represents the regression coefficients associated with <span class="math inline">\(\beta\)</span> in the equation <span class="math inline">\(Y_{j} = X_{j} \beta + e_{j}\)</span>. The regression coefficients are multiplied by the design matrix to generate the column labeled “fixed_outcome” in the output. The output also contains the column, “random_effects” which are all 0 here indicating there are no random effects and the response variable, “y”.</p>
+<p>The only additional argument that is needed for the
+<code>generate_response</code> function is the <code>reg_weights</code>
+argument. This argument represents the regression coefficients
+associated with <span class="math inline">\(\beta\)</span> in the
+equation <span class="math inline">\(Y_{j} = X_{j} \beta +
+e_{j}\)</span>. The regression coefficients are multiplied by the design
+matrix to generate the column labeled “fixed_outcome” in the output. The
+output also contains the column, “random_effects” which are all 0 here
+indicating there are no random effects and the response variable,
+“y”.</p>
 <div class="section level4">
 <h4 id="generate-response-with-more-than-2-factor-levels">Generate Response with more than 2 factor levels<a class="anchor" aria-label="anchor" href="#generate-response-with-more-than-2-factor-levels"></a>
 </h4>
-<p>Earlier, a factor or categorical grouping factor with 2 levels was shown. It may be of interest to generate a factor or categorical attribute with more than 2 levels, a feature that is built into simglm.</p>
-<p>The creation a categorical attribute with more than two level is similar to that with 2 levels. The following code creates a categorical attribute with 4 levels based on the grade, freshman, sophomore, junior, or senior. To add more levels, the user would just add more categories to the levels argument. Below, the data are generated and a table showing the different categories are shown.</p>
+<p>Earlier, a factor or categorical grouping factor with 2 levels was
+shown. It may be of interest to generate a factor or categorical
+attribute with more than 2 levels, a feature that is built into
+simglm.</p>
+<p>The creation a categorical attribute with more than two level is
+similar to that with 2 levels. The following code creates a categorical
+attribute with 4 levels based on the grade, freshman, sophomore, junior,
+or senior. To add more levels, the user would just add more categories
+to the levels argument. Below, the data are generated and a table
+showing the different categories are shown.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
@@ -373,7 +465,9 @@
 <span><span class="co">## 2 sophomore 20</span></span>
 <span><span class="co">## 3    junior 32</span></span>
 <span><span class="co">## 4    senior 21</span></span></code></pre>
-<p>The levels of the new grade attribute could also be modified to include unequal probabilities for each class to be sampled. To do this, the prob argument could be passed as follows.</p>
+<p>The levels of the new grade attribute could also be modified to
+include unequal probabilities for each class to be sampled. To do this,
+the prob argument could be passed as follows.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
@@ -399,7 +493,16 @@
 <span><span class="co">## 2 sophomore 26</span></span>
 <span><span class="co">## 3    junior 43</span></span>
 <span><span class="co">## 4    senior 25</span></span></code></pre>
-<p>When generating more than 2 levels for a categorical attribute, the default behavior within R and with simglm is to create dummy or indicator variables to be used within a linear model. Therefore, in order to generate the outcome for an attribute with more than 2 levels, multiple indicator or dummy attributes need to be created. The number of indicator or dummy attributes is always 1 less than the number of categories, so for the grade attribute example, there needs to be 3 indicator attributes to represent the 4 categories within a linear model. An example of what these indicators attributes would look like is presented below.</p>
+<p>When generating more than 2 levels for a categorical attribute, the
+default behavior within R and with simglm is to create dummy or
+indicator variables to be used within a linear model. Therefore, in
+order to generate the outcome for an attribute with more than 2 levels,
+multiple indicator or dummy attributes need to be created. The number of
+indicator or dummy attributes is always 1 less than the number of
+categories, so for the grade attribute example, there needs to be 3
+indicator attributes to represent the 4 categories within a linear
+model. An example of what these indicators attributes would look like is
+presented below.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  grade <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'freshman'</span>, <span class="st">'sophomore'</span>, <span class="st">'junior'</span>, <span class="st">'senior'</span><span class="op">)</span>,</span>
@@ -419,9 +522,43 @@
 <span><span class="co">## 8  sophomore         1      0      0</span></span>
 <span><span class="co">## 9  sophomore         1      0      0</span></span>
 <span><span class="co">## 10  freshman         0      0      0</span></span></code></pre>
-<p>Each indicator takes a value of 1 or 0 for each new column created. These indicate which category is represented by each attribute, for example, the 1 for the sophomore column indicates that this term would represent the effect of moving from the reference group to the sophomore category. The reference group is selected by the group or category that does not have an indicator attribute for it, in this example it is the freshman group. The default behavior in R is to use the category that is closest to “A” in alphabetical order.</p>
-<p>It is important to understand how the indicator attributes are generated as this will impact how the response outcome is created. In this case, since there will be 3 indicator variables to represent the 4 categories of the grade attribute, 3 regression weights will need to be added to the <code>reg_weights</code> argument. These terms would represent the effect (mean level change) from moving from the reference group to each of the indicator variables. Using the example above, this would reflect the mean difference between freshman and sophomore, freshman and junior, and freshman and senior.</p>
-<p>The other element that needs to be kept track of, is the order that these indicator attributes are created by R. The default behavior is for these to be created in alphabetical order. The simglm package modifies this default behavior to convert those specified with a character vector for the <code>levels</code> argument to be in the same order as specified. This is important as it has implications for the interpretation of the terms specified within <code>reg_weights</code>. To be more concrete, what this means is that the last three terms specified within the <code>reg_weights</code> argument (ie., .75, 1.8, and 2.5) would respectively represent the difference between the sophomore, junior, and senior groups compared to the freshman group. Therefore, the average mean difference between the freshman and sophomore groups would be .75, the mean difference between the freshman and junior groups would be 1.8, and the mean difference between the freshman and senior groups would be 2.5. You could confirm this by saving the simulated data below and fitting a linear regression using the <code>lm</code> function as follows: <code>lm(y ~ 1 + weight + age + sex + grade, data = &amp;&amp;)</code> where the saved data object is placed instead of the <code>&amp;&amp;</code>.</p>
+<p>Each indicator takes a value of 1 or 0 for each new column created.
+These indicate which category is represented by each attribute, for
+example, the 1 for the sophomore column indicates that this term would
+represent the effect of moving from the reference group to the sophomore
+category. The reference group is selected by the group or category that
+does not have an indicator attribute for it, in this example it is the
+freshman group. The default behavior in R is to use the category that is
+closest to “A” in alphabetical order.</p>
+<p>It is important to understand how the indicator attributes are
+generated as this will impact how the response outcome is created. In
+this case, since there will be 3 indicator variables to represent the 4
+categories of the grade attribute, 3 regression weights will need to be
+added to the <code>reg_weights</code> argument. These terms would
+represent the effect (mean level change) from moving from the reference
+group to each of the indicator variables. Using the example above, this
+would reflect the mean difference between freshman and sophomore,
+freshman and junior, and freshman and senior.</p>
+<p>The other element that needs to be kept track of, is the order that
+these indicator attributes are created by R. The default behavior is for
+these to be created in alphabetical order. The simglm package modifies
+this default behavior to convert those specified with a character vector
+for the <code>levels</code> argument to be in the same order as
+specified. This is important as it has implications for the
+interpretation of the terms specified within <code>reg_weights</code>.
+To be more concrete, what this means is that the last three terms
+specified within the <code>reg_weights</code> argument (ie., .75, 1.8,
+and 2.5) would respectively represent the difference between the
+sophomore, junior, and senior groups compared to the freshman group.
+Therefore, the average mean difference between the freshman and
+sophomore groups would be .75, the mean difference between the freshman
+and junior groups would be 1.8, and the mean difference between the
+freshman and senior groups would be 2.5. You could confirm this by
+saving the simulated data below and fitting a linear regression using
+the <code>lm</code> function as follows:
+<code>lm(y ~ 1 + weight + age + sex + grade, data = &amp;&amp;)</code>
+where the saved data object is placed instead of the
+<code>&amp;&amp;</code>.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
@@ -461,7 +598,16 @@
 <div class="section level4">
 <h4 id="non-normal-outcomes">Non-normal Outcomes<a class="anchor" aria-label="anchor" href="#non-normal-outcomes"></a>
 </h4>
-<p>Non-normal outcomes are possible with simglm. Two non-normal outcomes are currently supported with more support coming in the future. Binary and count outcomes are supported and can be specified with the <code>outcome_type</code> simulation argument. If <code>outcome_type = 'logistic'</code> or <code>outcome_type = 'binary'</code> then a binary outcome is generated (ie. 0/1 variable) using the <code>rbinom</code> function. If <code>outcome_type = 'count'</code> or <code>outcome_type = 'poisson'</code> then the outcome is transformed to be a count variable (ie. discrete variable; 0, 1, 2, etc.).</p>
+<p>Non-normal outcomes are possible with simglm. Two non-normal outcomes
+are currently supported with more support coming in the future. Binary
+and count outcomes are supported and can be specified with the
+<code>outcome_type</code> simulation argument. If
+<code>outcome_type = 'logistic'</code> or
+<code>outcome_type = 'binary'</code> then a binary outcome is generated
+(ie. 0/1 variable) using the <code>rbinom</code> function. If
+<code>outcome_type = 'count'</code> or
+<code>outcome_type = 'poisson'</code> then the outcome is transformed to
+be a count variable (ie. discrete variable; 0, 1, 2, etc.).</p>
 <p>Here is an example of generating a binary outcome.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
@@ -502,7 +648,9 @@
 <span><span class="co">## 8               0              55.88580 1</span></span>
 <span><span class="co">## 9               0              48.75039 1</span></span>
 <span><span class="co">## 10              0              46.05934 1</span></span></code></pre>
-<p>And finally, an example of generating a count outcome. Note, the weight variable here has been grand mean centered in the generation (ie. mean = 0). This helps to ensure that the counts are not too large.</p>
+<p>And finally, an example of generating a count outcome. Note, the
+weight variable here has been grand mean centered in the generation (ie.
+mean = 0). This helps to ensure that the counts are not too large.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
@@ -547,14 +695,24 @@
 <div class="section level2">
 <h2 id="functions-for-power-analysis">Functions for Power Analysis<a class="anchor" aria-label="anchor" href="#functions-for-power-analysis"></a>
 </h2>
-<p>Now that the basics of tidy simulation have been shown in the context of a linear regression model, let’s explore an example in which the power for this model is to be evaluated. In particular, suppose we are interested in estimating empirical power for the three fixed effects based on the following formula: <code>y ~ 1 + weight + age + sex</code>. More specifically, we are interested in estimating power for “weight”, “age”, and “sex” variables. A few additional functions are needed for this step including:</p>
+<p>Now that the basics of tidy simulation have been shown in the context
+of a linear regression model, let’s explore an example in which the
+power for this model is to be evaluated. In particular, suppose we are
+interested in estimating empirical power for the three fixed effects
+based on the following formula: <code>y ~ 1 + weight + age + sex</code>.
+More specifically, we are interested in estimating power for “weight”,
+“age”, and “sex” variables. A few additional functions are needed for
+this step including:</p>
 <ul>
 <li>
-<code>model_fit</code>: this function will fit a model to the data.</li>
+<code>model_fit</code>: this function will fit a model to the
+data.</li>
 <li>
-<code>extract_coefficients</code>: this function will extract the fixed coefficients based on the model fitted.</li>
+<code>extract_coefficients</code>: this function will extract the
+fixed coefficients based on the model fitted.</li>
 </ul>
-<p>To fit a model and extract coefficients, we could do the following building off the example from the previous section:</p>
+<p>To fit a model and extract coefficients, we could do the following
+building off the example from the previous section:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
@@ -580,7 +738,17 @@
 <span><span class="co">## <span style="color: #BCBCBC;">2</span> weight         0.328     0.103    3.19    0.018<span style="text-decoration: underline;">9</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">3</span> age           -<span style="color: #BB0000;">0.198</span>     0.271   -<span style="color: #BB0000;">0.733</span>   0.491 </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">4</span> sexfemale     -<span style="color: #BB0000;">1.87</span>      5.93    -<span style="color: #BB0000;">0.315</span>   0.763</span></span></code></pre>
-<p>This output contains the model output for a single data simulation, more specifically we can see the parameter name, parameter estimate, the standard error for the parameter estimate, the test statistics, and the p-value. These were estimated using the <code>lm</code> function based on the same formula defined in <code>sim_arguments</code>. It is possible to specify your own formula, model fitting function, and regression weights to the <code>model_fit</code> function. For example, suppose we knew that weight was an important predictor, but are unable to collect it in real life. We could then specify an alternative model when evaluating power, but include the variable in the data generation step.</p>
+<p>This output contains the model output for a single data simulation,
+more specifically we can see the parameter name, parameter estimate, the
+standard error for the parameter estimate, the test statistics, and the
+p-value. These were estimated using the <code>lm</code> function based
+on the same formula defined in <code>sim_arguments</code>. It is
+possible to specify your own formula, model fitting function, and
+regression weights to the <code>model_fit</code> function. For example,
+suppose we knew that weight was an important predictor, but are unable
+to collect it in real life. We could then specify an alternative model
+when evaluating power, but include the variable in the data generation
+step.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
@@ -608,16 +776,25 @@
 <span><span class="co">## <span style="color: #BCBCBC;">1</span> (Intercept)  48.0       21.3       2.25   0.059<span style="text-decoration: underline;">4</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">2</span> age           0.048<span style="text-decoration: underline;">8</span>     0.394     0.124  0.905 </span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">3</span> sexfemale     2.25       8.79      0.256  0.805</span></span></code></pre>
-<p>Notice that we now get very different parameter estimates for this single data generation process which reflects the contribution of the variable “weight” that is not taken into account in the model fitting.</p>
+<p>Notice that we now get very different parameter estimates for this
+single data generation process which reflects the contribution of the
+variable “weight” that is not taken into account in the model
+fitting.</p>
 <div class="section level3">
 <h3 id="replicate-analysis">Replicate Analysis<a class="anchor" aria-label="anchor" href="#replicate-analysis"></a>
 </h3>
-<p>When evaluating empirical power, it is essential to replicate the analysis just like a Monte Carlo study to avoid extreme simulation conditions. The simglm package offers functions to aid in the replication given the simulation conditions and the desired simulation framework. To do this, two additional functions are used:</p>
+<p>When evaluating empirical power, it is essential to replicate the
+analysis just like a Monte Carlo study to avoid extreme simulation
+conditions. The simglm package offers functions to aid in the
+replication given the simulation conditions and the desired simulation
+framework. To do this, two additional functions are used:</p>
 <ul>
 <li>
-<code>replicate_simulation</code>: this function replicates the simulation</li>
+<code>replicate_simulation</code>: this function replicates the
+simulation</li>
 <li>
-<code>compute_statistics</code>: this function compute desired statistics across the replications.</li>
+<code>compute_statistics</code>: this function compute desired
+statistics across the replications.</li>
 </ul>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
@@ -649,10 +826,26 @@
 <span><span class="co">## <span style="color: #949494;">#   abbreviated variable names ¹​avg_estimate, ²​avg_test_stat,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   ³​crit_value_power, ⁴​type_1_error, ⁵​avg_adjtest_stat, ⁶​crit_value_t1e,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   ⁷​param_estimate_sd, ⁸​avg_standard_error</span></span></span></code></pre>
-<p>As can be seen from the output, the default behavior is to return statistics for power, average test statistic, type I error rate, adjusted average test statistic, standard deviation of parameter estimate, average standard error, precision ration (standard deviation of parameter estimate divided by average standard error), and the number of replications for each term.</p>
-<p>To generate this output, only the number of replications is needed. Here only 10 replications were done, in practice many more replications would be done to ensure there are accurate results.</p>
-<p>The default power parameter values used are: Normal distribution, two-tailed alternative hypotheses, and alpha of 0.05. Additional power parameters can be passed directly to override default values by including a power argument within the simulation arguments. For example, if a t-distribution with one degree of freedom an alpha of 0.02 is desired, these can be added as follows:</p>
-<p>Note: A user would likely want to change <code>plan(sequential)</code> to something like <code>plan(mutisession)</code> or <code>plan(multicore)</code> to run these in parallel. <code>plan(sequential)</code> is used here for vignette processing.</p>
+<p>As can be seen from the output, the default behavior is to return
+statistics for power, average test statistic, type I error rate,
+adjusted average test statistic, standard deviation of parameter
+estimate, average standard error, precision ration (standard deviation
+of parameter estimate divided by average standard error), and the number
+of replications for each term.</p>
+<p>To generate this output, only the number of replications is needed.
+Here only 10 replications were done, in practice many more replications
+would be done to ensure there are accurate results.</p>
+<p>The default power parameter values used are: Normal distribution,
+two-tailed alternative hypotheses, and alpha of 0.05. Additional power
+parameters can be passed directly to override default values by
+including a power argument within the simulation arguments. For example,
+if a t-distribution with one degree of freedom an alpha of 0.02 is
+desired, these can be added as follows:</p>
+<p>Note: A user would likely want to change
+<code>plan(sequential)</code> to something like
+<code>plan(mutisession)</code> or <code>plan(multicore)</code> to run
+these in parallel. <code>plan(sequential)</code> is used here for
+vignette processing.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
@@ -696,9 +889,32 @@
 <div class="section level2">
 <h2 id="nested-designs">Nested Designs<a class="anchor" aria-label="anchor" href="#nested-designs"></a>
 </h2>
-<p>Nested designs are ones in which data belong to multiple levels. An example could be individuals nested within neighborhoods. In this example, a specific individual is tied directly to one neighborhood. These types of data often include correlations between individuals within a neighborhood that need to be taken into account when modeling the data. These types of data can be generated with simglm.</p>
-<p>To do this, the formula syntax introduced above is modified slightly to include information on the nesting structure. In the example below, the nesting structure in the formula is specified in the portion within the parentheses. How the part within parentheses could be read is, add a random intercept effect for each neighborhood. This random intercept effect is similar to random error found in regression models, except the error is associated with neighborhoods and is the same values for all individuals within that neighborhood. The simulation arguments, <code>randomeffect</code> provides information about this term. One element that is often of interest to modify is the variance of the random effect term(s). For example, if the variance of the random effect should be 8, then the argument, <code>variance = 8</code>, could be added to the specific term as shown below.</p>
-<p>Finally, the <code>sample_size</code> argument needs to be modified to include information about the two levels of nested. You could read the <code>sample_size = list(level1 = 10, level2 = 20)</code> argument below as: create 20 neighborhoods (ie. <code>level2 = 20</code>) and within each neighborhood have 10 individuals (ie. <code>level1 = 10</code>). Therefore the total sample size (ie. rows in the data) would be 200.</p>
+<p>Nested designs are ones in which data belong to multiple levels. An
+example could be individuals nested within neighborhoods. In this
+example, a specific individual is tied directly to one neighborhood.
+These types of data often include correlations between individuals
+within a neighborhood that need to be taken into account when modeling
+the data. These types of data can be generated with simglm.</p>
+<p>To do this, the formula syntax introduced above is modified slightly
+to include information on the nesting structure. In the example below,
+the nesting structure in the formula is specified in the portion within
+the parentheses. How the part within parentheses could be read is, add a
+random intercept effect for each neighborhood. This random intercept
+effect is similar to random error found in regression models, except the
+error is associated with neighborhoods and is the same values for all
+individuals within that neighborhood. The simulation arguments,
+<code>randomeffect</code> provides information about this term. One
+element that is often of interest to modify is the variance of the
+random effect term(s). For example, if the variance of the random effect
+should be 8, then the argument, <code>variance = 8</code>, could be
+added to the specific term as shown below.</p>
+<p>Finally, the <code>sample_size</code> argument needs to be modified
+to include information about the two levels of nested. You could read
+the <code>sample_size = list(level1 = 10, level2 = 20)</code> argument
+below as: create 20 neighborhoods (ie. <code>level2 = 20</code>) and
+within each neighborhood have 10 individuals (ie.
+<code>level1 = 10</code>). Therefore the total sample size (ie. rows in
+the data) would be 200.</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
@@ -744,7 +960,9 @@
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">nested_data</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 200</span></span></code></pre>
-<p>The vignette simulation_arguments contains more example of specifying random effects and additional nesting designs including three levels of nested and cross-classified models.</p>
+<p>The vignette simulation_arguments contains more example of specifying
+random effects and additional nesting designs including three levels of
+nested and cross-classified models.</p>
 </div>
   </div>
 

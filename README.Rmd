@@ -55,7 +55,7 @@ Currently supports the following features:
     + Can vary model fitted to the data to misspecify directly.
 * Simulation of missing data
 * Include other distributions for covariate simulation.
-* Continuous, Logistic (dichotomous), and Poisson (count) outcome variables.
+* Continuous, Logistic (dichotomous), Poisson (count), ordinal (rating scale) outcome variables.
 * Cross classified simulation and power
 
 ## Bugs/Feature Requests

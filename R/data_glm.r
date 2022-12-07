@@ -24,7 +24,7 @@ transform_outcome <- function(outcome, type, ...) {
     prob_categories <- probability_restructure(probability)
     do.call("rbind", lapply(seq_len(nrow(prob_categories)), 
       function(xx) 
-        sample(x = 1:num_cats, 
+        sample(x = 1:ncol(prob_categories), 
                size = 1,
                prob = prob_categories[xx, ]
         )

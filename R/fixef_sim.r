@@ -86,10 +86,19 @@ sim_ordinal2 <- function(n, levels, var_level = 1, replace = TRUE,
 #'  used for standardization be simulated. 
 #' @param ther_val A vector of 2 that should include the theoretical mean and 
 #'  standard deviation of the generating function.
+#' @param ceiling A numeric value that specifies the ceiling (maximum) of an 
+#' attribute being generated. Defaults to NULL meaning no ceiling effect. 
+#' If a value is specified, any data larger than integer is rounded to 
+#' that ceiling value.
+#' @param floor A numeric value that specifies the floor (minimum) of an 
+#' attribute being generated. Defaults to NULL meaning no floor effect.
+#' If a value is specified, any data larger than integer is rounded to 
+#' that floor value.
 #' @param ... Additional parameters to pass to the dist_fun argument.
 #' @export 
 sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1, 
                             variance = NULL, ther_sim = FALSE, ther_val = NULL, 
+                            ceiling = NULL, floor = NULL,
                             ...) {
   
   if(var_level == 1) {
@@ -115,6 +124,13 @@ sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1,
       cont_var <- standardize(cont_var, ther_val[1], ther_val[2])
     }
       cont_var <- cont_var %*% chol(c(variance))
+  }
+  
+  if(!is.null(ceiling)) {
+    cont_var <- ifelse(cont_var > ceiling, ceiling, cont_var)
+  }
+  if(!is.null(floor)) {
+    cont_var <- ifelse(cont_var < floor, floor, cont_var)
   }
   cont_var
 }

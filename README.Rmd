@@ -45,6 +45,7 @@ Currently supports the following features:
 * Specification of the number of variables
     + Ability to add time-varying covariates
     + Specify the mean and variance of fixed covariate variables
+    + Specify floor or ceiling aspects of continuous attributes
     + Factor variable simulation 
     + Ordinal variable simulation
 * Generation of mixture normal distributions

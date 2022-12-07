@@ -24,7 +24,7 @@ R is supported."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.3</span>
       </span>
     </div>
 
@@ -81,6 +81,8 @@ R is supported.</p>
 <span>  variance <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ther_sim <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  ther_val <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ceiling <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  floor <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -115,6 +117,20 @@ used for standardization be simulated.</p></dd>
 <dt>ther_val</dt>
 <dd><p>A vector of 2 that should include the theoretical mean and 
 standard deviation of the generating function.</p></dd>
+
+
+<dt>ceiling</dt>
+<dd><p>A numeric value that specifies the ceiling (maximum) of an 
+attribute being generated. Defaults to NULL meaning no ceiling effect. 
+If a value is specified, any data larger than integer is rounded to 
+that ceiling value.</p></dd>
+
+
+<dt>floor</dt>
+<dd><p>A numeric value that specifies the floor (minimum) of an 
+attribute being generated. Defaults to NULL meaning no floor effect.
+If a value is specified, any data larger than integer is rounded to 
+that floor value.</p></dd>
 
 
 <dt>...</dt>

@@ -61,7 +61,14 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     Xmat <- cbind(data['X.Intercept.'], Xmat)
   }
   
-  fixed_outcome <- as.matrix(Xmat) %*% sim_args[['reg_weights']]
+  if(is.list(sim_args[['reg_weights']])) {
+    fixed_outcome <- do.call("cbind", 
+              lapply(seq_along(sim_args[['reg_weights']]), 
+                     function(xx) 
+                       as.matrix(Xmat) %*% sim_args[['reg_weights']][[xx]]))
+  } else {
+    fixed_outcome <- as.matrix(Xmat) %*% sim_args[['reg_weights']]
+  }
   
   if(length(parse_formula(sim_args)[['randomeffect']]) != 0) {
     random_formula <- parse_formula(sim_args)[['randomeffect']]

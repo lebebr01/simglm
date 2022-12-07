@@ -9,8 +9,8 @@ test_that("ordinal data simulation", {
     error = list(variance = 0.1),
     sample_size = 100,
     reg_weights = list(
-      c(-5, 0.2),
-      c(-2, 0.2)
+      c(-2, 0.2),
+      c(-5, 0.2)
     ),
     outcome_type = 'ordinal'
   )

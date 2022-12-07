@@ -11,6 +11,8 @@ sim_continuous2(
   variance = NULL,
   ther_sim = FALSE,
   ther_val = NULL,
+  ceiling = NULL,
+  floor = NULL,
   ...
 )
 }
@@ -32,6 +34,16 @@ used for standardization be simulated.}
 
 \item{ther_val}{A vector of 2 that should include the theoretical mean and 
 standard deviation of the generating function.}
+
+\item{ceiling}{A numeric value that specifies the ceiling (maximum) of an 
+attribute being generated. Defaults to NULL meaning no ceiling effect. 
+If a value is specified, any data larger than integer is rounded to 
+that ceiling value.}
+
+\item{floor}{A numeric value that specifies the floor (minimum) of an 
+attribute being generated. Defaults to NULL meaning no floor effect.
+If a value is specified, any data larger than integer is rounded to 
+that floor value.}
 
 \item{...}{Additional parameters to pass to the dist_fun argument.}
 }

@@ -122,6 +122,7 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   if(!is.null(sim_args[['outcome_type']])){
     trans_outcome <- transform_outcome(outcome, type = sim_args[['outcome_type']])
     if(ncol(outcome) > 1) {
+      names(outcome) <- paste0('untransformed_outcome', 1:ncol(outcome))
       data <- cbind(data, outcome) 
     } else {
       data <- cbind(data, untransformed_outcome = outcome)

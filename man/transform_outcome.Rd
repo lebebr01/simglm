@@ -4,12 +4,14 @@
 \alias{transform_outcome}
 \title{Transform response variable}
 \usage{
-transform_outcome(outcome, type, ...)
+transform_outcome(outcome, type, categories = NULL, ...)
 }
 \arguments{
 \item{outcome}{The outcome variable to transform.}
 
 \item{type}{Type of transformation to apply.}
+
+\item{categories}{A vector of named categories for multinomial sim}
 
 \item{...}{Additional arguments passed to distribution functions.}
 }

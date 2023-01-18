@@ -137,9 +137,9 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     if(sim_args[['outcome_type']] == 'multinomial') {
       data <- cbind(data, trans_outcome)
       if(is.null(multinomial_categories)) {
-        data[outcome_name] <- data[data$outcome_num]
+        names(data)[names(data) == 'outcome_num'] <- outcome_name
       } else {
-        data[outcome_name] <- data[data$outcome_category]
+        names(data)[names(data) == 'outcome_category'] <- outcome_name
       }
     } else {
       data[outcome_name] <- trans_outcome

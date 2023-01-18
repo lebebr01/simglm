@@ -14,7 +14,13 @@ transform_outcome <- function(outcome, type, ...) {
   } else if(type %in% c('count', 'poisson')) {
     rpois(length(outcome), lambda = exp(outcome))
   } else if(type == 'multinomial') {
-    
+    probability <- lapply(seq_along(1:ncol(outcome)), 
+                          function(xx) exp(outcome[, xx])
+    )
+    outcomes <- lapply(seq_along(probability),
+                       function(xx) 
+                         rmultinom(nrow(outcome), size = 1,
+                                prob = probability[[xx]]))
   } else if(type == 'ordinal') {
     probability <- do.call('cbind', 
           lapply(seq_along(1:ncol(outcome)), 

@@ -12,7 +12,7 @@ Description: Simulates regression models,
     flexible allowing the specification of missing data, unbalanced designs,
     and different random error distributions are built into the package.
 Depends:
-    R (>= 3.6.0)
+    R (>= 4.1.0)
 Imports:
     stats,
     methods,

@@ -1,6 +1,6 @@
-context("oridinal outcome simulation")
+context("multinomial outcome simulation")
 
-test_that("ordinal data simulation", {
+test_that("multinomial data simulation", {
   set.seed(2023)
   
   sim_arguments <- list(
@@ -21,6 +21,7 @@ test_that("ordinal data simulation", {
   
   expect_equal(1000, nrow(tmp_data))
   expect_equal(3, length(unique(tmp_data$y)))
+  expect_type(tmp_data$y, 'integer')
   expect_equal(all(is.na(tmp_data$outcome_category)), TRUE)
   
   set.seed(2023)
@@ -43,7 +44,8 @@ test_that("ordinal data simulation", {
     generate_response(sim_arguments)
   
   expect_equal(1000, nrow(tmp_data))
-  expect_equal(3, length(unique(tmp_data$y)))
-  expect_equal(all(is.na(tmp_data$outcome_category)), TRUE)
+  expect_equal(length(unique(tmp_data$y)), 3)
+  expect_type(tmp_data$outcome_num, 'integer')
+  expect_type(tmp_data$y, 'character')
   
 })

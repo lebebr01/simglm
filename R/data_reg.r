@@ -89,7 +89,7 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
       Zmat <- dplyr::bind_cols(Zmat)
     }
     
-    rand_effects <- dplyr::select(data, tidyselect::all_of(random_effects_names))
+    rand_effects <- subset(data, select = random_effects_names)
     
     random_effects <- rowSums(rand_effects * Zmat)
   } else {

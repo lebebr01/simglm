@@ -67,7 +67,7 @@ generate_multinomial_category <- function(probability, categories = NULL) {
   
   if(!is.null(categories)) { 
     outcome_category <- data.frame(outcome_num = rep(1:length(categories)), 
-                                   outcome_categories = categories)
+                                   outcome_category = categories)
     outcome_comb <- merge(data.frame(ID = 1:length(outcome), 
                                     outcome_num = outcome_num),
                          outcome_category, by = 'outcome_num', all.x = TRUE)

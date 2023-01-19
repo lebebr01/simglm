@@ -139,7 +139,7 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
       if(is.null(multinomial_categories)) {
         names(data)[names(data) == 'outcome_num'] <- outcome_name
       } else {
-        names(data)[names(data) == 'outcome_categories'] <- outcome_name
+        names(data)[names(data) == 'outcome_category'] <- outcome_name
       }
     } else {
       data[outcome_name] <- trans_outcome

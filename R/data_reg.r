@@ -120,14 +120,30 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   outcome <- fixed_outcome + random_effects + data[['error']]
   
   if(!is.null(sim_args[['outcome_type']])){
-    trans_outcome <- transform_outcome(outcome, type = sim_args[['outcome_type']])
+    if(is.null(sim_args[['multinomial_categories']])) {
+      multinomial_categories <- NULL
+    } else {
+      multinomial_categories <- sim_args[['multinomial_categories']]
+    }
+    trans_outcome <- transform_outcome(outcome, 
+                                       type = sim_args[['outcome_type']],
+                                       categories = multinomial_categories)
     if(ncol(outcome) > 1) {
       names(outcome) <- paste0('untransformed_outcome', 1:ncol(outcome))
       data <- cbind(data, outcome) 
     } else {
       data <- cbind(data, untransformed_outcome = outcome)
     }
-    data[outcome_name] <- trans_outcome
+    if(sim_args[['outcome_type']] == 'multinomial') {
+      data <- cbind(data, trans_outcome)
+      if(is.null(multinomial_categories)) {
+        names(data)[names(data) == 'outcome_num'] <- outcome_name
+      } else {
+        names(data)[names(data) == 'outcome_category'] <- outcome_name
+      }
+    } else {
+      data[outcome_name] <- trans_outcome
+    }
   } else {
     data[outcome_name] <- outcome
   }

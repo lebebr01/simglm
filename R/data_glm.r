@@ -72,7 +72,7 @@ generate_multinomial_category <- function(probability, categories = NULL) {
                                     outcome_num = outcome_num),
                          outcome_category, by = 'outcome_num', all.x = TRUE)
     outcome_comb <- outcome_comb[order(outcome_comb$ID), ]
-    outcome_comb <- outcome_comb[-outcome_comb$ID]
+    outcome_comb <- subset(outcome_comb, select = -ID)
   } else {
       outcome_comb <- data.frame(outcome_num = outcome_num, 
                                  outcome_category = NA)

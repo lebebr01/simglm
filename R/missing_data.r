@@ -222,7 +222,7 @@ random_missing <- function(sim_data, resp_var = 'sim_data',
 #' @param miss_cov Covariate that the missing values are based on.
 #' @param mar_prop Proportion of missing data for each unique value 
 #'   specified in the miss_cov argument.
-#' @importFrom dplyr count select slice left_join mutate
+#' @importFrom dplyr count select left_join mutate
 #' @export 
 #' @rdname missing
 mar_missing <- function(sim_data, resp_var = 'sim_data', 

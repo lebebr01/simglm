@@ -32,14 +32,14 @@ test_that('fixed cross class', {
   expect_false(is.null(cross_random[['neighborhood_id']]))
   expect_equal(length(unique(cross_random[['neighborhood_id']])), 12)
   
-  cross_random_fixed <- simulate_randomeffect(data = NULL, sim_arguments) %>%
+  cross_random_fixed <- simulate_randomeffect(data = NULL, sim_arguments) |>
     simulate_fixed(sim_arguments)
   
   expect_equal(ncol(cross_random_fixed), 12)
   
-  cross_random_fixed <- simulate_randomeffect(data = NULL, sim_arguments) %>%
-    simulate_fixed(sim_arguments) %>% 
-    simulate_error(sim_arguments) %>%
+  cross_random_fixed <- simulate_randomeffect(data = NULL, sim_arguments) |>
+    simulate_fixed(sim_arguments) |>
+    simulate_error(sim_arguments) |>
     generate_response(sim_arguments)
   
   expect_equal(ncol(cross_random_fixed), 16)

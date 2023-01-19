@@ -43,7 +43,7 @@ sample_sizes <- function(sample_size) {
     if(2 %in% min_max_loc) {
       level2 <- runif(n = sample_size[['level3']], 
                       min = sample_size[['level2']]$min,
-                      max = sample_size[['level2']]$max) %>%
+                      max = sample_size[['level2']]$max) |>
         round(0)
     } else {
       if(length(sample_size) == 3) {
@@ -57,7 +57,7 @@ sample_sizes <- function(sample_size) {
     if(1 %in% min_max_loc) {
       level1 <- runif(n = total_level2_samplesize,
                       min = sample_size[['level1']]$min,
-                      max = sample_size[['level1']]$max) %>%
+                      max = sample_size[['level1']]$max) |>
         round(0)
     } else {
       if(length(sample_size[['level1']]) == sample_size[['level2']]) {

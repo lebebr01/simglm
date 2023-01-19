@@ -128,7 +128,7 @@ correlate_fixedeffects <- function(data, sim_args, correlation_matrices) {
                                       function(xx) 
                                         round_ordinal(correlated_data[[var_names[ordinal_loc][xx]]], 
                                                       min = ordinal_min[[xx]],
-                                                      max = ordinal_max[[xx]]))) %>%
+                                                      max = ordinal_max[[xx]]))) |>
         data.frame()
       names(round_correlated_data) <- var_names[ordinal_loc]
       names(correlated_data)[names(correlated_data) %in% var_names[ordinal_loc]] <- paste0(var_names[ordinal_loc], '_corr')

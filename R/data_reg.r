@@ -79,8 +79,8 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     random_formula <- lapply(seq_along(random_formula_parsed[['random_effects']]), function(xx) 
       as.formula(random_formula_parsed[['random_effects']][xx]))
     
-    Zmat <- lapply(random_formula, model.matrix, data = data) %>%
-      lapply(., data.frame)
+    Zmat <- lapply(lapply(random_formula, model.matrix, data = data), 
+      data.frame)
     
     cross_class <- parse_crossclass(sim_args, parse_randomeffect(parse_formula(sim_args)[['randomeffect']]))
     if(any(cross_class[['cross_class_re']])){

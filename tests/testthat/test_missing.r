@@ -17,11 +17,10 @@ test_that('random missing', {
                         type = 'random'),
     sample_size = list(level1 = 50, level2 = 30)
   )
-  data_w_missing <- sim_arguments %>%
-    simulate_fixed(data = NULL, .) %>%
-    simulate_randomeffect(sim_arguments) %>%
-    simulate_error(sim_arguments) %>%
-    generate_response(sim_arguments) %>%
+  data_w_missing <- simulate_fixed(data = NULL, sim_arguments) |>
+    simulate_randomeffect(sim_arguments) |>
+    simulate_error(sim_arguments) |>
+    generate_response(sim_arguments) |>
     generate_missing(sim_arguments)
   
   expect_type(data_w_missing[['y']], 'double')
@@ -122,11 +121,10 @@ test_that("missing at random", {
                         type = 'mar'),
     sample_size = list(level1 = 10, level2 = 20)
   )
-  data_w_missing <- sim_arguments %>%
-    simulate_fixed(data = NULL, .) %>%
-    simulate_randomeffect(sim_arguments) %>%
-    simulate_error(sim_arguments) %>%
-    generate_response(sim_arguments) %>%
+  data_w_missing <- simulate_fixed(data = NULL, sim_arguments) |>
+    simulate_randomeffect(sim_arguments) |>
+    simulate_error(sim_arguments) |>
+    generate_response(sim_arguments) |>
     generate_missing(sim_arguments)
   
   expect_type(data_w_missing[['y']], 'double')

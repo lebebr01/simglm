@@ -20,14 +20,14 @@ simulate_error <- function(data, sim_args, ...) {
     error <- purrr::invoke(sim_error, 
                            sim_args[['error']],
                            n = n
-    ) %>% 
+    ) |>
       unlist()
   } else {
     n <- compute_samplesize(data, sim_args)
     error <- purrr::invoke(sim_error, 
                            sim_args[['error']],
                            n = n
-    ) %>% 
+    ) |> 
       unlist()
   }
   

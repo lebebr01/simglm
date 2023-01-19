@@ -11,8 +11,8 @@ test_that('generated continuous data', {
     # outcome_type = 'count'
   )
   
-  sim_data <- simulate_fixed(data = NULL, sim_arguments) %>%
-    simulate_error(sim_arguments) %>%
+  sim_data <- simulate_fixed(data = NULL, sim_arguments) |>
+    simulate_error(sim_arguments) |>
     generate_response(sim_arguments)
   
   expect_equal(nrow(sim_data), 150)
@@ -32,8 +32,8 @@ test_that('generated poisson data', {
   )
   
   
-  sim_data <- simulate_fixed(data = NULL, sim_arguments) %>%
-    simulate_error(sim_arguments) %>%
+  sim_data <- simulate_fixed(data = NULL, sim_arguments) |>
+    simulate_error(sim_arguments) |>
     generate_response(sim_arguments)
   
   expect_equal(nrow(sim_data), 100)

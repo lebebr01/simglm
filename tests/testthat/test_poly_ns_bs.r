@@ -72,13 +72,13 @@ test_that('poly outcome', {
     reg_weights = c(2, 1, 0.5, 0.25, 1, 0.5)
   )
   
-  expect_equal(simulate_fixed(data = NULL, sim_arguments) %>%
-    simulate_error(sim_arguments) %>%
-    generate_response(sim_arguments) %>% 
+  expect_equal(simulate_fixed(data = NULL, sim_arguments) |>
+    simulate_error(sim_arguments) |>
+    generate_response(sim_arguments) |> 
       nrow(), 10)
-  expect_equal(simulate_fixed(data = NULL, sim_arguments) %>%
-                 simulate_error(sim_arguments) %>%
-                 generate_response(sim_arguments) %>% 
+  expect_equal(simulate_fixed(data = NULL, sim_arguments) |>
+                 simulate_error(sim_arguments) |>
+                 generate_response(sim_arguments) |> 
                  ncol(), 13)
 })
 

@@ -14,12 +14,12 @@ test_that('heterogeneity of variance', {
     reg_weights = c(0, .15)
   )
   
-  h_data <- simulate_fixed(data = NULL, simulation_arguments) %>%
-    simulate_error(simulation_arguments) %>%
+  h_data <- simulate_fixed(data = NULL, simulation_arguments) |>
+    simulate_error(simulation_arguments) |>
     simulate_heterogeneity(simulation_arguments)
   
-  h_var <- h_data %>%
-    group_by(group) %>% 
+  h_var <- h_data |>
+    group_by(group) |>
     summarise(var_error = var(error), 
               var_o_error = var(orig_error))
   

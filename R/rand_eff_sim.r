@@ -4,7 +4,7 @@ cross_class_sim <- function(num_ids, samp_size, col_names, ...) {
 
   cross_rand_eff <- purrr::invoke_map('sim_cross',
                                       ...,
-                                      num_ids = num_ids) %>%
+                                      num_ids = num_ids) |>
     data.frame()
   cross_rand_eff$id <- 1:num_ids
 
@@ -81,7 +81,7 @@ simulate_randomeffect <- function(data, sim_args, ...) {
                               sim_args[['randomeffect']][!cross_class[['cross_class_re']]],
                               n = n,
                               var_type = 'continuous'
-    ) %>% 
+    ) |>
       data.frame()
   } else {
     n <- compute_samplesize(data, sim_args)
@@ -89,7 +89,7 @@ simulate_randomeffect <- function(data, sim_args, ...) {
                               sim_args[['randomeffect']][!cross_class[['cross_class_re']]],
                               n = n,
                               var_type = 'continuous'
-    ) %>% 
+    ) |>
       data.frame()
   }
   

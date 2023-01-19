@@ -5,6 +5,7 @@
 #' @param categories A vector of named categories for multinomial sim
 #' @param ... Additional arguments passed to distribution functions.
 #' 
+#' @importFrom stats rmultinom
 #' @export
 transform_outcome <- function(outcome, type, categories = NULL, ...) {
   

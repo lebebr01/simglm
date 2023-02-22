@@ -105,67 +105,89 @@ parse_crossclass <- function(sim_args, random_formula_parsed) {
 #' @export 
 parse_power <- function(sim_args, samp_size) {
   
-  if(is.null(sim_args[['power']][['direction']]) || sim_args[['power']][['direction']] %ni% c('lower', 'upper')) {
-    number_tails <- 2
+  if(is.null(sim_args[['model_fit']][['reg_weights_model']])) {
+    reg_weights <- sim_args[['reg_weights']]
   } else {
-    number_tails <- 1
+    reg_weights <- sim_args[['model_fit']][['reg_weights_model']]
   }
   
   if(is.null(sim_args[['power']][['direction']])) {
-    tail_direction <- 'two-tailed'
+    number_tails <- rep(2, length(reg_weights))
+  } else {
+    number_tails <- ifelse(sim_arguments[['power']][['direction']] %in% c('lower', 'upper') == TRUE, 1, 2)
+    if(length(number_tails) != length(reg_weights)) {
+      number_tails <- rep(number_tails, length(reg_weights))
+    }
+  }
+  
+  if(is.null(sim_args[['power']][['direction']])) {
+    tail_direction <- rep('two-tailed', length(reg_weights))
   } else {
     tail_direction <- sim_args[['power']][['direction']]
+    if(length(tail_direction) != length(reg_weights)) {
+      tail_direction <- rep(tail_direction, length(reg_weights))
+    }
   }
   
   if(is.null(sim_args[['power']][['dist']])) {
-    stat_dist <- 'qnorm'
+    stat_dist <- rep('qnorm', length(reg_weights))
   } else {
     stat_dist <- sim_args[['power']][['dist']]
+    if(length(stat_dist) != length(reg_weights)) {
+      stat_dist <- rep(stat_dist, length(reg_weights))
+    }
   }
   
   if(is.null(sim_args[['power']][['alpha']])) {
-    alpha <- 0.05
+    alpha <- rep(0.05, length(reg_weights))
   } else {
     alpha <- sim_args[['power']][['alpha']]
+    if(length(alpha) != length(reg_weights)) {
+      alpha <- rep(alpha, length(reg_weights))
+    }
   }
   
-  if(tail_direction == 'lower') {
-    lower_tail <- TRUE
-  } else {
-    lower_tail <- FALSE
-  }
+  lower_tail <- ifelse(tail_direction == 'lower', TRUE, FALSE)
   
   if(is.null(sim_args[['power']][['opts']])) {
     opts <- NULL
   } else {
     opts <- sim_args[['power']][['opts']]
+    if(length(opts) != length(reg_weights)) {
+      opts <- rep(opts, length(reg_weights))
+    }
   }
   
   alpha <- alpha / number_tails
   
-  if(is.null(sim_args[['power']][['opts']][['df']]) & stat_dist == 'qt') {
-    df <- purrr::map(samp_size, `-`, 1)
-    
-    test_statistic <- lapply(seq_along(df), function(xx) {
-      purrr::invoke(stat_dist, 
-                  p = alpha, 
-                  lower.tail = lower_tail,
-                  df = df[[xx]],
-                  opts)
-    })
-  } else {
-    test_statistic <- purrr::invoke(stat_dist, 
-                                  p = alpha, 
-                                  lower.tail = lower_tail,
-                                  opts)
+  test_statistic <- lapply(seq_along(stat_dist), function(ii) {
+    if(is.null(sim_args[['power']][['opts']][['df']]) & stat_dist[ii] == 'qt') {
+      df <- purrr::map(samp_size, `-`, 1)
+      
+      lapply(seq_along(df), function(xx) {
+        purrr::invoke(stat_dist[ii], 
+                      p = alpha[ii], 
+                      lower.tail = lower_tail[ii],
+                      df = df[[xx]],
+                      opts[ii])
+      })
+    } else {
+      purrr::invoke(stat_dist[ii], 
+                    p = alpha[ii], 
+                    lower.tail = lower_tail[ii],
+                    opts[ii])
+    }
   }
+  )
+  
 
   lapply(seq_along(test_statistic), function(xx) {
     list(test_statistic = test_statistic[[xx]],
-         alpha = alpha, 
-         number_tails = number_tails,
-         direction = tail_direction,
-         distribution = stat_dist
+         alpha = alpha[xx], 
+         number_tails = number_tails[xx],
+         direction = tail_direction[xx],
+         distribution = stat_dist[xx],
+         opts = opts[xx]
     )
   })
   

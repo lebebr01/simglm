@@ -205,15 +205,31 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   
   power_args <- parse_power(sim_args, samp_size)
   
-  data_df <- data %>%
-    Map(compute_power, ., power_args) %>%
-    Map(compute_t1e, ., list(sim_args), 
-                         power_args) %>%
-    dplyr::bind_rows()
+  power_comp <- lapply(seq_along(data), function(ii){
+    do.call('rbind', lapply(seq_along(power_args), function(xx) {
+      compute_power(data[[ii]][xx,], power_args[[xx]])
+    }))
+  })
+  
+  if(is.null(sim_args[['model_fit']][['reg_weights_model']])) {
+    reg_weights <- sim_args[['reg_weights']]
+  } else {
+    reg_weights <- sim_args[['model_fit']][['reg_weights_model']]
+  }
+  
+  t1e_comp <- lapply(seq_along(power_comp), function(ii){
+    do.call('rbind', lapply(seq_along(power_args), function(xx) {
+      compute_t1e(power_comp[[ii]][xx,], power_args[[xx]], reg_weights = reg_weights[xx])
+    }))
+  })
+  
+  data_df <- do.call("rbind", t1e_comp)
+  
   
   # data_df <- data %>%
-  #   purrr::map(compute_power, power_args) %>% 
-  #   purrr::map(compute_t1e, sim_args = sim_args, t1e_args = power_args) %>%
+  #   Map(compute_power, ., power_args) %>%
+  #   Map(compute_t1e, ., list(sim_args), 
+  #                        power_args) %>%
   #   dplyr::bind_rows()
   
   if(is.null(sim_args['vary_arguments'])) {
@@ -277,15 +293,15 @@ compute_power <- function(data, power_args) {
   }
 }
 
-compute_t1e <- function(data, sim_args, t1e_args) {
+compute_t1e <- function(data, t1e_args, reg_weights) {
   
-  fixed_vars <- strsplit(as.character(parse_formula(sim_args)[['fixed']]), "\\+")[[2]]
-  
-  if(is.null(sim_args[['model_fit']][['reg_weights_model']])) {
-    reg_weights <- sim_args[['reg_weights']]
-  } else {
-    reg_weights <- sim_args[['model_fit']][['reg_weights_model']]
-  }
+  # fixed_vars <- strsplit(as.character(parse_formula(sim_args)[['fixed']]), "\\+")[[2]]
+  # 
+  # if(is.null(sim_args[['model_fit']][['reg_weights_model']])) {
+  #   reg_weights <- sim_args[['reg_weights']]
+  # } else {
+  #   reg_weights <- sim_args[['model_fit']][['reg_weights_model']]
+  # }
   
   # if(length(fixed_vars) != length(reg_weights)) {
   #   stop("Check reg_weights in model_fit simulation arguments, must specify 

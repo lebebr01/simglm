@@ -57,4 +57,30 @@ test_that('3way interaction', {
   expect_type(fixed_vars[['act.sex_1.type_1']], 'double')
   expect_type(fixed_vars[['act.sex_1.type_2']], 'double')
   expect_type(fixed_vars[['type']], 'integer')
+  
+  sim_args <- list(
+    formula = y ~ 1  + time + 
+      control + treat_knot + 
+      time:treat_knot + control:treat_knot + (1 + time | id),
+    fixed = list(time = list(var_type = 'time', 
+                             time_levels = seq(-5, 10, 1)),
+                 control = list(var_type = 'factor',
+                                levels = c('Control', 'Treatment'), 
+                                var_level = 2)),
+    knot = list(treat_knot = list(variable = 'time', 
+                                  knot_locations = 0)),
+    sample_size = list(level1 = 16, level2 = 50),
+    randomeffect = list(int_id = list(variance = 5, var_level = 2),
+                        time_id = list(variance = 1.5, var_level = 2)),
+    error = list(variance = 10),
+    reg_weights = c(2, .5, 3, -3, 0, -0.15)
+  )
+  
+  fixed_vars <- simulate_fixed(data = NULL, sim_args) 
+  
+  expect_equal(ncol(fixed_vars), 9)
+  expect_type(fixed_vars[['time.treat_knot']], 'double')
+  expect_type(fixed_vars[['treat_knot.control_1']], 'double')
+  expect_equal(length(unique(fixed_vars[['treat_knot.control_1']])), 2)
+  expect_equal(length(unique(fixed_vars[['time.treat_knot']])), 11)
 })

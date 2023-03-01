@@ -149,9 +149,10 @@ is_factor_var <- function(sim_args) {
 factor_names <- function(sim_args, fixed_vars) {
   
   which_factor <- is_factor_var(sim_args)
+  factor_names <- names(sim_args[['fixed']][which_factor])
   
-  fixed_vars_continuous <- fixed_vars[!which_factor]
-  fixed_vars_cat <- fixed_vars[which_factor]
+  fixed_vars_continuous <- fixed_vars[!grepl(paste(factor_names, collapse = "|"), fixed_vars)]
+  fixed_vars_cat <- fixed_vars[grepl(paste(factor_names, collapse = "|"), fixed_vars)]
   
   if(any(grepl(":|^I", fixed_vars_cat))) {
     int_loc <- grep(":|^I", fixed_vars_cat)
@@ -192,14 +193,21 @@ factor_names <- function(sim_args, fixed_vars) {
     )
   
   if(any(grepl(":|^I", fixed_vars))) {
-    int_loc <- grep(":|^I", fixed_vars)
-    new_interaction_names <- interaction_names(fixed_vars, 
+    fixed_vars_cat_rename <- fixed_vars[grepl(paste(factor_names, collapse = "|"), fixed_vars)]
+    int_loc <- grep(":|^I", fixed_vars_cat_rename)
+    new_interaction_names <- interaction_names(fixed_vars_cat_rename,
                                                fixed_levels_gt2_names,
                                                sim_args)
     for(ii in seq_along(int_loc)) {
-      fixed_vars[int_loc[ii]] <- new_interaction_names[ii]
+      # int_loc <- grep(":|^I", fixed_vars)
+      int_loc_rename <- grep(fixed_vars_cat_rename[int_loc[ii]], fixed_vars)
+      fixed_vars[int_loc_rename[ii]] <- new_interaction_names[ii]
     }
   }
+  
+  # gsub(fixed_vars_cat[1], reordered_names[[1]], fixed_vars)
+  
+  # fixed_vars <- c(fixed_vars_continuous, fixed_vars_cat_rename)
   
   for(ii in seq_along(var_loc)) {
     fixed_vars[[var_loc[[ii]]]] <- reordered_names[ii]

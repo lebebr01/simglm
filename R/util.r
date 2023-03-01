@@ -200,8 +200,8 @@ factor_names <- function(sim_args, fixed_vars) {
                                                sim_args)
     for(ii in seq_along(int_loc)) {
       # int_loc <- grep(":|^I", fixed_vars)
-      int_loc_rename <- grep(fixed_vars_cat_rename[int_loc[ii]], fixed_vars)
-      fixed_vars[int_loc_rename[ii]] <- new_interaction_names[ii]
+      int_loc_rename <- grep(paste0('^', fixed_vars_cat_rename[int_loc[ii]], '$', collapse=""), fixed_vars)
+      fixed_vars[int_loc_rename] <- new_interaction_names[ii]
     }
   }
   

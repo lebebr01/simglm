@@ -236,6 +236,9 @@ interaction_names <- function(fixed_vars, renamed_vars, sim_args) {
   renamed_int_vars <- lapply(seq_along(int_names), function(ii) {
     if(length(int_names[[ii]][int_names[[ii]] %in% factor_names]) == 1) {
       cont_vars <- int_names[[ii]][!int_names[[ii]] %in% factor_names]
+      if(length(cont_vars) > 1) {
+        cont_vars <- paste0(cont_vars, collapse = ":")
+      }
       do.call(paste, c(expand.grid(cont_vars, renamed_vars[[int_names[[ii]][int_names[[ii]] %in% factor_names]]], stringsAsFactors = FALSE), sep = ":"))
     } else {
       if(all(int_names[[ii]] %in% factor_names)) {

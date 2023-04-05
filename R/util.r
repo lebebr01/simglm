@@ -354,6 +354,20 @@ dataframe2matrix <- function(data, corr_variable, var_names) {
   }
 }
 
+density_quantile <- function(data, quantiles) {
+  
+  data_density <- data.frame(density(data, na.rm = TRUE, 
+                                     n = 10000)[c('x', 'y')])
+  
+  matches <- lapply(quantiles, closest_match, 
+                    data = data_density$x)
+  
+  data_density[unlist(matches), ]
+}
+
+closest_match <- function(data, value) {
+  which.min(abs(data - value))
+}
 
 # Horrible hack to keep CRAN happy and suppress NOTES about
 # parts of the code that use non-standard evaluation.

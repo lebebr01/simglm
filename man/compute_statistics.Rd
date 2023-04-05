@@ -9,7 +9,8 @@ compute_statistics(
   sim_args,
   power = TRUE,
   type_1_error = TRUE,
-  precision = TRUE
+  precision = TRUE,
+  alternative_power = TRUE
 )
 }
 \arguments{

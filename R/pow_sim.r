@@ -189,11 +189,12 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
 #'  should be computed. Defaults to TRUE.
 #' @param precision TRUE/FALSE flag indicating whether precision should be 
 #'  computed. Defaults to TRUE.
-#' @importFrom dplyr mutate summarise group_by `%>%`
+#' @importFrom dplyr mutate summarise group_by
 #' @importFrom rlang syms
 #' @export
 compute_statistics <- function(data, sim_args, power = TRUE, 
-                               type_1_error = TRUE, precision = TRUE) {
+                               type_1_error = TRUE, precision = TRUE,
+                               alternative_power = TRUE) {
   
   if(is.null(sim_args[['sample_size']])) {
     samp_size <- lapply(seq_along(data), function(xx) {
@@ -224,13 +225,6 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   })
   
   data_df <- do.call("rbind", t1e_comp)
-  
-  
-  # data_df <- data %>%
-  #   Map(compute_power, ., power_args) %>%
-  #   Map(compute_t1e, ., list(sim_args), 
-  #                        power_args) %>%
-  #   dplyr::bind_rows()
   
   if(is.null(sim_args['vary_arguments'])) {
     group_vars <- c('term')
@@ -370,4 +364,42 @@ aggregate_precision <- function(data, group_var) {
     summarise(param_estimate_sd = sd(estimate),
               avg_standard_error = mean(std.error),
               precision_ratio = param_estimate_sd / avg_standard_error)
+}
+
+alternative_power <- function(data, group_var, 
+                              quantiles) {
+  
+  group_by_var <- dplyr::quos(!!! group_var) 
+  
+  data |>
+    group_by(!!! group_by_var) |>
+    summarise()
+}
+
+#' Convenience function for computing density values for plotting.
+#' 
+#' @param data A dataframe that contains the parameter estimates.
+#' @param group_var A group variable that specifies the attributes to 
+#' group by. By default, this would likely be the term attribute, but can 
+#' contain more than one attribute.
+#' @param parameter The attribute that represents the parameter estimate.
+#' @param values A list of numeric vectors that specifies the values 
+#' for which the density values are computed for.
+#' 
+#' @export
+compute_density_values <- function(data, group_var, parameter,
+                                   values) {
+  
+  data_list <- data |>
+    split(f = data[group_var]) 
+
+  dens_values <- lapply(seq_along(data_list), function(ii) 
+    cbind(density_quantile(data_list[[ii]][[parameter]], 
+         quantiles = values[[ii]]), 
+         names(data_list)[[ii]])
+    )
+  dens_df <- do.call('rbind', dens_values)
+  names(dens_df) <- c('x', 'y', group_var)
+  
+  dens_df
 }

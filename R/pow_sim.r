@@ -203,7 +203,7 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   if(is.null(sim_args[['sample_size']])) {
     samp_size <- future.apply::future_lapply(seq_along(data), function(xx) {
       unique(as.numeric(as.character(data[[xx]][['sample_size']])))
-      })
+      }, future.seed = TRUE)
   } else {
     samp_size <- sim_args[['sample_size']]
   }
@@ -213,8 +213,8 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   power_comp <- future.apply::future_lapply(seq_along(data), function(ii){
     do.call('rbind', future.apply::future_lapply(seq_along(power_args), function(xx) {
       compute_power(data[[ii]][xx,], power_args[[xx]])
-    }))
-  })
+    }, future.seed = TRUE))
+  }, future.seed = TRUE)
   
   if(is.null(sim_args[['model_fit']][['reg_weights_model']])) {
     reg_weights <- sim_args[['reg_weights']]
@@ -225,8 +225,8 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   t1e_comp <- future.apply::future_lapply(seq_along(power_comp), function(ii){
     do.call('rbind', future.apply::future_lapply(seq_along(power_args), function(xx) {
       compute_t1e(power_comp[[ii]][xx,], power_args[[xx]], reg_weights = reg_weights[xx])
-    }))
-  })
+    }, future.seed = TRUE))
+  }, future.seed = TRUE)
   
   data_df <- do.call("rbind", t1e_comp)
   
@@ -384,13 +384,13 @@ alternative_power <- function(data, group_var,
   
   #data_df <- do.call("rbind", data)
   
-  data_list <- split(data_df, f = data_df[group_var])
+  data_list <- split(data, f = data[group_var])
   
   alt_power_out <- future.apply::future_lapply(seq_along(data_list), function(ii) 
     do.call("rbind", future.apply::future_lapply(seq_along(quantiles[[ii]]), function(xx)
       c(compute_alt_power(data_list[[ii]], quantile = quantiles[[ii]][xx]),
-      names(data_list)[[ii]])
-  ))
+      names(data_list)[[ii]]), future.seed = TRUE
+  )), future.seed = TRUE
   )
   
  do.call("rbind", alt_power_out)
@@ -425,7 +425,7 @@ compute_density_values <- function(data, group_var, parameter,
   dens_values <- future.apply::future_lapply(seq_along(data_list), function(ii) 
     cbind(density_quantile(data_list[[ii]][[parameter]], 
          quantiles = values[[ii]]), 
-         names(data_list)[[ii]])
+         names(data_list)[[ii]]), future.seed = TRUE
     )
   dens_df <- do.call('rbind', dens_values)
   names(dens_df) <- c('x', 'y', group_var)

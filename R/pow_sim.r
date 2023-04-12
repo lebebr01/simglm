@@ -141,26 +141,26 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
   
   sim_arguments <- parse_varyarguments(sim_args)
   
-  power_out <- future.apply::future_lapply(seq_along(sim_arguments), function(xx) 
+  power_out <- future.apply::future_lapply(seq_along(sim_arguments), function(xx) {
           future.apply::future_replicate(sim_arguments[[xx]][['replications']], 
                                          simglm(sim_arguments[[xx]]),
                                          simplify = FALSE,
                                          future.seed = future.seed)
-            )
+            }, future.seed = future.seed)
   
   if(return_list) {
     return(power_out)
   } else {
     
-    power_df <- future.apply::future_lapply(power_out, dplyr::bind_rows)
+    power_df <- lapply(power_out, dplyr::bind_rows)
     
-    num_rows <- unlist(future.apply::future_lapply(power_df, nrow))
+    num_rows <- unlist(lapply(power_df, nrow))
     
-    rep_id <- future.apply::future_lapply(seq_along(num_rows), function(xx) 
+    rep_id <- lapply(seq_along(num_rows), function(xx) 
       rep(1:sim_args[['replications']], 
           each = num_rows[xx]/sim_args[['replications']]))
     
-    power_list <- future.apply::future_lapply(seq_along(sim_arguments), function(xx) 
+    power_list <- lapply(seq_along(sim_arguments), function(xx) 
       data.frame(conditions[xx, , drop = FALSE],
                  replication = rep_id[[xx]],
                  power_df[[xx]],
@@ -201,9 +201,9 @@ compute_statistics <- function(data, sim_args, power = TRUE,
                                alternative_power = TRUE) {
   
   if(is.null(sim_args[['sample_size']])) {
-    samp_size <- future.apply::future_lapply(seq_along(data), function(xx) {
+    samp_size <- lapply(seq_along(data), function(xx) {
       unique(as.numeric(as.character(data[[xx]][['sample_size']])))
-      }, future.seed = TRUE)
+      })
   } else {
     samp_size <- sim_args[['sample_size']]
   }
@@ -213,8 +213,8 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   power_comp <- future.apply::future_lapply(seq_along(data), function(ii){
     do.call('rbind', future.apply::future_lapply(seq_along(power_args), function(xx) {
       compute_power(data[[ii]][xx,], power_args[[xx]])
-    }, future.seed = TRUE))
-  }, future.seed = TRUE)
+    }, future.seed = NULL))
+  }, future.seed = NULL)
   
   if(is.null(sim_args[['model_fit']][['reg_weights_model']])) {
     reg_weights <- sim_args[['reg_weights']]
@@ -225,8 +225,8 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   t1e_comp <- future.apply::future_lapply(seq_along(power_comp), function(ii){
     do.call('rbind', future.apply::future_lapply(seq_along(power_args), function(xx) {
       compute_t1e(power_comp[[ii]][xx,], power_args[[xx]], reg_weights = reg_weights[xx])
-    }, future.seed = TRUE))
-  }, future.seed = TRUE)
+    }, future.seed = NULL))
+  }, future.seed = NULL)
   
   data_df <- do.call("rbind", t1e_comp)
   
@@ -386,11 +386,11 @@ alternative_power <- function(data, group_var,
   
   data_list <- split(data, f = data[group_var])
   
-  alt_power_out <- future.apply::future_lapply(seq_along(data_list), function(ii) 
-    do.call("rbind", future.apply::future_lapply(seq_along(quantiles[[ii]]), function(xx)
+  alt_power_out <- future.apply::future_lapply(seq_along(data_list), function(ii) {
+    do.call("rbind", future.apply::future_lapply(seq_along(quantiles[[ii]]), function(xx) {
       c(compute_alt_power(data_list[[ii]], quantile = quantiles[[ii]][xx]),
-      names(data_list)[[ii]]), future.seed = TRUE
-  )), future.seed = TRUE
+      names(data_list)[[ii]]) }, future.seed = NULL
+  ))}, future.seed = NULL
   )
   
  do.call("rbind", alt_power_out)

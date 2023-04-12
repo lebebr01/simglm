@@ -141,7 +141,7 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
   
   sim_arguments <- parse_varyarguments(sim_args)
   
-  power_out <- lapply(seq_along(sim_arguments), function(xx) 
+  power_out <- future.apply::future_lapply(seq_along(sim_arguments), function(xx) 
           future.apply::future_replicate(sim_arguments[[xx]][['replications']], 
                                          simglm(sim_arguments[[xx]]),
                                          simplify = FALSE,
@@ -152,15 +152,15 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
     return(power_out)
   } else {
     
-    power_df <- lapply(power_out, dplyr::bind_rows)
+    power_df <- future.apply::future_lapply(power_out, dplyr::bind_rows)
     
-    num_rows <- unlist(lapply(power_df, nrow))
+    num_rows <- unlist(future.apply::future_lapply(power_df, nrow))
     
-    rep_id <- lapply(seq_along(num_rows), function(xx) 
+    rep_id <- future.apply::future_lapply(seq_along(num_rows), function(xx) 
       rep(1:sim_args[['replications']], 
           each = num_rows[xx]/sim_args[['replications']]))
     
-    power_list <- lapply(seq_along(sim_arguments), function(xx) 
+    power_list <- future.apply::future_lapply(seq_along(sim_arguments), function(xx) 
       data.frame(conditions[xx, , drop = FALSE],
                  replication = rep_id[[xx]],
                  power_df[[xx]],
@@ -194,13 +194,14 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
 #'  thresholds specified within the power simulation arguments. 
 #' @importFrom dplyr mutate summarise group_by
 #' @importFrom rlang syms
+#' @importFrom future.apply future_lapply
 #' @export
 compute_statistics <- function(data, sim_args, power = TRUE, 
                                type_1_error = TRUE, precision = TRUE,
                                alternative_power = TRUE) {
   
   if(is.null(sim_args[['sample_size']])) {
-    samp_size <- lapply(seq_along(data), function(xx) {
+    samp_size <- future.apply::future_lapply(seq_along(data), function(xx) {
       unique(as.numeric(as.character(data[[xx]][['sample_size']])))
       })
   } else {
@@ -209,8 +210,8 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   
   power_args <- parse_power(sim_args, samp_size)
   
-  power_comp <- lapply(seq_along(data), function(ii){
-    do.call('rbind', lapply(seq_along(power_args), function(xx) {
+  power_comp <- future.apply::future_lapply(seq_along(data), function(ii){
+    do.call('rbind', future.apply::future_lapply(seq_along(power_args), function(xx) {
       compute_power(data[[ii]][xx,], power_args[[xx]])
     }))
   })
@@ -221,8 +222,8 @@ compute_statistics <- function(data, sim_args, power = TRUE,
     reg_weights <- sim_args[['model_fit']][['reg_weights_model']]
   }
   
-  t1e_comp <- lapply(seq_along(power_comp), function(ii){
-    do.call('rbind', lapply(seq_along(power_args), function(xx) {
+  t1e_comp <- future.apply::future_lapply(seq_along(power_comp), function(ii){
+    do.call('rbind', future.apply::future_lapply(seq_along(power_args), function(xx) {
       compute_t1e(power_comp[[ii]][xx,], power_args[[xx]], reg_weights = reg_weights[xx])
     }))
   })
@@ -239,7 +240,7 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   avg_estimates <- aggregate_estimate(data_df,
                                       rlang::syms(group_vars))
   
-  if(alternative) {
+  if(alternative_power) {
     alt_power_est <- alternative_power(data_df,
                                        group_var = group_vars,
                                        quantiles = sim_args[['power']][['thresholds']])
@@ -385,8 +386,8 @@ alternative_power <- function(data, group_var,
   
   data_list <- split(data_df, f = data_df[group_var])
   
-  alt_power_out <- lapply(seq_along(data_list), function(ii) 
-    do.call("rbind", lapply(seq_along(quantiles[[ii]]), function(xx)
+  alt_power_out <- future.apply::future_lapply(seq_along(data_list), function(ii) 
+    do.call("rbind", future.apply::future_lapply(seq_along(quantiles[[ii]]), function(xx)
       c(compute_alt_power(data_list[[ii]], quantile = quantiles[[ii]][xx]),
       names(data_list)[[ii]])
   ))
@@ -421,7 +422,7 @@ compute_density_values <- function(data, group_var, parameter,
   data_list <- data |>
     split(f = data[group_var]) 
 
-  dens_values <- lapply(seq_along(data_list), function(ii) 
+  dens_values <- future.apply::future_lapply(seq_along(data_list), function(ii) 
     cbind(density_quantile(data_list[[ii]][[parameter]], 
          quantiles = values[[ii]]), 
          names(data_list)[[ii]])

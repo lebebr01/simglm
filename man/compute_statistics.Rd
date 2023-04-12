@@ -33,6 +33,10 @@ should be computed. Defaults to TRUE.}
 
 \item{precision}{TRUE/FALSE flag indicating whether precision should be 
 computed. Defaults to TRUE.}
+
+\item{alternative_power}{TRUE/FALSE flag indicating whether alternative 
+power estimates should be computed. If TRUE, this must be accompanied by 
+thresholds specified within the power simulation arguments.}
 }
 \description{
 Compute Power, Type I Error, or Precision Statistics

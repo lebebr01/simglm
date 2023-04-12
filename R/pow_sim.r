@@ -189,6 +189,9 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
 #'  should be computed. Defaults to TRUE.
 #' @param precision TRUE/FALSE flag indicating whether precision should be 
 #'  computed. Defaults to TRUE.
+#' @param alternative_power TRUE/FALSE flag indicating whether alternative 
+#'  power estimates should be computed. If TRUE, this must be accompanied by 
+#'  thresholds specified within the power simulation arguments. 
 #' @importFrom dplyr mutate summarise group_by
 #' @importFrom rlang syms
 #' @export
@@ -235,6 +238,15 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   
   avg_estimates <- aggregate_estimate(data_df,
                                       rlang::syms(group_vars))
+  
+  if(alternative) {
+    alt_power_est <- alternative_power(data_df,
+                                       group_var = group_vars,
+                                       quantiles = sim_args[['power']][['thresholds']])
+    avg_estimates <- dplyr::full_join(avg_estimates, 
+                                      alt_power_est,
+                                      by = group_vars)
+  }
   
   if(power) {
     power_computation <- aggregate_power(data_df, 
@@ -369,11 +381,27 @@ aggregate_precision <- function(data, group_var) {
 alternative_power <- function(data, group_var, 
                               quantiles) {
   
-  group_by_var <- dplyr::quos(!!! group_var) 
+  #data_df <- do.call("rbind", data)
   
-  data |>
-    group_by(!!! group_by_var) |>
-    summarise()
+  data_list <- split(data_df, f = data_df[group_var])
+  
+  alt_power_out <- lapply(seq_along(data_list), function(ii) 
+    do.call("rbind", lapply(seq_along(quantiles[[ii]]), function(xx)
+      c(compute_alt_power(data_list[[ii]], quantile = quantiles[[ii]][xx]),
+      names(data_list)[[ii]])
+  ))
+  )
+  
+ do.call("rbind", alt_power_out)
+}
+
+compute_alt_power <- function(data, quantile) {
+  
+  if(quantile < 0) {
+    c(mean(ifelse(data[['estimate']] <= quantile, 1, 0)), quantile)
+  } else {
+    c(mean(ifelse(data[['estimate']] >= quantile, 1, 0)), quantile)
+  }
 }
 
 #' Convenience function for computing density values for plotting.

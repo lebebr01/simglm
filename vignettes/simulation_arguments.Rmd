@@ -434,7 +434,7 @@ head(random_correlate)
 
 ```{r random-correlate-values}
 select(random_correlate, -level1_id, -id) |>
-  cor(.)
+  cor()
 ```
 
 # Missing Data Arguments

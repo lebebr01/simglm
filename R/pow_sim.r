@@ -194,7 +194,6 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
 #'  thresholds specified within the power simulation arguments. 
 #' @importFrom dplyr mutate summarise group_by
 #' @importFrom rlang syms
-#' @importFrom future.apply future_lapply
 #' @export
 compute_statistics <- function(data, sim_args, power = TRUE, 
                                type_1_error = TRUE, precision = TRUE,
@@ -210,11 +209,11 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   
   power_args <- parse_power(sim_args, samp_size)
   
-  power_comp <- future.apply::future_lapply(seq_along(data), function(ii){
-    do.call('rbind', future.apply::future_lapply(seq_along(power_args), function(xx) {
+  power_comp <- lapply(seq_along(data), function(ii){
+    do.call('rbind', lapply(seq_along(power_args), function(xx) {
       compute_power(data[[ii]][xx,], power_args[[xx]])
-    }, future.seed = NULL))
-  }, future.seed = NULL)
+    }))
+  })
   
   if(is.null(sim_args[['model_fit']][['reg_weights_model']])) {
     reg_weights <- sim_args[['reg_weights']]
@@ -222,11 +221,11 @@ compute_statistics <- function(data, sim_args, power = TRUE,
     reg_weights <- sim_args[['model_fit']][['reg_weights_model']]
   }
   
-  t1e_comp <- future.apply::future_lapply(seq_along(power_comp), function(ii){
-    do.call('rbind', future.apply::future_lapply(seq_along(power_args), function(xx) {
+  t1e_comp <- lapply(seq_along(power_comp), function(ii){
+    do.call('rbind', lapply(seq_along(power_args), function(xx) {
       compute_t1e(power_comp[[ii]][xx,], power_args[[xx]], reg_weights = reg_weights[xx])
-    }, future.seed = NULL))
-  }, future.seed = NULL)
+    }))
+  })
   
   data_df <- do.call("rbind", t1e_comp)
   
@@ -386,14 +385,14 @@ alternative_power <- function(data, group_var,
   
   data_list <- split(data, f = data[group_var])
   
-  alt_power_out <- future.apply::future_lapply(seq_along(data_list), function(ii) {
-    do.call("rbind", future.apply::future_lapply(seq_along(quantiles[[ii]]), function(xx) {
+  alt_power_out <- lapply(seq_along(data_list), function(ii) {
+    do.call("rbind", lapply(seq_along(quantiles[[ii]]), function(xx) {
       c(compute_alt_power(data_list[[ii]], quantile = quantiles[[ii]][xx]),
-      names(data_list)[[ii]]) }, future.seed = NULL
-  ))}, future.seed = NULL
+      names(data_list)[[ii]]) }
+  ))}
   )
   
- alt_power_df <- do.call("rbind", alt_power_out)
+ alt_power_df <- data.frame(do.call("rbind", alt_power_out))
  names(alt_power_df) <- c('alt_power', 'threshold', group_var)
  
  alt_power_df

@@ -13,24 +13,12 @@
 #' @export
 parse_formula <- function(sim_args) {
   
-  outcome <- sim_args[['formula']] %>%
-    as.character() %>%
-    .[2]
+  outcome <- as.character(sim_args[['formula']])[2]
   
-  fixed <- sim_args[['formula']] %>%
-    as.character() %>%
-    .[3] %>%
-    gsub("\\+\\s*(\\s+|\\++)\\(.*?\\)", "", .) %>%
-    gsub("^\\s+|\\s+$", "", .) %>%
-    paste0("~", .) %>%
-    as.formula()
+  fixed <- as.formula(paste0("~", gsub("^\\s+|\\s+$", "", gsub("\\+\\s*(\\s+|\\++)\\(.*?\\)", "", as.character(sim_args[['formula']])[3]))))
   
-  randomeffect <- sim_args[['formula']] %>%
-    as.character() %>%
-    .[3] %>%
-    regmatches(gregexpr("(\\+|\\s+)\\(.*?\\)", .)) %>%
-    unlist() %>%
-    gsub("^\\s+|\\s+$", "", .)
+  randomeffect <- gsub("^\\s+|\\s+$", "", unlist(regmatches(as.character(sim_args[['formula']])[3], 
+                                                            gregexpr("(\\+|\\s+)\\(.*?\\)", as.character(sim_args[['formula']])[3]))))
   
   list(outcome = outcome, 
        fixed = fixed,
@@ -44,16 +32,9 @@ parse_formula <- function(sim_args) {
 #' @export 
 parse_randomeffect <- function(formula) {
   
-  cluster_id_vars <- lapply(seq_along(formula), function(xx) strsplit(formula, "\\|")[[xx]][2]) %>%
-    unlist() %>%
-    gsub("\\)", "", .) %>%
-    gsub("^\\s+|\\s+$", "", .)
+  cluster_id_vars <- gsub("^\\s+|\\s+$", "", gsub("\\)", "", unlist(lapply(seq_along(formula), function(xx) strsplit(formula, "\\|")[[xx]][2]))))
   
-  random_effects <- lapply(seq_along(formula), function(xx) strsplit(formula, "\\|")[[xx]][1]) %>%
-    unlist() %>%
-    gsub("\\(", "", .) %>%
-    gsub("^\\s+|\\s+$", "", .) %>%
-    paste0('~', .)
+  random_effects <- paste0('~', gsub("^\\s+|\\s+$", "", gsub("\\(", "", unlist(lapply(seq_along(formula), function(xx) strsplit(formula, "\\|")[[xx]][1])))))
   
   list(
     cluster_id_vars = cluster_id_vars,

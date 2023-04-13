@@ -393,7 +393,10 @@ alternative_power <- function(data, group_var,
   ))}, future.seed = NULL
   )
   
- do.call("rbind", alt_power_out)
+ alt_power_df <- do.call("rbind", alt_power_out)
+ names(alt_power_df) <- c('alt_power', 'threshold', group_var)
+ 
+ alt_power_df
 }
 
 compute_alt_power <- function(data, quantile) {

@@ -209,25 +209,13 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   
   power_args <- parse_power(sim_args, samp_size)
   
-  power_comp <- lapply(seq_along(data), function(ii){
-    do.call('rbind', lapply(seq_along(power_args), function(xx) {
-      compute_power(data[[ii]][xx,], power_args[[xx]])
-    }))
-  })
-  
   if(is.null(sim_args[['model_fit']][['reg_weights_model']])) {
     reg_weights <- sim_args[['reg_weights']]
   } else {
     reg_weights <- sim_args[['model_fit']][['reg_weights_model']]
   }
   
-  t1e_comp <- lapply(seq_along(power_comp), function(ii){
-    do.call('rbind', lapply(seq_along(power_args), function(xx) {
-      compute_t1e(power_comp[[ii]][xx,], power_args[[xx]], reg_weights = reg_weights[xx])
-    }))
-  })
-  
-  data_df <- do.call("rbind", t1e_comp)
+  data_df <- do.call("rbind", data)
   
   if(is.null(sim_args['vary_arguments'])) {
     group_vars <- c('term')
@@ -235,6 +223,16 @@ compute_statistics <- function(data, sim_args, power = TRUE,
     group_vars <- c(names(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE)),
                        'term')
   }
+  data_list <- split(data_df, f = data_df[group_vars])
+  
+  data_list <- lapply(seq_along(data_list), function(xx) {
+    compute_power(data_list[[xx]], power_args[[xx]])
+    })
+  data_list <- lapply(seq_along(data_list), function(xx) {
+    compute_t1e(data_list[[xx]], power_args[[xx]], reg_weights = reg_weights[xx])
+  })
+  
+  data_df <- do.call("rbind", data_list)
   
   avg_estimates <- aggregate_estimate(data_df,
                                       rlang::syms(group_vars))
@@ -380,8 +378,6 @@ aggregate_precision <- function(data, group_var) {
 
 alternative_power <- function(data, group_var, 
                               quantiles) {
-  
-  #data_df <- do.call("rbind", data)
   
   data_list <- split(data, f = data[group_var])
   

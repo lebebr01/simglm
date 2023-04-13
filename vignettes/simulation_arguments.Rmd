@@ -160,7 +160,7 @@ The required elements to simulate a knot variable is the variable to base the kn
 Similar to above, the `simulate_fixed()` function does the simulation of this fixed effect term.
 
 ```{r knot-sim}
-simulate_fixed(data = NULL, sim_args = sim_args) %>%
+simulate_fixed(data = NULL, sim_args = sim_args) |>
   head()
 ```
 
@@ -177,7 +177,7 @@ sim_args <- list(
     reg_weights = c(2, .5, 1.5, 10)
   )
 
-simulate_fixed(data = NULL, sim_args = sim_args) %>% 
+simulate_fixed(data = NULL, sim_args = sim_args) |> 
   head()
 ```
 
@@ -305,14 +305,14 @@ simulation_arguments <- list(
   reg_weights = c(0, .15)
 )
 
-hetero_data <- simulate_fixed(data = NULL, simulation_arguments) %>%
-  simulate_error(simulation_arguments) %>%
+hetero_data <- simulate_fixed(data = NULL, simulation_arguments) |>
+  simulate_error(simulation_arguments) |>
   simulate_heterogeneity(simulation_arguments)
 ```
 
 ```{r heterogeneity-var}
-hetero_data %>% 
-  group_by(group) %>% 
+hetero_data |> 
+  group_by(group) |> 
   summarise(var_error = var(error), 
             var_o_error = var(orig_error))
 ```
@@ -394,14 +394,14 @@ sim_args <- list(formula = y ~ 1 + act + gpa + commute_time,
                                                      corr = c(0.5, .6, .2))),
                  sample_size = 1000)
 
-correlate_attribute <- simulate_fixed(data = NULL, sim_args) %>%
+correlate_attribute <- simulate_fixed(data = NULL, sim_args) |>
   correlate_variables(sim_args)
 
 head(correlate_attribute)
 ```
 
 ```{r correlate-fixed-values}
-select(correlate_attribute, -X.Intercept., -level1_id) %>%
+select(correlate_attribute, -X.Intercept., -level1_id) |>
   cor(.)
 ```
 
@@ -426,14 +426,14 @@ sim_args <- list(formula = y ~ 1 + act + gpa + sat + (1 + act | id),
                                                       corr = .3))
                  )
 
-random_correlate <- simulate_randomeffect(data = NULL, sim_args) %>%
+random_correlate <- simulate_randomeffect(data = NULL, sim_args) |>
   correlate_variables(sim_args)
 
 head(random_correlate)
 ```
 
 ```{r random-correlate-values}
-select(random_correlate, -level1_id, -id) %>%
+select(random_correlate, -level1_id, -id) |>
   cor(.)
 ```
 
@@ -466,11 +466,11 @@ sim_arguments <- list(
   sample_size = list(level1 = 10, level2 = 20)
 )
 
-data_w_missing <- sim_arguments %>%
-  simulate_fixed(data = NULL, .) %>%
-  simulate_randomeffect(sim_arguments) %>%
-  simulate_error(sim_arguments) %>%
-  generate_response(sim_arguments) %>%
+data_w_missing <- sim_arguments |>
+  simulate_fixed(data = NULL, .) |>
+  simulate_randomeffect(sim_arguments) |>
+  simulate_error(sim_arguments) |>
+  generate_response(sim_arguments) |>
   generate_missing(sim_arguments)
 
 head(data_w_missing, n = 10)
@@ -507,11 +507,11 @@ sim_arguments <- list(
   sample_size = list(level1 = 10, level2 = 20)
 )
 
-data_w_missing <- sim_arguments %>%
-  simulate_fixed(data = NULL, .) %>%
-  simulate_randomeffect(sim_arguments) %>%
-  simulate_error(sim_arguments) %>%
-  generate_response(sim_arguments) %>%
+data_w_missing <- sim_arguments |>
+  simulate_fixed(data = NULL, .) |>
+  simulate_randomeffect(sim_arguments) |>
+  simulate_error(sim_arguments) |>
+  generate_response(sim_arguments) |>
   generate_missing(sim_arguments)
 
 head(data_w_missing, n = 10)
@@ -546,11 +546,11 @@ sim_arguments <- list(
   sample_size = list(level1 = 10, level2 = 20)
 )
 
-data_w_missing <- sim_arguments %>%
-  simulate_fixed(data = NULL, .) %>%
-  simulate_randomeffect(sim_arguments) %>%
-  simulate_error(sim_arguments) %>%
-  generate_response(sim_arguments) %>%
+data_w_missing <- sim_arguments |>
+  simulate_fixed(data = NULL, .) |>
+  simulate_randomeffect(sim_arguments) |>
+  simulate_error(sim_arguments) |>
+  generate_response(sim_arguments) |>
   generate_missing(sim_arguments)
 
 head(data_w_missing, n = 10)
@@ -593,11 +593,11 @@ sim_arguments <- list(
   sample_size = list(level1 = 10, level2 = 20)
 )
 
-data_w_missing <- sim_arguments %>%
-  simulate_fixed(data = NULL, .) %>%
-  simulate_randomeffect(sim_arguments) %>%
-  simulate_error(sim_arguments) %>%
-  generate_response(sim_arguments) %>%
+data_w_missing <- sim_arguments |>
+  simulate_fixed(data = NULL, .) |>
+  simulate_randomeffect(sim_arguments) |>
+  simulate_error(sim_arguments) |>
+  generate_response(sim_arguments) |>
   generate_missing(sim_arguments)
 
 head(data_w_missing, n = 10)
@@ -643,10 +643,10 @@ sim_arguments <- list(
   )
 )
 
-simulate_fixed(data = NULL, sim_arguments) %>%
-  simulate_error(sim_arguments) %>%
-  generate_response(sim_arguments) %>%
-  model_fit(sim_arguments) %>% .$family
+simulate_fixed(data = NULL, sim_arguments) |>
+  simulate_error(sim_arguments) |>
+  generate_response(sim_arguments) |>
+  model_fit(sim_arguments) |> .$family
 ```
 
 The link function could then be changed to a probit link function with the following code:
@@ -669,10 +669,10 @@ sim_arguments <- list(
   )
 )
 
-simulate_fixed(data = NULL, sim_arguments) %>%
-  simulate_error(sim_arguments) %>%
-  generate_response(sim_arguments) %>%
-  model_fit(sim_arguments) %>% .$family
+simulate_fixed(data = NULL, sim_arguments) |>
+  simulate_error(sim_arguments) |>
+  generate_response(sim_arguments) |>
+  model_fit(sim_arguments) |> .$family
 ```
 
 ## Adding Serial Correlation
@@ -714,11 +714,11 @@ sim_arguments <- list(
   )
 )
 
-simulate_fixed(data = NULL, sim_arguments) %>%
-  simulate_error(sim_arguments) %>%
-  simulate_randomeffect(sim_arguments) %>%
-  generate_response(sim_arguments) %>%
-  model_fit(sim_arguments) %>%
+simulate_fixed(data = NULL, sim_arguments) |>
+  simulate_error(sim_arguments) |>
+  simulate_randomeffect(sim_arguments) |>
+  generate_response(sim_arguments) |>
+  model_fit(sim_arguments) |>
   extract_coefficients()
 ```
 

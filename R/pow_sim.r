@@ -414,6 +414,7 @@ compute_alt_power <- function(data, quantile) {
 #' for which the density values are computed for.
 #' 
 #' @export
+#' @importFrom stats density
 compute_density_values <- function(data, group_var, parameter,
                                    values) {
   

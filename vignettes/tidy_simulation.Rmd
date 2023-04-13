@@ -387,7 +387,7 @@ sim_arguments <- list(
 )
 
 replicate_simulation(sim_arguments) |>
-  compute_statistics(sim_arguments)
+  compute_statistics(sim_arguments, alternative_power = FALSE)
 ```
 
 As can be seen from the output, the default behavior is to return statistics for power, average test statistic, type I error rate, adjusted average test statistic, standard deviation of parameter estimate, average standard error, precision ration (standard deviation of parameter estimate divided by average standard error), and the number of replications for each term. 
@@ -425,7 +425,7 @@ sim_arguments <- list(
 )
 
 replicate_simulation(sim_arguments) |>
-  compute_statistics(sim_arguments)
+  compute_statistics(sim_arguments, alternative_power = FALSE)
 ```
 
 # Nested Designs
@@ -448,8 +448,7 @@ sim_arguments <- list(
   sample_size = list(level1 = 10, level2 = 20)
 )
 
-nested_data <- sim_arguments |>
-  simulate_fixed(data = NULL, .) |>
+nested_data <- simulate_fixed(data = NULL, sim_arguments) |>
   simulate_randomeffect(sim_arguments) |>
   simulate_error(sim_arguments) |>
   generate_response(sim_arguments)

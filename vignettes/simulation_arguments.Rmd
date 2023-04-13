@@ -402,7 +402,7 @@ head(correlate_attribute)
 
 ```{r correlate-fixed-values}
 select(correlate_attribute, -X.Intercept., -level1_id) |>
-  cor(.)
+  cor()
 ```
 
 ## Random Effect Correlation
@@ -639,10 +639,11 @@ sim_arguments <- list(
   )
 )
 
-simulate_fixed(data = NULL, sim_arguments) |>
+tmp_data <- simulate_fixed(data = NULL, sim_arguments) |>
   simulate_error(sim_arguments) |>
   generate_response(sim_arguments) |>
-  model_fit(sim_arguments) |> .$family
+  model_fit(sim_arguments)
+tmp_data$family
 ```
 
 The link function could then be changed to a probit link function with the following code:
@@ -665,10 +666,11 @@ sim_arguments <- list(
   )
 )
 
-simulate_fixed(data = NULL, sim_arguments) |>
+tmp_data <- simulate_fixed(data = NULL, sim_arguments) |>
   simulate_error(sim_arguments) |>
   generate_response(sim_arguments) |>
-  model_fit(sim_arguments) |> .$family
+  model_fit(sim_arguments)
+tmp_data$family
 ```
 
 ## Adding Serial Correlation

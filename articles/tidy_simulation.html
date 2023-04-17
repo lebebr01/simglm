@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Tidy Simulation with <code>simglm</code>
 </h1>
             
-            <h4 data-toc-skip class="date">2023-03-02</h4>
+            <h4 data-toc-skip class="date">2023-04-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/HEAD/vignettes/tidy_simulation.Rmd" class="external-link"><code>vignettes/tidy_simulation.Rmd</code></a></small>
       <div class="hidden name"><code>tidy_simulation.Rmd</code></div>
@@ -378,7 +378,7 @@ to be specified as some other value. For example:</p>
 (covariates) and random error, we can now generate the response by
 combining the previous two steps and then using the
 <code>generate_response</code> function. What makes this a tidy
-simulation is that the pipe from magrittr, <code>%&gt;%</code> can be
+simulation is that the pipe from magrittr, <code>|&gt;</code> can be
 used to combine steps into a simulation pipeline.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
@@ -393,8 +393,8 @@ used to combine steps into a simulation pipeline.</p>
 <span>  reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##    X.Intercept.   weight age sex_1    sex level1_id       error fixed_outcome</span></span>
 <span><span class="co">## 1             1 231.1471  44     1 female         1   4.5862776      67.44413</span></span>
@@ -457,8 +457,8 @@ showing the different categories are shown.</p>
 <span>  sample_size <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">count</span><span class="op">(</span><span class="va">grade</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       grade  n</span></span>
 <span><span class="co">## 1  freshman 27</span></span>
@@ -485,8 +485,8 @@ the prob argument could be passed as follows.</p>
 <span>  sample_size <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">count</span><span class="op">(</span><span class="va">grade</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       grade  n</span></span>
 <span><span class="co">## 1  freshman  6</span></span>
@@ -507,7 +507,7 @@ presented below.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  grade <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'freshman'</span>, <span class="st">'sophomore'</span>, <span class="st">'junior'</span>, <span class="st">'senior'</span><span class="op">)</span>,</span>
 <span>                 size <span class="op">=</span> <span class="fl">10</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu">mutate</span><span class="op">(</span>sophomore <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">grade</span> <span class="op">==</span> <span class="st">'sophomore'</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>         junior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">grade</span> <span class="op">==</span> <span class="st">'junior'</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>, </span>
 <span>         senior <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">grade</span> <span class="op">==</span> <span class="st">'senior'</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -576,9 +576,9 @@ where the saved data object is placed instead of the
 <span>  reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">.1</span>, <span class="fl">.55</span>, <span class="fl">1.5</span>, <span class="fl">.75</span>, <span class="fl">1.8</span>, <span class="fl">2.5</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   X.Intercept.   weight age sex_1 grade_1 grade_2 grade_3    sex     grade</span></span>
 <span><span class="co">## 1            1 231.1471  49     1       1       0       0 female sophomore</span></span>
@@ -623,8 +623,8 @@ be a count variable (ie. discrete variable; 0, 1, 2, etc.).</p>
 <span>  outcome_type <span class="op">=</span> <span class="st">'binary'</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##    X.Intercept.   weight age sex_1    sex level1_id       error fixed_outcome</span></span>
 <span><span class="co">## 1             1 231.1471  44     1 female         1   4.5862776      67.44413</span></span>
@@ -664,8 +664,8 @@ mean = 0). This helps to ensure that the counts are not too large.</p>
 <span>  outcome_type <span class="op">=</span> <span class="st">'count'</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##    X.Intercept.     weight sex_1    sex level1_id      error fixed_outcome</span></span>
 <span><span class="co">## 1             1  51.147097     0   male         1 -4.0233584      2.511471</span></span>
@@ -726,10 +726,10 @@ building off the example from the previous section:</p>
 <span>  reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="../reference/model_fit.html">model_fit</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/model_fit.html">model_fit</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/extract_coefficients.html">extract_coefficients</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 4 × 5</span></span></span>
 <span><span class="co">##   term        estimate std.error statistic p.value</span></span>
@@ -765,10 +765,10 @@ step.</p>
 <span>  reg_weights_model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="../reference/model_fit.html">model_fit</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/model_fit.html">model_fit</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/extract_coefficients.html">extract_coefficients</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 5</span></span></span>
 <span><span class="co">##   term        estimate std.error statistic p.value</span></span>
@@ -814,18 +814,17 @@ statistics across the replications.</li>
 <span>  extract_coefficients <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span>, alternative_power <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 12</span></span></span>
-<span><span class="co">##   term     avg_e…¹ power avg_t…² crit_…³ type_…⁴ avg_a…⁵ crit_…⁶ param…⁷ avg_s…⁸</span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Interc… 46.1      0.7   3.06     1.96     0.5   2.93     1.96  26.1    19.2  </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> age       0.085<span style="text-decoration: underline;">2</span>   0.3   0.102    1.96     0.4   0.404    1.96   0.583   0.396</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> sexfema…  1.51     0.1   0.266    1.96     0.2   0.187    1.96   6.66    7.50 </span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 2 more variables: precision_ratio &lt;dbl&gt;, replications &lt;dbl&gt;, and</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   abbreviated variable names ¹​avg_estimate, ²​avg_test_stat,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ³​crit_value_power, ⁴​type_1_error, ⁵​avg_adjtest_stat, ⁶​crit_value_t1e,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ⁷​param_estimate_sd, ⁸​avg_standard_error</span></span></span></code></pre>
+<span><span class="co">##   term        avg_estimate power avg_test_stat crit_value_power type_1_error</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Intercept)      46.1      0.7         3.06              1.96          0.5</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> age               0.085<span style="text-decoration: underline;">2</span>   0.3         0.102             1.96          0.4</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> sexfemale         1.51     0.1         0.266             1.96          0.2</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 6 more variables: avg_adjtest_stat &lt;dbl&gt;, crit_value_t1e &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   param_estimate_sd &lt;dbl&gt;, avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   replications &lt;dbl&gt;</span></span></span></code></pre>
 <p>As can be seen from the output, the default behavior is to return
 statistics for power, average test statistic, type I error rate,
 adjusted average test statistic, standard deviation of parameter
@@ -872,18 +871,17 @@ vignette processing.</p>
 <span>  extract_coefficients <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span>, alternative_power <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 12</span></span></span>
-<span><span class="co">##   term    avg_e…¹ power avg_t…² crit_…³ type_…⁴ avg_ad…⁵ crit_…⁶ param…⁷ avg_s…⁸</span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Inter… 56.0        0   7.26     31.8       0  7.00       31.8   7.83    7.83 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> age     -<span style="color: #BB0000;">0.099</span><span style="color: #BB0000; text-decoration: underline;">4</span>     0  -<span style="color: #BB0000;">0.603</span>    31.8       0  0.002<span style="text-decoration: underline;">43</span>    31.8   0.166   0.168</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> sexfem…  0.439      0   0.150    31.8       0 -<span style="color: #BB0000;">0.019</span><span style="color: #BB0000; text-decoration: underline;">2</span>     31.8   3.01    2.98 </span></span>
-<span><span class="co">## <span style="color: #949494;"># … with 2 more variables: precision_ratio &lt;dbl&gt;, replications &lt;dbl&gt;, and</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   abbreviated variable names ¹​avg_estimate, ²​avg_test_stat,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ³​crit_value_power, ⁴​type_1_error, ⁵​avg_adjtest_stat, ⁶​crit_value_t1e,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   ⁷​param_estimate_sd, ⁸​avg_standard_error</span></span></span></code></pre>
+<span><span class="co">##   term        avg_estimate power avg_test_stat crit_value_power type_1_error</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Intercept)      56.0        0         7.26              31.8            0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> age              -<span style="color: #BB0000;">0.099</span><span style="color: #BB0000; text-decoration: underline;">4</span>     0        -<span style="color: #BB0000;">0.603</span>             31.8            0</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> sexfemale         0.439      0         0.150             31.8            0</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 6 more variables: avg_adjtest_stat &lt;dbl&gt;, crit_value_t1e &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   param_estimate_sd &lt;dbl&gt;, avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,</span></span></span>
+<span><span class="co">## <span style="color: #949494;">#   replications &lt;dbl&gt;</span></span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
@@ -928,10 +926,9 @@ the data) would be 200.</p>
 <span>  sample_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>level1 <span class="op">=</span> <span class="fl">10</span>, level2 <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">nested_data</span> <span class="op">&lt;-</span> <span class="va">sim_arguments</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">.</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/simulate_randomeffect.html">simulate_randomeffect</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span><span class="va">nested_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/simulate_randomeffect.html">simulate_randomeffect</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/simulate_error.html">simulate_error</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/generate_response.html">generate_response</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">nested_data</span>, n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>

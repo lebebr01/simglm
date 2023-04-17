@@ -95,7 +95,7 @@ parse_power <- function(sim_args, samp_size) {
   if(is.null(sim_args[['power']][['direction']])) {
     number_tails <- rep(2, length(reg_weights))
   } else {
-    number_tails <- ifelse(sim_arguments[['power']][['direction']] %in% c('lower', 'upper') == TRUE, 1, 2)
+    number_tails <- ifelse(sim_args[['power']][['direction']] %in% c('lower', 'upper') == TRUE, 1, 2)
     if(length(number_tails) != length(reg_weights)) {
       number_tails <- rep(number_tails, length(reg_weights))
     }

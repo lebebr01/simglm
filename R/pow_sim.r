@@ -191,13 +191,19 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
 #'  computed. Defaults to TRUE.
 #' @param alternative_power TRUE/FALSE flag indicating whether alternative 
 #'  power estimates should be computed. If TRUE, this must be accompanied by 
-#'  thresholds specified within the power simulation arguments. 
+#'  thresholds specified within the power simulation arguments. Defaults to FALSE.
+#' @param type_s_error TRUE/FALSE flag indicating whether Type S error should
+#'  be computed. Defaults to FALSE.
+#' @param type_m_error TRUE/FALSE flag indicating whether Type M error should
+#'  be computed. Defaults to FALSE.
 #' @importFrom dplyr mutate summarise group_by
 #' @importFrom rlang syms
 #' @export
 compute_statistics <- function(data, sim_args, power = TRUE, 
                                type_1_error = TRUE, precision = TRUE,
-                               alternative_power = TRUE) {
+                               alternative_power = FALSE,
+                               type_s_error = FALSE,
+                               type_m_error = FALSE) {
   
   if(is.null(sim_args[['sample_size']])) {
     samp_size <- lapply(seq_along(data), function(xx) {
@@ -244,6 +250,14 @@ compute_statistics <- function(data, sim_args, power = TRUE,
     avg_estimates <- dplyr::full_join(avg_estimates, 
                                       alt_power_est,
                                       by = group_vars)
+  }
+  
+  if(type_s_error) {
+    type_s <- compute_type_s()
+  }
+  
+  if(type_m_error){
+    type_m <- compute_type_m()
   }
   
   if(power) {
@@ -401,6 +415,19 @@ compute_alt_power <- function(data, quantile) {
   } else {
     c(mean(ifelse(data[['estimate']] >= quantile, 1, 0)), quantile)
   }
+}
+
+compute_type_s <- function(data, sign) {
+  
+  if(sign == 'positive') {
+    c(mean(ifelse(data[['estimate']] < 0, 1, 0)), sign)
+  } else {
+    c(mean(ifelse(data[['estimate']] > 0, 1, 0)), sign)
+  }
+}
+
+compute_type_m <- function(data, quantile) {
+  
 }
 
 #' Convenience function for computing density values for plotting.

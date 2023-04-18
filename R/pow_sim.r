@@ -417,6 +417,22 @@ compute_alt_power <- function(data, quantile) {
   }
 }
 
+type_m_s_errors <- function(data, group_var, sign = NULL, quantile = NULL) {
+  
+  data_list <- split(data, f = data[group_var])
+  
+  if(!is.null(sign)) {
+    type_s <- data.frame(do.call("rbind", lapply(seq_along(data_list), function(ii) {
+      c(compute_type_s(data_list[[ii]], sign[ii]), names(data_list)[[ii]])
+    })))
+    names(type_s) <- c('type_s_error', 'sign', group_var)
+  }
+  if(!is.null(quantile)) {
+    
+  }
+  type_s
+}
+
 compute_type_s <- function(data, sign) {
   
   if(sign == 'positive') {

@@ -10,7 +10,9 @@ compute_statistics(
   power = TRUE,
   type_1_error = TRUE,
   precision = TRUE,
-  alternative_power = TRUE
+  alternative_power = FALSE,
+  type_s_error = FALSE,
+  type_m_error = FALSE
 )
 }
 \arguments{
@@ -36,7 +38,13 @@ computed. Defaults to TRUE.}
 
 \item{alternative_power}{TRUE/FALSE flag indicating whether alternative 
 power estimates should be computed. If TRUE, this must be accompanied by 
-thresholds specified within the power simulation arguments.}
+thresholds specified within the power simulation arguments. Defaults to FALSE.}
+
+\item{type_s_error}{TRUE/FALSE flag indicating whether Type S error should
+be computed. Defaults to FALSE.}
+
+\item{type_m_error}{TRUE/FALSE flag indicating whether Type M error should
+be computed. Defaults to FALSE.}
 }
 \description{
 Compute Power, Type I Error, or Precision Statistics

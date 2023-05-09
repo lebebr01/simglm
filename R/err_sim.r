@@ -9,6 +9,7 @@
 #'     \item error: This is the error (i.e. residual term).
 #'   }
 #' @param ... Other arguments to pass to error simulation functions.
+#' @importFrom purrr exec
 #' 
 #' @export 
 simulate_error <- function(data, sim_args, ...) {
@@ -17,19 +18,11 @@ simulate_error <- function(data, sim_args, ...) {
     n <- sample_sizes(sim_args[['sample_size']])
     ids <- create_ids(n, 
                       c('level1_id', parse_randomeffect(parse_formula(sim_args)[['randomeffect']])[['cluster_id_vars']]))
-    error <- purrr::invoke(sim_error, 
-                           sim_args[['error']],
-                           n = n
-    ) |>
-      unlist()
   } else {
     n <- compute_samplesize(data, sim_args)
-    error <- purrr::invoke(sim_error, 
-                           sim_args[['error']],
-                           n = n
-    ) |> 
-      unlist()
   }
+  error <- purrr::exec(sim_error, n = n, !!!sim_args[['error']]) |> 
+    unlist()
   
   if(is.null(data)) {
     data.frame(error = error, ids)

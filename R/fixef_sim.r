@@ -161,12 +161,6 @@ simulate_knot <- function(data, sim_args) {
                         data = data)
           )
   )
-  
-  # purrr::invoke_map("sim_knot2", 
-  #                   sim_args[['knot']], 
-  #                   data = data
-  # ) |> data.frame()
-  
 }
 
 sim_knot2 <- function(data, variable, knot_locations, right = FALSE, ...) {

@@ -47,9 +47,13 @@ model_fit <- function(data, sim_args, ...) {
   
   model_args[['model_function']] <- NULL
   
-  purrr::invoke(model_function, 
-                model_args, 
+  purrr::exec(model_function, 
+                !!!model_args, 
                 data = data)
+  
+  # purrr::invoke(model_function, 
+  #               model_args, 
+  #               data = data)
 }
 
 #' Extract Coefficients
@@ -253,7 +257,7 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   }
   
   if(type_s_error) {
-    type_s <- type_m_s_errors(avg_estimates, 
+    type_s <- type_s_errors(data_df, 
                               group_var = group_vars, 
                               sign = sim_args[['power']][['type_s_sign']])
     
@@ -262,9 +266,15 @@ compute_statistics <- function(data, sim_args, power = TRUE,
                                       by = group_vars)
   }
   
-  if(type_m_error){
-    type_m <- compute_type_m()
-  }
+  # if(type_m_error){
+  #   type_m <- type_m_s_errors(data_df, 
+  #                             group_var = group_vars, 
+  #                             sign = sim_args[['power']][['type_m_threshold']])
+  #   
+  #   avg_estimates <- dplyr::full_join(avg_estimates, 
+  #                                     type_m,
+  #                                     by = group_vars)
+  # }
   
   if(power) {
     power_computation <- aggregate_power(data_df, 
@@ -423,7 +433,7 @@ compute_alt_power <- function(data, quantile) {
   }
 }
 
-type_m_s_errors <- function(data, group_var, sign = NULL, quantile = NULL) {
+type_s_errors <- function(data, group_var, sign = NULL) {
   
   data_list <- split(data, f = data[group_var])
   
@@ -432,9 +442,6 @@ type_m_s_errors <- function(data, group_var, sign = NULL, quantile = NULL) {
       c(compute_type_s(data_list[[ii]], sign[ii]), names(data_list)[[ii]])
     })))
     names(type_s) <- c('type_s_error', 'sign', group_var)
-  }
-  if(!is.null(quantile)) {
-    
   }
   type_s
 }

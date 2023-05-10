@@ -250,19 +250,21 @@ simulate_fixed <- function(data, sim_args, ...) {
     id_vars <- id_vars[id_vars %ni% cross_class[['cross_class_idvars']]]
     ids <- create_ids(n, 
                       c('level1_id', id_vars))
-    Xmat <- data.frame(
-      purrr::invoke_map("sim_variable", 
-                        sim_args[['fixed']],
-                        n = n
+    Xmat <- do.call("cbind.data.frame", 
+              lapply(seq_along(sim_args[['fixed']]), function(ii)
+                purrr::exec(sim_variable, 
+                            !!!sim_args[['fixed']][[ii]], 
+                            n = n)
+              )
       )
-    )
   } else {
     n <- compute_samplesize(data, sim_args)
-    Xmat <- data.frame(
-      purrr::invoke_map("sim_variable", 
-                        sim_args[['fixed']],
-                        n = n
-      )
+    Xmat <- do.call("cbind.data.frame", 
+                    lapply(seq_along(sim_args[['fixed']]), function(ii)
+                      purrr::exec(sim_variable, 
+                                  !!!sim_args[['fixed']][[ii]], 
+                                  n = n)
+                    )
     )
   }
   if(!is.null(sim_args[['knot']])) {

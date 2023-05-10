@@ -253,7 +253,13 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   }
   
   if(type_s_error) {
-    type_s <- compute_type_s()
+    type_s <- type_m_s_errors(avg_estimates, 
+                              group_var = group_vars, 
+                              sign = sim_args[['power']][['type_s_sign']])
+    
+    avg_estimates <- dplyr::full_join(avg_estimates, 
+                                      type_s,
+                                      by = group_vars)
   }
   
   if(type_m_error){

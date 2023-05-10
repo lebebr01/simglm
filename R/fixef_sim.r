@@ -137,7 +137,7 @@ sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1,
 
 #' Simulate knot locations
 #' 
-#' Function that generates knot locations. An example of usefulness of this funciton
+#' Function that generates knot locations. An example of usefulness of this function
 #' would be with generation of interrupted time series data. Another application may
 #' be with simulation of piecewise linear data structures.
 #' 
@@ -154,10 +154,18 @@ sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1,
 #' @export
 simulate_knot <- function(data, sim_args) {
   
-  purrr::invoke_map("sim_knot2", 
-                    sim_args[['knot']], 
-                    data = data
-  ) |> data.frame()
+  do.call("cbind.data.frame", 
+          lapply(seq_along(sim_args[['knot']]), function(ii)
+            purrr::exec(sim_knot2, 
+                        !!!sim_args[['knot']][[ii]], 
+                        data = data)
+          )
+  )
+  
+  # purrr::invoke_map("sim_knot2", 
+  #                   sim_args[['knot']], 
+  #                   data = data
+  # ) |> data.frame()
   
 }
 
@@ -281,7 +289,7 @@ simulate_fixed <- function(data, sim_args, ...) {
       colnames(Xmat) <- fixed_vars_knot
     } 
     
-    Xmat <- cbind(Xmat, 
+    Xmat <- cbind.data.frame(Xmat, 
                   simulate_knot(data = Xmat, sim_args = sim_args))
   }
   

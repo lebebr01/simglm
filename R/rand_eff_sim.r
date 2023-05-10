@@ -77,20 +77,36 @@ simulate_randomeffect <- function(data, sim_args, ...) {
     n <- sample_sizes(sim_args[['sample_size']])
     ids <- create_ids(n, 
                       c('level1_id', random_formula_parsed[['cluster_id_vars']]))
-    Zmat <- purrr::invoke_map("sim_variable", 
-                              sim_args[['randomeffect']][!cross_class[['cross_class_re']]],
-                              n = n,
-                              var_type = 'continuous'
-    ) |>
-      data.frame()
+    Zmat <- do.call("cbind.data.frame", 
+                    lapply(seq_along(sim_args[['randomeffect']][!cross_class[['cross_class_re']]]), function(ii)
+                      purrr::exec(sim_variable, 
+                                  !!!sim_args[['randomeffect']][!cross_class[['cross_class_re']]][[ii]], 
+                                  n = n,
+                                  var_type = 'continuous')
+                    )
+    )
+    # purrr::invoke_map("sim_variable", 
+    #                           sim_args[['randomeffect']][!cross_class[['cross_class_re']]],
+    #                           n = n,
+    #                           var_type = 'continuous'
+    # ) |>
+    #   data.frame()
   } else {
     n <- compute_samplesize(data, sim_args)
-    Zmat <- purrr::invoke_map("sim_variable", 
-                              sim_args[['randomeffect']][!cross_class[['cross_class_re']]],
-                              n = n,
-                              var_type = 'continuous'
-    ) |>
-      data.frame()
+    Zmat <-  do.call("cbind.data.frame", 
+                     lapply(seq_along(sim_args[['randomeffect']][!cross_class[['cross_class_re']]]), function(ii)
+                       purrr::exec(sim_variable, 
+                                   !!!sim_args[['randomeffect']][!cross_class[['cross_class_re']]][[ii]], 
+                                   n = n,
+                                   var_type = 'continuous')
+                     )
+    )
+    #   purrr::invoke_map("sim_variable", 
+    #                           sim_args[['randomeffect']][!cross_class[['cross_class_re']]],
+    #                           n = n,
+    #                           var_type = 'continuous'
+    # ) |>
+    #   data.frame()
   }
   
   names(Zmat) <- random_effects_names[!cross_class[['cross_class_re']]]

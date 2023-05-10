@@ -146,17 +146,26 @@ parse_power <- function(sim_args, samp_size) {
       df <- purrr::map(samp_size, `-`, 1)
       
       lapply(seq_along(df), function(xx) {
-        purrr::invoke(stat_dist[ii], 
+        purrr::exec(stat_dist[ii], 
                       p = alpha[ii], 
                       lower.tail = lower_tail[ii],
                       df = df[[xx]],
-                      opts[ii])
+                      !!!opts[ii])
+        # purrr::invoke(stat_dist[ii], 
+        #               p = alpha[ii], 
+        #               lower.tail = lower_tail[ii],
+        #               df = df[[xx]],
+        #               opts[ii])
       })
     } else {
-      purrr::invoke(stat_dist[ii], 
+      purrr::exec(stat_dist[ii], 
                     p = alpha[ii], 
                     lower.tail = lower_tail[ii],
-                    opts[ii])
+                    !!!opts[ii])
+      # purrr::invoke(stat_dist[ii], 
+      #               p = alpha[ii], 
+      #               lower.tail = lower_tail[ii],
+      #               opts[ii])
     }
   }
   )

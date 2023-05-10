@@ -2,10 +2,9 @@ cross_class_sim <- function(num_ids, samp_size, col_names, ...) {
   cross_ids <- data.frame(id = sample(1:num_ids, samp_size,
                                       replace = TRUE))
 
-  cross_rand_eff <- purrr::invoke_map('sim_cross',
-                                      ...,
-                                      num_ids = num_ids) |>
-    data.frame()
+  cross_rand_eff <- purrr::exec(sim_cross, 
+                                          ..., 
+                                          num_ids = num_ids) |> data.frame()
   cross_rand_eff$id <- 1:num_ids
 
   cross_eff <- dplyr::right_join(cross_rand_eff, cross_ids, by = 'id')
@@ -107,10 +106,19 @@ simulate_randomeffect <- function(data, sim_args, ...) {
     args[[1]]['var_level'] <- NULL
     args[[1]]['cross_class'] <- NULL
     
-    cross_vars <- purrr::invoke_map('cross_class_sim',
-                                    args,
-                                    samp_size = sum(n[['level1']]),
-                                    col_names = cross_names)
+    cross_vars <- do.call("cbind.data.frame", 
+                          lapply(seq_along(args), function(ii)
+                            purrr::exec(cross_class_sim, 
+                                        !!!args[[ii]], 
+                                        samp_size = sum(n[['level1']]),
+                                        col_names = cross_names)
+                          )
+    )
+      # 
+      # purrr::invoke_map('cross_class_sim',
+      #                               args,
+      #                               samp_size = sum(n[['level1']]),
+      #                               col_names = cross_names)
     Zmat <- data.frame(Zmat, cross_vars)
   }
   

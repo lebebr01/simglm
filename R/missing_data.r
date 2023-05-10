@@ -52,11 +52,17 @@ generate_missing <- function(data, sim_args) {
   
   resp_var <- parse_formula(sim_args)[['outcome']]
   
-  purrr::invoke("missing_data",
-                sim_args[['missing_data']],
+  purrr::exec(missing_data,
+                !!!sim_args[['missing_data']],
                 sim_data = data,
                 resp_var = resp_var,
                 within_id = 'level1_id')
+  
+  # purrr::invoke("missing_data",
+  #               sim_args[['missing_data']],
+  #               sim_data = data,
+  #               resp_var = resp_var,
+  #               within_id = 'level1_id')
 }
 
 

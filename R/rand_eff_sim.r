@@ -85,12 +85,6 @@ simulate_randomeffect <- function(data, sim_args, ...) {
                                   var_type = 'continuous')
                     )
     )
-    # purrr::invoke_map("sim_variable", 
-    #                           sim_args[['randomeffect']][!cross_class[['cross_class_re']]],
-    #                           n = n,
-    #                           var_type = 'continuous'
-    # ) |>
-    #   data.frame()
   } else {
     n <- compute_samplesize(data, sim_args)
     Zmat <-  do.call("cbind.data.frame", 
@@ -101,12 +95,6 @@ simulate_randomeffect <- function(data, sim_args, ...) {
                                    var_type = 'continuous')
                      )
     )
-    #   purrr::invoke_map("sim_variable", 
-    #                           sim_args[['randomeffect']][!cross_class[['cross_class_re']]],
-    #                           n = n,
-    #                           var_type = 'continuous'
-    # ) |>
-    #   data.frame()
   }
   
   names(Zmat) <- random_effects_names[!cross_class[['cross_class_re']]]

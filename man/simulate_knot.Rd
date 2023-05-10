@@ -18,7 +18,7 @@ for more information. The named list may contain the following:
 }}
 }
 \description{
-Function that generates knot locations. An example of usefulness of this funciton
+Function that generates knot locations. An example of usefulness of this function
 would be with generation of interrupted time series data. Another application may
 be with simulation of piecewise linear data structures.
 }

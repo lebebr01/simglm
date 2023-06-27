@@ -11,24 +11,84 @@
 #'      respectively.
 #' @param replace TRUE/FALSE indicating whether levels should be sampled with 
 #'   replacement. Default is TRUE.
+#' @param force_equal TRUE/FALSE indicating if the sample size should be forced
+#'     to be equal. 
 #' @param ... Additional parameters passed to the sample function.
 #' @export 
 sim_factor2 <- function(n, levels, var_level = 1, replace = TRUE,
+                        force_equal = FALSE,
                        ...) {
-  if(var_level == 1) {
-    cat_var <- base::sample(x = levels, size = sum(n[['level1']]), 
-                            replace = replace, ...)
-  } else {
-    if(var_level == 2) {
-      cat_var <- rep(base::sample(x = levels, size = sum(n[['level2']]), 
-                                  replace = replace, ...),
-                      times = n[['level1']])
+  if(force_equal) {
+    if(var_level == 1) {
+      cat_var = 1
+      num_equal <- sum(n[['level1']]) / length(levels)
+      
+      if(whole_number(num_equal)) {
+        while(any((table(cat_var) - num_equal) != 0)) {
+          cat_var <- base::sample(x = levels, size = sum(n[['level1']]), 
+                                  replace = replace, ...)
+        }
+      } else {
+        while(any(abs(round(table(cat_var) - num_equal)) > 1)) {
+          cat_var <- base::sample(x = levels, size = sum(n[['level1']]), 
+                                  replace = replace, ...)
+        }
+      }
     } else {
-      cat_var <- rep(base::sample(x = levels, size = n[['level3']], 
-                                  replace = replace, ...),
-                      times = n[['level3_total']])
+      if(var_level == 2) {
+        cat_var = 1
+        num_equal <- sum(n[['level2']]) / length(levels)
+        
+        if(whole_number(num_equal)) {
+          while(any((table(cat_var) - num_equal) != 0)) {
+            cat_var <- base::sample(x = levels, size = sum(n[['level2']]), 
+                                    replace = replace, ...)
+          }
+        } else {
+          while(any(abs(round(table(cat_var) - num_equal)) > 1)) {
+            cat_var <- base::sample(x = levels, size = sum(n[['level2']]), 
+                                    replace = replace, ...)
+          }
+        }
+        
+        cat_var <- rep(cat_var,
+                       times = n[['level1']])
+      } else {
+        cat_var = 1
+        num_equal <- n[['level3']] / length(levels)
+        
+        if(whole_number(num_equal)) {
+          while(any((table(cat_var) - num_equal) != 0)) {
+            cat_var <- base::sample(x = levels, size = n[['level3']], 
+                                    replace = replace, ...)
+          }
+        } else {
+          while(any(abs(round(table(cat_var) - num_equal)) > 1)) {
+            cat_var <- base::sample(x = levels, size = n[['level3']], 
+                                    replace = replace, ...)
+          }
+        }
+        cat_var <- rep(cat_var,
+                       times = n[['level3_total']])
+      }
+    }
+  } else {
+    if(var_level == 1) {
+      cat_var <- base::sample(x = levels, size = sum(n[['level1']]), 
+                              replace = replace, ...)
+    } else {
+      if(var_level == 2) {
+        cat_var <- rep(base::sample(x = levels, size = sum(n[['level2']]), 
+                                    replace = replace, ...),
+                       times = n[['level1']])
+      } else {
+        cat_var <- rep(base::sample(x = levels, size = n[['level3']], 
+                                    replace = replace, ...),
+                       times = n[['level3_total']])
+      }
     }
   }
+  
   
   cat_var <- factor(cat_var, levels = levels)
   

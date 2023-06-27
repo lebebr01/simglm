@@ -1,5 +1,9 @@
 "%ni%" <- Negate("%in%")
 
+is_odd <- function(x) x %% 2 != 0
+
+whole_number <- function(x) x %% 1 == 0
+
 prop_limits <- function(prop) {
   if(prop > .5) {
     u_diff <- 1 - prop

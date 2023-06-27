@@ -4,7 +4,7 @@
 \alias{sim_factor2}
 \title{Simulate categorical or factor variables}
 \usage{
-sim_factor2(n, levels, var_level = 1, replace = TRUE, ...)
+sim_factor2(n, levels, var_level = 1, replace = TRUE, force_equal = FALSE, ...)
 }
 \arguments{
 \item{n}{A list of sample sizes.}
@@ -18,6 +18,9 @@ respectively.}
 
 \item{replace}{TRUE/FALSE indicating whether levels should be sampled with 
 replacement. Default is TRUE.}
+
+\item{force_equal}{TRUE/FALSE indicating if the sample size should be forced
+to be equal.}
 
 \item{...}{Additional parameters passed to the sample function.}
 }

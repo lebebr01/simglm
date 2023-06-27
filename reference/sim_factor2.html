@@ -24,7 +24,7 @@ Is essentially a wrapper around the sample function from base R."><!-- mathjax -
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.8</span>
       </span>
     </div>
 
@@ -74,7 +74,7 @@ Is essentially a wrapper around the sample function from base R.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sim_factor2</span><span class="op">(</span><span class="va">n</span>, <span class="va">levels</span>, var_level <span class="op">=</span> <span class="fl">1</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">sim_factor2</span><span class="op">(</span><span class="va">n</span>, <span class="va">levels</span>, var_level <span class="op">=</span> <span class="fl">1</span>, replace <span class="op">=</span> <span class="cn">TRUE</span>, force_equal <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -97,6 +97,11 @@ respectively.</p></dd>
 <dt>replace</dt>
 <dd><p>TRUE/FALSE indicating whether levels should be sampled with 
 replacement. Default is TRUE.</p></dd>
+
+
+<dt>force_equal</dt>
+<dd><p>TRUE/FALSE indicating if the sample size should be forced
+to be equal.</p></dd>
 
 
 <dt>...</dt>

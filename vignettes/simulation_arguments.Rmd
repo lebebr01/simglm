@@ -137,6 +137,8 @@ An additional optional argument is `replace`. The `replace` argument specified w
 
 The probability of selecting each value specified to the `levels` argument is also able to be specified through the `prob` argument. If `prob` is specified, it takes a vector of probabilities that must be the same length as the levels argument. The default behavior is for each value specified with `levels` to be equally likely to be sampled.
 
+### Force Balanced Simulation
+
 It is also possible to simulate data from a balanced factorial design by including the `force_equal = TRUE` argument. This argument will cause the `simulate_fixed()` function to produce a data set with an equal number of observations for each level of the factor variable, instead of randomly sampling from the levels. To see the difference, compare the difference between the two following simulations:
 
 ```{r unbalanced}
@@ -179,6 +181,30 @@ dplyr::count(balanced_data, treat) # equal number of control and treatment obser
 ```
 
 Note that the `force_equal = TRUE` argument is incompatible with the `replace = FALSE` option. The `force_equal = TRUE` argument supersedes the `prob` argument - in other words, specifying `force_equal = TRUE` as well as specifying specific sampling probabilities will not cause an error, but doesn't make conceptual sense, and those sampling probabilities will not be reflected in the simulated data.
+
+It is also possible to specify `force_equal = TRUE` when groups are not explicitly equal. In this situation it will get as close to equal as it possibly can, usually within one or two observations of each other. Note, that this will not explicitly retain group size across replications, but they will be within one or two across replications. This behavior would likely be similar across replications than the default approach that would imply the probabilities being equal in the long run. 
+
+The following code adjusts the sample size to be 35, which is not equally dividable by 3, the group size. As such, the resulting count of the number of observations within each group is close to being equal. 
+
+```{r almost-balanced}
+set.seed(321) 
+
+sim_arguments <- list(
+  formula = y ~ 1 + weight + treat ,
+  fixed = list(weight = list(var_type = 'continuous', dist = 'rgamma', 
+                             shape = 3
+                             ),
+               treat = list(var_type = 'factor', 
+                            levels = c('Treatment A', 'Treatment B', 'Control'),
+                            force_equal = TRUE
+                            )
+               ),
+  sample_size = 35
+)
+
+balanced_data <- simulate_fixed(data = NULL, sim_arguments)
+dplyr::count(balanced_data, treat) # equal number of control and treatment observations
+```
 
 ## Knot Variables 
 

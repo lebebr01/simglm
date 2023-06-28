@@ -20,7 +20,7 @@ respectively.}
 replacement. Default is TRUE.}
 
 \item{force_equal}{TRUE/FALSE indicating if the sample size should be forced
-to be equal.}
+to be equal. Should not be used with the `replace = FALSE` argument.}
 
 \item{...}{Additional parameters passed to the sample function.}
 }

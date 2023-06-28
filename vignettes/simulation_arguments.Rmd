@@ -121,6 +121,29 @@ ggplot(fixed_data, aes(x = weight)) +
   theme_bw()
 ```
 
+### Floor or Ceiling Effects
+
+It is also possible to simulate floor or ceiling effects for continuous attributes. This may be of interest in a situation when data are simulated that would be distributed a specific way, but through the measurement process, the scores are truncated by a floor or ceiling value. One common example for the presence of a floor effect is for age, which would start at 0. Ceiling effects could be possible for very easy exams where many individuals may achieve a perfect score, so the ceiling effect would impose this constraint. 
+
+To impose floor or ceiling effects, there are optional arguments when specifying a continuous attribute named, `floor` and `ceiling` respectively that would impose floor and/or ceiling constraints. It is possible to use both for the same attribute as well. Below is an example of specifying these for two continuous attributes. In the following example, 
+
+```{r floor-ceiling, eval = FALSE}
+sim_arguments <- list(
+  formula = y ~ 1 + age + exam,
+  fixed = list(age = list(var_type = 'continuous', 
+                          mean = 6, sd = 1, 
+                          floor = 5),
+               exam = list(var_type = 'continuous',
+                           mean = 90, sd = 6,
+                           ceiling = 100)),
+  sample_size = 50
+)
+
+sim_data <- simulate_fixed(data = NULL, sim_arguments)
+summary(sim_data$age)
+summary(sim_data$exam)
+```
+
 ## Ordinal Variable
 
 Ordinal variable specification uses the `sample` function within R to generate ordinal variables that are whole integers. The required argument for these types of variables is `levels`. The `levels` argument takes a range or vector of integer values to be passed to the `sample` function within R. For example, these three specifications for the `levels` argument are valid: `3:60`, `seq(4, 60, 2)`, `c(3, 10, 18, 24, 54, 60)`.

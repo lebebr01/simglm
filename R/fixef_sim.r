@@ -12,7 +12,7 @@
 #' @param replace TRUE/FALSE indicating whether levels should be sampled with 
 #'   replacement. Default is TRUE.
 #' @param force_equal TRUE/FALSE indicating if the sample size should be forced
-#'     to be equal. 
+#'     to be equal. Should not be used with the `replace = FALSE` argument.
 #' @param ... Additional parameters passed to the sample function.
 #' @export 
 sim_factor2 <- function(n, levels, var_level = 1, replace = TRUE,

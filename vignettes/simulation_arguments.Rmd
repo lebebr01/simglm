@@ -529,6 +529,98 @@ select(random_correlate, -level1_id, -id) |>
   cor()
 ```
 
+# Unbalanced level 2 and 3 designs
+
+Often it is of interest to not have the same number of observations within each cluster when simulated data that are clustered. For example, imagine a situation within education where there are students nested in classrooms which are nested in schools. You could build this example further, but for this example, suppose this is the hierarchy that is of interest to model. In most situations, the number of classrooms and the number of students within those classrooms would not be the same. Instead, it is most likely that the number of classrooms would vary across schools and the number of students would vary across classrooms within the same school. 
+
+To be very explicit, one school may have 15 classrooms, another may have 35 classrooms, and another could have 100 classrooms. Within the school with 15 classrooms, the classrooms may average 20 students in each, but may vary between 15 to 25 students across all 15 classrooms. This is important to simulate to mimic real world data that would be collected. 
+
+## Unbalanced Level 2 Example
+
+Suppose only students and classrooms are focused on first. To generate realistic situations, it is of interest to vary the number of students within each classroom. To do this, the `runif()` function can be used to generate random numbers between specified minimum and maximum classroom sizes. A user can also specify the values directly in a vector of samples sizes that are the same size as the number of level 2 units (classrooms here). 
+
+```{r level-2-unbal}
+set.seed(38)
+
+level1_ss <- runif(15, min = 14, max = 30) |> 
+  round(0)
+level1_ss
+```
+
+The "level1_ss" vector are whole integers representing the sample size for each classroom. Below, these data are simulated. Notice that the "level1_ss" object is passed as an element of the level one sample size. Finally, a count of the number of observations in each classroom are shown, notice how these are the same as the values in the "level1_ss" object. 
+
+```{r sim-level1-unbal}
+sim_arguments <- list(
+  formula = test_scores ~ 1 + gpa + (1 | classroom),
+  fixed = list(
+    gpa = list(var_type = 'continuous', mean = 3, sd = 0.5,
+               ceiling = 4, floor = 0)
+  ),
+  random = list(
+    classroom_int = list(variance = 2, var_level = 2)
+  ),
+  error = list(variance = 5),
+  reg_weights = c(50, 0.5),
+  sample_size = list(
+    level1 = level1_ss,
+    level2 = 15
+  )
+)
+
+simulate_fixed(data = NULL, sim_arguments) |> 
+  dplyr::count(classroom)
+```
+
+## Unbalanced Level 3 Example
+
+This can be further specified to work with the full level 3 example discussed above with students nested within classrooms which are nested in schools. Suppose there are 25 schools that are included in the sample frame. Within these 25 schools, suppose there are between 8 and 50 classrooms. 
+
+```{r unbal-level2-23}
+set.seed(34)
+
+level2_ss <- runif(25, min = 8, max = 50) |> 
+  round(0)
+level2_ss
+```
+
+Each number for the level 2 sample size object represents the number of classrooms that are in each of the 25 schools. For example, the first number above, `r level2_ss[1]`, is the number of classrooms in the first school. Once the unbalanced level 2 sample size is specified, then, the level 1 sample size for each classroom can be generated. To generate the level 1 sample size, we need the **sum** of the level 2 sample sizes. That is, we need to generate a sample size for **each** of the `r level2_ss[1]` classrooms for the first school and so on. Therefore, a total of `r sum(level2_ss)` sample sizes will need to be generated as that is the total number of classrooms simulated across all 25 schools. Suppose that each classroom ranges from 12 to 28 students. 
+
+```{r unbal-level1-23}
+level1_ss <- runif(sum(level2_ss), min = 12, max = 28) |> 
+  round(0)
+head(level1_ss)
+```
+
+The sample size for the first six classrooms are shown. These could now be specified within the simulation arguments to extend the code generated in the level 2 example. 
+
+```{r unbalanced-level23}
+sim_arguments <- list(
+  formula = test_scores ~ 1 + gpa + (1 | classroom) + (1 | school),
+  fixed = list(
+    gpa = list(var_type = 'continuous', mean = 3, sd = 0.5,
+               ceiling = 4, floor = 0)
+  ),
+  random = list(
+    classroom_int = list(variance = 2, var_level = 2),
+    school_int = list(variance = 0.5, var_level = 3)
+  ),
+  error = list(variance = 5),
+  reg_weights = c(50, 0.5),
+  sample_size = list(
+    level1 = level1_ss,
+    level2 = level2_ss,
+    level3 = 25
+  )
+)
+
+simulate_fixed(data = NULL, sim_arguments) |> 
+  dplyr::count(school, classroom) |> 
+  head()
+```
+
+The sample sizes for the first 6 classrooms for the first school are shown. These values will match the level1_ss object shown above. 
+
+
 # Missing Data Arguments
 
 Missing data is the standard rather than the exception in real world data. Therefore, generating data that include missing is important for generating data that are representative of real world data. In the power analysis context, most power analyses do not include missing data in the power computations (particularly if these are closed form solutions), but power can be negatively affected by missing data.

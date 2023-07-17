@@ -39,43 +39,26 @@ search_factors <- function(x) {
 
 sample_sizes <- function(sample_size) {
   
-  min_max_loc <- grep('min', lapply(sample_size, names))
-  
   if(length(sample_size) == 1) {
     sample_size <- list(level1 = sample_size)
   } else {
-    if(2 %in% min_max_loc) {
-      level2 <- runif(n = sample_size[['level3']], 
-                      min = sample_size[['level2']]$min,
-                      max = sample_size[['level2']]$max) |>
-        round(0)
-    } else {
-      if(length(sample_size) == 3) {
-        level2 <- rep(sample_size[['level2']], sample_size[['level3']])
-      } else {
+    if(length(sample_size) == 3) {
+      if(length(sample_size[['level2']]) == sample_size[['level3']]) {
         level2 <- sample_size[['level2']]
+      } else {
+        level2 <- rep(sample_size[['level2']], sample_size[['level3']])
       }
+      sample_size['level3_total'] <- list(sample_size_level3(sample_size)) 
     }
     total_level2_samplesize <- sum(level2)
     
-    if(1 %in% min_max_loc) {
-      level1 <- runif(n = total_level2_samplesize,
-                      min = sample_size[['level1']]$min,
-                      max = sample_size[['level1']]$max) |>
-        round(0)
+    if(length(sample_size[['level1']]) == total_level2_samplesize) {
+      level1 <- sample_size[['level1']]
     } else {
-      if(length(sample_size[['level1']]) == sample_size[['level2']]) {
-        level1 <- sample_size[['level1']]
-      } else {
-        level1 <- rep(sample_size[['level1']], total_level2_samplesize)
-      }
+      level1 <- rep(sample_size[['level1']], total_level2_samplesize)
     }
     sample_size['level1'] <- list(level1)
     sample_size['level2'] <- list(level2)
-    
-    if(length(sample_size) == 3) {
-      sample_size['level3_total'] <- list(sample_size_level3(sample_size)) 
-    }
   }
   sample_size
 }

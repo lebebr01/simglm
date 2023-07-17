@@ -48,9 +48,9 @@ sample_sizes <- function(sample_size) {
       } else {
         level2 <- rep(sample_size[['level2']], sample_size[['level3']])
       }
-      sample_size['level3_total'] <- list(sample_size_level3(sample_size)) 
+      sample_size['level2'] <- list(level2)
     }
-    total_level2_samplesize <- sum(level2)
+    total_level2_samplesize <- sum(sample_size[['level2']])
     
     if(length(sample_size[['level1']]) == total_level2_samplesize) {
       level1 <- sample_size[['level1']]
@@ -58,7 +58,9 @@ sample_sizes <- function(sample_size) {
       level1 <- rep(sample_size[['level1']], total_level2_samplesize)
     }
     sample_size['level1'] <- list(level1)
-    sample_size['level2'] <- list(level2)
+    if(length(sample_size) == 3) {
+      sample_size['level3_total'] <- list(sample_size_level3(sample_size)) 
+    }
   }
   sample_size
 }

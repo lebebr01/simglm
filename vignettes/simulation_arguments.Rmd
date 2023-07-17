@@ -600,7 +600,7 @@ sim_arguments <- list(
     gpa = list(var_type = 'continuous', mean = 3, sd = 0.5,
                ceiling = 4, floor = 0)
   ),
-  random = list(
+  randomeffect = list(
     classroom_int = list(variance = 2, var_level = 2),
     school_int = list(variance = 0.5, var_level = 3)
   ),

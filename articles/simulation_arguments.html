@@ -999,6 +999,153 @@ explored first, followed by correlating random effects next.</p>
 </div>
 </div>
 <div class="section level2">
+<h2 id="unbalanced-level-2-and-3-designs">Unbalanced level 2 and 3 designs<a class="anchor" aria-label="anchor" href="#unbalanced-level-2-and-3-designs"></a>
+</h2>
+<p>Often it is of interest to not have the same number of observations
+within each cluster when simulated data that are clustered. For example,
+imagine a situation within education where there are students nested in
+classrooms which are nested in schools. You could build this example
+further, but for this example, suppose this is the hierarchy that is of
+interest to model. In most situations, the number of classrooms and the
+number of students within those classrooms would not be the same.
+Instead, it is most likely that the number of classrooms would vary
+across schools and the number of students would vary across classrooms
+within the same school.</p>
+<p>To be very explicit, one school may have 15 classrooms, another may
+have 35 classrooms, and another could have 100 classrooms. Within the
+school with 15 classrooms, the classrooms may average 20 students in
+each, but may vary between 15 to 25 students across all 15 classrooms.
+This is important to simulate to mimic real world data that would be
+collected.</p>
+<div class="section level3">
+<h3 id="unbalanced-level-2-example">Unbalanced Level 2 Example<a class="anchor" aria-label="anchor" href="#unbalanced-level-2-example"></a>
+</h3>
+<p>Suppose only students and classrooms are focused on first. To
+generate realistic situations, it is of interest to vary the number of
+students within each classroom. To do this, the <code><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif()</a></code>
+function can be used to generate random numbers between specified
+minimum and maximum classroom sizes. A user can also specify the values
+directly in a vector of samples sizes that are the same size as the
+number of level 2 units (classrooms here).</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">38</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">level1_ss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">15</span>, min <span class="op">=</span> <span class="fl">14</span>, max <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">level1_ss</span></span></code></pre></div>
+<pre><code><span><span class="co">##  [1] 20 14 16 20 26 26 22 21 15 28 15 22 25 20 22</span></span></code></pre>
+<p>The “level1_ss” vector are whole integers representing the sample
+size for each classroom. Below, these data are simulated. Notice that
+the “level1_ss” object is passed as an element of the level one sample
+size. Finally, a count of the number of observations in each classroom
+are shown, notice how these are the same as the values in the
+“level1_ss” object.</p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  formula <span class="op">=</span> <span class="va">test_scores</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">gpa</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">classroom</span><span class="op">)</span>,</span>
+<span>  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    gpa <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">3</span>, sd <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>               ceiling <span class="op">=</span> <span class="fl">4</span>, floor <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  random <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    classroom_int <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">2</span>, var_level <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
+<span>  reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">0.5</span><span class="op">)</span>,</span>
+<span>  sample_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    level1 <span class="op">=</span> <span class="va">level1_ss</span>,</span>
+<span>    level2 <span class="op">=</span> <span class="fl">15</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">classroom</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##    classroom  n</span></span>
+<span><span class="co">## 1          1 20</span></span>
+<span><span class="co">## 2          2 14</span></span>
+<span><span class="co">## 3          3 16</span></span>
+<span><span class="co">## 4          4 20</span></span>
+<span><span class="co">## 5          5 26</span></span>
+<span><span class="co">## 6          6 26</span></span>
+<span><span class="co">## 7          7 22</span></span>
+<span><span class="co">## 8          8 21</span></span>
+<span><span class="co">## 9          9 15</span></span>
+<span><span class="co">## 10        10 28</span></span>
+<span><span class="co">## 11        11 15</span></span>
+<span><span class="co">## 12        12 22</span></span>
+<span><span class="co">## 13        13 25</span></span>
+<span><span class="co">## 14        14 20</span></span>
+<span><span class="co">## 15        15 22</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="unbalanced-level-3-example">Unbalanced Level 3 Example<a class="anchor" aria-label="anchor" href="#unbalanced-level-3-example"></a>
+</h3>
+<p>This can be further specified to work with the full level 3 example
+discussed above with students nested within classrooms which are nested
+in schools. Suppose there are 25 schools that are included in the sample
+frame. Within these 25 schools, suppose there are between 8 and 50
+classrooms.</p>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">34</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">level2_ss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">25</span>, min <span class="op">=</span> <span class="fl">8</span>, max <span class="op">=</span> <span class="fl">50</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">level2_ss</span></span></code></pre></div>
+<pre><code><span><span class="co">##  [1] 27 50 45 18 18 44 20 38 25 32 22 26 39 10 16 42 44  9 29 29 22 45 40 17 26</span></span></code></pre>
+<p>Each number for the level 2 sample size object represents the number
+of classrooms that are in each of the 25 schools. For example, the first
+number above, 27, is the number of classrooms in the first school. Once
+the unbalanced level 2 sample size is specified, then, the level 1
+sample size for each classroom can be generated. To generate the level 1
+sample size, we need the <strong>sum</strong> of the level 2 sample
+sizes. That is, we need to generate a sample size for
+<strong>each</strong> of the 27 classrooms for the first school and so
+on. Therefore, a total of 733 sample sizes will need to be generated as
+that is the total number of classrooms simulated across all 25 schools.
+Suppose that each classroom ranges from 12 to 28 students.</p>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">level1_ss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">level2_ss</span><span class="op">)</span>, min <span class="op">=</span> <span class="fl">12</span>, max <span class="op">=</span> <span class="fl">28</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">level1_ss</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 27 26 24 22 21 27</span></span></code></pre>
+<p>The sample size for the first six classrooms are shown. These could
+now be specified within the simulation arguments to extend the code
+generated in the level 2 example.</p>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  formula <span class="op">=</span> <span class="va">test_scores</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">gpa</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">classroom</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">|</span> <span class="va">school</span><span class="op">)</span>,</span>
+<span>  fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    gpa <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, mean <span class="op">=</span> <span class="fl">3</span>, sd <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>               ceiling <span class="op">=</span> <span class="fl">4</span>, floor <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  random <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    classroom_int <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">2</span>, var_level <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>    school_int <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">0.5</span>, var_level <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
+<span>  reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">0.5</span><span class="op">)</span>,</span>
+<span>  sample_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    level1 <span class="op">=</span> <span class="va">level1_ss</span>,</span>
+<span>    level2 <span class="op">=</span> <span class="va">level2_ss</span>,</span>
+<span>    level3 <span class="op">=</span> <span class="fl">25</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/simulate_fixed.html">simulate_fixed</a></span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">school</span>, <span class="va">classroom</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   school classroom  n</span></span>
+<span><span class="co">## 1      1         1 27</span></span>
+<span><span class="co">## 2      1         2 26</span></span>
+<span><span class="co">## 3      1         3 24</span></span>
+<span><span class="co">## 4      1         4 22</span></span>
+<span><span class="co">## 5      1         5 21</span></span>
+<span><span class="co">## 6      1         6 27</span></span></code></pre>
+<p>The sample sizes for the first 6 classrooms for the first school are
+shown. These values will match the level1_ss object shown above.</p>
+</div>
+</div>
+<div class="section level2">
 <h2 id="missing-data-arguments">Missing Data Arguments<a class="anchor" aria-label="anchor" href="#missing-data-arguments"></a>
 </h2>
 <p>Missing data is the standard rather than the exception in real world
@@ -1028,7 +1175,7 @@ needs to be specified with <code>miss_prop</code> and the name of the
 new response variable with missing data needs to be specified with
 <code>new_outcome</code>. Below is an example generating data with
 random missing data.</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -1088,7 +1235,7 @@ random missing data.</p>
 <span><span class="co">## 9          0  171.8387</span></span>
 <span><span class="co">## 10         0  156.3659</span></span></code></pre>
 <p>We can look at the amount of missing data:</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## FALSE  TRUE </span></span>
@@ -1098,7 +1245,7 @@ random missing data.</p>
 <h3 id="mar-missing-data">MAR Missing Data<a class="anchor" aria-label="anchor" href="#mar-missing-data"></a>
 </h3>
 <p>Data that are missing at random (MAR) can be generated as well.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -1160,7 +1307,7 @@ random missing data.</p>
 <span><span class="co">## 9  0.92751823       0  171.8387</span></span>
 <span><span class="co">## 10 0.82901588       0  156.3659</span></span></code></pre>
 <p>We can look at the amount of missing data:</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## FALSE  TRUE </span></span>
@@ -1178,7 +1325,7 @@ measurement. To request this type of missing data, the
 argument is needed, <code>clust_var</code>. This argument represents the
 id associated with the clusters with longitudinal data. Below is an
 example:</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -1238,14 +1385,14 @@ example:</p>
 <span><span class="co">## 9   171.8387</span></span>
 <span><span class="co">## 10  156.3659</span></span></code></pre>
 <p>We can look at the amount of missing data:</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## FALSE  TRUE </span></span>
 <span><span class="co">## 0.945 0.055</span></span></code></pre>
 <p>We can also look now at the amount of missing by the time
 variable.</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span>, <span class="va">data_w_missing</span><span class="op">$</span><span class="va">time</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##        </span></span>
 <span><span class="co">##             0     1     2     3     4     5     6     7     8     9</span></span>
@@ -1259,7 +1406,7 @@ dropout is possible. In this situation, a vector is passed to
 <code>dropout_location</code> that specifies for each individual (more
 generally each level 2 unit) where the dropout occurs. Below is an
 example of this.</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -1321,14 +1468,14 @@ example of this.</p>
 <span><span class="co">## 9         NA</span></span>
 <span><span class="co">## 10        NA</span></span></code></pre>
 <p>We can look at the amount of missing data:</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## FALSE  TRUE </span></span>
 <span><span class="co">##  0.48  0.52</span></span></code></pre>
 <p>We can also look now at the amount of missing by the time
 variable.</p>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">prop.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data_w_missing</span><span class="op">$</span><span class="va">y_missing</span><span class="op">)</span>, <span class="va">data_w_missing</span><span class="op">$</span><span class="va">time</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##        </span></span>
 <span><span class="co">##             0     1     2     3     4     5     6     7     8     9</span></span>
@@ -1364,7 +1511,7 @@ example, when generating data with a binary dependent variable, the
 logistic or probit links could be used when specifying the binomial
 family. Below is an example of using the binomial family with a logit
 link (the default link function).</p>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -1392,7 +1539,7 @@ link (the default link function).</p>
 <span><span class="co">## Link function: logit</span></span></code></pre>
 <p>The link function could then be changed to a probit link function
 with the following code:</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -1438,7 +1585,7 @@ code to fit a marginal model in a longitudinal context. The code is not
 evaluated, so no coefficients are shown, but if you have the
 <code>geepack</code> package installed, this code should run as
 written.</p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="co"># To-DO: Add knot variable and debug</span></span>
@@ -1497,7 +1644,7 @@ return multiple simulated data sets with different sample sizes.</p>
 <code>plan(mutisession)</code> or <code>plan(multicore)</code> to run
 these in parallel. <code>plan(sequential)</code> is used here for
 vignette processing.</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://future.futureverse.org" class="external-link">future</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">sequential</span><span class="op">)</span></span>
 <span></span>

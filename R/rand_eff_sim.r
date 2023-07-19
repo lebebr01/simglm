@@ -1,4 +1,4 @@
-cross_class_sim <- function(num_ids, samp_size, col_names, ...) {
+multiple_member_sim <- function(num_ids, samp_size, col_names, ...) {
   cross_ids <- data.frame(id = sample(1:num_ids, samp_size,
                                       replace = TRUE))
 
@@ -60,15 +60,15 @@ simulate_randomeffect <- function(data, sim_args, ...) {
   
   random_effects_names <- names(sim_args[['randomeffect']])
   
-  cross_class <- parse_crossclass(sim_args, random_formula_parsed)
+  multiple_member <- parse_multiplemember(sim_args, random_formula_parsed)
   
-  if(any(cross_class[['cross_class_re']])) {
-    cross_loc <- grepl(cross_class[['cross_class_idvars']], 
+  if(any(multiple_member[['multiple_member_re']])) {
+    mm_loc <- grepl(multiple_member[['multiple_member_idvars']], 
                        random_formula_parsed[['cluster_id_vars']])
     
-    cross_vars <- lapply(random_formula_parsed, '[', cross_loc)
+    mm_vars <- lapply(random_formula_parsed, '[', mm_loc)
     
-    random_formula_parsed <- lapply(random_formula_parsed, '[', !cross_loc)
+    random_formula_parsed <- lapply(random_formula_parsed, '[', !mm_loc)
   }
   
   
@@ -77,9 +77,9 @@ simulate_randomeffect <- function(data, sim_args, ...) {
     ids <- create_ids(n, 
                       c('level1_id', random_formula_parsed[['cluster_id_vars']]))
     Zmat <- do.call("cbind.data.frame", 
-                    lapply(seq_along(sim_args[['randomeffect']][!cross_class[['cross_class_re']]]), function(ii)
+                    lapply(seq_along(sim_args[['randomeffect']][!multiple_member[['multiple_member_re']]]), function(ii)
                       purrr::exec(sim_variable, 
-                                  !!!sim_args[['randomeffect']][!cross_class[['cross_class_re']]][[ii]], 
+                                  !!!sim_args[['randomeffect']][!multiple_member[['multiple_member_re']]][[ii]], 
                                   n = n,
                                   var_type = 'continuous')
                     )
@@ -87,39 +87,39 @@ simulate_randomeffect <- function(data, sim_args, ...) {
   } else {
     n <- compute_samplesize(data, sim_args)
     Zmat <-  do.call("cbind.data.frame", 
-                     lapply(seq_along(sim_args[['randomeffect']][!cross_class[['cross_class_re']]]), function(ii)
+                     lapply(seq_along(sim_args[['randomeffect']][!multiple_member[['multiple_member_re']]]), function(ii)
                        purrr::exec(sim_variable, 
-                                   !!!sim_args[['randomeffect']][!cross_class[['cross_class_re']]][[ii]], 
+                                   !!!sim_args[['randomeffect']][!multiple_member[['multiple_member_re']]][[ii]], 
                                    n = n,
                                    var_type = 'continuous')
                      )
     )
   }
   
-  names(Zmat) <- random_effects_names[!cross_class[['cross_class_re']]]
+  names(Zmat) <- random_effects_names[!multiple_member[['multiple_member_re']]]
   
-  if(any(cross_class[['cross_class_re']])) {
-    cross_names <- c(random_effects_names[cross_class[['cross_class_re']]], 
-                     cross_class[['cross_class_idvars']])
+  if(any(multiple_member[['multiple_member_re']])) {
+    mm_names <- c(random_effects_names[multiple_member[['multiple_member_re']]], 
+                     multiple_member[['multiple_member_idvars']])
     
-    args <- sim_args[['randomeffect']][cross_class[['cross_class_re']]]
+    args <- sim_args[['randomeffect']][multiple_member[['multiple_member_re']]]
     args[[1]]['var_level'] <- NULL
-    args[[1]]['cross_class'] <- NULL
+    args[[1]]['multiple_member'] <- NULL
     
-    cross_vars <- do.call("cbind.data.frame", 
+    mm_vars <- do.call("cbind.data.frame", 
                           lapply(seq_along(args), function(ii)
-                            purrr::exec(cross_class_sim, 
+                            purrr::exec(multiple_member_sim, 
                                         !!!args[[ii]], 
                                         samp_size = sum(n[['level1']]),
-                                        col_names = cross_names)
+                                        col_names = mm_names)
                           )
     )
       # 
-      # purrr::invoke_map('cross_class_sim',
+      # purrr::invoke_map('multiple_member_sim',
       #                               args,
       #                               samp_size = sum(n[['level1']]),
-      #                               col_names = cross_names)
-    Zmat <- data.frame(Zmat, cross_vars)
+      #                               col_names = mm_names)
+    Zmat <- data.frame(Zmat, mm_vars)
   }
   
   if(is.null(data)) {

@@ -43,19 +43,19 @@ parse_randomeffect <- function(formula) {
 
 }
 
-#' Parse Cross-classified Random Effects
+#' Parse Multiple Membership Random Effects
 #' 
 #' @param sim_args Simulation arguments
 #' @param random_formula_parsed This is the output from 
 #'   \code{\link{parse_randomeffect}}.
 #' 
 #' @export
-parse_crossclass <- function(sim_args, random_formula_parsed) {
-  cross_class_re <- lapply(seq_along(sim_args[['randomeffect']]), 
+parse_multiplemember <- function(sim_args, random_formula_parsed) {
+  multiple_member_re <- lapply(seq_along(sim_args[['randomeffect']]), 
                            function(xx) 
-                             sim_args[['randomeffect']][[xx]][['cross_class']])
-  cross_class_re <- unlist(lapply(seq_along(cross_class_re), function(xx)  
-    !is.null(cross_class_re[[xx]])))
+                             sim_args[['randomeffect']][[xx]][['multiple_member']])
+  multiple_member_re <- unlist(lapply(seq_along(multiple_member_re), function(xx)  
+    !is.null(multiple_member_re[[xx]])))
   num_res <- lapply(lapply(seq_along(random_formula_parsed[['random_effects']]), 
                            function(xx) 
                              unlist(strsplit(random_formula_parsed[['random_effects']][xx], '\\+'))), 
@@ -63,11 +63,11 @@ parse_crossclass <- function(sim_args, random_formula_parsed) {
   num_res <- unlist(lapply(seq_along(num_res), function(xx) 
     rep(random_formula_parsed[['cluster_id_vars']][xx], num_res[[xx]])))
   
-  cross_class_idvars <- num_res[cross_class_re]
+  multiple_member_idvars <- num_res[multiple_member_re]
   
-  list(cross_class_idvars = cross_class_idvars,
+  list(multiple_member_idvars = multiple_member_idvars,
        num_res = num_res,
-       cross_class_re = cross_class_re
+       multiple_member_re = multiple_member_re
   )
 }
 

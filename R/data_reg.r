@@ -82,8 +82,8 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     Zmat <- lapply(lapply(random_formula, model.matrix, data = data), 
       data.frame)
     
-    cross_class <- parse_crossclass(sim_args, parse_randomeffect(parse_formula(sim_args)[['randomeffect']]))
-    if(any(cross_class[['cross_class_re']])){
+    multiple_member <- parse_multiplemember(sim_args, parse_randomeffect(parse_formula(sim_args)[['randomeffect']]))
+    if(any(multiple_member[['multiple_member_re']])){
       Zmat <- do.call('cbind', Zmat)
     } else {
       Zmat <- dplyr::bind_cols(Zmat)

@@ -307,9 +307,9 @@ simulate_fixed <- function(data, sim_args, ...) {
   if(is.null(data)) {
     n <- sample_sizes(sim_args[['sample_size']])
     id_vars <- parse_randomeffect(parse_formula(sim_args)[['randomeffect']])[['cluster_id_vars']]
-    cross_class <- parse_crossclass(sim_args, parse_randomeffect(parse_formula(sim_args)[['randomeffect']]))
+    multiple_member <- parse_multiplemember(sim_args, parse_randomeffect(parse_formula(sim_args)[['randomeffect']]))
     
-    id_vars <- id_vars[id_vars %ni% cross_class[['cross_class_idvars']]]
+    id_vars <- id_vars[id_vars %ni% multiple_member[['multiple_member_idvars']]]
     ids <- create_ids(n, 
                       c('level1_id', id_vars))
     Xmat <- do.call("cbind.data.frame", 

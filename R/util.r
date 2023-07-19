@@ -103,9 +103,9 @@ create_ids <- function(sample_size_list, id_names) {
 compute_samplesize <- function(data, sim_args) {
   
   id_vars <- parse_randomeffect(parse_formula(sim_args)[['randomeffect']])[['cluster_id_vars']]
-  cross_class <- parse_crossclass(sim_args, parse_randomeffect(parse_formula(sim_args)[['randomeffect']]))
+  multiple_member <- parse_multiplemember(sim_args, parse_randomeffect(parse_formula(sim_args)[['randomeffect']]))
   
-  id_vars <- id_vars[id_vars %ni% cross_class[['cross_class_idvars']]]
+  id_vars <- id_vars[id_vars %ni% multiple_member[['multiple_member_idvars']]]
   
   samp_size <- lapply(seq_along(id_vars), function(xx) as.numeric(table(data[id_vars[xx]])))
   

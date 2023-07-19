@@ -457,6 +457,6 @@ head(nested_data, n = 10)
 nrow(nested_data)
 ```
 
-The vignette simulation_arguments contains more example of specifying random effects and additional nesting designs including three levels of nested and cross-classified models.
+The vignette simulation_arguments contains more example of specifying random effects and additional nesting designs including three levels of nested and multiple membership models.
 
 

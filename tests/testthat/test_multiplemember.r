@@ -1,6 +1,6 @@
-context("test cross-class") 
+context("test multiple-member") 
 
-test_that('fixed cross class', {
+test_that('fixed multiple member', {
   set.seed(321) 
   
   sim_arguments <- list(
@@ -15,33 +15,33 @@ test_that('fixed cross class', {
     randomeffect = list(int_id = list(variance = 8, var_level = 2),
                         time_id = list(variance = 3, var_level = 2),
                         int_nid = list(variance = 5, var_level = 2,
-                                       cross_class = TRUE,
+                                       multiple_member = TRUE,
                                        num_ids = 12)),
     sample_size = list(level1 = 10, level2 = 20),
     reg_weights = c(1, 0.3, 0.8, 1, 5)
   )
   
-  cross_class <- simulate_fixed(data = NULL, sim_arguments)
+  multiple_member <- simulate_fixed(data = NULL, sim_arguments)
   
-  expect_equal(ncol(cross_class), 8)
-  expect_true(is.null(cross_class[['neighborhood_id']]))
+  expect_equal(ncol(multiple_member), 8)
+  expect_true(is.null(multiple_member[['neighborhood_id']]))
   
-  cross_random <- simulate_randomeffect(data = NULL, sim_arguments)
+  mm_random <- simulate_randomeffect(data = NULL, sim_arguments)
   
-  expect_equal(ncol(cross_random), 6)
-  expect_false(is.null(cross_random[['neighborhood_id']]))
-  expect_equal(length(unique(cross_random[['neighborhood_id']])), 12)
+  expect_equal(ncol(mm_random), 6)
+  expect_false(is.null(mm_random[['neighborhood_id']]))
+  expect_equal(length(unique(mm_random[['neighborhood_id']])), 12)
   
-  cross_random_fixed <- simulate_randomeffect(data = NULL, sim_arguments) |>
+  mm_random_fixed <- simulate_randomeffect(data = NULL, sim_arguments) |>
     simulate_fixed(sim_arguments)
   
-  expect_equal(ncol(cross_random_fixed), 12)
+  expect_equal(ncol(mm_random_fixed), 12)
   
-  cross_random_fixed <- simulate_randomeffect(data = NULL, sim_arguments) |>
+  mm_random_fixed <- simulate_randomeffect(data = NULL, sim_arguments) |>
     simulate_fixed(sim_arguments) |>
     simulate_error(sim_arguments) |>
     generate_response(sim_arguments)
   
-  expect_equal(ncol(cross_random_fixed), 16)
-  expect_type(cross_random_fixed[['y']], 'double')
+  expect_equal(ncol(mm_random_fixed), 16)
+  expect_type(mm_random_fixed[['y']], 'double')
 })

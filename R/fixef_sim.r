@@ -331,8 +331,11 @@ simulate_fixed <- function(data, sim_args, ...) {
   }
   if(!is.null(sim_args[['knot']])) {
     
+    num_knot_vars <- length(sim_args[['knot']])
+    
     knot_names <- names(sim_args[['knot']])
-    knot_loc <- grep(knot_names, fixed_vars)
+    knot_loc <- unlist(lapply(seq_along(seq_len(num_knot_vars)), function(xx) 
+      grep(knot_names[xx], fixed_vars)))
     
     fixed_vars_knot <- fixed_vars[-knot_loc]
       
@@ -343,8 +346,15 @@ simulate_fixed <- function(data, sim_args, ...) {
       colnames(Xmat) <- fixed_vars_knot
     } 
     
-    Xmat <- cbind.data.frame(Xmat, 
-                  simulate_knot(data = Xmat, sim_args = sim_args))
+    Xmat_knot <- do.call("cbind.data.frame", 
+                    lapply(seq_along(sim_args[['knot']]), function(ii)
+                      purrr::exec(sim_knot2, 
+                                  !!!sim_args[['knot']][[ii]], 
+                                  data = Xmat)
+                    )
+    )
+    
+    Xmat <- cbind(Xmat, Xmat_knot)
   }
   
   if(any(grepl(":|^I", fixed_vars))) {
@@ -353,6 +363,53 @@ simulate_fixed <- function(data, sim_args, ...) {
   } else {
     colnames(Xmat) <- fixed_vars
   } 
+  
+  # Place holder for post-process effects
+  if(any(grepl("_post$", fixed_vars))) {
+    
+    detect_ifelse <- unlist(lapply(seq_along(sim_args[['post']]), function(ii) 
+      grepl('ifelse', sim_args[['post']][[1]][['fun']])
+    ))
+    
+    post_names <- names(sim_args[['post']])
+    
+    sim_args_post_ifelse <- sim_args[['post']][detect_ifelse]
+    sim_args_post_other <- sim_args[['post']][!detect_ifelse]
+    
+    if(length(sim_args_post_ifelse) > 0) {
+      Xmat_post_ifelse <- do.call("cbind.data.frame",
+                                  lapply(seq_along(sim_args_post_ifelse), function(ii)
+                                    lapply(
+                                      X = eval(parse(text = paste0('Xmat[["', 
+                                                                   sim_args_post_ifelse[[ii]][['variable']],
+                                                                   '"]]',
+                                                                   sim_args_post_ifelse[[ii]][['condition']]))),
+                                      FUN = sim_args_post_ifelse[[ii]][['fun']],
+                                      yes = sim_args_post_ifelse[[ii]][['yes']],
+                                      no = sim_args_post_ifelse[[ii]][['no']]
+                                    )
+                                  )
+      )
+      
+      Xmat <- cbind(Xmat,
+                    Xmat_post_ifelse)
+    }
+    
+    if(length(sim_args_post_other) > 0) {
+      Xmat_post_other <- do.call("cbind.data.frame",
+                                 lapply(seq_along(sim_args_post_other), function(ii)
+                                   lapply(
+                                     X = Xmat[[sim_args_post_other[[ii]][['variable']]]],
+                                     FUN = sim_args_post_other[[ii]][['fun']]
+                                   )
+                                 )
+      )
+      
+      Xmat <- cbind(Xmat,
+                    Xmat_post_other)
+    }
+    
+  }
 
   if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
     sim_args[['fixed']][[xx]]$var_type)) == 'factor') | 

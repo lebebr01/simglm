@@ -303,6 +303,9 @@ simulate_fixed <- function(data, sim_args, ...) {
   if(any(grepl("^poly\\(", fixed_vars))) {
     fixed_vars <- gsub("poly\\(|\\,.+\\)", "", fixed_vars)
   }
+  if(any(grepl("_post$", fixed_vars))) {
+    fixed_vars <- fixed_vars[!grepl("_post$", fixed_vars)]
+  }
   
   if(is.null(data)) {
     n <- sample_sizes(sim_args[['sample_size']])
@@ -365,7 +368,7 @@ simulate_fixed <- function(data, sim_args, ...) {
   } 
   
   # Place holder for post-process effects
-  if(any(grepl("_post$", fixed_vars))) {
+  if(any(grepl("_post$", attr(terms(fixed_formula), "term.labels")))) {
     
     detect_ifelse <- unlist(lapply(seq_along(sim_args[['post']]), function(ii) 
       grepl('ifelse', sim_args[['post']][[1]][['fun']])
@@ -379,17 +382,20 @@ simulate_fixed <- function(data, sim_args, ...) {
     if(length(sim_args_post_ifelse) > 0) {
       Xmat_post_ifelse <- do.call("cbind.data.frame",
                                   lapply(seq_along(sim_args_post_ifelse), function(ii)
-                                    lapply(
-                                      X = eval(parse(text = paste0('Xmat[["', 
-                                                                   sim_args_post_ifelse[[ii]][['variable']],
-                                                                   '"]]',
-                                                                   sim_args_post_ifelse[[ii]][['condition']]))),
-                                      FUN = sim_args_post_ifelse[[ii]][['fun']],
-                                      yes = sim_args_post_ifelse[[ii]][['yes']],
-                                      no = sim_args_post_ifelse[[ii]][['no']]
+                                    unlist(
+                                      lapply(
+                                        X = eval(parse(text = paste0('Xmat[["', 
+                                                                     sim_args_post_ifelse[[ii]][['variable']],
+                                                                     '"]]',
+                                                                     sim_args_post_ifelse[[ii]][['condition']]))),
+                                        FUN = sim_args_post_ifelse[[ii]][['fun']],
+                                        yes = sim_args_post_ifelse[[ii]][['yes']],
+                                        no = sim_args_post_ifelse[[ii]][['no']]
+                                      )
                                     )
                                   )
       )
+      names(Xmat_post_ifelse) <- names(sim_args_post_ifelse)
       
       Xmat <- cbind(Xmat,
                     Xmat_post_ifelse)
@@ -404,6 +410,7 @@ simulate_fixed <- function(data, sim_args, ...) {
                                    )
                                  )
       )
+      names(Xmat_post_other) <- names(sim_args_post_other)
       
       Xmat <- cbind(Xmat,
                     Xmat_post_other)
@@ -428,12 +435,14 @@ simulate_fixed <- function(data, sim_args, ...) {
       num_levels[[xx]] > 1 & 
       sim_args[['fixed']][[xx]][['var_type']] == 'factor'))
       )) {
-      fixed_vars <- factor_names(sim_args, fixed_vars)
+      fixed_vars <- factor_names(sim_args, attr(terms(fixed_formula), "term.labels"))
     }
     
     Omat <- Xmat
     Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))
     colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars
+
+    
     
     if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
       sim_args[['fixed']][[xx]]$var_type)) == 'factor')) {
@@ -462,9 +471,9 @@ simulate_fixed <- function(data, sim_args, ...) {
     Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))
     
     if(grepl("^0", as.character(fixed_formula)[2])) {
-      colnames(Xmat)[1:ncol(Xmat)] <- fixed_vars
+      colnames(Xmat)[1:ncol(Xmat)] <- attr(terms(fixed_formula), "term.labels")
     } else {
-      colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars
+      colnames(Xmat)[2:ncol(Xmat)] <- attr(terms(fixed_formula), "term.labels")
     }
   }
   

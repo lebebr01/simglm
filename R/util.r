@@ -141,7 +141,9 @@ factor_names <- function(sim_args, fixed_vars) {
   factor_names <- names(sim_args[['fixed']][which_factor])
   
   fixed_vars_continuous <- fixed_vars[!grepl(paste(factor_names, collapse = "|"), fixed_vars)]
-  fixed_vars_cat <- fixed_vars[grepl(paste(factor_names, collapse = "|"), fixed_vars)]
+  fixed_vars_cat <- fixed_vars[grepl(paste0('^', 
+                                            paste(factor_names, collapse = "|"),
+                                            "$"), fixed_vars)]
   
   if(any(grepl(":|^I", fixed_vars_cat))) {
     int_loc <- grep(":|^I", fixed_vars_cat)
@@ -163,10 +165,14 @@ factor_names <- function(sim_args, fixed_vars) {
   if(any(grepl(":|^I", fixed_vars))) {
     int_loc <- grep(":|^I", fixed_vars)
     var_loc <- lapply(seq_along(fixed_levels_gt2), function(xx) 
-      grep(fixed_levels_gt2[xx], fixed_vars[-int_loc]))
+      grep(paste0('^',
+                  fixed_levels_gt2[xx],
+                  "$"), fixed_vars[-int_loc]))
   } else {
     var_loc <- lapply(seq_along(fixed_levels_gt2), function(xx) 
-      grep(fixed_levels_gt2[xx], fixed_vars))
+      grep(paste0('^',
+                  fixed_levels_gt2[xx],
+                  "$"), fixed_vars))
   }
   
   updated_names <- lapply(seq_along(fixed_levels_gt2), function(ii) 
@@ -183,7 +189,12 @@ factor_names <- function(sim_args, fixed_vars) {
   
   if(any(grepl(":|^I", fixed_vars))) {
     fixed_vars_cat_rename <- fixed_vars[grepl(paste(factor_names, collapse = "|"), fixed_vars)]
+    
+    if(any(grepl("_post$", fixed_vars_cat_rename[int_loc]))) {
+      fixed_vars_cat_rename <- fixed_vars_cat_rename[!grepl("_post$", fixed_vars_cat_rename)]
+    }
     int_loc <- grep(":|^I", fixed_vars_cat_rename)
+    
     new_interaction_names <- interaction_names(fixed_vars_cat_rename,
                                                fixed_levels_gt2_names,
                                                sim_args)

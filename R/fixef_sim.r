@@ -435,7 +435,14 @@ simulate_fixed <- function(data, sim_args, ...) {
       num_levels[[xx]] > 1 & 
       sim_args[['fixed']][[xx]][['var_type']] == 'factor'))
       )) {
-      fixed_vars <- factor_names(sim_args, attr(terms(fixed_formula), "term.labels"))
+      
+      fixed_vars_factornames <- attr(terms(fixed_formula), "term.labels")
+      if(any(grepl('^factor\\(', fixed_vars_factornames))) {
+        fixed_vars_factornames <- gsub("factor\\(|\\)$", "", 
+                                       fixed_vars_factornames)
+      }
+      
+      fixed_vars <- factor_names(sim_args, fixed_vars_factornames)
     }
     
     Omat <- Xmat

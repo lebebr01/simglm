@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.11</span>
       </span>
     </div>
 
@@ -91,7 +91,7 @@
 <code>simglm</code>
 </h1>
             
-            <h4 data-toc-skip class="date">2023-07-17</h4>
+            <h4 data-toc-skip class="date">2023-09-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/HEAD/vignettes/simulation_arguments.Rmd" class="external-link"><code>vignettes/simulation_arguments.Rmd</code></a></small>
       <div class="hidden name"><code>simulation_arguments.Rmd</code></div>
@@ -827,23 +827,22 @@ arguments.</p>
 <span><span class="co">## 19 -2.013949 -0.185436         9  2</span></span>
 <span><span class="co">## 20 -2.013949 -0.185436        10  2</span></span></code></pre>
 <div class="section level3">
-<h3 id="cross-classified-random-effects">Cross-Classified Random Effects<a class="anchor" aria-label="anchor" href="#cross-classified-random-effects"></a>
+<h3 id="multiple-membership-random-effects">Multiple Membership Random Effects<a class="anchor" aria-label="anchor" href="#multiple-membership-random-effects"></a>
 </h3>
-<p>If cross-classified random effects are desired, these can be
+<p>If multiple membership random effects are desired, these can be
 specified directly within the formula syntax as you would with lme4. For
 example,
 <code>y ~ 1 + time + weight + age + treat + (1 + time| id) + (1 | neighborhood_id)</code>.
-When documenting the simulation arguments for the additional
-cross-classified random effect
-(i.e. <code>(1 | neighborhood_id)</code>), specifying
-<code>cross_class = TRUE</code> with that random effect to identify that
-this is indeed a cross-classified random effect. Secondly, you can also
-specify directly the number of clusters that are associated with this
-cross-classified factor, this can be different than those specified in
-the <code>sample_size</code> argument. This can be done with the
-<code>num_ids</code> argument. Below is an example with a single
-cross-classified random effect representing neighborhoods individuals
-belong in</p>
+When documenting the simulation arguments for the additional multiple
+membership random effect (i.e. <code>(1 | neighborhood_id)</code>),
+specifying <code>multiple_member = TRUE</code> with that random effect
+to identify that this is indeed a multiple membership random effect.
+Secondly, you can also specify directly the number of clusters that are
+associated with this multiple membership factor, this can be different
+than those specified in the <code>sample_size</code> argument. This can
+be done with the <code>num_ids</code> argument. Below is an example with
+a single multiple membership random effect representing neighborhoods
+individuals belong in</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">321</span><span class="op">)</span> </span>
 <span></span>
@@ -859,7 +858,7 @@ belong in</p>
 <span>  randomeffect <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>int_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">8</span>, var_level <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
 <span>                time_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">3</span>, var_level <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
 <span>                int_nid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">5</span>, var_level <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>                               cross_class <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                               multiple_member <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                               num_ids <span class="op">=</span> <span class="fl">12</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  sample_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>level1 <span class="op">=</span> <span class="fl">10</span>, level2 <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>

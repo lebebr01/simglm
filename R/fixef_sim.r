@@ -405,14 +405,20 @@ simulate_fixed <- function(data, sim_args, ...) {
       Xmat_tmp <- data.frame(Xmat, ids)
       
       Xmat_post_other <- #do.call("cbind.data.frame",
-                                 lapply(seq_along(sim_args_post_other), function(ii)
-                                   aggregate(
-                                     Xmat_tmp[[sim_args_post_other[[ii]][['variable']]]] ~ Xmat_tmp[[sim_args_post_other[[ii]][['by']]]],
-                                     FUN = sim_args_post_other[[ii]][['fun']]
-                                   )
-                                 #)
-      )
-      names(Xmat_post_other) <- names(sim_args_post_other)
+        lapply(seq_along(sim_args_post_other), function(ii)
+          setNames(
+            aggregate(
+              Xmat_tmp[[sim_args_post_other[[ii]][['variable']]]] ~ Xmat_tmp[[sim_args_post_other[[ii]][['by']]]],
+              FUN = sim_args_post_other[[ii]][['fun']]
+            ),
+            list(sim_args_post_other[[ii]][['by']], 
+                 sim_args_post_other[[ii]][['variable']])
+            #)
+          )
+        )
+      #names(Xmat_post_other) <- names(sim_args_post_other)
+      
+      Xmat_tmp <- merge(Xmat_tmp, Xmat_post_other, )
       
       Xmat <- cbind(Xmat,
                     Xmat_post_other)

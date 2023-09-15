@@ -371,7 +371,7 @@ simulate_fixed <- function(data, sim_args, ...) {
   if(any(grepl("_post$", attr(terms(fixed_formula), "term.labels")))) {
     
     detect_ifelse <- unlist(lapply(seq_along(sim_args[['post']]), function(ii) 
-      grepl('ifelse', sim_args[['post']][[1]][['fun']])
+      grepl('ifelse', sim_args[['post']][[ii]][['fun']])
     ))
     
     post_names <- names(sim_args[['post']])
@@ -402,13 +402,15 @@ simulate_fixed <- function(data, sim_args, ...) {
     }
     
     if(length(sim_args_post_other) > 0) {
-      Xmat_post_other <- do.call("cbind.data.frame",
+      Xmat_tmp <- data.frame(Xmat, ids)
+      
+      Xmat_post_other <- #do.call("cbind.data.frame",
                                  lapply(seq_along(sim_args_post_other), function(ii)
-                                   lapply(
-                                     X = Xmat[[sim_args_post_other[[ii]][['variable']]]],
+                                   aggregate(
+                                     Xmat_tmp[[sim_args_post_other[[ii]][['variable']]]] ~ Xmat_tmp[[sim_args_post_other[[ii]][['by']]]],
                                      FUN = sim_args_post_other[[ii]][['fun']]
                                    )
-                                 )
+                                 #)
       )
       names(Xmat_post_other) <- names(sim_args_post_other)
       

@@ -286,6 +286,7 @@ sim_variable <- function(var_type = c("continuous", "factor", "ordinal",
 #'   }
 #' @param ... Other arguments to pass to error simulation functions.
 #' @importFrom purrr modify_if
+#' @importFrom stats setNames
 #' 
 #' @export 
 simulate_fixed <- function(data, sim_args, ...) {
@@ -418,14 +419,16 @@ simulate_fixed <- function(data, sim_args, ...) {
         )
       #names(Xmat_post_other) <- names(sim_args_post_other)
       
-      Xmat_tmp <- lapply(seq_along(Xmat_post_other), function(ii) 
-        merge(Xmat_tmp, Xmat_post_other[[ii]], 
-              by = sim_args_post_other[[ii]][['by']], 
-              all.x = TRUE)
-      )
+      Xmat_tmp2 <- do.call("cbind.data.frame",
+                          lapply(seq_along(Xmat_post_other), function(ii) 
+                            merge(Xmat_tmp, Xmat_post_other[[ii]], 
+                                  by = sim_args_post_other[[ii]][['by']], 
+                                  all.x = TRUE)
+                          )
+      )[names(sim_args_post_other)]
       
       Xmat <- cbind(Xmat,
-                    Xmat_post_other)
+                    Xmat_tmp2)
     }
     
   }

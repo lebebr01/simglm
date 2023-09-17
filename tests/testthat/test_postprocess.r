@@ -39,4 +39,42 @@ test_that('ifelse post process', {
                table(seg_data$control_1)[[2]])
   expect_equal(table(seg_data$control_post)[[2]], 
                table(seg_data$control_1)[[1]])
+  
+  set.seed(1999)
+  
+  sim_arguments <- list(
+    formula = retirement_savings ~ 1 + age + family_income + walkability + neighborhood_income_post + (1 | neighborhood),
+    fixed = list(
+      age = list(var_type = 'ordinal', levels = 20:80),
+      family_income = list(var_type = 'continuous', mean = 0, sd = 25000),
+      walkability = list(var_type = 'continuous', mean = 35, sd = 20, 
+                         floor = 0, ceiling = 100)
+    ),
+    post = list(
+      neighborhood_income_post = list(
+        variable = 'family_income',
+        by = 'neighborhood', 
+        fun = 'mean'
+      )
+    ),
+    randomeffect = list(
+      neighborhood_int = list(variance = 10000, var_level = 2)
+    ),
+    error = list(
+      variance = 50000
+    ),
+    reg_weights = c(50000, 5000, 2, 1000, 0.5),
+    sample_size = list(
+      level1 = 1000,
+      level2 = 50
+    )
+  )
+  
+  agg_data <- simulate_fixed(data = NULL, sim_arguments)
+  
+  expect_equal(length(unique(agg_data$neighborhood_income_post)), 
+               50)
+  expect_equal(mean(subset(agg_data, neighborhood == 1)$family_income), 
+               agg_data$neighborhood_income_post[1])
+  
 })

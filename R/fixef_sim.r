@@ -412,13 +412,17 @@ simulate_fixed <- function(data, sim_args, ...) {
               FUN = sim_args_post_other[[ii]][['fun']]
             ),
             list(sim_args_post_other[[ii]][['by']], 
-                 sim_args_post_other[[ii]][['variable']])
+                 names(sim_args_post_other)[ii])
             #)
           )
         )
       #names(Xmat_post_other) <- names(sim_args_post_other)
       
-      Xmat_tmp <- merge(Xmat_tmp, Xmat_post_other, )
+      Xmat_tmp <- lapply(seq_along(Xmat_post_other), function(ii) 
+        merge(Xmat_tmp, Xmat_post_other[[ii]], 
+              by = sim_args_post_other[[ii]][['by']], 
+              all.x = TRUE)
+      )
       
       Xmat <- cbind(Xmat,
                     Xmat_post_other)

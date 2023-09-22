@@ -227,13 +227,7 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   
   data_df <- do.call("rbind", data)
   
-  if(is.null(sim_args['vary_arguments'])) {
-    group_vars <- c('term')
-  } else {
-    group_vars <- c(names(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE)),
-                       'term')
-  }
-  data_list <- split(data_df, f = data_df[group_vars])
+  data_list <- split(data_df, f = data_df['term'])
   
   data_list <- lapply(seq_along(data_list), function(xx) {
     compute_power(data_list[[xx]], power_args[[xx]])
@@ -243,6 +237,13 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   })
   
   data_df <- do.call("rbind", data_list)
+  
+  if(is.null(sim_args['vary_arguments'])) {
+    group_vars <- c('term')
+  } else {
+    group_vars <- c(names(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE)),
+                    'term')
+  }
   
   avg_estimates <- aggregate_estimate(data_df,
                                       rlang::syms(group_vars))

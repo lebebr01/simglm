@@ -369,6 +369,15 @@ closest_match <- function(data, value) {
   which.min(abs(data - value))
 }
 
+list_select <- function(list, names, exclude = TRUE) {
+  if(exclude) {
+    index <- which(!(names(list) %in% names))
+  } else {
+    index <- which(names(list) %in% names)
+  }
+  list[index]
+}
+
 # Horrible hack to keep CRAN happy and suppress NOTES about
 # parts of the code that use non-standard evaluation.
 # See:

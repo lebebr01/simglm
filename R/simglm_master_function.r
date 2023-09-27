@@ -59,12 +59,12 @@ simglm_modelfit <- function(data, sim_args) {
   }
   
   if(!is.null(sim_args[['model_fit']])) {
-    data_model <- model_fit(data, sim_args = sim_args)
+    data <- model_fit(data, sim_args = sim_args)
   }
   
   if(!is.null(sim_args[['extract_coefficients']])) {
-    data_model <- extract_coefficients(data_model)
+    data <- extract_coefficients(data)
   }
 
-data_model
+data
 }

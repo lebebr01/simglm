@@ -162,33 +162,26 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
                                          future.seed = future.seed)
             }, future.seed = future.seed)
   
-  sim_arguments_w <- parse_varyarguments_w(sim_args)
-  
-  power_out <- future.apply::future_lapply(seq_along(simulation_out), function(xx) {
-    future.apply::future_lapply(seq_along(simulation_out[[xx]]), function(yy) {
-      future.apply::future_lapply(seq_along(sim_arguments_w), function(zz) {
-        simglm_modelfit(simulation_out[[xx]][[yy]], 
-                        sim_arguments_w[[zz]])
+  if(length(within_conditions_name) > 0) {
+    sim_arguments_w <- parse_varyarguments_w(sim_args)
+    
+    power_out <- future.apply::future_lapply(seq_along(simulation_out), function(xx) {
+      future.apply::future_lapply(seq_along(simulation_out[[xx]]), function(yy) {
+        future.apply::future_lapply(seq_along(sim_arguments_w), function(zz) {
+          simglm_modelfit(simulation_out[[xx]][[yy]], 
+                          sim_arguments_w[[zz]])
+        }, future.seed = future.seed)
       }, future.seed = future.seed)
     }, future.seed = future.seed)
-  }, future.seed = future.seed)
+  }
+  if(length(within_conditions_name) ==0) {
+    power_out <- simulation_out
+  }
+
   
   if(return_list) {
     return(power_out)
   } else {
-    
-    num_terms <- lapply(seq_along(power_out), function(xx)
-      lapply(seq_along(power_out[[xx]]), function(yy)
-             lapply(power_out[[xx]][[yy]], nrow))
-      )
-    within_id <- rep(rep(rep(seq_along(sim_arguments_w), 
-                             unique(unlist(num_terms))), 
-                         sim_args[['replications']]), 
-                     length(sim_arguments))
-    within_df <- data.frame(
-      within_id = unique(within_id),
-      within_names = within_conditions_name
-    )
     
     power_df <- lapply(power_out, dplyr::bind_rows)
     
@@ -198,21 +191,34 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
       rep(1:sim_args[['replications']], 
           each = num_rows[xx]/sim_args[['replications']]))
     
-    power_list <- data.frame(
-      do.call("rbind", lapply(seq_along(sim_arguments), function(xx) 
+    power_list <- lapply(seq_along(sim_arguments), function(xx) 
       data.frame(between_conditions_name[xx, , drop = FALSE],
                  replication = rep_id[[xx]],
                  power_df[[xx]],
                  row.names = NULL
       )
     )
-    ), 
-    within_id = within_id
-    )
-    power_list <- merge(power_list,
-                        within_df, 
-                        by = 'within_id',
-                        all.x = TRUE)
+
+    if(length(within_conditions_name) > 0) {
+      num_terms <- lapply(seq_along(power_out), function(xx)
+        lapply(seq_along(power_out[[xx]]), function(yy)
+          lapply(power_out[[xx]][[yy]], nrow))
+      )
+      within_id <- rep(rep(rep(seq_along(sim_arguments_w), 
+                               unique(unlist(num_terms))), 
+                           sim_args[['replications']]), 
+                       length(sim_arguments))
+      within_df <- data.frame(
+        within_id = unique(within_id),
+        within_names = within_conditions_name
+      )
+      
+      power_list <- merge(power_list,
+                          within_df, 
+                          by = 'within_id',
+                          all.x = TRUE)
+    }
+
     
     power_list
   }

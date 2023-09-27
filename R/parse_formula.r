@@ -235,7 +235,7 @@ parse_varyarguments <- function(sim_args) {
 parse_varyarguments_w <- function(sim_args) {
   
   conditions <- expand.grid(list_select(sim_args[['vary_arguments']],
-                                        names = c('model_fit', 'power'),
+                                        names = c('model_fit'),
                                         exclude = FALSE), 
                             KEEP.OUT.ATTRS = FALSE)
   if(any(sapply(conditions, is.list))) {

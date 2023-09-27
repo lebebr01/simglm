@@ -49,14 +49,22 @@ simglm <- function(sim_args) {
     data <- generate_missing(data, sim_args = sim_args)
   }
   
+  data
+  
+}
+
+simglm_modelfit <- function(data, sim_args) {
+  if(is.null(data)) {
+    error('Must pass a valid data object')
+  }
+  
   if(!is.null(sim_args[['model_fit']])) {
-    data <- model_fit(data, sim_args = sim_args)
+    data_model <- model_fit(data, sim_args = sim_args)
   }
   
   if(!is.null(sim_args[['extract_coefficients']])) {
-    data <- extract_coefficients(data)
+    data_model <- extract_coefficients(data_model)
   }
-  
-  data
-  
+
+data_model
 }

@@ -176,6 +176,19 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
     return(power_out)
   } else {
     
+    num_terms <- lapply(seq_along(power_out), function(xx)
+      lapply(seq_along(power_out[[xx]]), function(yy)
+             lapply(power_out[[xx]][[yy]], nrow))
+      )
+    within_id <- rep(rep(rep(seq_along(sim_arguments_w), 
+                             unique(unlist(num_terms))), 
+                         sim_args[['replications']]), 
+                     length(sim_arguments))
+    within_df <- data.frame(
+      within_id = unique(within_id),
+      within_names = within_conditions_name
+    )
+    
     power_df <- lapply(power_out, dplyr::bind_rows)
     
     num_rows <- unlist(lapply(power_df, nrow))
@@ -184,13 +197,21 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
       rep(1:sim_args[['replications']], 
           each = num_rows[xx]/sim_args[['replications']]))
     
-    power_list <- lapply(seq_along(sim_arguments), function(xx) 
+    power_list <- data.frame(
+      do.call("rbind", lapply(seq_along(sim_arguments), function(xx) 
       data.frame(between_conditions_name[xx, , drop = FALSE],
                  replication = rep_id[[xx]],
                  power_df[[xx]],
                  row.names = NULL
       )
     )
+    ), 
+    within_id = within_id
+    )
+    power_list <- merge(power_list,
+                        within_df, 
+                        by = 'within_id',
+                        all.x = TRUE)
     
     power_list
   }

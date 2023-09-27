@@ -196,7 +196,10 @@ parse_power <- function(sim_args, samp_size) {
 #' @export
 parse_varyarguments <- function(sim_args) {
   
-  conditions <- expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE)
+  conditions <- expand.grid(list_select(sim_args[['vary_arguments']],
+                                        names = c('model_fit', 'power'),
+                                        exclude = TRUE), 
+                            KEEP.OUT.ATTRS = FALSE)
   if(any(sapply(conditions, is.list))) {
     loc <- sapply(conditions, is.list)
     simp_conditions <- conditions[loc != TRUE]

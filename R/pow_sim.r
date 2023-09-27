@@ -140,6 +140,13 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
     sim_args[['replications']] <- 1
   }
   
+  within_conditions <- list_select(sim_args[['vary_arguments']],
+                                   names = c('model_fit', 'power'),
+                                   exclude = FALSE)
+  between_conditions <- list_select(sim_args[['vary_arguments']],
+                                    names = c('model_fit', 'power'),
+                                    exclude = TRUE)
+  
   conditions <- data.frame(sapply(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE),
                                   as.character))
   

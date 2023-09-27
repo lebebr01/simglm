@@ -190,27 +190,28 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
     rep_id <- lapply(seq_along(num_rows), function(xx) 
       rep(1:sim_args[['replications']], 
           each = num_rows[xx]/sim_args[['replications']]))
-    
-    power_list <- lapply(seq_along(sim_arguments), function(xx) 
-      data.frame(between_conditions_name[xx, , drop = FALSE],
-                 replication = rep_id[[xx]],
-                 power_df[[xx]],
-                 row.names = NULL
-      )
-    )
 
     if(length(within_conditions_name) > 0) {
       num_terms <- lapply(seq_along(power_out), function(xx)
         lapply(seq_along(power_out[[xx]]), function(yy)
           lapply(power_out[[xx]][[yy]], nrow))
       )
-      within_id <- rep(rep(rep(seq_along(sim_arguments_w), 
-                               unique(unlist(num_terms))), 
-                           sim_args[['replications']]), 
-                       length(sim_arguments))
+      within_id <- rep(rep(seq_along(sim_arguments_w), 
+                           unique(unlist(num_terms))), 
+                       sim_args[['replications']])
+      
       within_df <- data.frame(
         within_id = unique(within_id),
         within_names = within_conditions_name
+      )
+      
+      power_list <- lapply(seq_along(sim_arguments), function(xx) 
+        data.frame(between_conditions_name[xx, , drop = FALSE],
+                   replication = rep_id[[xx]],
+                   within_id = within_id,
+                   power_df[[xx]],
+                   row.names = NULL
+        )
       )
       
       power_list <- lapply(seq_along(power_list), function(xx) 
@@ -218,6 +219,14 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
               within_df, 
               by = 'within_id',
               all.x = TRUE)
+      )
+    } else {
+      power_list <- lapply(seq_along(sim_arguments), function(xx) 
+        data.frame(between_conditions_name[xx, , drop = FALSE],
+                   replication = rep_id[[xx]],
+                   power_df[[xx]],
+                   row.names = NULL
+        )
       )
     }
 

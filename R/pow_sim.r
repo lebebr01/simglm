@@ -174,7 +174,7 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
           each = num_rows[xx]/sim_args[['replications']]))
     
     power_list <- lapply(seq_along(sim_arguments), function(xx) 
-      data.frame(conditions[xx, , drop = FALSE],
+      data.frame(between_conditions_name[xx, , drop = FALSE],
                  replication = rep_id[[xx]],
                  power_df[[xx]],
                  row.names = NULL

@@ -147,8 +147,10 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
                                     names = c('model_fit', 'power'),
                                     exclude = TRUE)
   
-  conditions <- data.frame(sapply(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE),
+  between_conditions_name <- data.frame(sapply(expand.grid(between_conditions, KEEP.OUT.ATTRS = FALSE),
                                   as.character))
+  within_conditions_name <- data.frame(sapply(expand.grid(within_conditions, KEEP.OUT.ATTRS = FALSE),
+                                           as.character))
   
   sim_arguments <- parse_varyarguments(sim_args)
   

@@ -183,7 +183,7 @@ parse_power <- function(sim_args, samp_size) {
   
 }
 
-#' Parse varying arguments
+#' Parse between varying arguments
 #' 
 #' @param sim_args A named list with special model formula syntax. See details and examples
 #'   for more information. The named list may contain the following:
@@ -199,6 +199,44 @@ parse_varyarguments <- function(sim_args) {
   conditions <- expand.grid(list_select(sim_args[['vary_arguments']],
                                         names = c('model_fit', 'power'),
                                         exclude = TRUE), 
+                            KEEP.OUT.ATTRS = FALSE)
+  if(any(sapply(conditions, is.list))) {
+    loc <- sapply(conditions, is.list)
+    simp_conditions <- conditions[loc != TRUE]
+    list_conditions <- conditions[loc == TRUE]
+    list_conditions <- lapply(seq_along(list_conditions), function(xx) 
+      unlist(list_conditions[xx], recursive = FALSE))
+    for(tt in seq_along(list_conditions)) {
+      names(list_conditions[[tt]]) <- gsub("[0-9]*", "", names(list_conditions[[tt]]))
+    }
+    lapply(1:nrow(conditions), function(xx) c(sim_args, 
+                                              simp_conditions[xx, , drop = FALSE], 
+                                              do.call('c', lapply(seq_along(list_conditions), function(tt) 
+                                                list_conditions[[tt]][xx]))
+    ))
+  } else {
+    lapply(1:nrow(conditions), function(xx) c(sim_args, 
+                                              conditions[xx, , drop = FALSE]))
+  }
+  
+}
+
+#' Parse within varying arguments
+#' 
+#' @param sim_args A named list with special model formula syntax. See details and examples
+#'   for more information. The named list may contain the following:
+#'   \itemize{
+#'     \item fixed: This is the fixed portion of the model (i.e. covariates)
+#'     \item random: This is the random portion of the model (i.e. random effects)
+#'     \item error: This is the error (i.e. residual term).
+#'   }
+#'   
+#' @export
+parse_varyarguments_w <- function(sim_args) {
+  
+  conditions <- expand.grid(list_select(sim_args[['vary_arguments']],
+                                        names = c('model_fit', 'power'),
+                                        exclude = FALSE), 
                             KEEP.OUT.ATTRS = FALSE)
   if(any(sapply(conditions, is.list))) {
     loc <- sapply(conditions, is.list)

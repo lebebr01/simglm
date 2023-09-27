@@ -213,10 +213,12 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
         within_names = within_conditions_name
       )
       
-      power_list <- merge(power_list,
-                          within_df, 
-                          by = 'within_id',
-                          all.x = TRUE)
+      power_list <- lapply(seq_along(power_list), function(xx) 
+        merge(power_list[[xx]],
+              within_df, 
+              by = 'within_id',
+              all.x = TRUE)
+      )
     }
 
     

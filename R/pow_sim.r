@@ -123,7 +123,8 @@ replicate_simulation <- function(sim_args, return_list = FALSE,
       sim_args[['replications']] <- 1
     }
     future.apply::future_replicate(sim_args[['replications']], 
-                                   simglm(sim_args),
+                                   simglm_modelfit(simglm(sim_args), 
+                                                   sim_args),
                                    simplify = FALSE,
                                    future.seed = future.seed)
   } else {

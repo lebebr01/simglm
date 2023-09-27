@@ -141,7 +141,7 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
   }
   
   within_conditions <- list_select(sim_args[['vary_arguments']],
-                                   names = c('model_fit', 'power'),
+                                   names = c('model_fit'),
                                    exclude = FALSE)
   between_conditions <- list_select(sim_args[['vary_arguments']],
                                     names = c('model_fit', 'power'),

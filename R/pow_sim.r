@@ -154,12 +154,23 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
   
   sim_arguments <- parse_varyarguments(sim_args)
   
-  power_out <- future.apply::future_lapply(seq_along(sim_arguments), function(xx) {
+  simulation_out <- future.apply::future_lapply(seq_along(sim_arguments), function(xx) {
           future.apply::future_replicate(sim_arguments[[xx]][['replications']], 
                                          simglm(sim_arguments[[xx]]),
                                          simplify = FALSE,
                                          future.seed = future.seed)
             }, future.seed = future.seed)
+  
+  sim_arguments_w <- parse_varyarguments_w(sim_args)
+  
+  power_out <- future.apply::future_lapply(seq_along(simulation_out), function(xx) {
+    future.apply::future_lapply(seq_along(simulation_out[[xx]]), function(yy) {
+      future.apply::future_lapply(seq_along(sim_arguments_w), function(zz) {
+        simglm_modelfit(simulation_out[[xx]][[yy]], 
+                        sim_arguments_w[[zz]])
+      }, future.seed = future.seed)
+    }, future.seed = future.seed)
+  }, future.seed = future.seed)
   
   if(return_list) {
     return(power_out)

@@ -113,6 +113,7 @@ tidy_mixed <- function(model) {
 #'   \code{\link[future.apply:future_lapply]{future_replicate}}.
 #' @param ... Currently not used.
 #' @importFrom future.apply future_replicate
+#' @importFrom dplyr left_join
 #' @export 
 replicate_simulation <- function(sim_args, return_list = FALSE, 
                                  future.seed = TRUE, ...) {
@@ -215,10 +216,9 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
       )
       
       power_list <- lapply(seq_along(power_list), function(xx) 
-        data.frame(power_list[[xx]],
-              within_df, 
-              by = 'within_id',
-              all.x = TRUE)
+        dplyr::left_join(power_list[[xx]],
+              within_df,
+              by = 'within_id')
       )
     } else {
       power_list <- lapply(seq_along(sim_arguments), function(xx) 

@@ -164,7 +164,7 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
             }, future.seed = future.seed)
   
   if(length(within_conditions_name) > 0) {
-    sim_arguments_w <- parse_varyarguments_w(sim_args)
+    sim_arguments_w <- parse_varyarguments_w(sim_args, name = 'model_fit')
     
     power_out <- future.apply::future_lapply(seq_along(simulation_out), function(xx) {
       future.apply::future_lapply(seq_along(simulation_out[[xx]]), function(yy) {

@@ -14,6 +14,9 @@ for more information. The named list may contain the following:
   \item random: This is the random portion of the model (i.e. random effects)
   \item error: This is the error (i.e. residual term).
 }}
+
+\item{name}{The name of the within simulation condition. This is primarily 
+an internal function.}
 }
 \description{
 Parse within varying arguments

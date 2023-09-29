@@ -230,6 +230,8 @@ parse_varyarguments <- function(sim_args) {
 #'     \item random: This is the random portion of the model (i.e. random effects)
 #'     \item error: This is the error (i.e. residual term).
 #'   }
+#' @param name The name of the within simulation condition. This is primarily 
+#' an internal function.
 #'   
 #' @export
 parse_varyarguments_w <- function(sim_args, name) {

@@ -4,7 +4,7 @@
 \alias{parse_varyarguments_w}
 \title{Parse within varying arguments}
 \usage{
-parse_varyarguments_w(sim_args)
+parse_varyarguments_w(sim_args, name)
 }
 \arguments{
 \item{sim_args}{A named list with special model formula syntax. See details and examples

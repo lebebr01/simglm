@@ -55,7 +55,7 @@ simglm <- function(sim_args) {
 
 simglm_modelfit <- function(data, sim_args) {
   if(is.null(data)) {
-    error('Must pass a valid data object')
+    stop('Must pass a valid data object')
   }
   
   if(!is.null(sim_args[['model_fit']])) {

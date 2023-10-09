@@ -276,7 +276,15 @@ compute_statistics <- function(data, sim_args, power = TRUE,
     samp_size <- sim_args[['sample_size']]
   }
   
-  power_args <- parse_power(sim_args, samp_size)
+  if(is.null(sim_args[['power']])) {
+    sim_arguments_w <- parse_varyarguments_w(sim_args, name = 'power')
+    
+    power_args <- lapply(seq_along(sim_arguments_w), function(xx) 
+      parse_power(sim_arguments_w[[xx]], samp_size)
+    )
+  } else {
+    power_args <- parse_power(sim_args, samp_size)
+  }
   
   if(is.null(sim_args[['model_fit']][['reg_weights_model']])) {
     reg_weights <- sim_args[['reg_weights']]

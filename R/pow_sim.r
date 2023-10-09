@@ -175,7 +175,7 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
       }, future.seed = future.seed)
     }, future.seed = future.seed)
   }
-  if(length(within_conditions_name) ==0) {
+  if(length(within_conditions_name) == 0) {
     power_out <- simulation_out
   }
 

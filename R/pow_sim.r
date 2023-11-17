@@ -307,7 +307,7 @@ compute_statistics <- function(data, sim_args, power = TRUE,
     data_list <- lapply(seq_along(sim_arguments_w), function(yy) {
       lapply(seq_along(data_list), function(xx) {
         cbind(compute_power(data_list[[xx]], power_args[[yy]][[xx]]),
-              power = within_conditions_name[yy, ])
+              power_arg = within_conditions_name[yy, ])
       }
       )
     }
@@ -341,6 +341,9 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   } else {
     group_vars <- c(names(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE)),
                     'term')
+    if(any(group_vars %in% 'power')) {
+      group_vars <- gsub("power", "power_args", group_vars)
+    }
   }
   
   avg_estimates <- aggregate_estimate(data_df,

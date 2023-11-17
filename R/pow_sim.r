@@ -307,7 +307,7 @@ compute_statistics <- function(data, sim_args, power = TRUE,
     data_list <- lapply(seq_along(sim_arguments_w), function(yy) {
       lapply(seq_along(data_list), function(xx) {
         cbind(compute_power(data_list[[xx]], power_args[[yy]][[xx]]),
-              within_conditions_name[yy, ])
+              power = within_conditions_name[yy, ])
       }
       )
     }

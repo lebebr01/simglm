@@ -164,7 +164,7 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
             }, future.seed = future.seed)
   
   if(length(within_conditions_name) > 0) {
-    sim_arguments_w <- parse_varyarguments_w(sim_args, name = 'model_fit')
+    sim_arguments_w <- parse_varyarguments_w(sim_args, name = c('model_fit'))
     
     power_out <- future.apply::future_lapply(seq_along(simulation_out), function(xx) {
       future.apply::future_lapply(seq_along(simulation_out[[xx]]), function(yy) {
@@ -278,6 +278,13 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   
   if(is.null(sim_args[['power']])) {
     sim_arguments_w <- parse_varyarguments_w(sim_args, name = 'power')
+    within_conditions <- list_select(sim_args[['vary_arguments']],
+                                     names = c('power'),
+                                     exclude = FALSE)
+    
+    within_conditions_name <- data.frame(sapply(expand.grid(within_conditions, KEEP.OUT.ATTRS = FALSE),
+                                                as.character))
+    
     
     power_args <- lapply(seq_along(sim_arguments_w), function(xx) 
       parse_power(sim_arguments_w[[xx]], samp_size)
@@ -296,14 +303,37 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   
   data_list <- split(data_df, f = data_df['term'])
   
-  data_list <- lapply(seq_along(data_list), function(xx) {
-    compute_power(data_list[[xx]], power_args[[xx]])
+  if(is.null(sim_args[['power']])) {
+    data_list <- lapply(seq_along(sim_arguments_w), function(yy) {
+      lapply(seq_along(data_list), function(xx) {
+        compute_power(data_list[[xx]], power_args[[yy]][[xx]])
+      }
+      )
+    }
+    )
+    
+    # data_list <- lapply(seq_along(sim_arguments_w), function(yy) {
+    #   lapply(seq_along(data_list), function(xx) {
+    #     compute_t1e(data_list[[xx]], power_args[[yy]][[xx]], reg_weights = reg_weights[xx])
+    #   }
+    #   )
+    # }
+    # )
+  } else {
+    data_list <- lapply(seq_along(data_list), function(xx) {
+      compute_power(data_list[[xx]], power_args[[xx]])
     })
-  data_list <- lapply(seq_along(data_list), function(xx) {
-    compute_t1e(data_list[[xx]], power_args[[xx]], reg_weights = reg_weights[xx])
-  })
+    data_list <- lapply(seq_along(data_list), function(xx) {
+      compute_t1e(data_list[[xx]], power_args[[xx]], reg_weights = reg_weights[xx])
+    })
+  }
+  
   
   data_df <- do.call("rbind", data_list)
+  
+  if(!is.data.frame(data_df)) {
+    data_df <- do.call("rbind", data_df)
+  }
   
   if(is.null(sim_args['vary_arguments'])) {
     group_vars <- c('term')

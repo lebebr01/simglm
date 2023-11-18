@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Tidy Simulation with <code>simglm</code>
 </h1>
             
-            <h4 data-toc-skip class="date">2023-09-27</h4>
+            <h4 data-toc-skip class="date">2023-11-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/HEAD/vignettes/tidy_simulation.Rmd" class="external-link"><code>vignettes/tidy_simulation.Rmd</code></a></small>
       <div class="hidden name"><code>tidy_simulation.Rmd</code></div>
@@ -815,22 +815,22 @@ statistics across the replications.</li>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span>, alternative_power <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 12</span></span></span>
-<span><span class="co">##   term        avg_estimate power avg_test_stat crit_value_power type_1_error</span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Intercept)      46.1      0.7         3.06              1.96          0.5</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> age               0.085<span style="text-decoration: underline;">2</span>   0.3         0.102             1.96          0.4</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> sexfemale         1.51     0.1         0.266             1.96          0.2</span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 6 more variables: avg_adjtest_stat &lt;dbl&gt;, crit_value_t1e &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   param_estimate_sd &lt;dbl&gt;, avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,</span></span></span>
+<span>  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span>, alternative_power <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>                     type_1_error <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 9</span></span></span>
+<span><span class="co">##   term       avg_estimate power avg_test_stat crit_value_power param_estimate_sd</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Intercep…      46.1      0.7         3.06              1.96            25.4  </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> age              0.085<span style="text-decoration: underline;">2</span>   0.3         0.102             1.96             0.567</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> sexfemale        1.51     0.1         0.266             1.96             6.48 </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 3 more variables: avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   replications &lt;dbl&gt;</span></span></span></code></pre>
 <p>As can be seen from the output, the default behavior is to return
-statistics for power, average test statistic, type I error rate,
-adjusted average test statistic, standard deviation of parameter
-estimate, average standard error, precision ration (standard deviation
-of parameter estimate divided by average standard error), and the number
-of replications for each term.</p>
+statistics for power, average test statistic, adjusted average test
+statistic, standard deviation of parameter estimate, average standard
+error, precision ration (standard deviation of parameter estimate
+divided by average standard error), and the number of replications for
+each term.</p>
 <p>To generate this output, only the number of replications is needed.
 Here only 10 replications were done, in practice many more replications
 would be done to ensure there are accurate results.</p>
@@ -872,15 +872,15 @@ vignette processing.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span>, alternative_power <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 12</span></span></span>
-<span><span class="co">##   term        avg_estimate power avg_test_stat crit_value_power type_1_error</span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Intercept)      56.0        0         7.26              31.8            0</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> age              -<span style="color: #BB0000;">0.099</span><span style="color: #BB0000; text-decoration: underline;">4</span>     0        -<span style="color: #BB0000;">0.603</span>             31.8            0</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> sexfemale         0.439      0         0.150             31.8            0</span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 6 more variables: avg_adjtest_stat &lt;dbl&gt;, crit_value_t1e &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   param_estimate_sd &lt;dbl&gt;, avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,</span></span></span>
+<span>  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span>, alternative_power <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>                     type_1_error <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 9</span></span></span>
+<span><span class="co">##   term       avg_estimate power avg_test_stat crit_value_power param_estimate_sd</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Intercep…      56.0        0         7.26              31.8             7.83 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> age             -<span style="color: #BB0000;">0.099</span><span style="color: #BB0000; text-decoration: underline;">4</span>     0        -<span style="color: #BB0000;">0.603</span>             31.8             0.166</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> sexfemale        0.439      0         0.150             31.8             3.01 </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 3 more variables: avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,</span></span></span>
 <span><span class="co">## <span style="color: #949494;">#   replications &lt;dbl&gt;</span></span></span></code></pre>
 </div>
 </div>

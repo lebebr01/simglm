@@ -89,7 +89,6 @@ sim_factor2 <- function(n, levels, var_level = 1, replace = TRUE,
     }
   }
   
-  
   cat_var <- factor(cat_var, levels = levels)
   
   cat_var

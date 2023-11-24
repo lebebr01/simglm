@@ -113,6 +113,7 @@ tidy_mixed <- function(model) {
 #'   \code{\link[future.apply:future_lapply]{future_replicate}}.
 #' @param ... Currently not used.
 #' @importFrom future.apply future_replicate
+#' @importFrom dplyr left_join
 #' @export 
 replicate_simulation <- function(sim_args, return_list = FALSE, 
                                  future.seed = TRUE, ...) {
@@ -123,7 +124,8 @@ replicate_simulation <- function(sim_args, return_list = FALSE,
       sim_args[['replications']] <- 1
     }
     future.apply::future_replicate(sim_args[['replications']], 
-                                   simglm(sim_args),
+                                   simglm_modelfit(simglm(sim_args), 
+                                                   sim_args),
                                    simplify = FALSE,
                                    future.seed = future.seed)
   } else {
@@ -141,7 +143,7 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
   }
   
   within_conditions <- list_select(sim_args[['vary_arguments']],
-                                   names = c('model_fit', 'power'),
+                                   names = c('model_fit'),
                                    exclude = FALSE)
   between_conditions <- list_select(sim_args[['vary_arguments']],
                                     names = c('model_fit', 'power'),
@@ -154,12 +156,29 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
   
   sim_arguments <- parse_varyarguments(sim_args)
   
-  power_out <- future.apply::future_lapply(seq_along(sim_arguments), function(xx) {
+  simulation_out <- future.apply::future_lapply(seq_along(sim_arguments), function(xx) {
           future.apply::future_replicate(sim_arguments[[xx]][['replications']], 
                                          simglm(sim_arguments[[xx]]),
                                          simplify = FALSE,
                                          future.seed = future.seed)
             }, future.seed = future.seed)
+  
+  if(length(within_conditions_name) > 0) {
+    sim_arguments_w <- parse_varyarguments_w(sim_args, name = c('model_fit'))
+    
+    power_out <- future.apply::future_lapply(seq_along(simulation_out), function(xx) {
+      future.apply::future_lapply(seq_along(simulation_out[[xx]]), function(yy) {
+        future.apply::future_lapply(seq_along(sim_arguments_w), function(zz) {
+          simglm_modelfit(simulation_out[[xx]][[yy]], 
+                          sim_arguments_w[[zz]])
+        }, future.seed = future.seed)
+      }, future.seed = future.seed)
+    }, future.seed = future.seed)
+  }
+  if(length(within_conditions_name) == 0) {
+    power_out <- simulation_out
+  }
+
   
   if(return_list) {
     return(power_out)
@@ -172,14 +191,45 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
     rep_id <- lapply(seq_along(num_rows), function(xx) 
       rep(1:sim_args[['replications']], 
           each = num_rows[xx]/sim_args[['replications']]))
-    
-    power_list <- lapply(seq_along(sim_arguments), function(xx) 
-      data.frame(between_conditions_name[xx, , drop = FALSE],
-                 replication = rep_id[[xx]],
-                 power_df[[xx]],
-                 row.names = NULL
+
+    if(length(within_conditions_name) > 0) {
+      num_terms <- lapply(seq_along(power_out), function(xx)
+        lapply(seq_along(power_out[[xx]]), function(yy)
+          lapply(power_out[[xx]][[yy]], nrow))
       )
-    )
+      within_id <- rep(rep(seq_along(sim_arguments_w), 
+                           unique(unlist(num_terms))), 
+                       sim_args[['replications']])
+      
+      within_df <- data.frame(
+        within_id = unique(within_id),
+        within_names = within_conditions_name
+      )
+      
+      power_list <- lapply(seq_along(sim_arguments), function(xx) 
+        data.frame(between_conditions_name[xx, , drop = FALSE],
+                   replication = rep_id[[xx]],
+                   within_id = within_id,
+                   power_df[[xx]],
+                   row.names = NULL
+        )
+      )
+      
+      power_list <- lapply(seq_along(power_list), function(xx) 
+        dplyr::left_join(power_list[[xx]],
+              within_df,
+              by = 'within_id')
+      )
+    } else {
+      power_list <- lapply(seq_along(sim_arguments), function(xx) 
+        data.frame(between_conditions_name[xx, , drop = FALSE],
+                   replication = rep_id[[xx]],
+                   power_df[[xx]],
+                   row.names = NULL
+        )
+      )
+    }
+
     
     power_list
   }
@@ -226,7 +276,22 @@ compute_statistics <- function(data, sim_args, power = TRUE,
     samp_size <- sim_args[['sample_size']]
   }
   
-  power_args <- parse_power(sim_args, samp_size)
+  if(is.null(sim_args[['power']])) {
+    sim_arguments_w <- parse_varyarguments_w(sim_args, name = 'power')
+    within_conditions <- list_select(sim_args[['vary_arguments']],
+                                     names = c('power'),
+                                     exclude = FALSE)
+    
+    within_conditions_name <- data.frame(sapply(expand.grid(within_conditions, KEEP.OUT.ATTRS = FALSE),
+                                                as.character))
+    
+    
+    power_args <- lapply(seq_along(sim_arguments_w), function(xx) 
+      parse_power(sim_arguments_w[[xx]], samp_size)
+    )
+  } else {
+    power_args <- parse_power(sim_args, samp_size)
+  }
   
   if(is.null(sim_args[['model_fit']][['reg_weights_model']])) {
     reg_weights <- sim_args[['reg_weights']]
@@ -238,20 +303,47 @@ compute_statistics <- function(data, sim_args, power = TRUE,
   
   data_list <- split(data_df, f = data_df['term'])
   
-  data_list <- lapply(seq_along(data_list), function(xx) {
-    compute_power(data_list[[xx]], power_args[[xx]])
+  if(is.null(sim_args[['power']])) {
+    data_list <- lapply(seq_along(sim_arguments_w), function(yy) {
+      lapply(seq_along(data_list), function(xx) {
+        cbind(compute_power(data_list[[xx]], power_args[[yy]][[xx]]),
+              power_arg = within_conditions_name[yy, ], row.names = NULL)
+      }
+      )
+    }
+    )
+    
+    # data_list <- lapply(seq_along(sim_arguments_w), function(yy) {
+    #   lapply(seq_along(data_list), function(xx) {
+    #     compute_t1e(data_list[[xx]], power_args[[yy]][[xx]], reg_weights = reg_weights[xx])
+    #   }
+    #   )
+    # }
+    # )
+  } else {
+    data_list <- lapply(seq_along(data_list), function(xx) {
+      compute_power(data_list[[xx]], power_args[[xx]])
     })
-  data_list <- lapply(seq_along(data_list), function(xx) {
-    compute_t1e(data_list[[xx]], power_args[[xx]], reg_weights = reg_weights[xx])
-  })
+    data_list <- lapply(seq_along(data_list), function(xx) {
+      compute_t1e(data_list[[xx]], power_args[[xx]], reg_weights = reg_weights[xx])
+    })
+  }
+  
   
   data_df <- do.call("rbind", data_list)
+  
+  if(!is.data.frame(data_df)) {
+    data_df <- do.call("rbind", data_df)
+  }
   
   if(is.null(sim_args['vary_arguments'])) {
     group_vars <- c('term')
   } else {
     group_vars <- c(names(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE)),
                     'term')
+    if(any(group_vars %in% 'power')) {
+      group_vars <- gsub("power", "power_arg", group_vars)
+    }
   }
   
   avg_estimates <- aggregate_estimate(data_df,

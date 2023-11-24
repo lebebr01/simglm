@@ -2,7 +2,7 @@
 % Please edit documentation in R/parse_formula.r
 \name{parse_varyarguments}
 \alias{parse_varyarguments}
-\title{Parse varying arguments}
+\title{Parse between varying arguments}
 \usage{
 parse_varyarguments(sim_args)
 }
@@ -16,5 +16,5 @@ for more information. The named list may contain the following:
 }}
 }
 \description{
-Parse varying arguments
+Parse between varying arguments
 }

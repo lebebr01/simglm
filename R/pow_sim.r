@@ -198,7 +198,7 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
           lapply(power_out[[xx]][[yy]], nrow))
       )
       within_id <- rep(rep(seq_along(sim_arguments_w), 
-                           unique(unlist(num_terms))), 
+                           unlist(num_terms[[1]][[1]])), 
                        sim_args[['replications']])
       
       within_df <- data.frame(

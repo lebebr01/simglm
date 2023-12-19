@@ -25,6 +25,16 @@ parse_formula <- function(sim_args) {
        randomeffect = randomeffect)
 }
 
+parse_formula_list <- function(sim_args) {
+  
+  lapply(seq_along(sim_args[['formula']]), function(xx) 
+    list(outcome = as.character(sim_args[['formula']][[xx]])[2],
+         fixed = as.formula(paste0("~", gsub("^\\s+|\\s+$", "", gsub("\\+\\s*(\\s+|\\++)\\(.*?\\)", "", as.character(sim_args[['formula']][[xx]])[3])))),
+         randomeffect = gsub("^\\s+|\\s+$", "", unlist(regmatches(as.character(sim_args[['formula']][[xx]])[3], 
+                                                                  gregexpr("(\\+|\\s+)\\(.*?\\)", as.character(sim_args[['formula']][[xx]])[3]))))
+           ))
+}
+
 #' Parses random effect specification
 #' 
 #' @param formula Random effect formula already parsed by \code{\link{parse_formula}}

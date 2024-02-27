@@ -165,21 +165,12 @@ parse_power <- function(sim_args, samp_size) {
                       lower.tail = lower_tail[ii],
                       df = df[[xx]],
                       !!!opts[ii])
-        # purrr::invoke(stat_dist[ii], 
-        #               p = alpha[ii], 
-        #               lower.tail = lower_tail[ii],
-        #               df = df[[xx]],
-        #               opts[ii])
       })
     } else {
       purrr::exec(stat_dist[ii], 
                     p = alpha[ii], 
                     lower.tail = lower_tail[ii],
                     !!!opts[ii])
-      # purrr::invoke(stat_dist[ii], 
-      #               p = alpha[ii], 
-      #               lower.tail = lower_tail[ii],
-      #               opts[ii])
     }
   }
   )

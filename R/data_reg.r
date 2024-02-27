@@ -22,6 +22,12 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
                              formula = sim_args[['formula']][[xx]],
                              reg_weights = sim_args[['reg_weights']][[xx]],
                              keep_intermediate = keep_intermediate, ...))
+    
+    outcome_names <- unlist(lapply(seq_along(parse_formula(sim_args)), function(xx) 
+      parse_formula(sim_args)[[xx]][['outcome']]))
+    outcome_data <- do.call('cbind', lapply(seq_along(outcome_names)[2:length(outcome_names)], function(xx) 
+      gen_data[[xx]][[outcome_names[xx]]]))
+    cbind.data.frame(gen_data[[1]], outcome_data)
   } else {
     generate_response_one(data = data, sim_args = sim_args, 
                           keep_intermediate = keep_intermediate, 

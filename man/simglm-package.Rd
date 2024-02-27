@@ -3,6 +3,7 @@
 \docType{package}
 \name{simglm-package}
 \alias{simglm-package}
+\alias{_PACKAGE}
 \title{simglm: Simulate Models Based on the Generalized Linear Model}
 \description{
 Simulates regression models, including both simple regression and generalized linear mixed models with up to three level of nesting. Power simulations that are flexible allowing the specification of missing data, unbalanced designs, and different random error distributions are built into the package.

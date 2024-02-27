@@ -297,7 +297,7 @@ simulate_fixed <- function(data, sim_args, ...) {
     if(comp_list(fixed_list)) {
       fixed_formula <- list_formula[[1]][['fixed']]
     } else {
-      
+      NULL
     }
   } else {
     fixed_formula <- parse_formula(sim_args)[['fixed']]

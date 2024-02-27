@@ -13,16 +13,20 @@
 #' @export
 parse_formula <- function(sim_args) {
   
-  outcome <- as.character(sim_args[['formula']])[2]
-  
-  fixed <- as.formula(paste0("~", gsub("^\\s+|\\s+$", "", gsub("\\+\\s*(\\s+|\\++)\\(.*?\\)", "", as.character(sim_args[['formula']])[3]))))
-  
-  randomeffect <- gsub("^\\s+|\\s+$", "", unlist(regmatches(as.character(sim_args[['formula']])[3], 
-                                                            gregexpr("(\\+|\\s+)\\(.*?\\)", as.character(sim_args[['formula']])[3]))))
-  
-  list(outcome = outcome, 
-       fixed = fixed,
-       randomeffect = randomeffect)
+  if(is.list(sim_args[['formula']])) {
+     parse_formula_list(sim_args)
+  } else {
+    outcome <- as.character(sim_args[['formula']])[2]
+    
+    fixed <- as.formula(paste0("~", gsub("^\\s+|\\s+$", "", gsub("\\+\\s*(\\s+|\\++)\\(.*?\\)", "", as.character(sim_args[['formula']])[3]))))
+    
+    randomeffect <- gsub("^\\s+|\\s+$", "", unlist(regmatches(as.character(sim_args[['formula']])[3], 
+                                                              gregexpr("(\\+|\\s+)\\(.*?\\)", as.character(sim_args[['formula']])[3]))))
+    
+    list(outcome = outcome, 
+         fixed = fixed,
+         randomeffect = randomeffect)
+  }
 }
 
 parse_formula_list <- function(sim_args) {

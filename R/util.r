@@ -4,6 +4,8 @@ is_odd <- function(x) x %% 2 != 0
 
 whole_number <- function(x) x %% 1 == 0
 
+comp_list <- function(x) length(unique.default(x)) == 1L
+
 prop_limits <- function(prop) {
   if(prop > .5) {
     u_diff <- 1 - prop
@@ -153,7 +155,7 @@ factor_names <- function(sim_args, fixed_vars) {
   num_levels <- lapply(fixed_vars_cat, function(xx) 
     sim_args[['fixed']][[xx]][['levels']])
   num_levels <- purrr::modify_if(num_levels, is.character, length)
-    
+  
   loc <- num_levels > 1
   fixed_levels_gt2 <- fixed_vars_cat[loc]
   num_levels_gt2 <- num_levels[loc]
@@ -184,8 +186,8 @@ factor_names <- function(sim_args, fixed_vars) {
   )
   
   reordered_names <- lapply(seq_along(fixed_levels_gt2), function(ii)
-       reorder_names(updated_names[[ii]])
-    )
+    reorder_names(updated_names[[ii]])
+  )
   
   if(any(grepl(":|^I", fixed_vars))) {
     fixed_vars_cat_rename <- fixed_vars[grepl(paste(factor_names, collapse = "|"), fixed_vars)]
@@ -222,11 +224,11 @@ interaction_names <- function(fixed_vars, renamed_vars, sim_args) {
   
   int_names <- lapply(int_loc, function(ii) 
     unlist(strsplit(fixed_vars[ii], split = ":"))
-    )
+  )
   
   factor_vars <- unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
     sim_args[['fixed']][[xx]][['var_type']] == 'factor'
-    )
+  )
   )
   factor_names <- names(sim_args[['fixed']])[factor_vars]
   
@@ -269,7 +271,18 @@ reorder_names <- function(names) {
 
 
 poly_ns_names <- function(sim_args) {
-  fixed_formula <- parse_formula(sim_args)[['fixed']]
+  if(is.null(parse_formula(sim_args)[['fixed']])) {
+    list_formula <- parse_formula(sim_args)
+    fixed_list <- lapply(seq_along(list_formula), function(xx) 
+      as.character(list_formula[[xx]][['fixed']]))
+    if(comp_list(fixed_list)) {
+      fixed_formula <- list_formula[[1]][['fixed']]
+    } else {
+      NULL
+    }
+  } else {
+    fixed_formula <- parse_formula(sim_args)[['fixed']]
+  }
   
   fixed_vars <- attr(terms(fixed_formula), "term.labels") 
   
@@ -305,7 +318,7 @@ poly_ns_names <- function(sim_args) {
 
 ns_df_names <- function(x) {
   name <- gsub("ns\\(|bs\\(|\\,.+\\)$", "", x)
-
+  
   func_arg <- unlist(regmatches(x, regexec("df\\s+=\\s+[0-9]+", x)))
   num <- unlist(regmatches(func_arg, regexec("[0-9]+", func_arg)))
   

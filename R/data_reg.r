@@ -25,8 +25,9 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
     
     outcome_names <- unlist(lapply(seq_along(parse_formula(sim_args)), function(xx) 
       parse_formula(sim_args)[[xx]][['outcome']]))
-    outcome_data <- do.call('cbind', lapply(seq_along(outcome_names)[2:length(outcome_names)], function(xx) 
-      gen_data[[xx]][[outcome_names[xx]]]))
+    outcome_data <- data.frame(do.call('cbind', lapply(seq_along(outcome_names)[2:length(outcome_names)], function(xx) 
+      gen_data[[xx]][[outcome_names[xx]]])))
+    names(outcome_data) <- outcome_names[2:length(outcome_names)]
     cbind.data.frame(gen_data[[1]], outcome_data)
   } else {
     generate_response_one(data = data, sim_args = sim_args, 

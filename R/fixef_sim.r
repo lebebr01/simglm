@@ -17,7 +17,7 @@
 #' @export 
 sim_factor2 <- function(n, levels, var_level = 1, replace = TRUE,
                         force_equal = FALSE,
-                       ...) {
+                        ...) {
   if(force_equal) {
     if(var_level == 1) {
       cat_var = 1
@@ -110,7 +110,7 @@ sim_factor2 <- function(n, levels, var_level = 1, replace = TRUE,
 #' @param ... Additional parameters passed to the sample function.
 #' @export 
 sim_ordinal2 <- function(n, levels, var_level = 1, replace = TRUE,
-                        ...) {
+                         ...) {
   if(var_level == 1) {
     ord_var <- base::sample(x = levels, size = sum(n[['level1']]), 
                             replace = replace, ...)
@@ -182,7 +182,7 @@ sim_continuous2 <- function(n, dist = 'rnorm', var_level = 1,
     if(!is.null(ther_val)) {
       cont_var <- standardize(cont_var, ther_val[1], ther_val[2])
     }
-      cont_var <- cont_var %*% chol(c(variance))
+    cont_var <- cont_var %*% chol(c(variance))
   }
   
   if(!is.null(ceiling)) {
@@ -262,11 +262,11 @@ sim_variable <- function(var_type = c("continuous", "factor", "ordinal",
   var_type <- match.arg(var_type)
   
   switch(var_type,
-    continuous = sim_continuous2(...),
-    factor = sim_factor2(...),
-    ordinal = sim_ordinal2(...),
-    #knot = sim_knot2(...),
-    time = sim_time(...)
+         continuous = sim_continuous2(...),
+         factor = sim_factor2(...),
+         ordinal = sim_ordinal2(...),
+         #knot = sim_knot2(...),
+         time = sim_time(...)
   )
 }
 
@@ -290,7 +290,18 @@ sim_variable <- function(var_type = c("continuous", "factor", "ordinal",
 #' @export 
 simulate_fixed <- function(data, sim_args, ...) {
   
-  fixed_formula <- parse_formula(sim_args)[['fixed']]
+  if(is.null(parse_formula(sim_args)[['fixed']])) {
+    list_formula <- parse_formula(sim_args)
+    fixed_list <- lapply(seq_along(list_formula), function(xx) 
+      as.character(list_formula[[xx]][['fixed']]))
+    if(comp_list(fixed_list)) {
+      fixed_formula <- list_formula[[1]][['fixed']]
+    } else {
+      NULL
+    }
+  } else {
+    fixed_formula <- parse_formula(sim_args)[['fixed']]
+  }
   
   fixed_vars <- attr(terms(fixed_formula), "term.labels")  
   
@@ -316,12 +327,12 @@ simulate_fixed <- function(data, sim_args, ...) {
     ids <- create_ids(n, 
                       c('level1_id', id_vars))
     Xmat <- do.call("cbind.data.frame", 
-              lapply(seq_along(sim_args[['fixed']]), function(ii)
-                purrr::exec(sim_variable, 
-                            !!!sim_args[['fixed']][[ii]], 
-                            n = n)
-              )
-      )
+                    lapply(seq_along(sim_args[['fixed']]), function(ii)
+                      purrr::exec(sim_variable, 
+                                  !!!sim_args[['fixed']][[ii]], 
+                                  n = n)
+                    )
+    )
   } else {
     n <- compute_samplesize(data, sim_args)
     Xmat <- do.call("cbind.data.frame", 
@@ -341,7 +352,7 @@ simulate_fixed <- function(data, sim_args, ...) {
       grep(knot_names[xx], fixed_vars)))
     
     fixed_vars_knot <- fixed_vars[-knot_loc]
-      
+    
     if(any(grepl(":|^I", fixed_vars_knot))) {
       int_loc <- grep(":|^I", fixed_vars_knot)
       colnames(Xmat) <- fixed_vars_knot[-int_loc]
@@ -350,11 +361,11 @@ simulate_fixed <- function(data, sim_args, ...) {
     } 
     
     Xmat_knot <- do.call("cbind.data.frame", 
-                    lapply(seq_along(sim_args[['knot']]), function(ii)
-                      purrr::exec(sim_knot2, 
-                                  !!!sim_args[['knot']][[ii]], 
-                                  data = Xmat)
-                    )
+                         lapply(seq_along(sim_args[['knot']]), function(ii)
+                           purrr::exec(sim_knot2, 
+                                       !!!sim_args[['knot']][[ii]], 
+                                       data = Xmat)
+                         )
     )
     
     Xmat <- cbind(Xmat, Xmat_knot)
@@ -419,11 +430,11 @@ simulate_fixed <- function(data, sim_args, ...) {
       #names(Xmat_post_other) <- names(sim_args_post_other)
       
       Xmat_tmp2 <- do.call("cbind.data.frame",
-                          lapply(seq_along(Xmat_post_other), function(ii) 
-                            merge(Xmat_tmp, Xmat_post_other[[ii]], 
-                                  by = sim_args_post_other[[ii]][['by']], 
-                                  all.x = TRUE)
-                          )
+                           lapply(seq_along(Xmat_post_other), function(ii) 
+                             merge(Xmat_tmp, Xmat_post_other[[ii]], 
+                                   by = sim_args_post_other[[ii]][['by']], 
+                                   all.x = TRUE)
+                           )
       )[names(sim_args_post_other)]
       
       Xmat <- cbind(Xmat,
@@ -431,7 +442,7 @@ simulate_fixed <- function(data, sim_args, ...) {
     }
     
   }
-
+  
   if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
     sim_args[['fixed']][[xx]]$var_type)) == 'factor') | 
     any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
@@ -448,7 +459,7 @@ simulate_fixed <- function(data, sim_args, ...) {
     if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
       num_levels[[xx]] > 1 & 
       sim_args[['fixed']][[xx]][['var_type']] == 'factor'))
-      )) {
+    )) {
       
       fixed_vars_factornames <- attr(terms(fixed_formula), "term.labels")
       if(any(grepl('^factor\\(', fixed_vars_factornames))) {
@@ -462,7 +473,7 @@ simulate_fixed <- function(data, sim_args, ...) {
     Omat <- Xmat
     Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))
     colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars
-
+    
     
     
     if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
@@ -524,10 +535,10 @@ simulate_fixed <- function(data, sim_args, ...) {
 simulate_heterogeneity <- function(data, sim_args, ...) {
   
   heterogeneity_error <- heterogeneity(variance = sim_args[['heterogeneity']][['variance']],
-                fixef = data, 
-                variable = sim_args[['heterogeneity']][['variable']],
-                err = data[['error']])
-
+                                       fixef = data, 
+                                       variable = sim_args[['heterogeneity']][['variable']],
+                                       err = data[['error']])
+  
   data.frame(data[, !(names(data) %in% 'error')], 
              error = heterogeneity_error, orig_error = data[['error']])
   

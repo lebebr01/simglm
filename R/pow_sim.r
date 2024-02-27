@@ -156,15 +156,15 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
   
   sim_arguments <- parse_varyarguments(sim_args)
   
+  simulation_out <- future.apply::future_lapply(seq_along(sim_arguments), function(xx) {
+          future.apply::future_replicate(sim_arguments[[xx]][['replications']], 
+                                         simglm(sim_arguments[[xx]]),
+                                         simplify = FALSE,
+                                         future.seed = future.seed)
+            }, future.seed = future.seed)
+  
   if(length(within_conditions_name) > 0) {
     sim_arguments_w <- parse_varyarguments_w(sim_args, name = c('model_fit'))
-    
-    simulation_out <- future.apply::future_lapply(seq_along(sim_arguments), function(xx) {
-      future.apply::future_replicate(sim_arguments[[xx]][['replications']], 
-                                     simglm(sim_arguments[[xx]]),
-                                     simplify = FALSE,
-                                     future.seed = future.seed)
-    }, future.seed = future.seed)
     
     power_out <- future.apply::future_lapply(seq_along(simulation_out), function(xx) {
       future.apply::future_lapply(seq_along(simulation_out[[xx]]), function(yy) {
@@ -176,15 +176,7 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
     }, future.seed = future.seed)
   }
   if(length(within_conditions_name) == 0) {
-
-    power_out <- future.apply::future_lapply(seq_along(sim_arguments), function(xx) {
-      future.apply::future_replicate(sim_arguments[[xx]][['replications']], 
-                                     simglm_modelfit(
-                                       simglm(sim_arguments[[xx]]),
-                                       sim_arguments[[xx]]),
-                                     simplify = FALSE,
-                                     future.seed = future.seed)
-    }, future.seed = future.seed)
+    power_out <- simulation_out
   }
 
   

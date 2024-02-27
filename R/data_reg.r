@@ -79,15 +79,8 @@ generate_response_list <- function(data, sim_args, formula, reg_weights,
     Xmat <- cbind(data['X.Intercept.'], Xmat)
   }
   
-  if(is.list(sim_args[['reg_weights']])) {
-    fixed_outcome <- data.frame(do.call("cbind", 
-                                        lapply(seq_along(sim_args[['reg_weights']]), 
-                                               function(xx) 
-                                                 as.matrix(Xmat) %*% sim_args[['reg_weights']][[xx]])))
-    names(fixed_outcome) <- paste0('logit', 1:ncol(fixed_outcome))
-  } else {
-    fixed_outcome <- as.matrix(Xmat) %*% sim_args[['reg_weights']]
-  }
+  fixed_outcome <- as.matrix(Xmat) %*% reg_weights
+
   
   if(length(parse_formula(sim_args)[['randomeffect']]) != 0) {
     random_formula <- parse_formula(sim_args)[['randomeffect']]

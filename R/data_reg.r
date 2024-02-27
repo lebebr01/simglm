@@ -16,21 +16,27 @@
 #' @export 
 generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   
-  outcome_name <- parse_formula(sim_args)[['outcome']]
-  outcome_type <- sim_args[['outcome_type']]
-  
-  if(is.null(parse_formula(sim_args)[['fixed']])) {
-    list_formula <- parse_formula(sim_args)
-    fixed_list <- lapply(seq_along(list_formula), function(xx) 
-      as.character(list_formula[[xx]][['fixed']]))
-    if(comp_list(fixed_list)) {
-      fixed_formula <- list_formula[[1]][['fixed']]
-    } else {
-      NULL
-    }
+  if(is.list(sim_args[['formula']])) {
+    gen_data <- lapply(seq_along(sim_args[['formula']]), function(xx) 
+      generate_response_list(data = data, sim_args = sim_args, 
+                             formula = sim_args[['formula']][[xx]],
+                             reg_weights = sim_args[['reg_weights']][[xx]],
+                             keep_intermediate = keep_intermediate, ...))
   } else {
-    fixed_formula <- parse_formula(sim_args)[['fixed']]
+    generate_response_one(data = data, sim_args = sim_args, 
+                          keep_intermediate = keep_intermediate, 
+                          ...)
   }
+  
+}
+
+generate_response_list <- function(data, sim_args, formula, reg_weights, 
+                                   keep_intermediate = TRUE, ...) {
+  outcome_name <- as.character(formula)[2]
+  outcome_type <- sim_args[['outcome_type']]
+  fixed_formula <- as.formula(paste0("~", gsub("^\\s+|\\s+$", "", 
+                                               gsub("\\+\\s*(\\s+|\\++)\\(.*?\\)", "", 
+                                                    as.character(formula)[3]))))
   
   fixed_vars <- attr(terms(fixed_formula),"term.labels")
   
@@ -75,9 +81,9 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   
   if(is.list(sim_args[['reg_weights']])) {
     fixed_outcome <- data.frame(do.call("cbind", 
-              lapply(seq_along(sim_args[['reg_weights']]), 
-                     function(xx) 
-                       as.matrix(Xmat) %*% sim_args[['reg_weights']][[xx]])))
+                                        lapply(seq_along(sim_args[['reg_weights']]), 
+                                               function(xx) 
+                                                 as.matrix(Xmat) %*% sim_args[['reg_weights']][[xx]])))
     names(fixed_outcome) <- paste0('logit', 1:ncol(fixed_outcome))
   } else {
     fixed_outcome <- as.matrix(Xmat) %*% sim_args[['reg_weights']]
@@ -92,7 +98,7 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
       as.formula(random_formula_parsed[['random_effects']][xx]))
     
     Zmat <- lapply(lapply(random_formula, model.matrix, data = data), 
-      data.frame)
+                   data.frame)
     
     multiple_member <- parse_multiplemember(sim_args, parse_randomeffect(parse_formula(sim_args)[['randomeffect']]))
     if(any(multiple_member[['multiple_member_re']])){
@@ -161,4 +167,143 @@ generate_response <- function(data, sim_args, keep_intermediate = TRUE, ...) {
   }
   
   data
+}
+
+
+generate_response_one <- function(data, sim_args, keep_intermediate = TRUE, ...) {
+  
+  outcome_name <- parse_formula(sim_args)[['outcome']]
+  outcome_type <- sim_args[['outcome_type']]
+  fixed_formula <- parse_formula(sim_args)[['fixed']]
+  
+  fixed_vars <- attr(terms(fixed_formula),"term.labels")
+  
+  if(any(grepl('^factor\\(', fixed_vars))) {
+    fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
+  }
+  if(any(grepl('^ns\\(', fixed_vars))) {
+    fixed_vars <- gsub("ns\\(|\\,.+\\)$", "", fixed_vars)
+  }
+  if(any(grepl("^poly\\(", fixed_vars))) {
+    fixed_vars <- gsub("poly\\(|\\,.+\\)", "", fixed_vars)
+  }
+  
+  if(any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
+    fixed_vars <- poly_ns_names(sim_args)
+  }
+  
+  if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
+    sim_args[['fixed']][[xx]]$var_type)) == 'factor')) {
+    
+    num_levels <- lapply(seq_along(sim_args[['fixed']]), function(xx) 
+      sim_args[['fixed']][[xx]][['levels']])
+    num_levels <- purrr::modify_if(num_levels, is.character, length)
+    
+    if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
+      num_levels[[xx]] > 1 & 
+      sim_args[['fixed']][[xx]][['var_type']] == 'factor'))
+    )) {
+      fixed_vars <- factor_names(sim_args, fixed_vars)
+    }
+  }
+  
+  if(any(grepl(':', fixed_vars))) {
+    fixed_vars <- gsub(":", "\\.", fixed_vars)
+  }
+  
+  # Xmat <- model.matrix(fixed_formula, data.frame(data), contrasts.arg = contrasts)
+  Xmat <- dplyr::select(data, dplyr::all_of(fixed_vars))
+  if(any(grepl('Intercept', names(data)))) {
+    Xmat <- cbind(data['X.Intercept.'], Xmat)
+  }
+  
+  if(is.list(sim_args[['reg_weights']])) {
+    fixed_outcome <- data.frame(do.call("cbind", 
+                                        lapply(seq_along(sim_args[['reg_weights']]), 
+                                               function(xx) 
+                                                 as.matrix(Xmat) %*% sim_args[['reg_weights']][[xx]])))
+    names(fixed_outcome) <- paste0('logit', 1:ncol(fixed_outcome))
+  } else {
+    fixed_outcome <- as.matrix(Xmat) %*% sim_args[['reg_weights']]
+  }
+  
+  if(length(parse_formula(sim_args)[['randomeffect']]) != 0) {
+    random_formula <- parse_formula(sim_args)[['randomeffect']]
+    random_formula_parsed <- parse_randomeffect(random_formula)
+    random_effects_names <- names(sim_args[['randomeffect']])
+    
+    random_formula <- lapply(seq_along(random_formula_parsed[['random_effects']]), function(xx) 
+      as.formula(random_formula_parsed[['random_effects']][xx]))
+    
+    Zmat <- lapply(lapply(random_formula, model.matrix, data = data), 
+                   data.frame)
+    
+    multiple_member <- parse_multiplemember(sim_args, parse_randomeffect(parse_formula(sim_args)[['randomeffect']]))
+    if(any(multiple_member[['multiple_member_re']])){
+      Zmat <- do.call('cbind', Zmat)
+    } else {
+      Zmat <- dplyr::bind_cols(Zmat)
+    }
+    
+    rand_effects <- subset(data, select = random_effects_names)
+    
+    random_effects <- rowSums(rand_effects * Zmat)
+  } else {
+    random_effects <- NULL
+    random_effects <- 0
+  }
+  
+  if(keep_intermediate) {
+    if(is.list(sim_args[['reg_weights']])) {
+      response_outcomes <- data.frame(
+        fixed_outcome,
+        random_effects = random_effects
+      )
+    } else {
+      response_outcomes <- data.frame(
+        fixed_outcome = fixed_outcome,
+        random_effects = random_effects
+      )
+    }
+    
+    data <- cbind(data, response_outcomes, row.names = NULL)
+  }
+  
+  if(is.null(data[['error']])) {
+    data['error'] <- 0
+  }
+  
+  outcome <- fixed_outcome + random_effects + data[['error']]
+  
+  if(!is.null(sim_args[['outcome_type']])){
+    if(is.null(sim_args[['multinomial_categories']])) {
+      multinomial_categories <- NULL
+    } else {
+      multinomial_categories <- sim_args[['multinomial_categories']]
+    }
+    trans_outcome <- transform_outcome(outcome, 
+                                       type = sim_args[['outcome_type']],
+                                       categories = multinomial_categories)
+    if(ncol(outcome) > 1) {
+      names(outcome) <- paste0('untransformed_outcome', 1:ncol(outcome))
+      data <- cbind(data, outcome) 
+    } else {
+      data <- cbind(data, untransformed_outcome = outcome)
+    }
+    if(sim_args[['outcome_type']] == 'multinomial') {
+      data <- cbind(data, trans_outcome)
+      if(is.null(multinomial_categories)) {
+        names(data)[names(data) == 'outcome_num'] <- outcome_name
+      } else {
+        names(data)[names(data) == 'outcome_category'] <- outcome_name
+      }
+    } else {
+      data[outcome_name] <- trans_outcome
+    }
+  } else {
+    data[outcome_name] <- outcome
+  }
+  
+  data
+  
 }

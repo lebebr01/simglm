@@ -13,16 +13,30 @@
 #' @export
 parse_formula <- function(sim_args) {
   
-  outcome <- as.character(sim_args[['formula']])[2]
+  if(is.list(sim_args[['formula']])) {
+     parse_formula_list(sim_args)
+  } else {
+    outcome <- as.character(sim_args[['formula']])[2]
+    
+    fixed <- as.formula(paste0("~", gsub("^\\s+|\\s+$", "", gsub("\\+\\s*(\\s+|\\++)\\(.*?\\)", "", as.character(sim_args[['formula']])[3]))))
+    
+    randomeffect <- gsub("^\\s+|\\s+$", "", unlist(regmatches(as.character(sim_args[['formula']])[3], 
+                                                              gregexpr("(\\+|\\s+)\\(.*?\\)", as.character(sim_args[['formula']])[3]))))
+    
+    list(outcome = outcome, 
+         fixed = fixed,
+         randomeffect = randomeffect)
+  }
+}
+
+parse_formula_list <- function(sim_args) {
   
-  fixed <- as.formula(paste0("~", gsub("^\\s+|\\s+$", "", gsub("\\+\\s*(\\s+|\\++)\\(.*?\\)", "", as.character(sim_args[['formula']])[3]))))
-  
-  randomeffect <- gsub("^\\s+|\\s+$", "", unlist(regmatches(as.character(sim_args[['formula']])[3], 
-                                                            gregexpr("(\\+|\\s+)\\(.*?\\)", as.character(sim_args[['formula']])[3]))))
-  
-  list(outcome = outcome, 
-       fixed = fixed,
-       randomeffect = randomeffect)
+  lapply(seq_along(sim_args[['formula']]), function(xx) 
+    list(outcome = as.character(sim_args[['formula']][[xx]])[2],
+         fixed = as.formula(paste0("~", gsub("^\\s+|\\s+$", "", gsub("\\+\\s*(\\s+|\\++)\\(.*?\\)", "", as.character(sim_args[['formula']][[xx]])[3])))),
+         randomeffect = gsub("^\\s+|\\s+$", "", unlist(regmatches(as.character(sim_args[['formula']][[xx]])[3], 
+                                                                  gregexpr("(\\+|\\s+)\\(.*?\\)", as.character(sim_args[['formula']][[xx]])[3]))))
+           ))
 }
 
 #' Parses random effect specification
@@ -151,21 +165,12 @@ parse_power <- function(sim_args, samp_size) {
                       lower.tail = lower_tail[ii],
                       df = df[[xx]],
                       !!!opts[ii])
-        # purrr::invoke(stat_dist[ii], 
-        #               p = alpha[ii], 
-        #               lower.tail = lower_tail[ii],
-        #               df = df[[xx]],
-        #               opts[ii])
       })
     } else {
       purrr::exec(stat_dist[ii], 
                     p = alpha[ii], 
                     lower.tail = lower_tail[ii],
                     !!!opts[ii])
-      # purrr::invoke(stat_dist[ii], 
-      #               p = alpha[ii], 
-      #               lower.tail = lower_tail[ii],
-      #               opts[ii])
     }
   }
   )

@@ -94,3 +94,31 @@ library(splines)
   expect_equal(nrow(simulate_fixed(data = NULL, sim_arguments)), 10)
   expect_equal(ncol(simulate_fixed(data = NULL, sim_arguments)), 8)
 })
+
+test_that("poly and factors", {
+  set.seed(11111)
+  sim_arguments <- list(
+    formula = y ~ 1 + denomination + poly(attendance, degree = 2, raw = TRUE) + age + friends + female,
+    fixed = list(
+      denomination = list(var_type = 'factor', levels = c('Catholic', 'Jewish', 'Protestant', 'Other'), 
+                          prob = c(0.2732, 0.0126, 0.3053, 0.4089)),
+      attendance   = list(var_type = 'ordinal', levels = 0:4,   
+                          prob = c(0.205, 0.170, 0.201, 0.130, 0.294)),
+      age          = list(var_type = 'continuous', mean = 47.66, sd = 17.15),
+      #age          = list(var_type = 'ordinal', levels = 18:93, mean = 47.66),
+      friends      = list(var_type = 'ordinal', levels = 0:1,   
+                          prob = c(0.4903, 0.5097)),
+      female       = list(var_type = 'ordinal', levels = 0:1,   
+                          prob = c(0.4095, 0.5905))
+    ),
+    sample_size = 500
+  )
+  
+  poly_factor_data <- simulate_fixed(data = NULL, sim_arguments)
+  
+  expect_equal(ncol(poly_factor_data), 12)
+  expect_equal(nrow(poly_factor_data), 500)
+  expect_true(any(names(poly_factor_data) %in% paste('denomination', 1:3, sep = "_")))
+  expect_true(any(names(poly_factor_data) %in% paste('attendance', 1:2, sep = "_")))
+  
+})

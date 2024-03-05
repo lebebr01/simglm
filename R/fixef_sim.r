@@ -446,7 +446,6 @@ simulate_fixed <- function(data, sim_args, ...) {
   if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
     sim_args[['fixed']][[xx]]$var_type)) == 'factor') | 
     any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
-    fixed_vars <- poly_ns_names(sim_args)
     
     if(any(grepl('^factor\\(', fixed_vars))) {
       fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
@@ -469,6 +468,14 @@ simulate_fixed <- function(data, sim_args, ...) {
       
       fixed_vars <- factor_names(sim_args, fixed_vars_factornames)
     }
+    if(any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
+      if(any(grepl("^ns|^poly", fixed_vars))) {
+        fixed_vars <- poly_ns_names(sim_args, fixed_vars)
+      } else {
+        fixed_vars <- poly_ns_names(sim_args, attr(terms(fixed_formula), "term.labels"))
+      }
+    }
+    
     
     Omat <- Xmat
     Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))

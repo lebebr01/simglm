@@ -270,7 +270,7 @@ reorder_names <- function(names) {
 }
 
 
-poly_ns_names <- function(sim_args) {
+poly_ns_names <- function(sim_args, fixed_vars) {
   if(is.null(parse_formula(sim_args)[['fixed']])) {
     list_formula <- parse_formula(sim_args)
     fixed_list <- lapply(seq_along(list_formula), function(xx) 
@@ -284,7 +284,7 @@ poly_ns_names <- function(sim_args) {
     fixed_formula <- parse_formula(sim_args)[['fixed']]
   }
   
-  fixed_vars <- attr(terms(fixed_formula), "term.labels") 
+  # fixed_vars <- attr(terms(fixed_formula), "term.labels") 
   
   ns_loc <- grep("^ns|^bs", fixed_vars)
   if(any(ns_loc)) {

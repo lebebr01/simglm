@@ -53,12 +53,11 @@ generate_response_list <- function(data, sim_args, formula, reg_weights,
   if(any(grepl('^ns\\(', fixed_vars))) {
     fixed_vars <- gsub("ns\\(|\\,.+\\)$", "", fixed_vars)
   }
+  if(any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
+    fixed_vars <- poly_ns_names(sim_args, fixed_vars)
+  }
   if(any(grepl("^poly\\(", fixed_vars))) {
     fixed_vars <- gsub("poly\\(|\\,.+\\)", "", fixed_vars)
-  }
-  
-  if(any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
-    fixed_vars <- poly_ns_names(sim_args)
   }
   
   if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 
@@ -184,12 +183,11 @@ generate_response_one <- function(data, sim_args, keep_intermediate = TRUE, ...)
   if(any(grepl('^ns\\(', fixed_vars))) {
     fixed_vars <- gsub("ns\\(|\\,.+\\)$", "", fixed_vars)
   }
+  if(any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
+    fixed_vars <- poly_ns_names(sim_args, fixed_vars)
+  }
   if(any(grepl("^poly\\(", fixed_vars))) {
     fixed_vars <- gsub("poly\\(|\\,.+\\)", "", fixed_vars)
-  }
-  
-  if(any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
-    fixed_vars <- poly_ns_names(sim_args)
   }
   
   if(any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) 

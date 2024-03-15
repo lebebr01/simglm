@@ -393,7 +393,6 @@ list_select <- function(list, names, exclude = TRUE, simplify = FALSE) {
   } else {
     list[index]
   }
- 
 }
 
 # Horrible hack to keep CRAN happy and suppress NOTES about

@@ -144,20 +144,26 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
   
   within_conditions <- list_select(sim_args[['vary_arguments']],
                                    names = c('model_fit'),
-                                   exclude = FALSE)
+                                   exclude = FALSE, simplify = FALSE)
+  if(length(within_conditions) > 0 ) {
+    within_conditions_name <- names(
+      list_select(sim_args[['vary_arguments']],
+                  names = c('model_fit'),
+                  exclude = FALSE, simplify = TRUE)
+    )
+  }
   between_conditions <- list_select(sim_args[['vary_arguments']],
                                     names = c('model_fit', 'power'),
-                                    exclude = TRUE)
+                                    exclude = TRUE, simplify = FALSE)
   
   between_conditions_name <- data.frame(sapply(expand.grid(between_conditions, KEEP.OUT.ATTRS = FALSE),
                                                as.character))
-  within_conditions_name <- data.frame(sapply(expand.grid(within_conditions, KEEP.OUT.ATTRS = FALSE),
-                                              as.character))
+
   
   sim_arguments <- parse_varyarguments(sim_args)
   
-  if(length(within_conditions_name) > 0) {
-    sim_arguments_w <- parse_varyarguments_w(sim_args, name = c('model_fit'))
+  if(length(within_conditions) > 0) {
+    sim_arguments_w <- parse_varyarguments_mf(sim_args, name = c('model_fit'))
     
     if(any(unlist(lapply(seq_along(sim_arguments_w),  function(xx) 
       sim_arguments_w[[xx]][['model_fit']] |> names())) == 'name')) {
@@ -184,7 +190,7 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
       }, future.seed = future.seed)
     }, future.seed = future.seed)
   }
-  if(length(within_conditions_name) == 0) {
+  if(length(within_conditions) == 0) {
     
     power_out <- future.apply::future_lapply(seq_along(sim_arguments), function(xx) {
       future.apply::future_replicate(sim_arguments[[xx]][['replications']], 
@@ -209,7 +215,7 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
       rep(1:sim_args[['replications']], 
           each = num_rows[xx]/sim_args[['replications']]))
     
-    if(length(within_conditions_name) > 0) {
+    if(length(within_conditions) > 0) {
       num_terms <- lapply(seq_along(power_out), function(xx)
         lapply(seq_along(power_out[[xx]]), function(yy)
           lapply(power_out[[xx]][[yy]], nrow))

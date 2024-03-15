@@ -159,6 +159,15 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
   if(length(within_conditions_name) > 0) {
     sim_arguments_w <- parse_varyarguments_w(sim_args, name = c('model_fit'))
     
+    if(any(unlist(lapply(seq_along(sim_arguments_w),  function(xx) 
+      sim_arguments_w[[xx]][['model_fit']] |> names())) == 'name')) {
+      within_conditions_name <- unlist(lapply(seq_along(sim_arguments_w),  function(xx) 
+        sim_arguments_w[[xx]][['model_fit']][['name']]))
+      for(ss in seq_along(sim_arguments_w)) {
+        sim_arguments_w[[ss]][['model_fit']][['name']] <- NULL
+      }
+    }
+    
     simulation_out <- future.apply::future_lapply(seq_along(sim_arguments), function(xx) {
       future.apply::future_replicate(sim_arguments[[xx]][['replications']], 
                                      simglm(sim_arguments[[xx]]),

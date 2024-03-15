@@ -245,9 +245,6 @@ parse_varyarguments_w <- function(sim_args, name) {
                                         names = name,
                                         exclude = FALSE),
                             KEEP.OUT.ATTRS = FALSE)
-  # conditions <- list_select(sim_args[['vary_arguments']],
-  #                           names = name,
-  #                           exclude = FALSE)
   if(any(sapply(conditions, is.list))) {
     loc <- sapply(conditions, is.list)
     simp_conditions <- conditions[loc != TRUE]
@@ -268,39 +265,6 @@ parse_varyarguments_w <- function(sim_args, name) {
   }
   
 }
-#' Parse within varying arguments
-#' 
-#' @param sim_args A named list with special model formula syntax. See details and examples
-#'   for more information. The named list may contain the following:
-#'   \itemize{
-#'     \item fixed: This is the fixed portion of the model (i.e. covariates)
-#'     \item random: This is the random portion of the model (i.e. random effects)
-#'     \item error: This is the error (i.e. residual term).
-#'   }
-#' @param name The name of the within simulation condition. This is primarily 
-#' an internal function.
-#'   
-#' @export
-parse_varyarguments_mf <- function(sim_args, name) {
-
-  conditions <- list_select(sim_args[['vary_arguments']],
-                            names = name,
-                            exclude = FALSE)
-  if(any(sapply(conditions, is.list))) {
-    loc <- sapply(conditions, is.list)
-    list_conditions <- conditions[loc == TRUE]
-    update_conditions <- lapply(seq_along(conditions), function(xx) c(sim_args, 
-                                                 model_fit = list_conditions[xx]))
-    for(xx in seq_along(update_conditions)) {
-      names(update_conditions[[xx]]) <- gsub("\\..*", "", names(update_conditions[[xx]]))
-    }
-  } else {
-    lapply(1:nrow(conditions), function(xx) c(sim_args, 
-                                              conditions[xx, , drop = FALSE]))
-  }
-  
-}
-
 
 #' Parse correlation arguments
 #' 

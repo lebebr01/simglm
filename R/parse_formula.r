@@ -254,10 +254,10 @@ parse_varyarguments_w <- function(sim_args, name) {
     for(tt in seq_along(list_conditions)) {
       names(list_conditions[[tt]]) <- gsub("[0-9]*", "", names(list_conditions[[tt]]))
     }
-    lapply(seq_along(conditions), function(xx) c(sim_args, 
+    lapply(1:nrow(conditions), function(xx) c(sim_args, 
                                               simp_conditions[xx, , drop = FALSE], 
-                                              do.call('c', lapply(seq_along(list_conditions), function(tt)
-                                                model_fit = list_conditions[xx]))
+                                              do.call('c', lapply(seq_along(list_conditions), function(tt) 
+                                                list_conditions[[tt]][xx]))
     ))
   } else {
     lapply(1:nrow(conditions), function(xx) c(sim_args, 

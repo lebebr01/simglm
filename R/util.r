@@ -382,13 +382,17 @@ closest_match <- function(data, value) {
   which.min(abs(data - value))
 }
 
-list_select <- function(list, names, exclude = TRUE) {
+list_select <- function(list, names, exclude = TRUE, simplify = FALSE) {
   if(exclude) {
     index <- which(!(names(list) %in% names))
   } else {
     index <- which(names(list) %in% names)
   }
-  list[index]
+  if(simplify) {
+    list[[index]]
+  } else {
+    list[index]
+  }
 }
 
 # Horrible hack to keep CRAN happy and suppress NOTES about

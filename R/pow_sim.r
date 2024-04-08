@@ -277,7 +277,7 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
 #'  be computed. Defaults to FALSE.
 #' @param type_m_error TRUE/FALSE flag indicating whether Type M error should
 #'  be computed. Defaults to FALSE.
-#' @importFrom dplyr mutate summarise group_by
+#' @importFrom dplyr mutate summarise group_by bind_rows
 #' @importFrom rlang syms
 #' @export
 compute_statistics <- function(data, sim_args, power = TRUE, 
@@ -294,7 +294,7 @@ compute_statistics <- function(data, sim_args, power = TRUE,
     samp_size <- sim_args[['sample_size']]
   }
   
-  if(is.null(sim_args[['power']])) {
+  if(!is.null(sim_args[['vary_arguments']][['power']])) {
     sim_arguments_w <- parse_varyarguments_w(sim_args, name = 'power')
     within_conditions <- list_select(sim_args[['vary_arguments']],
                                      names = c('power'),
@@ -308,20 +308,31 @@ compute_statistics <- function(data, sim_args, power = TRUE,
       parse_power(sim_arguments_w[[xx]], samp_size)
     )
   } else {
-    power_args <- parse_power(sim_args, samp_size)
+    if(!is.null(sim_args[['vary_arguments']])) {
+      sim_args_vary <- parse_varyarguments(sim_args)
+      power_args <- lapply(seq_along(sim_args_vary), function(xx) 
+        parse_power(sim_args_vary[[xx]], samp_size[[xx]]))
+    } else {
+      power_args <- parse_power(sim_args, samp_size)
+    }
   }
   
-  if(is.null(sim_args[['model_fit']][['reg_weights_model']])) {
-    reg_weights <- sim_args[['reg_weights']]
+  # if(is.null(sim_args[['model_fit']][['reg_weights_model']])) {
+  #   reg_weights <- sim_args[['reg_weights']]
+  # } else {
+  #   reg_weights <- sim_args[['model_fit']][['reg_weights_model']]
+  # }
+  
+  if(!is.null(sim_args[['vary_arguments']])) {
+    data_list <- lapply(seq_along(data), function(xx) 
+      split(data[[xx]], f = data[[xx]]['term']))
   } else {
-    reg_weights <- sim_args[['model_fit']][['reg_weights_model']]
+    data_df <- do.call("rbind", data)
+
+    data_list <- split(data_df, f = data_df['term'])
   }
   
-  data_df <- do.call("rbind", data)
-  
-  data_list <- split(data_df, f = data_df['term'])
-  
-  if(is.null(sim_args[['power']])) {
+  if(!is.null(sim_args[['vary_arguments']][['power']])) {
     data_list <- lapply(seq_along(sim_arguments_w), function(yy) {
       lapply(seq_along(data_list), function(xx) {
         cbind(compute_power(data_list[[xx]], power_args[[yy]][[xx]]),
@@ -339,20 +350,29 @@ compute_statistics <- function(data, sim_args, power = TRUE,
     # }
     # )
   } else {
-    data_list <- lapply(seq_along(data_list), function(xx) {
-      compute_power(data_list[[xx]], power_args[[xx]])
-    })
-    data_list <- lapply(seq_along(data_list), function(xx) {
-      compute_t1e(data_list[[xx]], power_args[[xx]], reg_weights = reg_weights[xx])
-    })
+    if(!is.null(sim_args[['vary_arguments']])) {
+      data_list <- lapply(seq_along(data_list), function(xx) {
+        lapply(seq_along(data_list[[xx]]), function(yy) {
+          compute_power(data_list[[xx]][[yy]], power_args[[xx]][[yy]])
+        })
+      })
+      # data_list <- lapply(seq_along(data_list), function(xx) {
+      #   lapply(seq_along(data_list[[xx]]), function(yy) {
+      #     compute_t1e(data_list[[xx]][[yy]], power_args[[xx]][[yy]])
+      #   })
+      # })
+    } else {
+      data_list <- lapply(seq_along(data_list), function(xx) {
+          compute_power(data_list[[xx]], power_args[[xx]])
+      })
+      # data_list <- lapply(seq_along(data_list), function(xx) {
+      #     compute_t1e(data_list[[xx]], power_args[[xx]])
+      # })
+    }
+
   }
   
-  
-  data_df <- do.call("rbind", data_list)
-  
-  if(!is.data.frame(data_df)) {
-    data_df <- do.call("rbind", data_df)
-  }
+  data_df <- dplyr::bind_rows(data_list)
   
   if(is.null(sim_args['vary_arguments'])) {
     group_vars <- c('term')
@@ -404,13 +424,13 @@ compute_statistics <- function(data, sim_args, power = TRUE,
                                       by = group_vars)
   }
   
-  if(type_1_error) {
-    type_1_error_computation <- aggregate_t1e(data_df, 
-                                              rlang::syms(group_vars))
-    avg_estimates <- dplyr::full_join(avg_estimates, 
-                                      type_1_error_computation,
-                                      by = group_vars)
-  }
+  # if(type_1_error) {
+  #   type_1_error_computation <- aggregate_t1e(data_df, 
+  #                                             rlang::syms(group_vars))
+  #   avg_estimates <- dplyr::full_join(avg_estimates, 
+  #                                     type_1_error_computation,
+  #                                     by = group_vars)
+  # }
   
   if(precision) {
     precision_computation <- aggregate_precision(data_df, 
@@ -447,7 +467,7 @@ compute_power <- function(data, power_args) {
   }
 }
 
-compute_t1e <- function(data, t1e_args, reg_weights) {
+compute_t1e <- function(data, t1e_args) {
   
   # fixed_vars <- strsplit(as.character(parse_formula(sim_args)[['fixed']]), "\\+")[[2]]
   # 
@@ -464,18 +484,18 @@ compute_t1e <- function(data, t1e_args, reg_weights) {
   
   if(t1e_args['direction'] == 'lower') {
     data |>
-      mutate(adjusted_teststat = (estimate - reg_weights) / std.error,
+      mutate(adjusted_teststat = (estimate - t1e_args['reg_weights']) / std.error,
              t1e = ifelse(adjusted_teststat <= t1e_args['test_statistic'], 
                           1, 0))
   } else {
     if(t1e_args['direction'] == 'upper') {
       data |>
-        mutate(adjusted_teststat = (estimate - reg_weights) / std.error,
+        mutate(adjusted_teststat = (estimate - t1e_args['reg_weights']) / std.error,
                t1e = ifelse(adjusted_teststat >= t1e_args['test_statistic'], 
                             1, 0))
     } else {
       data |>
-        mutate(adjusted_teststat = (estimate - reg_weights) / std.error,
+        mutate(adjusted_teststat = (estimate - t1e_args['reg_weights']) / std.error,
                t1e = ifelse(abs(adjusted_teststat) >= t1e_args['test_statistic'], 
                             1, 0))
     }
@@ -531,17 +551,28 @@ alternative_power <- function(data, group_var,
   
   data_list <- split(data, f = data[group_var])
   
-  alt_power_out <- lapply(seq_along(data_list), function(ii) {
-    do.call("rbind", lapply(seq_along(quantiles[[ii]]), function(xx) {
-      c(compute_alt_power(data_list[[ii]], quantile = quantiles[[ii]][xx]),
-        names(data_list)[[ii]]) }
-    ))}
-  )
+  if(length(quantiles) != length(data_list)) {
+    num_repeat <- length(data_list) / length(quantiles)
+    rep_quant <- quantiles[rep(1:length(quantiles), each = num_repeat)]
+  } else {
+    rep_quant <- quantiles
+  }
   
-  alt_power_df <- data.frame(do.call("rbind", alt_power_out))
-  names(alt_power_df) <- c('alt_power', 'threshold', group_var)
+  alt_power_out <- do.call('rbind.data.frame', lapply(seq_along(data_list), function(ii) {
+    do.call('rbind.data.frame', lapply(seq_along(rep_quant[[ii]]), function(xx) {
+      do.call("cbind", c(compute_alt_power(data_list[[ii]], rep_quant[[ii]][xx]), 
+                         data_list[[ii]][group_var][1,]))
+    }))
+  }))
+  names(alt_power_out) <- c('alt_power', 'threshold', group_var)
   
-  alt_power_df
+  #  <- lapply(seq_along(data_list), function(ii) {
+  #   do.call("rbind", lapply(seq_along(quantiles[[ii]]), function(xx) {
+  #     c(compute_alt_power(data_list[[ii]], quantile = quantiles[[ii]][xx]),
+  #       names(data_list)[[ii]]) }
+  #   ))}
+  # )
+  alt_power_out
 }
 
 compute_alt_power <- function(data, quantile) {
@@ -558,9 +589,15 @@ type_s_errors <- function(data, group_var, sign = NULL) {
   data_list <- split(data, f = data[group_var])
   
   if(!is.null(sign)) {
-    type_s <- data.frame(do.call("rbind", lapply(seq_along(data_list), function(ii) {
-      c(compute_type_s(data_list[[ii]], sign[ii]), names(data_list)[[ii]])
-    })))
+    if(length(sign) != length(data_list)) {
+      num_repeat <- length(data_list) / length(sign)
+      rep_sign <- rep(sign, each = num_repeat)
+    } else {
+      rep_sign <- sign
+    }
+    type_s <- do.call("rbind.data.frame", lapply(seq_along(data_list), function(ii) {
+      do.call("cbind", c(compute_type_s(data_list[[ii]], rep_sign[ii]), data_list[[ii]][group_var][1,]))
+    }))
     names(type_s) <- c('type_s_error', 'sign', group_var)
   }
   type_s

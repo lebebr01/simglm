@@ -182,6 +182,7 @@ parse_power <- function(sim_args, samp_size) {
          number_tails = number_tails[xx],
          direction = tail_direction[xx],
          distribution = stat_dist[xx],
+         reg_weights = reg_weights[xx],
          opts = opts[xx]
     )
   })

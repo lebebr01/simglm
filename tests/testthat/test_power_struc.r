@@ -25,7 +25,7 @@ test_that('compute_statistics dimensions', {
   # expect_equal(ncol(replicate_simulation(sim_arguments) |>
   #                     compute_statistics(sim_arguments, power = FALSE, alternative_power = FALSE)), 9)
   expect_equal(ncol(replicate_simulation(sim_arguments) |>
-                      compute_statistics(sim_arguments, type_1_error = FALSE, alternative_power = FALSE)), 9)
+                      compute_statistics(sim_arguments, type_1_error = FALSE, alternative_power = FALSE)), 7)
   # expect_equal(ncol(replicate_simulation(sim_arguments) |>
   #                     compute_statistics(sim_arguments, precision = FALSE, alternative_power = FALSE)), 9)
   expect_equal(ncol(replicate_simulation(sim_arguments) |>

@@ -450,21 +450,41 @@ compute_power <- function(data, power_args) {
   
   # power_args <- parse_power(sim_args)
   
-  if(power_args['direction'] == 'lower') {
-    data |>
-      mutate(reject = ifelse(statistic <= power_args['test_statistic'], 1, 0),
-             test_statistic = power_args[['test_statistic']]) 
-  } else {
-    if(power_args['direction'] == 'upper') {
+  if(is.null(data[['p.value']])) {
+    if(power_args['direction'] == 'lower') {
       data |>
-        mutate(reject = ifelse(statistic >= power_args['test_statistic'], 1, 0),
+        mutate(reject = ifelse(statistic <= power_args['test_statistic'], 1, 0),
                test_statistic = power_args[['test_statistic']]) 
     } else {
+      if(power_args['direction'] == 'upper') {
+        data |>
+          mutate(reject = ifelse(statistic >= power_args['test_statistic'], 1, 0),
+                 test_statistic = power_args[['test_statistic']]) 
+      } else {
+        data |>
+          mutate(reject = ifelse(abs(statistic) >= power_args['test_statistic'], 1, 0),
+                 test_statistic = power_args[['test_statistic']]) 
+      }
+    }
+  } else {
+    if(power_args['direction'] == 'lower') {
       data |>
-        mutate(reject = ifelse(abs(statistic) >= power_args['test_statistic'], 1, 0),
-               test_statistic = power_args[['test_statistic']]) 
+        mutate(reject = ifelse(p.value/2 <= power_args[['alpha']], 1, 0),
+               alpha = power_args[['alpha']]) 
+    } else {
+      if(power_args['direction'] == 'upper') {
+        data |>
+          mutate(reject = ifelse(p.value/2 <= power_args[['alpha']], 1, 0),
+                 alpha = power_args[['alpha']]) 
+      } else {
+        data |>
+          mutate(reject = ifelse(p.value <= power_args[['alpha']], 1, 0),
+                 alpha = power_args[['alpha']]) 
+      }
     }
   }
+  
+  
 }
 
 compute_t1e <- function(data, t1e_args) {
@@ -515,11 +535,18 @@ aggregate_power <- function(data, group_var) {
   
   group_by_var <- dplyr::quos(!!! group_var)
   
-  data |>
-    group_by(!!! group_by_var) |>
-    summarise(power = mean(reject),
-              avg_test_stat = mean(statistic),
-              crit_value_power = unique(test_statistic))
+  if(is.null(data[['p.value']])) {
+    data |>
+      group_by(!!! group_by_var) |>
+      summarise(power = mean(reject),
+                avg_test_stat = mean(statistic),
+                crit_value_power = unique(test_statistic))
+  } else {
+    data |>
+      group_by(!!! group_by_var) |>
+      summarise(power = mean(reject))
+  }
+  
 }
 
 aggregate_t1e <- function(data, group_var) {

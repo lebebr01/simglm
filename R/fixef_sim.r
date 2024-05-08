@@ -498,6 +498,9 @@ simulate_fixed <- function(data, sim_args, ...) {
       fixed_vars_poly_ns <- gsub("poly\\(|\\,.+\\)|ns\\(|\\,.+\\)", "", 
                                  fixed_vars_new[grepl("^poly|^ns", fixed_vars_new)]
       )
+      if(any(grepl(":", fixed_vars_poly_ns))) { 
+        fixed_vars_poly_ns <- fixed_vars_poly_ns[!grepl(":", fixed_vars_poly_ns)]
+        }
       Omat_poly_ns <- Omat[ , fixed_vars_poly_ns, drop = FALSE]
     } else {
       Omat_poly_ns <- NULL

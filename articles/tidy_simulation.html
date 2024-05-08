@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tidy Simulation with `simglm` • simglm</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -90,7 +90,7 @@
       <h1 data-toc-skip>Tidy Simulation with <code>simglm</code>
 </h1>
             
-            <h4 data-toc-skip class="date">2024-04-08</h4>
+            <h4 data-toc-skip class="date">2024-05-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/HEAD/vignettes/tidy_simulation.Rmd" class="external-link"><code>vignettes/tidy_simulation.Rmd</code></a></small>
       <div class="hidden name"><code>tidy_simulation.Rmd</code></div>
@@ -817,14 +817,13 @@ statistics across the replications.</li>
 <span><span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span>, alternative_power <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>                     type_1_error <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 9</span></span></span>
-<span><span class="co">##   term       avg_estimate power avg_test_stat crit_value_power param_estimate_sd</span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Intercep…      46.1      0.7         3.06              1.96            26.1  </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> age              0.085<span style="text-decoration: underline;">2</span>   0.3         0.102             1.96             0.583</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> sexfemale        1.51     0.1         0.266             1.96             6.66 </span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 3 more variables: avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   replications &lt;dbl&gt;</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 7</span></span></span>
+<span><span class="co">##   term   avg_estimate power param_estimate_sd avg_standard_error precision_ratio</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Inte…      46.1      0.3            26.1               19.2             1.36 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> age          0.085<span style="text-decoration: underline;">2</span>   0.1             0.583              0.396           1.47 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> sexfe…       1.51     0               6.66               7.50            0.888</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: replications &lt;dbl&gt;</span></span></span></code></pre>
 <p>As can be seen from the output, the default behavior is to return
 statistics for power, average test statistic, adjusted average test
 statistic, standard deviation of parameter estimate, average standard
@@ -874,14 +873,13 @@ vignette processing.</p>
 <span><span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span>, alternative_power <span class="op">=</span> <span class="cn">FALSE</span>, </span>
 <span>                     type_1_error <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 9</span></span></span>
-<span><span class="co">##   term       avg_estimate power avg_test_stat crit_value_power param_estimate_sd</span></span>
-<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Intercep…      56.0        0         7.26              31.8             7.83 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> age             -<span style="color: #BB0000;">0.099</span><span style="color: #BB0000; text-decoration: underline;">4</span>     0        -<span style="color: #BB0000;">0.603</span>             31.8             0.166</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> sexfemale        0.439      0         0.150             31.8             3.01 </span></span>
-<span><span class="co">## <span style="color: #949494;"># ℹ 3 more variables: avg_standard_error &lt;dbl&gt;, precision_ratio &lt;dbl&gt;,</span></span></span>
-<span><span class="co">## <span style="color: #949494;">#   replications &lt;dbl&gt;</span></span></span></code></pre>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 3 × 7</span></span></span>
+<span><span class="co">##   term   avg_estimate power param_estimate_sd avg_standard_error precision_ratio</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Inte…      56.0    1                 7.83               7.83            1.00 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> age         -<span style="color: #BB0000;">0.099</span><span style="color: #BB0000; text-decoration: underline;">4</span> 0.014             0.166              0.168           0.991</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> sexfe…       0.439  0.01              3.01               2.98            1.01 </span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: replications &lt;dbl&gt;</span></span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
@@ -980,7 +978,7 @@ nested and multiple membership models.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>

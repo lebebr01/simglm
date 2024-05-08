@@ -1,10 +1,10 @@
 pandoc: 3.1.11
-pkgdown: 2.0.7
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   simulation_arguments: simulation_arguments.html
   tidy_simulation: tidy_simulation.html
-last_built: 2024-04-08T17:46Z
+last_built: 2024-05-08T16:34Z
 urls:
   reference: https://simglm.brandonlebeau.org/reference
   article: https://simglm.brandonlebeau.org/articles

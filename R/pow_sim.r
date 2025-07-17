@@ -153,7 +153,6 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
                                                as.character))
   within_conditions_name <- data.frame(sapply(expand.grid(within_conditions, KEEP.OUT.ATTRS = FALSE),
                                                as.character))
-
   
   sim_arguments <- parse_varyarguments(sim_args)
   
@@ -247,8 +246,6 @@ replicate_simulation_vary <- function(sim_args, return_list = FALSE,
         )
       )
     }
-    
-    
     power_list
   }
 }

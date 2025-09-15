@@ -1,0 +1,44 @@
+---
+title: "Propensity Simulation for `simglm`"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Simulation Argument Details for `simglm`}
+  \usepackage[utf8]{inputenc}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(dplyr)
+library(simglm)
+knit_print.data.frame = function(x, ...) {
+  res = paste(c('', '', kable(x, output = FALSE)), collapse = '\n')
+  asis_output(res)
+}
+```
+
+
+
+```{r}
+sim_arguments <- list(
+    propensity = list(
+        formula = trt ~ 1 + x1 + x2,
+        fixed = list(x1 = list(var_type = 'continuous', 
+                         mean = 0, sd = 30),
+                     x2 = list(var_type = 'continuous', 
+                         mean = 0, sd = 5)),
+        sample_size = 1000,
+        error = list(variance = 5),
+        reg_weights = c(2, 0.3, -0.3),
+        outcome_type = 'binary'
+    )
+)
+
+prop_data <- simulate_propensity(sim_arguments)
+
+prop_data |> ggformula::gf_density(~ x2, fill = ~factor(trt))
+prop_data |> ggformula::gf_density(~ x1, fill = ~factor(trt))
+```

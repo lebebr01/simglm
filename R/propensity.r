@@ -16,5 +16,5 @@ simulate_propensity <- function(sim_args) {
     stop('Simulation arguments must specify propensity arguments')
   }
 
-  simglm(sim_args)
+  simglm(sim_args[['propensity']])
 }

@@ -364,10 +364,6 @@ sim_variable <- function(
 #'
 #' @export
 simulate_fixed <- function(data, sim_args, ...) {
-  if (!is.null(sim_args[['propensity']])) {
-    propensity_data <- simulate_propensity(sim_args = sim_args[['propensity']])
-  }
-
   if (is.null(parse_formula(sim_args)[['fixed']])) {
     list_formula <- parse_formula(sim_args)
     fixed_list <- lapply(seq_along(list_formula), function(xx) {
@@ -395,6 +391,10 @@ simulate_fixed <- function(data, sim_args, ...) {
   }
   if (any(grepl("_post$", fixed_vars))) {
     fixed_vars <- fixed_vars[!grepl("_post$", fixed_vars)]
+  }
+
+  if (!is.null(sim_args[['propensity']])) {
+    propensity_data <- simulate_propensity(sim_args = sim_args)
   }
 
   if (is.null(data)) {
@@ -436,8 +436,28 @@ simulate_fixed <- function(data, sim_args, ...) {
 
     if (any(grepl(":|^I", fixed_vars_knot))) {
       int_loc <- grep(":|^I", fixed_vars_knot)
+      if (!is.null(sim_args[['propensity']])) {
+        prop_vars <- c(
+          attr(
+            terms(parse_formula(sim_args[['propensity']])[['fixed']]),
+            "term.labels"
+          ),
+          parse_formula(sim_args[['propensity']])[['outcome']]
+        )
+        fixed_vars <- fixed_vars[!(fixed_vars %in% prop_vars)]
+      }
       colnames(Xmat) <- fixed_vars_knot[-int_loc]
     } else {
+      if (!is.null(sim_args[['propensity']])) {
+        prop_vars <- c(
+          attr(
+            terms(parse_formula(sim_args[['propensity']])[['fixed']]),
+            "term.labels"
+          ),
+          parse_formula(sim_args[['propensity']])[['outcome']]
+        )
+        fixed_vars <- fixed_vars[!(fixed_vars %in% prop_vars)]
+      }
       colnames(Xmat) <- fixed_vars_knot
     }
 
@@ -453,9 +473,33 @@ simulate_fixed <- function(data, sim_args, ...) {
 
   if (any(grepl(":|^I", fixed_vars))) {
     int_loc <- grep(":|^I", fixed_vars)
+    if (!is.null(sim_args[['propensity']])) {
+      prop_vars <- c(
+        attr(
+          terms(parse_formula(sim_args[['propensity']])[['fixed']]),
+          "term.labels"
+        ),
+        parse_formula(sim_args[['propensity']])[['outcome']]
+      )
+      fixed_vars <- fixed_vars[!(fixed_vars %in% prop_vars)]
+    }
     colnames(Xmat) <- fixed_vars[-int_loc]
   } else {
+    if (!is.null(sim_args[['propensity']])) {
+      prop_vars <- c(
+        attr(
+          terms(parse_formula(sim_args[['propensity']])[['fixed']]),
+          "term.labels"
+        ),
+        parse_formula(sim_args[['propensity']])[['outcome']]
+      )
+      fixed_vars <- fixed_vars[!(fixed_vars %in% prop_vars)]
+    }
     colnames(Xmat) <- fixed_vars
+  }
+
+  if (!is.null(sim_args[['propensity']])) {
+    Xmat <- cbind.data.frame(Xmat, propensity_data)
   }
 
   # Place holder for post-process effects

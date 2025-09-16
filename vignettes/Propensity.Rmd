@@ -32,7 +32,7 @@ sim_arguments <- list(
                          mean = 0, sd = 5)),
         sample_size = 1000,
         error = list(variance = 5),
-        reg_weights = c(2, 0.3, -0.3),
+        reg_weights = c(2, 0.3, 0.15),
         outcome_type = 'binary'
     )
 )

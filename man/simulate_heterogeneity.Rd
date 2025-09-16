@@ -7,7 +7,7 @@
 simulate_heterogeneity(data, sim_args, ...)
 }
 \arguments{
-\item{data}{Data simulated from other functions to pass to this function. 
+\item{data}{Data simulated from other functions to pass to this function.
 This function needs to be specified after `simulate_fixed` and `simulate_error`.}
 
 \item{sim_args}{A named list with special model formula syntax. See details and examples

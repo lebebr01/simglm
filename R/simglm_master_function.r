@@ -56,6 +56,10 @@ simglm_modelfit <- function(data, sim_args) {
     stop('Must pass a valid data object')
   }
 
+  if (!is.null(sim_args[['propensity_model']])) {
+    data[['propensity']] <- extract_propensity(data = data, sim_args = sim_args)
+  }
+
   if (!is.null(sim_args[['model_fit']])) {
     data <- model_fit(data, sim_args = sim_args)
   }

@@ -104,8 +104,8 @@ sim_arguments <- list(
     )
 )
 simulate_fixed(data = NULL, sim_args = sim_arguments) |>
-    simulate_error(sim_args = sim_arguments) |>
-    generate_response(sim_arguments)|> 
+  simulate_error(sim_args = sim_arguments) |>
+  generate_response(sim_arguments)|> 
   model_fit(sim_arguments) |>
   extract_coefficients()
 ```
@@ -137,8 +137,8 @@ sim_arguments <- list(
     )
 )
 simulate_fixed(data = NULL, sim_args = sim_arguments) |>
-    simulate_error(sim_args = sim_arguments) |>
-    generate_response(sim_arguments)|> 
+  simulate_error(sim_args = sim_arguments) |>
+  generate_response(sim_arguments)|> 
   model_fit(sim_arguments) |>
   extract_coefficients()
 ```

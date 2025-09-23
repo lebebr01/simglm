@@ -41,10 +41,21 @@ model_fit <- function(data, sim_args, ...) {
   }
 
   if (is.null(model_args[['formula']])) {
-    if (!is.null(sim_args[['propensity']])) {
-      #fitting here
-    }
     model_args[['formula']] <- sim_args[['formula']]
+  }
+  if (!is.null(sim_args[['propensity']])) {
+    if (sim_args[['propensity_model']][['propensity_type']] == 'covariate') {
+      model_args[['formula']] <- update(
+        model_args[['formula']],
+        formula(paste(". ~ . +", 'propensity'))
+      )
+    }
+  }
+
+  if (
+    sim_args[['propensity_model']][['propensity_type']] %in% c('ipw', 'sbw')
+  ) {
+    model_args[['weights']] <- data[['propensity_weights']]
   }
 
   model_args[['model_function']] <- NULL

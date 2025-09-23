@@ -45,3 +45,29 @@ extract_propensity <- function(data, sim_args) {
       fitted()
   }
 }
+
+propensity_weights <- function(data, sim_args) {
+  prop_response <- attr(
+    terms(sim_args[['propensity_model']][['formula']]),
+    "response"
+  )
+
+  if (sim_args[['propensity_model']][['propensity_type']] == 'ipw') {
+    # Calculate IPW weights
+    ifelse(
+      data[[prop_response]] == 1,
+      1 / data[['propensity']],
+      1 / (1 - data[['propensity']])
+    )
+  }
+
+  if (sim_args[['propensity_model']][['propensity_type']] == 'sbw') {
+    # Stabilized weights
+    p_treatment <- mean(data[[prop_response]])
+    ifelse(
+      data[[prop_response]] == 1,
+      p_treatment / data[['propensity']],
+      (1 - p_treatment) / (1 - data[['propensity']])
+    )
+  }
+}

@@ -58,6 +58,14 @@ simglm_modelfit <- function(data, sim_args) {
 
   if (!is.null(sim_args[['propensity_model']])) {
     data[['propensity']] <- extract_propensity(data = data, sim_args = sim_args)
+    if (
+      sim_args[['propensity_model']][['propensity_type']] %in% c('ipw', 'sbw')
+    ) {
+      data[['propensity_weights']] <- propensity_weights(
+        data = data,
+        sim_args = sim_args
+      )
+    }
   }
 
   if (!is.null(sim_args[['model_fit']])) {

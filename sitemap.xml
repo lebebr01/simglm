@@ -1,6 +1,7 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://simglm.brandonlebeau.org/404.html</loc></url>
 <url><loc>https://simglm.brandonlebeau.org/LICENSE-text.html</loc></url>
+<url><loc>https://simglm.brandonlebeau.org/articles/Propensity.html</loc></url>
 <url><loc>https://simglm.brandonlebeau.org/articles/index.html</loc></url>
 <url><loc>https://simglm.brandonlebeau.org/articles/simulation_arguments.html</loc></url>
 <url><loc>https://simglm.brandonlebeau.org/articles/tidy_simulation.html</loc></url>
@@ -12,6 +13,7 @@
 <url><loc>https://simglm.brandonlebeau.org/reference/correlate_variables.html</loc></url>
 <url><loc>https://simglm.brandonlebeau.org/reference/desireVar.html</loc></url>
 <url><loc>https://simglm.brandonlebeau.org/reference/extract_coefficients.html</loc></url>
+<url><loc>https://simglm.brandonlebeau.org/reference/fit_propensity.html</loc></url>
 <url><loc>https://simglm.brandonlebeau.org/reference/generate_missing.html</loc></url>
 <url><loc>https://simglm.brandonlebeau.org/reference/generate_response.html</loc></url>
 <url><loc>https://simglm.brandonlebeau.org/reference/index.html</loc></url>
@@ -37,6 +39,7 @@
 <url><loc>https://simglm.brandonlebeau.org/reference/simulate_fixed.html</loc></url>
 <url><loc>https://simglm.brandonlebeau.org/reference/simulate_heterogeneity.html</loc></url>
 <url><loc>https://simglm.brandonlebeau.org/reference/simulate_knot.html</loc></url>
+<url><loc>https://simglm.brandonlebeau.org/reference/simulate_propensity.html</loc></url>
 <url><loc>https://simglm.brandonlebeau.org/reference/simulate_randomeffect.html</loc></url>
 <url><loc>https://simglm.brandonlebeau.org/reference/transform_outcome.html</loc></url>
 </urlset>

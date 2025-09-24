@@ -22,32 +22,32 @@ sim_continuous2(
 \item{dist}{A distribution function. This argument takes a quoted
 R distribution function (e.g. 'rnorm'). Default is 'rnorm'.}
 
-\item{var_level}{The level the variable should be simulated at. This can either 
-be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable 
+\item{var_level}{The level the variable should be simulated at. This can either
+be 1, 2, or 3 specifying a level 1, level 2, or level 3 variable
 respectively.}
 
 \item{variance}{The variance for random effect simulation.}
 
-\item{ther_sim}{A TRUE/FALSE flag indicating whether the error simulation 
+\item{ther_sim}{A TRUE/FALSE flag indicating whether the error simulation
 function should be simulated, that is should the mean and standard deviation
 used for standardization be simulated.}
 
-\item{ther_val}{A vector of 2 that should include the theoretical mean and 
+\item{ther_val}{A vector of 2 that should include the theoretical mean and
 standard deviation of the generating function.}
 
-\item{ceiling}{A numeric value that specifies the ceiling (maximum) of an 
-attribute being generated. Defaults to NULL meaning no ceiling effect. 
-If a value is specified, any data larger than integer is rounded to 
+\item{ceiling}{A numeric value that specifies the ceiling (maximum) of an
+attribute being generated. Defaults to NULL meaning no ceiling effect.
+If a value is specified, any data larger than integer is rounded to
 that ceiling value.}
 
-\item{floor}{A numeric value that specifies the floor (minimum) of an 
+\item{floor}{A numeric value that specifies the floor (minimum) of an
 attribute being generated. Defaults to NULL meaning no floor effect.
-If a value is specified, any data larger than integer is rounded to 
+If a value is specified, any data larger than integer is rounded to
 that floor value.}
 
 \item{...}{Additional parameters to pass to the dist_fun argument.}
 }
 \description{
-Function that simulates continuous variables. Any distribution function in 
+Function that simulates continuous variables. Any distribution function in
 R is supported.
 }

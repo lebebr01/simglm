@@ -1,10 +1,10 @@
 #' Single wrapper function
-#' 
+#'
 #' This function is most useful to pass to \code{\link{replicate_simulation}}.
-#'   The function attempts to determine automatically which aspects to add to 
+#'   The function attempts to determine automatically which aspects to add to
 #'   the simulation/power generation based on the elements found in the sim_args
 #'   argument.
-#' 
+#'
 #' @param sim_args A named list with special model formula syntax. See details and examples
 #'   for more information. The named list may contain the following:
 #'   \itemize{
@@ -14,57 +14,67 @@
 #'   }
 #' @export
 simglm <- function(sim_args) {
-  
-  if(is.null(sim_args[['formula']])) {
+  if (is.null(sim_args[['formula']])) {
     stop('Simulation arguments must have a formula')
   }
-  if(is.null(sim_args[['reg_weights']])) {
+  if (is.null(sim_args[['reg_weights']])) {
     stop('Simulation arguments must have regression weights')
   }
-  if(is.null(sim_args[['sample_size']])) {
+  if (is.null(sim_args[['sample_size']])) {
     stop('Simulation arguments must specify sample size')
   }
-  
+
   data <- simulate_fixed(data = NULL, sim_args = sim_args)
-  
-  if(!is.null(sim_args[['error']])) {
+
+  if (!is.null(sim_args[['error']])) {
     data <- simulate_error(data, sim_args = sim_args)
   }
-  
-  if(!is.null(sim_args[['heterogeneity']])) {
+
+  if (!is.null(sim_args[['heterogeneity']])) {
     data <- simulate_heterogeneity(data, sim_args = sim_args)
   }
-  
-  if(!is.null(sim_args[['randomeffect']])) {
+
+  if (!is.null(sim_args[['randomeffect']])) {
     data <- simulate_randomeffect(data, sim_args = sim_args)
   }
-  
-  if(!is.null(sim_args[['correlate']])) {
+
+  if (!is.null(sim_args[['correlate']])) {
     data <- correlate_variables(data, sim_args = sim_args)
   }
-  
+
   data <- generate_response(data, sim_args = sim_args)
-  
-  if(!is.null(sim_args[['missing_data']])) {
+
+  if (!is.null(sim_args[['missing_data']])) {
     data <- generate_missing(data, sim_args = sim_args)
   }
-  
+
   data
-  
 }
 
 simglm_modelfit <- function(data, sim_args) {
-  if(is.null(data)) {
+  if (is.null(data)) {
     stop('Must pass a valid data object')
   }
-  
-  if(!is.null(sim_args[['model_fit']])) {
+
+  if (!is.null(sim_args[['propensity_model']])) {
+    data[['propensity']] <- extract_propensity(data = data, sim_args = sim_args)
+    if (
+      sim_args[['propensity_model']][['propensity_type']] %in% c('ipw', 'sbw')
+    ) {
+      data[['propensity_weights']] <- propensity_weights(
+        data = data,
+        sim_args = sim_args
+      )
+    }
+  }
+
+  if (!is.null(sim_args[['model_fit']])) {
     data <- model_fit(data, sim_args = sim_args)
   }
-  
-  if(!is.null(sim_args[['extract_coefficients']])) {
+
+  if (!is.null(sim_args[['extract_coefficients']])) {
     data <- extract_coefficients(data)
   }
 
-data
+  data
 }

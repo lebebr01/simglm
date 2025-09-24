@@ -9,7 +9,7 @@ extract_coefficients(model, extract_function = NULL)
 \arguments{
 \item{model}{A returned model object from a fitted model.}
 
-\item{extract_function}{A function that extracts model results. The 
+\item{extract_function}{A function that extracts model results. The
 function must take the model object as the only argument.}
 }
 \description{

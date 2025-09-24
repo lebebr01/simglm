@@ -16,10 +16,10 @@ for more information. The named list may contain the following:
 }}
 
 \item{return_list}{TRUE/FALSE indicating whether a full list output should be
-returned. If TRUE, the nested list is returned. If FALSE, replications are 
+returned. If TRUE, the nested list is returned. If FALSE, replications are
 combined with a replication id appended.}
 
-\item{future.seed}{TRUE/FALSE or numeric. Default value is true, see 
+\item{future.seed}{TRUE/FALSE or numeric. Default value is true, see
 \code{\link[future.apply:future_lapply]{future_replicate}}.}
 
 \item{...}{Currently not used.}

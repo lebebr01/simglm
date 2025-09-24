@@ -27,17 +27,17 @@ for more information. The named list may contain the following:
   \item error: This is the error (i.e. residual term).
 }}
 
-\item{power}{TRUE/FALSE flag indicating whether power should be computed. 
+\item{power}{TRUE/FALSE flag indicating whether power should be computed.
 Defaults to TRUE.}
 
 \item{type_1_error}{TRUE/FALSE flag indicating whether type I error rate
 should be computed. Defaults to TRUE.}
 
-\item{precision}{TRUE/FALSE flag indicating whether precision should be 
+\item{precision}{TRUE/FALSE flag indicating whether precision should be
 computed. Defaults to TRUE.}
 
-\item{alternative_power}{TRUE/FALSE flag indicating whether alternative 
-power estimates should be computed. If TRUE, this must be accompanied by 
+\item{alternative_power}{TRUE/FALSE flag indicating whether alternative
+power estimates should be computed. If TRUE, this must be accompanied by
 thresholds specified within the power simulation arguments. Defaults to FALSE.}
 
 \item{type_s_error}{TRUE/FALSE flag indicating whether Type S error should

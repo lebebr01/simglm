@@ -9,13 +9,13 @@ compute_density_values(data, group_var, parameter, values)
 \arguments{
 \item{data}{A dataframe that contains the parameter estimates.}
 
-\item{group_var}{A group variable that specifies the attributes to 
-group by. By default, this would likely be the term attribute, but can 
+\item{group_var}{A group variable that specifies the attributes to
+group by. By default, this would likely be the term attribute, but can
 contain more than one attribute.}
 
 \item{parameter}{The attribute that represents the parameter estimate.}
 
-\item{values}{A list of numeric vectors that specifies the values 
+\item{values}{A list of numeric vectors that specifies the values
 for which the density values are computed for.}
 }
 \description{

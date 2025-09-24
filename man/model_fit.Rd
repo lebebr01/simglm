@@ -16,7 +16,7 @@ for more information. The named list may contain the following:
   \item random: This is the random portion of the model (i.e. random effects)
   \item error: This is the error (i.e. residual term).
   \item model_fit: These are arguments passed to the \code{\link{model_fit}}
-    function. 
+    function.
 }}
 
 \item{...}{Currently not used.}

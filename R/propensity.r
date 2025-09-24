@@ -19,6 +19,25 @@ simulate_propensity <- function(sim_args) {
   simglm(sim_args[['propensity']])
 }
 
+#' @export
+fit_propensity <- function(data, sim_args) {
+  if (!is.null(sim_args[['propensity_model']])) {
+    propensity_scores <- extract_propensity(data = data, sim_args = sim_args)
+    prop_data <- cbind(data, propensity = propensity_scores)
+
+    if (
+      sim_args[['propensity_model']][['propensity_type']] %in% c('ipw', 'sbw')
+    ) {
+      propensity_weights <- propensity_weights(
+        data = prop_data,
+        sim_args = sim_args
+      )
+      prop_data <- cbind(prop_data, weights = propensity_weights)
+    }
+  }
+  prop_data
+}
+
 extract_propensity <- function(data, sim_args) {
   if (is.null(sim_args[['propensity_model']][['formula']])) {
     if (is.null(sim_args[['propensity']][['formula']])) {
@@ -54,7 +73,7 @@ propensity_weights <- function(data, sim_args) {
 
   if (sim_args[['propensity_model']][['propensity_type']] == 'ipw') {
     # Calculate IPW weights
-    ifelse(
+    weights <- ifelse(
       data[[prop_response]] == 1,
       1 / data[['propensity']],
       1 / (1 - data[['propensity']])
@@ -64,10 +83,11 @@ propensity_weights <- function(data, sim_args) {
   if (sim_args[['propensity_model']][['propensity_type']] == 'sbw') {
     # Stabilized weights
     p_treatment <- mean(data[[prop_response]])
-    ifelse(
+    weights <- ifelse(
       data[[prop_response]] == 1,
       p_treatment / data[['propensity']],
       (1 - p_treatment) / (1 - data[['propensity']])
     )
   }
+  weights
 }

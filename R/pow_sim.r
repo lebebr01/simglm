@@ -52,10 +52,12 @@ model_fit <- function(data, sim_args, ...) {
     }
   }
 
-  if (
-    sim_args[['propensity_model']][['propensity_type']] %in% c('ipw', 'sbw')
-  ) {
-    model_args[['weights']] <- data[['propensity_weights']]
+  if (!is.null(sim_args[['propensity']])) {
+    if (
+      sim_args[['propensity_model']][['propensity_type']] %in% c('ipw', 'sbw')
+    ) {
+      model_args[['weights']] <- data[['propensity_weights']]
+    }
   }
 
   model_args[['model_function']] <- NULL

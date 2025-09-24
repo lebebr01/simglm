@@ -39,8 +39,8 @@ sim_arguments <- list(
 
 prop_data <- simulate_propensity(sim_arguments)
 
-prop_data |> ggformula::gf_density(~ ses, fill = ~factor(trt))
-prop_data |> ggformula::gf_density(~ age, fill = ~factor(trt))
+# prop_data |> ggformula::gf_density(~ ses, fill = ~factor(trt))
+# prop_data |> ggformula::gf_density(~ age, fill = ~factor(trt))
 ```
 
 ## Include Propensity scores into broader process

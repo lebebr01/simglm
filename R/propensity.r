@@ -19,6 +19,15 @@ simulate_propensity <- function(sim_args) {
   simglm(sim_args[['propensity']])
 }
 
+#' Primary propensity model fitting
+#'
+#' Incorporates the estimated probabilities and weights.
+#'
+#' @param data Data object that contains the simulated data.
+#' @param sim_args The simulation argument list that contains the propensity
+#'  score arguments needed.
+#'
+#' @return Propensity probabilities and weights if specified.
 #' @export
 fit_propensity <- function(data, sim_args) {
   if (!is.null(sim_args[['propensity_model']])) {

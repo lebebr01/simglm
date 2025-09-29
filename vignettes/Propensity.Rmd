@@ -180,3 +180,39 @@ simulate_fixed(data = NULL, sim_args = sim_arguments) |>
   model_fit(sim_arguments) |>
   extract_coefficients()
 ```
+
+
+```{r}
+sim_arguments <- list(
+    formula = achievement ~ 1 + motivation + trt + age + ses,
+    fixed = list(
+        motivation = list(var_type = 'continuous',
+                           mean = 0, sd = 20)
+    ),
+    sample_size = 1000,
+    error = list(variance = 10),
+    reg_weights = c(50, 0.4, 1.2, 0.1, 0.25),
+    propensity = list(
+        formula = trt ~ 1 + age + ses,
+        fixed = list(age = list(var_type = 'ordinal', 
+                         levels = -7:7),
+                     ses = list(var_type = 'continuous', 
+                         mean = 0, sd = 5)),
+        sample_size = 1000,
+        error = list(variance = 5),
+        reg_weights = c(2, 0.3, -0.5),
+        outcome_type = 'binary'
+    ),
+    model_fit = list(formula = achievement ~ 1 + motivation + trt + age + ses,
+                   model_function = 'lm'),
+    propensity_model = list(
+        formula = trt ~ 1 + age + ses,
+        propensity_type = 'covariate'
+    ),
+    replications = 500,
+    extract_coefficients = TRUE
+)
+replicate_simulation(sim_arguments) |>
+  compute_statistics(sim_arguments, alternative_power = FALSE, 
+                     type_1_error = FALSE)
+```

@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.22</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.23</span>
       </span>
     </div>
 
@@ -93,7 +93,7 @@
 <code>simglm</code>
 </h1>
             
-            <h4 data-toc-skip class="date">2025-09-24</h4>
+            <h4 data-toc-skip class="date">2025-10-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/main/vignettes/Propensity.Rmd" class="external-link"><code>vignettes/Propensity.Rmd</code></a></small>
       <div class="hidden name"><code>Propensity.Rmd</code></div>
@@ -2284,6 +2284,133 @@ final model.</p>
 <span><span class="co">## <span style="color: #BCBCBC;">3</span> trt            1.25    0.262        4.77 2.08<span style="color: #949494;">e</span><span style="color: #BB0000;">- 6</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">4</span> age            0.106   0.023<span style="text-decoration: underline;">9</span>       4.44 1.00<span style="color: #949494;">e</span><span style="color: #BB0000;">- 5</span></span></span>
 <span><span class="co">## <span style="color: #BCBCBC;">5</span> ses            0.244   0.023<span style="text-decoration: underline;">7</span>      10.3  1.24<span style="color: #949494;">e</span><span style="color: #BB0000;">-23</span></span></span></code></pre>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    formula <span class="op">=</span> <span class="va">achievement</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">motivation</span> <span class="op">+</span> <span class="va">trt</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>,</span>
+<span>    fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        motivation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>,</span>
+<span>                           mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    sample_size <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>    error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
+<span>    reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">0.4</span>, <span class="fl">1.2</span>, <span class="fl">0.1</span>, <span class="fl">0.25</span><span class="op">)</span>,</span>
+<span>    propensity <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        formula <span class="op">=</span> <span class="va">trt</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>,</span>
+<span>        fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, </span>
+<span>                         levels <span class="op">=</span> <span class="op">-</span><span class="fl">7</span><span class="op">:</span><span class="fl">7</span><span class="op">)</span>,</span>
+<span>                     ses <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, </span>
+<span>                         mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>        sample_size <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>        error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
+<span>        reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.5</span><span class="op">)</span>,</span>
+<span>        outcome_type <span class="op">=</span> <span class="st">'binary'</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    model_fit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">achievement</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">motivation</span> <span class="op">+</span> <span class="va">trt</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>,</span>
+<span>                   model_function <span class="op">=</span> <span class="st">'lm'</span><span class="op">)</span>,</span>
+<span>    propensity_model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        formula <span class="op">=</span> <span class="va">trt</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>,</span>
+<span>        propensity_type <span class="op">=</span> <span class="st">'covariate'</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    replications <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>    extract_coefficients <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span>, alternative_power <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>                     type_1_error <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 7</span></span></span>
+<span><span class="co">##   term   avg_estimate power param_estimate_sd avg_standard_error precision_ratio</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Inte…     50.0      1              0.883              0.837             1.06 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> age         0.096<span style="text-decoration: underline;">1</span>   0.5            0.046<span style="text-decoration: underline;">1</span>             0.039<span style="text-decoration: underline;">6</span>            1.16 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> motiv…      0.400    1              0.005<span style="text-decoration: underline;">15</span>            0.005<span style="text-decoration: underline;">02</span>           1.03 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> prope…      0.009<span style="text-decoration: underline;">24</span>  0              1.40               1.23              1.14 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> ses         0.256    0.95           0.059<span style="text-decoration: underline;">2</span>             0.056<span style="text-decoration: underline;">8</span>            1.04 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> trt         1.28     1              0.217              0.263             0.824</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: replications &lt;dbl&gt;</span></span></span></code></pre>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    formula <span class="op">=</span> <span class="va">achievement</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">motivation</span> <span class="op">+</span> <span class="va">trt</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>,</span>
+<span>    fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        motivation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>,</span>
+<span>                           mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    sample_size <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>    error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
+<span>    reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">0.4</span>, <span class="fl">1.2</span>, <span class="fl">0.1</span>, <span class="fl">0.25</span><span class="op">)</span>,</span>
+<span>    propensity <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        formula <span class="op">=</span> <span class="va">trt</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>,</span>
+<span>        fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, </span>
+<span>                         levels <span class="op">=</span> <span class="op">-</span><span class="fl">7</span><span class="op">:</span><span class="fl">7</span><span class="op">)</span>,</span>
+<span>                     ses <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, </span>
+<span>                         mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>        sample_size <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>        error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
+<span>        reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.5</span><span class="op">)</span>,</span>
+<span>        outcome_type <span class="op">=</span> <span class="st">'binary'</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    model_fit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">achievement</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">motivation</span> <span class="op">+</span> <span class="va">trt</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>,</span>
+<span>                   model_function <span class="op">=</span> <span class="st">'lm'</span><span class="op">)</span>,</span>
+<span>    propensity_model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        formula <span class="op">=</span> <span class="va">trt</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>,</span>
+<span>        propensity_type <span class="op">=</span> <span class="st">'ipw'</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    replications <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>    extract_coefficients <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span>, alternative_power <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>                     type_1_error <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 5 × 7</span></span></span>
+<span><span class="co">##   term   avg_estimate power param_estimate_sd avg_standard_error precision_ratio</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Inte…       50.0   1               0.307              0.216              1.42</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> age           0.101 0.88            0.042<span style="text-decoration: underline;">0</span>             0.025<span style="text-decoration: underline;">2</span>             1.66</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> motiv…        0.400 1               0.009<span style="text-decoration: underline;">75</span>            0.005<span style="text-decoration: underline;">02</span>            1.94</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> ses           0.245 0.996           0.054<span style="text-decoration: underline;">4</span>             0.020<span style="text-decoration: underline;">5</span>             2.65</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> trt           1.17  0.938           0.374              0.263              1.42</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: replications &lt;dbl&gt;</span></span></span></code></pre>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    formula <span class="op">=</span> <span class="va">achievement</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">motivation</span> <span class="op">+</span> <span class="va">trt</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>,</span>
+<span>    fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        motivation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>,</span>
+<span>                           mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    sample_size <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>    error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,</span>
+<span>    reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">0.4</span>, <span class="fl">1.2</span>, <span class="fl">0.1</span>, <span class="fl">0.25</span><span class="op">)</span>,</span>
+<span>    propensity <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        formula <span class="op">=</span> <span class="va">trt</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>,</span>
+<span>        fixed <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>age <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'ordinal'</span>, </span>
+<span>                         levels <span class="op">=</span> <span class="op">-</span><span class="fl">7</span><span class="op">:</span><span class="fl">7</span><span class="op">)</span>,</span>
+<span>                     ses <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>var_type <span class="op">=</span> <span class="st">'continuous'</span>, </span>
+<span>                         mean <span class="op">=</span> <span class="fl">0</span>, sd <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>        sample_size <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>        error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>variance <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span>
+<span>        reg_weights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0.3</span>, <span class="op">-</span><span class="fl">0.5</span><span class="op">)</span>,</span>
+<span>        outcome_type <span class="op">=</span> <span class="st">'binary'</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    model_fit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">achievement</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">motivation</span> <span class="op">+</span> <span class="va">trt</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>,</span>
+<span>                   model_function <span class="op">=</span> <span class="st">'lm'</span><span class="op">)</span>,</span>
+<span>    propensity_model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        formula <span class="op">=</span> <span class="va">trt</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>,</span>
+<span>        propensity_type <span class="op">=</span> <span class="st">'sbw'</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    replications <span class="op">=</span> <span class="fl">500</span>,</span>
+<span>    extract_coefficients <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/replicate_simulation.html">replicate_simulation</a></span><span class="op">(</span><span class="va">sim_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/compute_statistics.html">compute_statistics</a></span><span class="op">(</span><span class="va">sim_arguments</span>, alternative_power <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>                     type_1_error <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 5 × 7</span></span></span>
+<span><span class="co">##   term   avg_estimate power param_estimate_sd avg_standard_error precision_ratio</span></span>
+<span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Inte…       50.0   1               0.301              0.216              1.39</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> age           0.100 0.864           0.040<span style="text-decoration: underline;">1</span>             0.025<span style="text-decoration: underline;">2</span>             1.59</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> motiv…        0.400 1               0.009<span style="text-decoration: underline;">27</span>            0.005<span style="text-decoration: underline;">02</span>            1.85</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> ses           0.250 1               0.052<span style="text-decoration: underline;">4</span>             0.020<span style="text-decoration: underline;">5</span>             2.55</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> trt           1.19  0.936           0.381              0.262              1.45</span></span>
+<span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: replications &lt;dbl&gt;</span></span></span></code></pre>
 </div>
   </div>
 

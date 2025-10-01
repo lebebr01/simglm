@@ -3,7 +3,7 @@ title: "Propensity Simulation for `simglm`"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Simulation Argument Details for `simglm`}
+  %\VignetteIndexEntry{Propensity Simulation for `simglm`}
   \usepackage[utf8]{inputenc}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 

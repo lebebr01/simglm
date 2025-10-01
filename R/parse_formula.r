@@ -168,14 +168,14 @@ parse_multiplemember <- function(sim_args, random_formula_parsed) {
 parse_power <- function(sim_args, samp_size) {
   if (is.null(sim_args[['model_fit']][['reg_weights_model']])) {
     reg_weights <- sim_args[['reg_weights']]
-    if (!is.null(sim_arguments[['propensity_model']])) {
+    if (!is.null(sim_args[['propensity_model']])) {
       if (sim_args[['propensity_model']][['propensity_type']] == 'covariate') {
         reg_weights <- c(reg_weights, 0)
       }
     }
   } else {
     reg_weights <- sim_args[['model_fit']][['reg_weights_model']]
-    if (!is.null(sim_arguments[['propensity_model']])) {
+    if (!is.null(sim_args[['propensity_model']])) {
       if (sim_args[['propensity_model']][['propensity_type']] == 'covariate') {
         reg_weights <- c(reg_weights, 0)
       }

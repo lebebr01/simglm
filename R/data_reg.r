@@ -61,6 +61,8 @@ generate_response_list <- function(
 ) {
   outcome_name <- as.character(formula)[2]
   outcome_type <- sim_args[['outcome_type']]
+
+  # ----- fixed effect variable parsing (unchanged) -----
   fixed_formula <- as.formula(paste0(
     "~",
     gsub(
@@ -85,89 +87,70 @@ generate_response_list <- function(
     fixed_vars <- gsub("poly\\(|\\,.+\\)", "", fixed_vars)
   }
 
-  if (
-    any(
-      unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) {
-        sim_args[['fixed']][[xx]]$var_type
-      })) ==
-        'factor'
+  # Factor expansion
+  if (any(unlist(lapply(sim_args[['fixed']], `[[`, "var_type")) == 'factor')) {
+    num_levels <- purrr::modify_if(
+      lapply(sim_args[['fixed']], `[[`, "levels"),
+      is.character,
+      length
     )
-  ) {
-    num_levels <- lapply(seq_along(sim_args[['fixed']]), function(xx) {
-      sim_args[['fixed']][[xx]][['levels']]
-    })
-    num_levels <- purrr::modify_if(num_levels, is.character, length)
-
     if (
-      any(unlist(lapply(seq_along(sim_args[['fixed']]), function(xx) {
-        num_levels[[xx]] > 1 &
-          sim_args[['fixed']][[xx]][['var_type']] == 'factor'
-      })))
+      any(unlist(Map(
+        function(n, s) n > 1 && s$var_type == "factor",
+        num_levels,
+        sim_args[['fixed']]
+      )))
     ) {
       fixed_vars <- factor_names(sim_args, fixed_vars)
     }
   }
 
+  # interaction renaming
   if (any(grepl(':', fixed_vars))) {
     fixed_vars <- gsub(":", "\\.", fixed_vars)
   }
 
-  # Xmat <- model.matrix(fixed_formula, data.frame(data), contrasts.arg = contrasts)
+  # ----- design matrix -----
   Xmat <- dplyr::select(data, dplyr::all_of(fixed_vars))
   if (any(grepl('Intercept', names(data)))) {
     Xmat <- cbind(data['X.Intercept.'], Xmat)
   }
 
+  # fixed effects for multinomial / continuous lists
   fixed_outcome <- as.matrix(Xmat) %*% reg_weights
 
+  # ----- random effects -----
   if (length(parse_formula(sim_args)[['randomeffect']]) != 0) {
     random_formula <- parse_formula(sim_args)[['randomeffect']]
     random_formula_parsed <- parse_randomeffect(random_formula)
     random_effects_names <- names(sim_args[['randomeffect']])
 
-    random_formula <- lapply(
-      seq_along(random_formula_parsed[['random_effects']]),
-      function(xx) {
-        as.formula(random_formula_parsed[['random_effects']][xx])
-      }
-    )
-
     Zmat <- lapply(
-      lapply(random_formula, model.matrix, data = data),
+      lapply(random_formula_parsed[['random_effects']], function(f) {
+        model.matrix(as.formula(f), data = data)
+      }),
       data.frame
     )
 
-    multiple_member <- parse_multiplemember(
-      sim_args,
-      parse_randomeffect(parse_formula(sim_args)[['randomeffect']])
-    )
-    if (any(multiple_member[['multiple_member_re']])) {
-      Zmat <- do.call('cbind', Zmat)
+    multiple_member <- parse_multiplemember(sim_args, random_formula_parsed)
+    Zmat <- if (any(multiple_member[['multiple_member_re']])) {
+      do.call('cbind', Zmat)
     } else {
-      Zmat <- dplyr::bind_cols(Zmat)
+      dplyr::bind_cols(Zmat)
     }
 
     rand_effects <- subset(data, select = random_effects_names)
-
     random_effects <- rowSums(rand_effects * Zmat)
   } else {
-    random_effects <- NULL
     random_effects <- 0
   }
 
+  # store intermediates if requested
   if (keep_intermediate) {
-    if (is.list(sim_args[['reg_weights']])) {
-      response_outcomes <- data.frame(
-        fixed_outcome,
-        random_effects = random_effects
-      )
-    } else {
-      response_outcomes <- data.frame(
-        fixed_outcome = fixed_outcome,
-        random_effects = random_effects
-      )
-    }
-
+    response_outcomes <- data.frame(
+      fixed_outcome = fixed_outcome,
+      random_effects = random_effects
+    )
     data <- cbind(data, response_outcomes, row.names = NULL)
   }
 
@@ -175,58 +158,57 @@ generate_response_list <- function(
     data['error'] <- 0
   }
 
+  # latent linear predictor
   outcome <- fixed_outcome + random_effects + data[['error']]
 
-  if (
-    !is.null(sim_args[['outcome_level']]) &&
-      !is.null(sim_args[['outcome_type']]) &&
-      sim_args[['outcome_type']] == 'binary' &&
-      sim_args[['outcome_level']] > 1
-  ) {
-    # aggregated at cluster-level first
-    outcome_unaggregated <- outcome
+  # ----- Outcome transformation logic -----
 
-    outcome <- aggregate_outcome_by_level(
-      outcome = outcome,
-      data = data,
-      sim_args = sim_args
-    )
-
-    if (exists("outcome_unaggregated")) {
-      data[['propensity_unit_logit']] <- as.numeric(outcome_unaggregated)
-    }
-
-    return(simulate_cluster_binary(
-      outcome = outcome,
-      data = data,
-      sim_args = sim_args,
-      outcome_name = outcome_name
-    ))
-  }
+  multinomial_categories <- sim_args[['multinomial_categories']] %||% NULL
+  is_cluster_outcome <- !is.null(sim_args[['outcome_level']]) &&
+    sim_args[['outcome_level']] > 1
 
   if (!is.null(sim_args[['outcome_type']])) {
-    if (is.null(sim_args[['multinomial_categories']])) {
-      multinomial_categories <- NULL
+    if (is_cluster_outcome) {
+      # store LP before cluster collapsing
+      outcome_unaggregated <- outcome
+
+      trans_outcome <- aggregate_outcome_by_level(
+        outcome = outcome,
+        data = data,
+        sim_args = sim_args,
+        multinomial_categories = multinomial_categories
+      )
     } else {
-      multinomial_categories <- sim_args[['multinomial_categories']]
+      trans_outcome <- transform_outcome(
+        outcome,
+        type = sim_args[['outcome_type']],
+        categories = multinomial_categories
+      )
     }
-    trans_outcome <- transform_outcome(
-      outcome,
-      type = sim_args[['outcome_type']],
-      categories = multinomial_categories
-    )
-    if (ncol(outcome) > 1) {
-      names(outcome) <- paste0('untransformed_outcome', 1:ncol(outcome))
+
+    # untransformed outcome always saved
+    if (!is.null(ncol(outcome)) && ncol(outcome) > 1) {
+      names(outcome) <- paste0("untransformed_outcome", 1:ncol(outcome))
       data <- cbind(data, outcome)
     } else {
       data <- cbind(data, untransformed_outcome = outcome)
     }
-    if (sim_args[['outcome_type']] == 'multinomial') {
+
+    # save pre-aggregated if cluster outcome
+    if (is_cluster_outcome) {
+      data$untransformed_outcome_unaggregated <- outcome_unaggregated
+    }
+
+    # place transformed output
+    if (is.data.frame(trans_outcome)) {
       data <- cbind(data, trans_outcome)
-      if (is.null(multinomial_categories)) {
-        names(data)[names(data) == 'outcome_num'] <- outcome_name
-      } else {
-        names(data)[names(data) == 'outcome_category'] <- outcome_name
+      if (sim_args[['outcome_type']] == 'multinomial') {
+        nm <- if (is.null(multinomial_categories)) {
+          'outcome_num'
+        } else {
+          'outcome_category'
+        }
+        names(data)[names(data) == nm] <- outcome_name
       }
     } else {
       data[outcome_name] <- trans_outcome

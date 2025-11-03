@@ -18,9 +18,9 @@ for more information. The named list may contain the following:
 }}
 }
 \description{
-This function is used to parse user specified correlation attributes. 
-The correlation attributes need to be in a dataframe to be processed 
-internally. Within the dataframe, there are expected to be 3 columns, 
-1) names of variable/attributes, 2) the variable/attribute pair for 1, 
+This function is used to parse user specified correlation attributes.
+The correlation attributes need to be in a dataframe to be processed
+internally. Within the dataframe, there are expected to be 3 columns,
+1) names of variable/attributes, 2) the variable/attribute pair for 1,
 3) the correlation.
 }

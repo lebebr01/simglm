@@ -9,7 +9,7 @@ parse_multiplemember(sim_args, random_formula_parsed)
 \arguments{
 \item{sim_args}{Simulation arguments}
 
-\item{random_formula_parsed}{This is the output from 
+\item{random_formula_parsed}{This is the output from
 \code{\link{parse_randomeffect}}.}
 }
 \description{

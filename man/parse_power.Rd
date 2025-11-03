@@ -15,7 +15,7 @@ for more information. The named list may contain the following:
   \item error: This is the error (i.e. residual term).
 }}
 
-\item{samp_size}{The sample size pulled from the simulation arguments or the 
+\item{samp_size}{The sample size pulled from the simulation arguments or the
 power model results when vary_arguments is used.}
 }
 \description{

@@ -15,7 +15,7 @@ for more information. The named list may contain the following:
   \item error: This is the error (i.e. residual term).
 }}
 
-\item{name}{The name of the within simulation condition. This is primarily 
+\item{name}{The name of the within simulation condition. This is primarily
 an internal function.}
 }
 \description{

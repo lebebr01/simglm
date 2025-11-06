@@ -1,11 +1,11 @@
 pandoc: 3.1.11
-pkgdown: 2.1.3
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   Propensity: Propensity.html
   simulation_arguments: simulation_arguments.html
   tidy_simulation: tidy_simulation.html
-last_built: 2025-11-03T17:48Z
+last_built: 2025-11-06T17:42Z
 urls:
   reference: https://simglm.brandonlebeau.org/reference
   article: https://simglm.brandonlebeau.org/articles

@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.25</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.26</span>
       </span>
     </div>
 
@@ -93,7 +93,7 @@
 <code>simglm</code>
 </h1>
             
-            <h4 data-toc-skip class="date">2025-11-03</h4>
+            <h4 data-toc-skip class="date">2025-11-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/main/vignettes/Propensity.Rmd" class="external-link"><code>vignettes/Propensity.Rmd</code></a></small>
       <div class="hidden name"><code>Propensity.Rmd</code></div>
@@ -2198,12 +2198,12 @@ final model.</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
 <span><span class="co">##   term        estimate std.error statistic   p.value</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Intercept)   51.1     0.848       60.2  0        </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> motivation     0.404   0.005<span style="text-decoration: underline;">23</span>     77.2  0        </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> trt            1.12    0.270        4.15 0.000<span style="text-decoration: underline;">035</span>9</span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span> age            0.158   0.042<span style="text-decoration: underline;">7</span>       3.71 0.000<span style="text-decoration: underline;">222</span> </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">5</span> ses            0.159   0.060<span style="text-decoration: underline;">2</span>       2.63 0.008<span style="text-decoration: underline;">60</span>  </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">6</span> propensity    -<span style="color: #BB0000;">1.83</span>    1.27        -<span style="color: #BB0000;">1.44</span> 0.151</span></span></code></pre>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Intercept)   49.9     0.206      242.    0   <span style="color: #949494;"> </span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> motivation     0.404   0.005<span style="text-decoration: underline;">23</span>     77.4   0   <span style="color: #949494;"> </span>   </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> trt            1.04    0.264        3.94  8.85<span style="color: #949494;">e</span><span style="color: #BB0000;">- 5</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> age            0.109   0.025<span style="text-decoration: underline;">4</span>       4.29  1.93<span style="color: #949494;">e</span><span style="color: #BB0000;">- 5</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> ses            0.238   0.023<span style="text-decoration: underline;">7</span>      10.1   1.05<span style="color: #949494;">e</span><span style="color: #BB0000;">-22</span></span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> propensity    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>           <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>   <span style="color: #949494;"> </span></span></span></code></pre>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    formula <span class="op">=</span> <span class="va">achievement</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">motivation</span> <span class="op">+</span> <span class="va">trt</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>,</span>
@@ -2320,12 +2320,12 @@ final model.</p>
 <pre><code><span><span class="co">## <span style="color: #949494;"># A tibble: 6 × 7</span></span></span>
 <span><span class="co">##   term   avg_estimate power param_estimate_sd avg_standard_error precision_ratio</span></span>
 <span><span class="co">##   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Inte…     50.0      1              0.883              0.837             1.06 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">2</span> age         0.096<span style="text-decoration: underline;">1</span>   0.5            0.046<span style="text-decoration: underline;">1</span>             0.039<span style="text-decoration: underline;">6</span>            1.16 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">3</span> motiv…      0.400    1              0.005<span style="text-decoration: underline;">15</span>            0.005<span style="text-decoration: underline;">02</span>           1.03 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">4</span> prope…      0.009<span style="text-decoration: underline;">24</span>  0              1.40               1.23              1.14 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">5</span> ses         0.256    0.95           0.059<span style="text-decoration: underline;">2</span>             0.056<span style="text-decoration: underline;">8</span>            1.04 </span></span>
-<span><span class="co">## <span style="color: #BCBCBC;">6</span> trt         1.28     1              0.217              0.263             0.824</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">1</span> (Inte…      50.0     1              0.150              0.204             0.736</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">2</span> age          0.096<span style="text-decoration: underline;">7</span>  0.95           0.024<span style="text-decoration: underline;">2</span>             0.024<span style="text-decoration: underline;">3</span>            0.993</span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">3</span> motiv…       0.400   1              0.005<span style="text-decoration: underline;">18</span>            0.005<span style="text-decoration: underline;">02</span>           1.03 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">4</span> prope…      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>             <span style="color: #BB0000;">NA</span>                 <span style="color: #BB0000;">NA</span>                <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">5</span> ses          0.255   1              0.024<span style="text-decoration: underline;">6</span>             0.022<span style="text-decoration: underline;">9</span>            1.08 </span></span>
+<span><span class="co">## <span style="color: #BCBCBC;">6</span> trt          1.28    1              0.187              0.258             0.727</span></span>
 <span><span class="co">## <span style="color: #949494;"># ℹ 1 more variable: replications &lt;dbl&gt;</span></span></span></code></pre>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sim_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -2352,7 +2352,11 @@ final model.</p>
 <span>                   model_function <span class="op">=</span> <span class="st">'lm'</span><span class="op">)</span>,</span>
 <span>    propensity_model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        formula <span class="op">=</span> <span class="va">trt</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>,</span>
-<span>        propensity_type <span class="op">=</span> <span class="st">'ipw'</span></span>
+<span>        propensity_type <span class="op">=</span> <span class="st">'ipw'</span>,</span>
+<span>        model_function <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span>,</span>
+<span>    propensity_model_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    replications <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>    extract_coefficients <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -2394,7 +2398,11 @@ final model.</p>
 <span>                   model_function <span class="op">=</span> <span class="st">'lm'</span><span class="op">)</span>,</span>
 <span>    propensity_model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>        formula <span class="op">=</span> <span class="va">trt</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">ses</span>,</span>
-<span>        propensity_type <span class="op">=</span> <span class="st">'sbw'</span></span>
+<span>        propensity_type <span class="op">=</span> <span class="st">'sbw'</span>,</span>
+<span>        model_function <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span>,</span>
+<span>    propensity_model_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">binomial</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    replications <span class="op">=</span> <span class="fl">500</span>,</span>
 <span>    extract_coefficients <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -26735,7 +26743,7 @@ final model.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
       </footer>

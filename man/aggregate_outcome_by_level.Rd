@@ -8,7 +8,7 @@ aggregate_outcome_by_level(
   outcome,
   data,
   sim_args,
-  multinomal_categories = NULL
+  multinomial_categories = NULL
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ aggregate_outcome_by_level(
 
 \item{sim_args}{Simulation arguments list containing outcome_level specification}
 
-\item{multinomal_categories}{Categories for multinomial outcome transformation}
+\item{multinomial_categories}{Categories for multinomial outcome transformation}
 }
 \value{
 Aggregated outcome vector with cluster-level values repeated

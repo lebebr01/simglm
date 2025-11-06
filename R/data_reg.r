@@ -196,7 +196,10 @@ generate_response_list <- function(
 
     # save pre-aggregated if cluster outcome
     if (is_cluster_outcome) {
-      data$untransformed_outcome_unaggregated <- outcome_unaggregated
+      data <- cbind(
+        data,
+        untransformed_outcome_unaggregated = outcome_unaggregated
+      )
     }
 
     # place transformed output
@@ -368,7 +371,7 @@ generate_response_one <- function(
         outcome = outcome,
         data = data,
         sim_args = sim_args,
-        multinomal_categories = multinomial_categories
+        multinomial_categories = multinomial_categories
       )
     } else {
       # normal individual-level assignment
@@ -433,7 +436,7 @@ generate_response_one <- function(
 #' @param outcome Numeric vector or matrix of linear predictors (untransformed outcomes)
 #' @param data Data frame containing cluster ID variables
 #' @param sim_args Simulation arguments list containing outcome_level specification
-#' @param multinomal_categories Categories for multinomial outcome transformation
+#' @param multinomial_categories Categories for multinomial outcome transformation
 #'
 #' @return Aggregated outcome vector with cluster-level values repeated
 #'   for all individuals within each cluster
@@ -442,7 +445,7 @@ aggregate_outcome_by_level <- function(
   outcome,
   data,
   sim_args,
-  multinomal_categories = NULL
+  multinomial_categories = NULL
 ) {
   outcome_level <- sim_args[['outcome_level']]
   outcome_name <- parse_formula(sim_args)[['outcome']]

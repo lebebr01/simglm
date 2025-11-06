@@ -47,32 +47,49 @@ fit_propensity <- function(data, sim_args) {
   prop_data
 }
 
+#' @importFrom stats fitted formula glm update terms
 extract_propensity <- function(data, sim_args) {
-  if (is.null(sim_args[['propensity_model']][['formula']])) {
-    if (is.null(sim_args[['propensity']][['formula']])) {
-      stop("Must specify a propensity model formula")
-    }
-    sim_args[['propensity_model']][['formula']] <- sim_args[['propensity']][[
-      'formula'
-    ]]
+  # Resolve formula
+  formula <- sim_args[['propensity_model']][['formula']] %||%
+    sim_args[['propensity']][['formula']]
+  if (is.null(formula)) {
+    stop("Must specify a propensity model formula")
   }
 
-  if (length(parse_formula(sim_args)[['propensity_model']][['formula']]) == 0) {
-    glm(
-      sim_args[['propensity_model']][['formula']],
-      data = data,
-      family = 'binomial'
-    ) |>
-      fitted()
-  } else {
-    glmer(
-      sim_args[['propensity_model']][['formula']],
-      data = data,
-      family = 'binomial'
-    ) |>
-      fitted()
+  # Resolve model fitting function (default = stats::glm)
+  fit_fun <- sim_args[['propensity_model']][['model_function']]
+  if (is.null(fit_fun)) {
+    fit_fun <- stats::glm
+  } else if (is.character(fit_fun)) {
+    # Optional string-based dispatch for common cases
+    if (fit_fun == "glm") {
+      fit_fun <- stats::glm
+    } else if (fit_fun == "glmer") {
+      if (!requireNamespace("lme4", quietly = TRUE)) {
+        stop(
+          "Package 'lme4' required for glmer model_function but not installed."
+        )
+      }
+      fit_fun <- lme4::glmer
+    } else {
+      stop("Unknown model_function: ", fit_fun)
+    }
   }
+
+  # Collect user-specified additional arguments
+  fit_args <- sim_args[['propensity_model']][['propensity_model_args']] %||%
+    list()
+
+  # Add required arguments (formula, data)
+  fit_args <- c(list(formula = formula, data = data), fit_args)
+
+  # Fit model
+  model <- do.call(fit_fun, fit_args)
+
+  # Extract fitted values
+  fitted(model)
 }
+
 
 propensity_weights <- function(data, sim_args) {
   prop_response <- attr(

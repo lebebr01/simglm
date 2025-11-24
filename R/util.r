@@ -7,7 +7,7 @@ whole_number <- function(x) x %% 1 == 0
 comp_list <- function(x) length(unique.default(x)) == 1L
 
 prop_limits <- function(prop) {
-  if (prop > .5) {
+  if (prop > 0.5) {
     u_diff <- 1 - prop
     u_max <- 1
     u_min <- prop - u_diff

@@ -23,7 +23,7 @@ base_args <- list(
       ses = list(var_type = 'continuous', mean = 0, sd = 1)
     ),
     sample_size = 200,
-    reg_weights = c(0, .5, .5),
+    reg_weights = c(0, 0.5, 0.5),
     outcome_type = 'binary'
   )
 )
@@ -110,7 +110,7 @@ test_that("multilevel propensity simulation runs", {
       fixed = list(age = list(var_type = 'ordinal', levels = 1:3)),
       sample_size = list(level1 = lvl, level2 = 20),
       randomeffect = list(int_school = list(variance = 2, var_level = 2)),
-      reg_weights = c(0, .5),
+      reg_weights = c(0, 0.5),
       outcome_type = 'binary',
       outcome_level = 2
     ),

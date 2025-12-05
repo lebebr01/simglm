@@ -16,6 +16,11 @@ simulate_propensity <- function(sim_args) {
     stop('Simulation arguments must specify propensity arguments')
   }
 
+  if (is.null(sim_args[['propensity']][['sample_size']])) {
+    sim_args[['propensity']][['sample_size']] <-
+      sim_args[['sample_size']]
+  }
+
   simglm(sim_args[['propensity']])
 }
 

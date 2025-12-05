@@ -51,6 +51,46 @@ simglm <- function(sim_args) {
   data
 }
 
+simglm_propensity <- function(data = NULL, sim_args) {
+  if (is.null(sim_args[['formula']])) {
+    stop('Simulation arguments must have a formula')
+  }
+  if (is.null(sim_args[['reg_weights']])) {
+    stop('Simulation arguments must have regression weights')
+  }
+  if (is.null(sim_args[['sample_size']])) {
+    stop('Simulation arguments must specify sample size')
+  }
+
+  if (is.null(data)) {
+    data <- simulate_fixed(data = NULL, sim_args = sim_args)
+  }
+
+  if (!is.null(sim_args[['error']])) {
+    data <- simulate_error(data, sim_args = sim_args)
+  }
+
+  if (!is.null(sim_args[['heterogeneity']])) {
+    data <- simulate_heterogeneity(data, sim_args = sim_args)
+  }
+
+  if (!is.null(sim_args[['randomeffect']])) {
+    data <- simulate_randomeffect(data, sim_args = sim_args)
+  }
+
+  if (!is.null(sim_args[['correlate']])) {
+    data <- correlate_variables(data, sim_args = sim_args)
+  }
+
+  data <- generate_response(data, sim_args = sim_args)
+
+  if (!is.null(sim_args[['missing_data']])) {
+    data <- generate_missing(data, sim_args = sim_args)
+  }
+
+  data
+}
+
 simglm_modelfit <- function(data, sim_args) {
   if (is.null(data)) {
     stop('Must pass a valid data object')

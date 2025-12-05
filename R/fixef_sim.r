@@ -25,7 +25,7 @@ sim_factor2 <- function(
 ) {
   if (force_equal) {
     if (var_level == 1) {
-      cat_var = 1
+      cat_var <- 1
       num_equal <- sum(n[['level1']]) / length(levels)
 
       if (whole_number(num_equal)) {
@@ -49,7 +49,7 @@ sim_factor2 <- function(
       }
     } else {
       if (var_level == 2) {
-        cat_var = 1
+        cat_var <- 1
         num_equal <- sum(n[['level2']]) / length(levels)
 
         if (whole_number(num_equal)) {
@@ -74,7 +74,7 @@ sim_factor2 <- function(
 
         cat_var <- rep(cat_var, times = n[['level1']])
       } else {
-        cat_var = 1
+        cat_var <- 1
         num_equal <- n[['level3']] / length(levels)
 
         if (whole_number(num_equal)) {
@@ -395,6 +395,7 @@ simulate_fixed <- function(data, sim_args, ...) {
 
   if (!is.null(sim_args[['propensity']])) {
     propensity_data <- simulate_propensity(sim_args = sim_args)
+    prop_formula <- parse_formula(sim_args[['propensity']])
   }
 
   if (is.null(data)) {
@@ -499,7 +500,11 @@ simulate_fixed <- function(data, sim_args, ...) {
   }
 
   if (!is.null(sim_args[['propensity']])) {
-    Xmat <- cbind.data.frame(Xmat, propensity_data)
+    if (nrow(Xmat) == 0) {
+      Xmat <- data.frame(propensity_data)
+    } else {
+      Xmat <- cbind.data.frame(Xmat, propensity_data)
+    }
   }
 
   # Place holder for post-process effects
@@ -665,11 +670,22 @@ simulate_fixed <- function(data, sim_args, ...) {
     Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))
 
     if (grepl("^0", as.character(fixed_formula)[2])) {
-      colnames(Xmat)[1:ncol(Xmat)] <- attr(terms(fixed_formula), "term.labels")
+      colnames(Xmat)[seq_len(ncol(Xmat))] <- attr(
+        terms(fixed_formula),
+        "term.labels"
+      )
     } else {
       colnames(Xmat)[2:ncol(Xmat)] <- attr(terms(fixed_formula), "term.labels")
     }
   }
+
+  # if (!is.null(sim_args[['propensity']])) {
+  #   # avoid duplicating column names
+  #   keep_cols <- setdiff(names(propensity_data), names(Xmat))
+  #   if (length(keep_cols) > 0L) {
+  #     Xmat <- cbind(Xmat, propensity_data[keep_cols])
+  #   }
+  # }
 
   if (is.null(data)) {
     data.frame(Xmat, ids)
@@ -677,7 +693,6 @@ simulate_fixed <- function(data, sim_args, ...) {
     data.frame(data, Xmat)
   }
 }
-
 
 #' Tidy heterogeneity of variance simulation
 #'

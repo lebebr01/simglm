@@ -73,7 +73,7 @@ sample_size_level3 <- function(sample_size) {
   beg <- beg[-length(beg)]
 
   lvl3ss <- unlist(lapply(
-    lapply(1:length(beg), function(xx) {
+    lapply(seq_along(beg), function(xx) {
       sample_size[['level1']][beg[xx]:end[xx]]
     }),
     sum
@@ -394,12 +394,17 @@ poly_names <- function(x) {
 
 
 unique_columns <- function(x, y) {
-  unlist(
-    lapply(seq_along(names(y)), function(xx) {
-      any(y[[xx]] != x[[grep(names(y)[[xx]], names(x))[1]]])
-    })
-  )
+  sapply(names(y), function(nm) {
+    idx <- grep(paste0("^", nm, "$"), names(x))
+    if (length(idx) == 0L) {
+      # Column only in y: keep it
+      TRUE
+    } else {
+      any(y[[nm]] != x[[idx[1]]])
+    }
+  })
 }
+
 
 dataframe2matrix <- function(data, corr_variable, var_names) {
   if (is.null(data)) {

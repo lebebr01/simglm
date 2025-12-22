@@ -20,6 +20,11 @@ model_fit <- function(data, sim_args, ...) {
     model_args[['reg_weights_model']] <- NULL
   }
 
+  if (!is.null(model_args[['robust']])) {
+    model_args[['robust']] <- NULL
+    model_args[['robust_args']] <- NULL
+  }
+
   if (is.null(model_args[['model_function']])) {
     if (length(parse_formula(sim_args)[['randomeffect']]) == 0) {
       model_function <- 'lm'
@@ -66,11 +71,50 @@ model_fit <- function(data, sim_args, ...) {
 
   model_args[['model_function']] <- NULL
 
-  purrr::exec(model_function, !!!model_args, data = data)
+  if (
+    !is.null(sim_args[['model_fit']][['robust']]) &&
+      sim_args[['model_fit']][['robust']] == TRUE
+  ) {
+    model <- purrr::exec(model_function, !!!model_args, data = data)
+    robust_model(
+      model,
+      data,
+      robust_args = sim_args[['model_fit']][['robust_args']]
+    )
+  } else {
+    purrr::exec(model_function, !!!model_args, data = data)
+  }
+}
 
-  # purrr::invoke(model_function,
-  #               model_args,
-  #               data = data)
+#' Robust Model Standard Errors
+#'
+#' @param data A data object that contains a fitted model.
+#' @param model A fitted model object from lm or glm.
+#' @param robust_args A named list of arguments passed to the robust model
+#'  standard error function.
+#' @importFrom lmtest coeftest
+#' @importFrom sandwich vcovHC vcovCL
+#' @export
+robust_model <- function(model, data = NULL, robust_args = list()) {
+  stopifnot(inherits(model, "lm"))
+
+  type <- robust_args$type %||% "HC3"
+  cluster_var <- robust_args$cluster %||% NULL
+
+  # Build vcov matrix
+  V <- if (is.null(cluster_var)) {
+    sandwich::vcovHC(model, type = type)
+  } else {
+    if (is.null(data)) {
+      stop(
+        "Provide `data` when using `cluster`, so I can look up the cluster variable."
+      )
+    }
+    cl <- data[[cluster_var]]
+    sandwich::vcovCL(model, cluster = cl, type = "HC1") # HC1-style small sample scaling is common
+  }
+
+  lmtest::coeftest(model, vcov. = V)
 }
 
 #' Extract Coefficients

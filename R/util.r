@@ -1,5 +1,8 @@
 "%ni%" <- Negate("%in%")
 
+`%||%` <- function(x, y) if (is.null(x)) y else x
+
+
 is_odd <- function(x) x %% 2 != 0
 
 whole_number <- function(x) x %% 1 == 0

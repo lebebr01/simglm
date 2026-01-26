@@ -4,7 +4,7 @@
 \alias{compute_density_values}
 \title{Convenience function for computing density values for plotting.}
 \usage{
-compute_density_values(data, group_var, parameter, values)
+compute_density_values(data, group_var, parameter, values, term_col = "term")
 }
 \arguments{
 \item{data}{A dataframe that contains the parameter estimates.}
@@ -17,6 +17,9 @@ contain more than one attribute.}
 
 \item{values}{A list of numeric vectors that specifies the values
 for which the density values are computed for.}
+
+\item{term_col}{A character vector representing the term column in the data,
+this should almost always be "term" unless renamed.}
 }
 \description{
 Convenience function for computing density values for plotting.

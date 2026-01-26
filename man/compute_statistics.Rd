@@ -11,7 +11,7 @@ compute_statistics(
   type_1_error = TRUE,
   precision = TRUE,
   alternative_power = FALSE,
-  type_s_error = FALSE,
+  type_use = FALSE,
   type_m_error = FALSE
 )
 }
@@ -40,7 +40,7 @@ computed. Defaults to TRUE.}
 power estimates should be computed. If TRUE, this must be accompanied by
 thresholds specified within the power simulation arguments. Defaults to FALSE.}
 
-\item{type_s_error}{TRUE/FALSE flag indicating whether Type S error should
+\item{type_use}{TRUE/FALSE flag indicating whether unconditional sign errors (USE) should
 be computed. Defaults to FALSE.}
 
 \item{type_m_error}{TRUE/FALSE flag indicating whether Type M error should

@@ -73,7 +73,7 @@ model_fit <- function(data, sim_args, ...) {
 
   if (
     !is.null(sim_args[['model_fit']][['robust']]) &&
-      sim_args[['model_fit']][['robust']] == TRUE
+      sim_args[['model_fit']][['robust']]
   ) {
     model <- purrr::exec(model_function, !!!model_args, data = data)
     robust_model(
@@ -385,7 +385,7 @@ replicate_simulation_vary <- function(
 #' @param alternative_power TRUE/FALSE flag indicating whether alternative
 #'  power estimates should be computed. If TRUE, this must be accompanied by
 #'  thresholds specified within the power simulation arguments. Defaults to FALSE.
-#' @param type_s_error TRUE/FALSE flag indicating whether Type S error should
+#' @param type_use TRUE/FALSE flag indicating whether unconditional sign errors (USE) should
 #'  be computed. Defaults to FALSE.
 #' @param type_m_error TRUE/FALSE flag indicating whether Type M error should
 #'  be computed. Defaults to FALSE.
@@ -399,7 +399,7 @@ compute_statistics <- function(
   type_1_error = TRUE,
   precision = TRUE,
   alternative_power = FALSE,
-  type_s_error = FALSE,
+  type_use = FALSE,
   type_m_error = FALSE
 ) {
   if (is.null(sim_args[['sample_size']])) {
@@ -437,13 +437,11 @@ compute_statistics <- function(
     }
   }
 
-  # if(is.null(sim_args[['model_fit']][['reg_weights_model']])) {
-  #   reg_weights <- sim_args[['reg_weights']]
-  # } else {
-  #   reg_weights <- sim_args[['model_fit']][['reg_weights_model']]
-  # }
-
   if (!is.null(sim_args[['vary_arguments']])) {
+    data <- lapply(seq_along(data), function(xx) {
+      data[[xx]][['condition_id']] <- xx
+      data[[xx]]
+    })
     data_list <- lapply(seq_along(data), function(xx) {
       split(data[[xx]], f = data[[xx]]['term'])
     })
@@ -463,33 +461,17 @@ compute_statistics <- function(
         )
       })
     })
-
-    # data_list <- lapply(seq_along(sim_arguments_w), function(yy) {
-    #   lapply(seq_along(data_list), function(xx) {
-    #     compute_t1e(data_list[[xx]], power_args[[yy]][[xx]], reg_weights = reg_weights[xx])
-    #   }
-    #   )
-    # }
-    # )
   } else {
     if (!is.null(sim_args[['vary_arguments']])) {
       data_list <- lapply(seq_along(data_list), function(xx) {
         lapply(seq_along(data_list[[xx]]), function(yy) {
-          compute_power(data_list[[xx]][[yy]], power_args[[xx]][[yy]])
+          compute_power(data_list[[xx]][[yy]], power_args[[xx]][[1]])
         })
       })
-      # data_list <- lapply(seq_along(data_list), function(xx) {
-      #   lapply(seq_along(data_list[[xx]]), function(yy) {
-      #     compute_t1e(data_list[[xx]][[yy]], power_args[[xx]][[yy]])
-      #   })
-      # })
     } else {
       data_list <- lapply(seq_along(data_list), function(xx) {
         compute_power(data_list[[xx]], power_args[[xx]])
       })
-      # data_list <- lapply(seq_along(data_list), function(xx) {
-      #     compute_t1e(data_list[[xx]], power_args[[xx]])
-      # })
     }
   }
 
@@ -500,10 +482,15 @@ compute_statistics <- function(
   } else {
     group_vars <- c(
       names(expand.grid(sim_args[['vary_arguments']], KEEP.OUT.ATTRS = FALSE)),
-      'term'
+      "term"
     )
+
+    if ("within_names" %in% names(data_df)) {
+      group_vars <- unique(c(group_vars, "within_names"))
+      group_vars <- setdiff(group_vars, "model_fit")
+    }
     if (any(group_vars %in% 'power')) {
-      group_vars <- gsub("power", "power_arg", group_vars)
+      group_vars <- gsub("power", "power_arg", group_vars, fixed = TRUE)
     }
   }
 
@@ -511,10 +498,11 @@ compute_statistics <- function(
 
   if (alternative_power) {
     alt_power_est <- alternative_power(
-      data_df,
+      data = data_df,
       group_var = group_vars,
-      quantiles = sim_args[['power']][['thresholds']]
+      thresholds = sim_args[["power"]][["thresholds"]]
     )
+
     avg_estimates <- dplyr::full_join(
       avg_estimates,
       alt_power_est,
@@ -522,24 +510,40 @@ compute_statistics <- function(
     )
   }
 
-  if (type_s_error) {
-    type_s <- type_s_errors(
+  # if (alternative_power) {
+  #   alt_power_est <- alternative_power(
+  #     data_df,
+  #     group_var = group_vars,
+  #     quantiles = sim_args[['power']][['thresholds']]
+  #   )
+  #   avg_estimates <- dplyr::full_join(
+  #     avg_estimates,
+  #     alt_power_est,
+  #     by = group_vars
+  #   )
+  # }
+
+  if (type_use) {
+    type_use_est <- type_use_error(
       data_df,
       group_var = group_vars,
-      sign = sim_args[['power']][['type_s_sign']]
+      sign = sim_args[["power"]][["type_use_sign"]]
     )
 
-    avg_estimates <- dplyr::full_join(avg_estimates, type_s, by = group_vars)
+    avg_estimates <- dplyr::full_join(
+      avg_estimates,
+      type_use_est,
+      by = group_vars
+    )
   }
+  # if (type_use) {
+  #   type_use <- type_use_error(
+  #     data_df,
+  #     group_var = group_vars,
+  #     sign = sim_args[['power']][['type_use_sign']]
+  #   )
 
-  # if(type_m_error){
-  #   type_m <- type_m_s_errors(data_df,
-  #                             group_var = group_vars,
-  #                             sign = sim_args[['power']][['type_m_threshold']])
-  #
-  #   avg_estimates <- dplyr::full_join(avg_estimates,
-  #                                     type_m,
-  #                                     by = group_vars)
+  #   avg_estimates <- dplyr::full_join(avg_estimates, type_use, by = group_vars)
   # }
 
   if (power) {
@@ -722,88 +726,230 @@ aggregate_precision <- function(data, group_var) {
     )
 }
 
-alternative_power <- function(data, group_var, quantiles) {
-  data_list <- split(data, f = data[group_var])
+alternative_power <- function(
+  data,
+  group_var,
+  thresholds,
+  term_col = "term",
+  estimate_col = "estimate"
+) {
+  stopifnot(is.data.frame(data))
+  stopifnot(is.character(group_var), length(group_var) >= 1)
+  stopifnot(term_col %in% group_var) # because you said term is in group_vars
+  stopifnot(is.list(thresholds))
 
-  if (length(quantiles) != length(data_list)) {
-    num_repeat <- length(data_list) / length(quantiles)
-    rep_quant <- quantiles[rep(1:length(quantiles), each = num_repeat)]
-  } else {
-    rep_quant <- quantiles
+  if (is.null(names(thresholds)) || any(names(thresholds) == "")) {
+    stop(
+      "`thresholds` must be a named list keyed by model terms (broom::tidy() `term`)."
+    )
   }
 
-  alt_power_out <- do.call(
-    'rbind.data.frame',
-    lapply(seq_along(data_list), function(ii) {
-      do.call(
-        'rbind.data.frame',
-        lapply(seq_along(rep_quant[[ii]]), function(xx) {
-          do.call(
-            "cbind",
-            c(
-              compute_alt_power(data_list[[ii]], rep_quant[[ii]][xx]),
-              data_list[[ii]][group_var][1, ]
-            )
-          )
+  # split by the full grouping (including term)
+  f <- interaction(data[group_var], drop = TRUE, sep = "___")
+  data_list <- split(data, f = f)
+
+  out <- do.call(
+    rbind.data.frame,
+    lapply(data_list, function(dat_i) {
+      grp <- dat_i[1, group_var, drop = FALSE]
+      this_term <- grp[[term_col]][[1]]
+
+      # if no thresholds provided for this term, return empty for this group
+      thr_vec <- thresholds[[this_term]]
+      if (is.null(thr_vec)) {
+        return(NULL)
+      }
+
+      res <- do.call(
+        rbind.data.frame,
+        lapply(thr_vec, function(thr) {
+          compute_alt_power(dat_i, thr, estimate_col = estimate_col)
         })
       )
+
+      cbind(res, grp, stringsAsFactors = FALSE)
     })
   )
-  names(alt_power_out) <- c('alt_power', 'threshold', group_var)
 
-  #  <- lapply(seq_along(data_list), function(ii) {
-  #   do.call("rbind", lapply(seq_along(quantiles[[ii]]), function(xx) {
-  #     c(compute_alt_power(data_list[[ii]], quantile = quantiles[[ii]][xx]),
-  #       names(data_list)[[ii]]) }
-  #   ))}
-  # )
-  alt_power_out
+  rownames(out) <- NULL
+  out
 }
 
-compute_alt_power <- function(data, quantile) {
-  if (quantile < 0) {
-    c(mean(ifelse(data[['estimate']] <= quantile, 1, 0)), quantile)
+
+# alternative_power <- function(data, group_var, quantiles) {
+#   data_list <- split(data, f = data[group_var])
+
+#   if (length(quantiles) != length(data_list)) {
+#     num_repeat <- length(data_list) / length(quantiles)
+#     rep_quant <- quantiles[rep(seq_along(quantiles), each = num_repeat)]
+#   } else {
+#     rep_quant <- quantiles
+#   }
+
+#   alt_power_out <- do.call(
+#     'rbind.data.frame',
+#     lapply(seq_along(data_list), function(ii) {
+#       do.call(
+#         'rbind.data.frame',
+#         lapply(seq_along(rep_quant[[ii]]), function(xx) {
+#           do.call(
+#             "cbind",
+#             c(
+#               compute_alt_power(data_list[[ii]], rep_quant[[ii]][xx]),
+#               data_list[[ii]][group_var][1, ]
+#             )
+#           )
+#         })
+#       )
+#     })
+#   )
+#   names(alt_power_out) <- c('alt_power', 'threshold', group_var)
+
+#   #  <- lapply(seq_along(data_list), function(ii) {
+#   #   do.call("rbind", lapply(seq_along(quantiles[[ii]]), function(xx) {
+#   #     c(compute_alt_power(data_list[[ii]], quantile = quantiles[[ii]][xx]),
+#   #       names(data_list)[[ii]]) }
+#   #   ))}
+#   # )
+#   alt_power_out
+# }
+
+compute_alt_power <- function(data, threshold, estimate_col = "estimate") {
+  x <- data[[estimate_col]]
+
+  alt <- if (threshold < 0) {
+    mean(x <= threshold, na.rm = TRUE)
   } else {
-    c(mean(ifelse(data[['estimate']] >= quantile, 1, 0)), quantile)
+    mean(x >= threshold, na.rm = TRUE)
   }
+
+  data.frame(
+    alt_power = alt,
+    threshold = threshold,
+    stringsAsFactors = FALSE
+  )
 }
 
-type_s_errors <- function(data, group_var, sign = NULL) {
-  data_list <- split(data, f = data[group_var])
 
-  if (!is.null(sign)) {
-    if (length(sign) != length(data_list)) {
-      num_repeat <- length(data_list) / length(sign)
-      rep_sign <- rep(sign, each = num_repeat)
-    } else {
-      rep_sign <- sign
+# compute_alt_power <- function(data, quantile) {
+#   if (quantile < 0) {
+#     c(mean(ifelse(data[['estimate']] <= quantile, 1, 0)), quantile)
+#   } else {
+#     c(mean(ifelse(data[['estimate']] >= quantile, 1, 0)), quantile)
+#   }
+# }
+
+type_use_error <- function(
+  data,
+  group_var,
+  sign = NULL,
+  term_col = "term",
+  estimate_col = "estimate",
+  default_sign = "positive"
+) {
+  stopifnot(is.data.frame(data))
+  stopifnot(is.character(group_var), length(group_var) >= 1)
+  stopifnot(term_col %in% group_var)
+
+  if (is.null(sign)) {
+    # If user doesn't supply sign, use default for everything
+    sign_map <- NULL
+  } else if (is.character(sign) && length(sign) == 1) {
+    # single global sign
+    sign_map <- NULL
+    default_sign <- sign
+  } else if (is.list(sign)) {
+    if (is.null(names(sign)) || any(names(sign) == "")) {
+      stop("If `sign` is a list, it must be *named* by model term.")
     }
-    type_s <- do.call(
-      "rbind.data.frame",
-      lapply(seq_along(data_list), function(ii) {
-        do.call(
-          "cbind",
-          c(
-            compute_type_s(data_list[[ii]], rep_sign[ii]),
-            data_list[[ii]][group_var][1, ]
-          )
-        )
-      })
-    )
-    names(type_s) <- c('type_s_error', 'sign', group_var)
-  }
-  type_s
-}
-
-compute_type_s <- function(data, sign) {
-  if (sign == 'positive') {
-    c(mean(ifelse(data[['estimate']] < 0, 1, 0)), sign)
+    sign_map <- sign
   } else {
-    c(mean(ifelse(data[['estimate']] > 0, 1, 0)), sign)
+    stop(
+      "`sign` must be NULL, a single character ('positive'/'negative'), or a named list by term."
+    )
   }
+
+  # Split by full grouping (including term)
+  f <- interaction(data[group_var], drop = TRUE, sep = "___")
+  data_list <- split(data, f = f)
+
+  out <- do.call(
+    rbind.data.frame,
+    lapply(data_list, function(dat_i) {
+      grp <- dat_i[1, group_var, drop = FALSE]
+      this_term <- grp[[term_col]][[1]]
+
+      this_sign <- if (!is.null(sign_map) && !is.null(sign_map[[this_term]])) {
+        sign_map[[this_term]]
+      } else {
+        default_sign
+      }
+
+      res <- compute_type_use(
+        dat_i,
+        sign = this_sign,
+        estimate_col = estimate_col
+      )
+      cbind(res, grp, stringsAsFactors = FALSE)
+    })
+  )
+
+  rownames(out) <- NULL
+  out
 }
 
-compute_type_m <- function(data, quantile) {}
+# type_use_error <- function(data, group_var, sign = NULL) {
+#   data_list <- split(data, f = data[group_var])
+
+#   if (!is.null(sign)) {
+#     if (length(sign) != length(data_list)) {
+#       num_repeat <- length(data_list) / length(sign)
+#       rep_sign <- rep(sign, each = num_repeat)
+#     } else {
+#       rep_sign <- sign
+#     }
+#     type_use <- do.call(
+#       "rbind.data.frame",
+#       lapply(seq_along(data_list), function(ii) {
+#         do.call(
+#           "cbind",
+#           c(
+#             compute_type_use(data_list[[ii]], rep_sign[ii]),
+#             data_list[[ii]][group_var][1, ]
+#           )
+#         )
+#       })
+#     )
+#     names(type_use) <- c('type_use', 'sign', group_var)
+#   }
+#   type_s
+# }
+
+compute_type_use <- function(data, sign, estimate_col = "estimate") {
+  x <- data[[estimate_col]]
+
+  type_use <- if (sign == "positive") {
+    mean(x < 0, na.rm = TRUE)
+  } else if (sign == "negative") {
+    mean(x > 0, na.rm = TRUE)
+  } else {
+    stop("`sign` must be 'positive' or 'negative'. Got: ", sign)
+  }
+
+  data.frame(
+    type_use = type_use,
+    sign = sign,
+    stringsAsFactors = FALSE
+  )
+}
+
+# compute_type_use <- function(data, sign) {
+#   if (sign == 'positive') {
+#     c(mean(ifelse(data[['estimate']] < 0, 1, 0)), sign)
+#   } else {
+#     c(mean(ifelse(data[['estimate']] > 0, 1, 0)), sign)
+#   }
+# }
 
 #' Convenience function for computing density values for plotting.
 #'
@@ -814,28 +960,76 @@ compute_type_m <- function(data, quantile) {}
 #' @param parameter The attribute that represents the parameter estimate.
 #' @param values A list of numeric vectors that specifies the values
 #' for which the density values are computed for.
+#' @param term_col A character vector representing the term column in the data,
+#'   this should almost always be "term" unless renamed.
 #'
 #' @export
 #' @importFrom stats density
-compute_density_values <- function(data, group_var, parameter, values) {
-  data_list <- data |>
-    split(f = data[group_var])
+compute_density_values <- function(
+  data,
+  group_var,
+  parameter,
+  values,
+  term_col = "term"
+) {
+  stopifnot(is.data.frame(data))
+  stopifnot(is.character(group_var), length(group_var) >= 1)
+  stopifnot(is.character(parameter), length(parameter) == 1)
+  stopifnot(parameter %in% names(data))
+
+  # Split by full grouping (robust for 1+ columns)
+  f <- interaction(data[group_var], drop = TRUE, sep = "___")
+  data_list <- split(data, f = f)
+
+  # values can be:
+  #  - a numeric vector (same quantiles for all groups), OR
+  #  - a named list keyed by term, OR
+  #  - a list of vectors aligned to groups (less preferred, but supported)
+  values_mode <- if (is.numeric(values)) {
+    "global_vec"
+  } else if (
+    is.list(values) && !is.null(names(values)) && all(names(values) != "")
+  ) {
+    "named_by_term"
+  } else if (is.list(values)) {
+    "list_by_group"
+  } else {
+    stop(
+      "`values` must be a numeric vector or a list (preferably named by term)."
+    )
+  }
 
   dens_values <- future.apply::future_lapply(
     seq_along(data_list),
     function(ii) {
+      dat_i <- data_list[[ii]]
+      grp <- dat_i[1, group_var, drop = FALSE]
+
+      q <- switch(
+        values_mode,
+        global_vec = values,
+        list_by_group = values[[ii]],
+        named_by_term = {
+          stopifnot(term_col %in% group_var)
+          this_term <- grp[[term_col]][[1]]
+          values[[this_term]]
+        }
+      )
+
+      if (is.null(q)) {
+        return(NULL)
+      }
+
       cbind(
-        density_quantile(
-          data_list[[ii]][[parameter]],
-          quantiles = values[[ii]]
-        ),
-        names(data_list)[[ii]]
+        density_quantile(dat_i[[parameter]], quantiles = q),
+        grp,
+        stringsAsFactors = FALSE
       )
     },
     future.seed = TRUE
   )
-  dens_df <- do.call('rbind', dens_values)
-  names(dens_df) <- c('x', 'y', group_var)
 
+  dens_df <- do.call(rbind.data.frame, dens_values)
+  rownames(dens_df) <- NULL
   dens_df
 }

@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.28</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.30</span>
       </span>
     </div>
 
@@ -75,7 +75,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">compute_density_values</span><span class="op">(</span><span class="va">data</span>, <span class="va">group_var</span>, <span class="va">parameter</span>, <span class="va">values</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">compute_density_values</span><span class="op">(</span><span class="va">data</span>, <span class="va">group_var</span>, <span class="va">parameter</span>, <span class="va">values</span>, term_col <span class="op">=</span> <span class="st">"term"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -99,6 +99,11 @@ contain more than one attribute.</p></dd>
 <dt id="arg-values">values<a class="anchor" aria-label="anchor" href="#arg-values"></a></dt>
 <dd><p>A list of numeric vectors that specifies the values
 for which the density values are computed for.</p></dd>
+
+
+<dt id="arg-term-col">term_col<a class="anchor" aria-label="anchor" href="#arg-term-col"></a></dt>
+<dd><p>A character vector representing the term column in the data,
+this should almost always be "term" unless renamed.</p></dd>
 
 </dl></div>
 

@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">simglm</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.30</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.31</span>
       </span>
     </div>
 
@@ -59,6 +59,9 @@
     </li>
     <li>
       <a href="../articles/simulation_arguments.html">Simulation Argument Details for `simglm`</a>
+    </li>
+    <li>
+      <a href="../articles/spline_simulation.html">Spline Simulation with `simglm`</a>
     </li>
     <li>
       <a href="../articles/tidy_simulation.html">Tidy Simulation with `simglm`</a>
@@ -92,7 +95,7 @@
       <h1 data-toc-skip>Tidy Simulation with <code>simglm</code>
 </h1>
             
-            <h4 data-toc-skip class="date">2026-02-13</h4>
+            <h4 data-toc-skip class="date">2026-04-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lebebr01/simglm/blob/main/vignettes/tidy_simulation.Rmd" class="external-link"><code>vignettes/tidy_simulation.Rmd</code></a></small>
       <div class="hidden name"><code>tidy_simulation.Rmd</code></div>
@@ -130,7 +133,7 @@ cluster residuals</li>
 effects, generate outcome variable
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Y</mi><mi>j</mi></msub><annotation encoding="application/x-tex">Y_{j}</annotation></semantics></math>
 given the following
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>j</mi></msub><mo>=</mo><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>X</mi><mi>j</mi></msub><mi>β</mi><mo>+</mo><msub><mi>Z</mi><mi>j</mi></msub><msub><mi>b</mi><mi>j</mi></msub><mo>+</mo><msub><mi>e</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Y_{j} = g(X_{j} \beta + Z_{j} b_{j} + e_{j})</annotation></semantics></math>.</li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Y</mi><mi>j</mi></msub><mo>=</mo><mi>g</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>X</mi><mi>j</mi></msub><mi>β</mi><mo>+</mo><msub><mi>Z</mi><mi>j</mi></msub><msub><mi>b</mi><mi>j</mi></msub><mo>+</mo><msub><mi>e</mi><mi>j</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Y_{j} = g(X_{j} \beta + Z_{j} b_{j} + e_{j})</annotation></semantics></math>.</li>
 </ul>
 <p>We will dive into what each of these component represent in a second,
 but first let’s start with an example that simulates a linear regression

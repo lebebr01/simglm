@@ -1,0 +1,183 @@
+---
+title: "Spline Simulation with `simglm`"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Spline Simulation with `simglm`}
+  \usepackage[utf8]{inputenc}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(dplyr)
+library(simglm)
+library(splines)
+knit_print.data.frame = function(x, ...) {
+  res = paste(c('', '', kable(x, output = FALSE)), collapse = '\n')
+  asis_output(res)
+}
+```
+
+# Spline Simulation
+
+Spline terms can be specified directly in the formula argument for fixed-effect simulation. The supported spline basis functions are `ns()` and `bs()`, both from the `splines` package. These terms are expanded into generated basis columns during simulation while the original variable is kept in the simulated data so the same formula can be used for model fitting.
+
+# Natural Cubic Spline
+
+The example below simulates two fixed variables, `x1` and `x2`, and uses a natural cubic spline for `x2`. The formula uses regular R formula syntax.
+
+```{r ns_fixed}
+set.seed(321)
+
+sim_arguments <- list(
+  formula = y ~ 1 + x1 + ns(x2, df = 4),
+  fixed = list(
+    x1 = list(var_type = 'continuous', mean = 0, sd = 1),
+    x2 = list(var_type = 'continuous', mean = 0, sd = 1)
+  ),
+  sample_size = 10
+)
+
+simulate_fixed(data = NULL, sim_arguments)
+```
+
+The generated design matrix contains one column for the intercept, one column for `x1`, four spline basis columns for `x2`, and the original `x2` variable. The spline basis columns are named `x2_1`, `x2_2`, `x2_3`, and `x2_4`.
+
+# Generating an Outcome
+
+Regression weights can be specified with a named list. This is useful for spline terms because one formula term expands to multiple basis columns. The name used for the spline term should match the formula term.
+
+```{r ns_outcome}
+set.seed(321)
+
+sim_arguments <- list(
+  formula = y ~ 1 + x1 + ns(x2, df = 4),
+  fixed = list(
+    x1 = list(var_type = 'continuous', mean = 0, sd = 1),
+    x2 = list(var_type = 'continuous', mean = 0, sd = 1)
+  ),
+  error = list(variance = 1),
+  sample_size = 100,
+  reg_weights = list(
+    `(Intercept)` = 0,
+    x1 = 0.25,
+    `ns(x2, df = 4)` = c(0.75, 0.5, 0, 0)
+  )
+)
+
+sim_data <- simulate_fixed(data = NULL, sim_arguments) |>
+  simulate_error(sim_arguments) |>
+  generate_response(sim_arguments)
+
+head(sim_data)
+```
+
+# B-Spline Basis
+
+The same pattern can be used for a B-spline basis with `bs()`.
+
+```{r bs_outcome}
+set.seed(321)
+
+sim_arguments_bs <- list(
+  formula = y ~ 1 + x1 + bs(x2, df = 4),
+  fixed = list(
+    x1 = list(var_type = 'continuous', mean = 0, sd = 1),
+    x2 = list(var_type = 'continuous', mean = 0, sd = 1)
+  ),
+  error = list(variance = 1),
+  sample_size = 100,
+  reg_weights = list(
+    `(Intercept)` = 0,
+    x1 = 0.25,
+    `bs(x2, df = 4)` = c(0.75, 0.5, 0, 0)
+  )
+)
+
+bs_data <- simulate_fixed(data = NULL, sim_arguments_bs) |>
+  simulate_error(sim_arguments_bs) |>
+  generate_response(sim_arguments_bs)
+
+head(bs_data)
+```
+
+# Model Fitting
+
+Spline models can be fit with the existing `model_fit` argument. The original variable is retained in the simulated data, so the fitted model can use the same formula syntax with `ns()` or `bs()`.
+
+```{r ns_model_fit}
+set.seed(321)
+
+sim_arguments_fit <- list(
+  formula = y ~ 1 + x1 + ns(x2, df = 4),
+  fixed = list(
+    x1 = list(var_type = 'continuous', mean = 0, sd = 1),
+    x2 = list(var_type = 'continuous', mean = 0, sd = 1)
+  ),
+  error = list(variance = 1),
+  sample_size = 100,
+  reg_weights = list(
+    `(Intercept)` = 0,
+    x1 = 0.25,
+    `ns(x2, df = 4)` = c(0.75, 0.5, 0, 0)
+  ),
+  model_fit = list(model_function = 'lm')
+)
+
+fit <- simulate_fixed(data = NULL, sim_arguments_fit) |>
+  simulate_error(sim_arguments_fit) |>
+  generate_response(sim_arguments_fit) |>
+  model_fit(sim_arguments_fit)
+
+broom::tidy(fit)
+```
+
+# Power Simulation
+
+Spline models can also be used with the existing power simulation workflow. Each
+spline basis coefficient is returned as its own model term in the fitted model,
+for example `ns(x2, df = 4)1` through `ns(x2, df = 4)4`. Alternative power
+thresholds should be named by the fitted model terms returned by `broom::tidy()`.
+
+```{r ns_power}
+set.seed(321)
+
+sim_arguments_power <- list(
+  formula = y ~ 1 + x1 + ns(x2, df = 4),
+  fixed = list(
+    x1 = list(var_type = 'continuous', mean = 0, sd = 1),
+    x2 = list(var_type = 'continuous', mean = 0, sd = 1)
+  ),
+  error = list(variance = 1),
+  sample_size = 80,
+  reg_weights = list(
+    `(Intercept)` = 0,
+    x1 = 0.25,
+    `ns(x2, df = 4)` = c(0.75, 0.5, 0, 0)
+  ),
+  model_fit = list(model_function = 'lm'),
+  power = list(
+    thresholds = list(
+      x1 = 0.25,
+      `ns(x2, df = 4)1` = c(0.5, 0.75),
+      `ns(x2, df = 4)2` = 0.5
+    )
+  ),
+  replications = 10,
+  extract_coefficients = TRUE
+)
+
+power_out <- replicate_simulation(sim_arguments_power)
+
+compute_statistics(
+  power_out,
+  sim_arguments_power,
+  type_1_error = FALSE,
+  alternative_power = TRUE
+)
+```
+
+Random effects can be included with spline fixed effects using the existing random-effect syntax. For example, `y ~ 1 + ns(time, df = 4) + (1 | id)` adds a random intercept while keeping the spline as a fixed-effect term.

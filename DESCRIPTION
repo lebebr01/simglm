@@ -23,7 +23,8 @@ Imports:
     future.apply,
     gtools,
     sandwich,
-    lmtest
+    lmtest,
+    splines
 Suggests:
     knitr,
     lme4,
@@ -36,7 +37,6 @@ Suggests:
     geepack,
     rmarkdown,
     future,
-    splines,
     covr
 VignetteBuilder: knitr
 Encoding: UTF-8

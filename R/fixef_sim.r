@@ -383,7 +383,7 @@ simulate_fixed <- function(data, sim_args, ...) {
   if (any(grepl('^factor\\(', fixed_vars))) {
     fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
   }
-  if (any(grepl('^ns\\(', fixed_vars))) {
+  if (any(grepl('^ns\\(|^bs\\(', fixed_vars))) {
     fixed_vars <- gsub("ns\\(|bs\\(|\\,.+\\)$", "", fixed_vars)
   }
   if (any(grepl("^poly\\(", fixed_vars))) {
@@ -587,7 +587,7 @@ simulate_fixed <- function(data, sim_args, ...) {
       })) ==
         'factor'
     ) |
-      any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))
+      any(grepl("^ns\\(|^bs\\(|^poly\\(", attr(terms(fixed_formula), "term.labels")))
   ) {
     if (any(grepl('^factor\\(', fixed_vars))) {
       fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
@@ -615,8 +615,8 @@ simulate_fixed <- function(data, sim_args, ...) {
 
       fixed_vars <- factor_names(sim_args, fixed_vars_factornames)
     }
-    if (any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
-      if (any(grepl("^ns|^poly", fixed_vars))) {
+    if (any(grepl("^ns\\(|^bs\\(|^poly\\(", attr(terms(fixed_formula), "term.labels")))) {
+      if (any(grepl("^ns\\(|^bs\\(|^poly\\(", fixed_vars))) {
         fixed_vars <- poly_ns_names(sim_args, fixed_vars)
       } else {
         fixed_vars <- poly_ns_names(
@@ -627,6 +627,7 @@ simulate_fixed <- function(data, sim_args, ...) {
     }
 
     Omat <- Xmat
+    fixed_formula <- attach_spline_env(fixed_formula)
     Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))
     colnames(Xmat)[2:ncol(Xmat)] <- fixed_vars
 
@@ -646,12 +647,12 @@ simulate_fixed <- function(data, sim_args, ...) {
     } else {
       Omat_factor <- NULL
     }
-    if (any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
+    if (any(grepl("^ns\\(|^bs\\(|^poly\\(", attr(terms(fixed_formula), "term.labels")))) {
       fixed_vars_new <- attr(terms(fixed_formula), "term.labels")
       fixed_vars_poly_ns <- gsub(
-        "poly\\(|\\,.+\\)|ns\\(|\\,.+\\)",
+        "poly\\(|ns\\(|bs\\(|\\,.+\\)$",
         "",
-        fixed_vars_new[grepl("^poly|^ns", fixed_vars_new)]
+        fixed_vars_new[grepl("^poly\\(|^ns\\(|^bs\\(", fixed_vars_new)]
       )
       if (any(grepl(":", fixed_vars_poly_ns))) {
         fixed_vars_poly_ns <- fixed_vars_poly_ns[
@@ -667,6 +668,7 @@ simulate_fixed <- function(data, sim_args, ...) {
 
     Xmat <- dplyr::bind_cols(Xmat, Omat)
   } else {
+    fixed_formula <- attach_spline_env(fixed_formula)
     Xmat <- data.frame(model.matrix(fixed_formula, Xmat, ...))
 
     if (grepl("^0", as.character(fixed_formula)[2])) {

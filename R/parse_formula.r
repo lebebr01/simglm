@@ -182,6 +182,16 @@ parse_power <- function(sim_args, samp_size) {
     }
   }
 
+  if (is.list(reg_weights) && !is.null(names(reg_weights)) && all(names(reg_weights) != "")) {
+    if (is.null(sim_args[['model_fit']][['formula']])) {
+      power_formula <- sim_args[['formula']]
+    } else {
+      power_formula <- sim_args[['model_fit']][['formula']]
+    }
+    power_fixed_formula <- parse_formula(list(formula = power_formula))[['fixed']]
+    reg_weights <- regression_weight_terms(reg_weights, power_fixed_formula)
+  }
+
   if (is.null(sim_args[['power']][['direction']])) {
     number_tails <- rep(2, length(reg_weights))
   } else {
@@ -260,7 +270,7 @@ parse_power <- function(sim_args, samp_size) {
     }
   })
 
-  lapply(seq_along(test_statistic), function(xx) {
+  power_out <- lapply(seq_along(test_statistic), function(xx) {
     list(
       test_statistic = test_statistic[[xx]],
       alpha = alpha[xx],
@@ -271,6 +281,9 @@ parse_power <- function(sim_args, samp_size) {
       opts = opts[xx]
     )
   })
+  names(power_out) <- names(reg_weights)
+
+  power_out
 }
 
 #' Parse between varying arguments

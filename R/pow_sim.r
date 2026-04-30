@@ -69,6 +69,8 @@ model_fit <- function(data, sim_args, ...) {
     }
   }
 
+  model_args[['formula']] <- attach_spline_env(model_args[['formula']])
+
   model_args[['model_function']] <- NULL
 
   if (
@@ -470,7 +472,13 @@ compute_statistics <- function(
       })
     } else {
       data_list <- lapply(seq_along(data_list), function(xx) {
-        compute_power(data_list[[xx]], power_args[[xx]])
+        term_name <- names(data_list)[xx]
+        if (!is.null(names(power_args)) && term_name %in% names(power_args)) {
+          power_arg <- power_args[[term_name]]
+        } else {
+          power_arg <- power_args[[xx]]
+        }
+        compute_power(data_list[[xx]], power_arg)
       })
     }
   }

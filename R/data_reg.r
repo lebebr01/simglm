@@ -77,10 +77,7 @@ generate_response_list <- function(
   if (any(grepl('^factor\\(', fixed_vars))) {
     fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
   }
-  if (any(grepl('^ns\\(', fixed_vars))) {
-    fixed_vars <- gsub("ns\\(|\\,.+\\)$", "", fixed_vars)
-  }
-  if (any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
+  if (any(grepl("^ns\\(|^bs\\(|^poly\\(", attr(terms(fixed_formula), "term.labels")))) {
     fixed_vars <- poly_ns_names(sim_args, fixed_vars)
   }
   if (any(grepl("^poly\\(", fixed_vars))) {
@@ -117,6 +114,7 @@ generate_response_list <- function(
   }
 
   # fixed effects for multinomial / continuous lists
+  reg_weights <- regression_weights(reg_weights, names(Xmat), fixed_formula)
   fixed_outcome <- as.matrix(Xmat) %*% reg_weights
 
   # ----- random effects -----
@@ -239,10 +237,7 @@ generate_response_one <- function(
   if (any(grepl('^factor\\(', fixed_vars))) {
     fixed_vars <- gsub("factor\\(|\\)$", "", fixed_vars)
   }
-  if (any(grepl('^ns\\(', fixed_vars))) {
-    fixed_vars <- gsub("ns\\(|\\,.+\\)$", "", fixed_vars)
-  }
-  if (any(grepl("^ns|^poly", attr(terms(fixed_formula), "term.labels")))) {
+  if (any(grepl("^ns\\(|^bs\\(|^poly\\(", attr(terms(fixed_formula), "term.labels")))) {
     fixed_vars <- poly_ns_names(sim_args, fixed_vars)
   }
   if (any(grepl("^poly\\(", fixed_vars))) {
@@ -282,16 +277,31 @@ generate_response_one <- function(
     Xmat <- cbind(data['X.Intercept.'], Xmat)
   }
 
-  if (is.list(sim_args[['reg_weights']])) {
+  if (
+    is.list(sim_args[['reg_weights']]) &&
+      (is.null(names(sim_args[['reg_weights']])) ||
+        any(names(sim_args[['reg_weights']]) == ""))
+  ) {
+    reg_weights <- lapply(
+      sim_args[['reg_weights']],
+      regression_weights,
+      names(Xmat),
+      fixed_formula
+    )
     fixed_outcome <- data.frame(do.call(
       "cbind",
-      lapply(seq_along(sim_args[['reg_weights']]), function(xx) {
-        as.matrix(Xmat) %*% sim_args[['reg_weights']][[xx]]
+      lapply(seq_along(reg_weights), function(xx) {
+        as.matrix(Xmat) %*% reg_weights[[xx]]
       })
     ))
     names(fixed_outcome) <- paste0('logit', 1:ncol(fixed_outcome))
   } else {
-    fixed_outcome <- as.matrix(Xmat) %*% sim_args[['reg_weights']]
+    reg_weights <- regression_weights(
+      sim_args[['reg_weights']],
+      names(Xmat),
+      fixed_formula
+    )
+    fixed_outcome <- as.matrix(Xmat) %*% reg_weights
   }
 
   if (length(parse_formula(sim_args)[['randomeffect']]) != 0) {

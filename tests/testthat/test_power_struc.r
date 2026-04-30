@@ -55,3 +55,36 @@ test_that('compute_statistics dimensions', {
     3
   )
 })
+
+test_that('power statistics support ns terms', {
+  set.seed(321)
+
+  sim_arguments_test <- list(
+    formula = y ~ 1 + x1 + ns(x2, df = 4),
+    fixed = list(
+      x1 = list(var_type = 'continuous', mean = 0, sd = 1),
+      x2 = list(var_type = 'continuous', mean = 0, sd = 1)
+    ),
+    error = list(variance = 1),
+    sample_size = 80,
+    reg_weights = list(
+      `(Intercept)` = 0,
+      x1 = 0.25,
+      `ns(x2, df = 4)` = c(0.75, 0.5, 0, 0)
+    ),
+    model_fit = list(model_function = 'lm'),
+    replications = 5,
+    extract_coefficients = TRUE
+  )
+
+  power_stats <- replicate_simulation(sim_arguments_test) |>
+    compute_statistics(
+      sim_arguments_test,
+      type_1_error = FALSE,
+      alternative_power = FALSE
+    )
+
+  expect_equal(nrow(power_stats), 6)
+  expect_true(all(paste0("ns(x2, df = 4)", 1:4) %in% power_stats$term))
+  expect_true(all(c("avg_estimate", "power", "precision_ratio") %in% names(power_stats)))
+})

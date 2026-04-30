@@ -395,6 +395,137 @@ poly_names <- function(x) {
   paste(name, 1:as.numeric(num), sep = "_")
 }
 
+basis_term_names <- function(x) {
+  if (grepl("^poly\\(", x)) {
+    return(poly_names(x))
+  }
+  if (grepl("^ns\\(|^bs\\(", x)) {
+    return(ns_df_names(x))
+  }
+
+  x
+}
+
+uses_spline_basis <- function(formula) {
+  any(grepl("^ns\\(|^bs\\(", attr(terms(formula), "term.labels")))
+}
+
+attach_spline_env <- function(formula) {
+  if (is.list(formula)) {
+    return(lapply(formula, attach_spline_env))
+  }
+
+  if (!inherits(formula, "formula") || !uses_spline_basis(formula)) {
+    return(formula)
+  }
+
+  formula_env <- new.env(parent = environment(formula))
+  formula_env$ns <- splines::ns
+  formula_env$bs <- splines::bs
+  environment(formula) <- formula_env
+
+  formula
+}
+
+regression_weights <- function(reg_weights, x_names, fixed_formula) {
+  if (!is.list(reg_weights) || is.null(names(reg_weights))) {
+    return(reg_weights)
+  }
+
+  if (any(names(reg_weights) == "")) {
+    return(reg_weights)
+  }
+
+  term_labels <- attr(terms(fixed_formula), "term.labels")
+  weights <- stats::setNames(rep(NA_real_, length(x_names)), x_names)
+
+  for (term in names(reg_weights)) {
+    term_weights <- unlist(reg_weights[[term]], use.names = FALSE)
+    if (term %in% c("(Intercept)", "Intercept", "X.Intercept.")) {
+      term_cols <- "X.Intercept."
+    } else if (term %in% x_names) {
+      term_cols <- term
+    } else if (term %in% term_labels) {
+      term_cols <- basis_term_names(term)
+    } else {
+      term_cols <- paste(term, seq_along(term_weights), sep = "_")
+    }
+
+    if (length(term_cols) != length(term_weights)) {
+      stop(
+        "Regression weights for `",
+        term,
+        "` must have one value per generated model column.",
+        call. = FALSE
+      )
+    }
+
+    missing_cols <- term_cols[term_cols %ni% x_names]
+    if (length(missing_cols) > 0) {
+      stop(
+        "Regression weights for `",
+        term,
+        "` refer to generated columns that were not found: ",
+        paste(missing_cols, collapse = ", "),
+        call. = FALSE
+      )
+    }
+
+    weights[term_cols] <- term_weights
+  }
+
+  if (any(is.na(weights))) {
+    stop(
+      "`reg_weights` must specify weights for all fixed-effect columns: ",
+      paste(names(weights)[is.na(weights)], collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  unname(weights)
+}
+
+regression_weight_terms <- function(reg_weights, fixed_formula) {
+  if (!is.list(reg_weights) || is.null(names(reg_weights))) {
+    return(reg_weights)
+  }
+
+  if (any(names(reg_weights) == "")) {
+    return(reg_weights)
+  }
+
+  term_labels <- attr(terms(fixed_formula), "term.labels")
+  weights <- numeric()
+
+  for (term in names(reg_weights)) {
+    term_weights <- unlist(reg_weights[[term]], use.names = FALSE)
+    if (term %in% c("(Intercept)", "Intercept", "X.Intercept.")) {
+      term_names <- "(Intercept)"
+    } else if (term %in% term_labels && grepl("^ns\\(|^bs\\(", term)) {
+      term_names <- paste0(term, seq_along(term_weights))
+    } else if (term %in% term_labels && grepl("^poly\\(", term)) {
+      term_names <- paste0(term, seq_along(term_weights))
+    } else if (length(term_weights) == 1) {
+      term_names <- term
+    } else {
+      term_names <- paste(term, seq_along(term_weights), sep = "_")
+    }
+
+    if (length(term_names) != length(term_weights)) {
+      stop(
+        "Regression weights for `",
+        term,
+        "` must have one value per fitted model coefficient.",
+        call. = FALSE
+      )
+    }
+
+    weights <- c(weights, stats::setNames(term_weights, term_names))
+  }
+
+  weights
+}
+
 
 unique_columns <- function(x, y) {
   sapply(names(y), function(nm) {

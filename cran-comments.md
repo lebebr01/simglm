@@ -1,11 +1,11 @@
 ## Test Environments
-* local OS X 11.15.1 R 4.1.0
-* Ubuntu 20.04.2  (GitHub Actions) 
+* local OS X 26.5.2 R 4.6.0
+* Ubuntu 24.04.4  (GitHub Actions) 
     - R Devel
-    - R 4.1.0
-    - R 4.0.5
-* OS X 10.15.7 (GitHub Actions) R 4.1.0
-* Windows server 2019 (GitHub Actions); R 4.1.0
+    - R 4.6.1
+    - R 4.5.3
+* OS X 26.5.2 (GitHub Actions) R 4.6.1
+* Windows server 2025 (GitHub Actions); R 4.6.1
 
 ## R CMD check results
 No Errors, warnings, or notes

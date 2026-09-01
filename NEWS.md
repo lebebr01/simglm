@@ -1,7 +1,47 @@
 # simglm 1.0.0
 
-**Changes:**
-* Change default behavior for factor simulations, order of levels are maintained now instead of alphabetical order which is the default in R. 
+This major release accompanies the publication of the `simglm` book. It
+expands the package's simulation and power-analysis capabilities and aligns
+the package API with the examples presented in the book.
+
+## New outcome and data-generation options
+
+* Added support for ordinal and multinomial outcomes.
+* Added floor and ceiling controls for continuous outcomes.
+* Changed factor simulation to preserve the declared order of levels rather
+  than sorting levels alphabetically.
+* Added `force_equal = TRUE` for generating equally represented factor levels.
+* Expanded support for unbalanced designs and flexible sample-size
+  specifications.
+* Generalized cross-classified data generation through multiple-membership
+  simulation.
+* Added post-processing and outcome aggregation tools.
+* Extended formula parsing and simulation support for list-based
+  specifications and multiple-equation workflows.
+
+## Power analysis and model fitting
+
+* Reworked the power-simulation framework, including improved support for
+  between- and within-subject designs.
+* Added type S and type M error summaries.
+* Added `robust_model()` for models using robust standard errors.
+
+## Propensity score workflows
+
+* Added `simulate_propensity()` for generating non-random treatment
+  assignment.
+* Added `fit_propensity()` and support for covariate adjustment, inverse
+  probability weighting (`ipw`), and stabilized balancing weights (`sbw`).
+* Added support, examples, and tests for multilevel propensity score designs.
+
+## Documentation, testing, and maintenance
+
+* Expanded the vignettes and documentation for missing-data, factor, ordinal,
+  multinomial, post-processing, power, and propensity score workflows.
+* Added lightweight compatibility tests based on code published in the book.
+* The package now requires R 4.1.0 or later because examples and simulation workflows use the native R pipe (|>)
+* Removed `Matrix` from package imports and added `gtools`, `sandwich`, and
+  `lmtest`.
 
 # simglm 0.7.2
 * Small maintenance fix for incoming 0.8 dplyr.
@@ -61,6 +101,4 @@
 # simglm 0.3.4
 
 * Added a `NEWS.md` file to track changes to the package.
-
-
 

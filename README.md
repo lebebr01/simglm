@@ -2,7 +2,7 @@
 
 [![R build status](https://github.com/lebebr01/simglm/workflows/R-CMD-check/badge.svg)](https://github.com/lebebr01/simglm/actions?workflow=R-CMD-check)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/lebebr01/simglm?branch=main&svg=true)](https://ci.appveyor.com/project/lebebr01/simglm)
-[![codecov.io](https://codecov.io/github/lebebr01/simglm/coverage.svg?branch=main)](https://codecov.io/github/lebebr01/simglm?branch=main)
+[![codecov.io](https://codecov.io/github/lebebr01/simglm/coverage.svg?branch=main)](https://app.codecov.io/github/lebebr01/simglm?branch=main)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/simglm)](https://cran.r-project.org/package=simglm)
 
 
@@ -10,14 +10,14 @@
 This package can be directly installed through CRAN:
 
 
-```r
+``` r
 install.packages("simglm")
 ```
 
 The development version of the package can be installed by using the devtools package.
 
 
-```r
+``` r
 library(devtools)
 install_github("lebebr01/simglm")
 ```
@@ -26,14 +26,14 @@ install_github("lebebr01/simglm")
 The best way to become oriented with the `simglm` package is through the package vignette. There are two ways to get to the vignettes (both will open a browser to view the vignette). Below is an example loading the "Intro" vignette directly:
 
 
-```r
+``` r
 browseVignettes()
 vignette("Intro", package = "simglm")
 ```
 
 Note: If you install the development version of the package, you may need to tell R to build the vignettes when installing the `simglm` package by doing the following:
 
-```r
+``` r
 install_github("lebebr01/simglm", build_vignettes = TRUE)
 ```
 

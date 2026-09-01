@@ -2,8 +2,8 @@ Package: simglm
 Type: Package
 Authors@R: person("Brandon", "LeBeau", email = "lebebr01+simglm@gmail.com",
      role = c("aut", "cre"))
-Version: 0.9.31
-Date: 2025-11-03
+Version: 1.0.0
+Date: 2026-09-01
 License: MIT + file LICENSE
 Title: Simulate Models Based on the Generalized Linear Model
 Description: Simulates regression models,
